@@ -28,8 +28,15 @@ public class SCMPMessageFault extends SCMPMessage {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPMessageFault.class);
 
+	/** The exception. */
 	private Exception exception;
 
+	/**
+	 * Instantiates a new sCMP message fault.
+	 * 
+	 * @param exception
+	 *            the exception
+	 */
 	public SCMPMessageFault(Exception exception) {
 		super();
 		this.exception = exception;

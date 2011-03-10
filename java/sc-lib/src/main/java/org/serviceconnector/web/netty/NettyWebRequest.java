@@ -39,7 +39,6 @@ import org.serviceconnector.web.AbstractWebRequest;
 public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
 
 	/** The request. */
@@ -59,6 +58,10 @@ public class NettyWebRequest extends AbstractWebRequest {
 	 * 
 	 * @param httpRequest
 	 *            the request
+	 * @param localAddress
+	 *            the local address
+	 * @param remoteAddress
+	 *            the remote address
 	 */
 	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);

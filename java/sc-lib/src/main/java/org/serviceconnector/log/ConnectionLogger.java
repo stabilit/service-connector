@@ -23,21 +23,21 @@ import org.apache.log4j.Logger;
 /**
  * The Class ConnectionLogger.
  */
-public class ConnectionLogger {
+public final class ConnectionLogger {
 
 	/** The Constant connectionLogger. */
-	private static final Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private static final Logger CONNECTION_LOGGER = Logger.getLogger(Loggers.CONNECTION.getValue());
 
-	/** The CONNECT_STR. */
-	private static String CONNECT_STR = "%s connect to:%s/%s";
-	/** The DISCONNECT_STR. */
-	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
-	/** The READ_STR. */
-	private static String READ_STR = "%s read from:%s/%s buffer:%s";
-	/** The WRITE_STR. */
-	private static String WRITE_STR = "%s write to:%s/%s buffer:%s";
-	/** The KEEP_ALIVE_STR. */
-	private static String KEEP_ALIVE_STR = "%s send keep alive to:%s/%s - idle count: %s";
+	/** The connect str. */
+	private static String connectStr = "%s connect to:%s/%s";
+	/** The disconnect str. */
+	private static String disconnectStr = "%s disconnect from:%s/%s";
+	/** The read str. */
+	private static String readStr = "%s read from:%s/%s buffer:%s";
+	/** The write str. */
+	private static String writeStr = "%s write to:%s/%s buffer:%s";
+	/** The keep alive str. */
+	private static String keepAliveStr = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -57,8 +57,8 @@ public class ConnectionLogger {
 	 */
 	public static synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
-		format.format(CONNECT_STR, className, hostName, String.valueOf(port));
-		connectionLogger.debug(format.toString());
+		format.format(connectStr, className, hostName, String.valueOf(port));
+		CONNECTION_LOGGER.debug(format.toString());
 		format.close();
 	}
 
@@ -75,8 +75,8 @@ public class ConnectionLogger {
 	public static synchronized void logDisconnect(String className, String hostName, int port) {
 
 		Formatter format = new Formatter();
-		format.format(DISCONNECT_STR, className, hostName, String.valueOf(port));
-		connectionLogger.debug(format.toString());
+		format.format(disconnectStr, className, hostName, String.valueOf(port));
+		CONNECTION_LOGGER.debug(format.toString());
 		format.close();
 	}
 
@@ -99,11 +99,11 @@ public class ConnectionLogger {
 	public static synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
 		if (length > 100) {
-			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, 100));
+			format.format(readStr, className, hostName, String.valueOf(port), new String(data, offset, 100));
 		} else {
-			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
+			format.format(readStr, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		connectionLogger.trace(format.toString());
+		CONNECTION_LOGGER.trace(format.toString());
 		format.close();
 	}
 
@@ -126,11 +126,11 @@ public class ConnectionLogger {
 	public static synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
 		if (length > 100) {
-			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, 100));
+			format.format(writeStr, className, hostName, String.valueOf(port), new String(data, offset, 100));
 		} else {
-			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
+			format.format(writeStr, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		connectionLogger.trace(format.toString());
+		CONNECTION_LOGGER.trace(format.toString());
 		format.close();
 	}
 
@@ -148,8 +148,8 @@ public class ConnectionLogger {
 	 */
 	public static synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
-		format.format(KEEP_ALIVE_STR, className, hostName, String.valueOf(port), nrOfIdles);
-		connectionLogger.trace(format.toString());
+		format.format(keepAliveStr, className, hostName, String.valueOf(port), nrOfIdles);
+		CONNECTION_LOGGER.trace(format.toString());
 		format.close();
 	}
 
@@ -159,7 +159,7 @@ public class ConnectionLogger {
 	 * @return true, if is enabled full
 	 */
 	public static boolean isEnabledFull() {
-		return connectionLogger.isTraceEnabled();
+		return CONNECTION_LOGGER.isTraceEnabled();
 	}
 
 	/**
@@ -168,6 +168,6 @@ public class ConnectionLogger {
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
-		return connectionLogger.isDebugEnabled();
+		return CONNECTION_LOGGER.isDebugEnabled();
 	}
 }

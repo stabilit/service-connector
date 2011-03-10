@@ -357,6 +357,8 @@ public class SCMessage {
 	}
 
 	/**
+	 * Gets the part size.
+	 * 
 	 * @return the size of the parts in which message will be broken when it is large
 	 */
 	public int getPartSize() {
@@ -364,6 +366,8 @@ public class SCMessage {
 	}
 
 	/**
+	 * Sets the part size.
+	 * 
 	 * @param partSize
 	 *            the size in which message will be broken when it is large
 	 */

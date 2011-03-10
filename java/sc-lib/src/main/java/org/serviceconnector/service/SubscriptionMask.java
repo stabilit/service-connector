@@ -79,6 +79,7 @@ public class SubscriptionMask {
 	 *            the new mask
 	 * @return the byte[]
 	 * @throws InvalidMaskLengthException
+	 *             the invalid mask length exception
 	 */
 	public static byte[] masking(byte[] baseMask, byte[] newMask) throws InvalidMaskLengthException {
 
@@ -109,6 +110,7 @@ public class SubscriptionMask {
 	 *            the mask2
 	 * @return the string
 	 * @throws InvalidMaskLengthException
+	 *             the invalid mask length exception
 	 */
 	public static String masking(SubscriptionMask currentSubscriptionMask, String mask2) throws InvalidMaskLengthException {
 		return new String(SubscriptionMask.masking(currentSubscriptionMask.getValue().getBytes(), mask2.getBytes()));

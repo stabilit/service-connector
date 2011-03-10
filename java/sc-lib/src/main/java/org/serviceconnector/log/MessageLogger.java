@@ -31,9 +31,9 @@ public final class MessageLogger {
 	/** The Constant messageLogger. */
 	private static final Logger MESSAGE_LOGGER = Logger.getLogger(Loggers.MESSAGE.getValue());
 	/** The MSG_INPUT_STR. */
-	private static String MSG_INPUT_STR = "<-%s %s";
+	private static String msgInputStr = "<-%s %s";
 	/** The MSG_OUTPUT_STR. */
-	private static String MSG_OUTPUT_STR = "->%s %s";
+	private static String msgOutputStr = "->%s %s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -53,7 +53,7 @@ public final class MessageLogger {
 		if (MESSAGE_LOGGER.isTraceEnabled()) {
 			// write out all header attributes
 			Formatter format = new Formatter();
-			format.format(MSG_INPUT_STR, headlineKey.toString(), message.getHeader().toString());
+			format.format(msgInputStr, headlineKey.toString(), message.getHeader().toString());
 			MESSAGE_LOGGER.trace(format.toString());
 			format.close();
 		} else if (MESSAGE_LOGGER.isDebugEnabled()) {
@@ -70,7 +70,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT, message));
 			Formatter format = new Formatter();
-			format.format(MSG_INPUT_STR, headlineKey.toString(), builder.toString());
+			format.format(msgInputStr, headlineKey.toString(), builder.toString());
 			MESSAGE_LOGGER.debug(format.toString());
 			format.close();
 		}
@@ -86,7 +86,7 @@ public final class MessageLogger {
 		if (MESSAGE_LOGGER.isTraceEnabled()) {
 			// write out all header attributes
 			Formatter format = new Formatter();
-			format.format(MSG_OUTPUT_STR, headlineKey.toString(), message.getHeader().toString());
+			format.format(msgOutputStr, headlineKey.toString(), message.getHeader().toString());
 			MESSAGE_LOGGER.trace(format.toString());
 			format.close();
 		} else if (MESSAGE_LOGGER.isDebugEnabled()) {
@@ -103,7 +103,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT, message));
 			Formatter format = new Formatter();
-			format.format(MSG_OUTPUT_STR, headlineKey.toString(), builder.toString());
+			format.format(msgOutputStr, headlineKey.toString(), builder.toString());
 			MESSAGE_LOGGER.debug(format.toString());
 			format.close();
 		}

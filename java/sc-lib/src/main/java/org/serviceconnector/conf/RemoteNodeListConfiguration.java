@@ -36,9 +36,12 @@ public class RemoteNodeListConfiguration {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(RemoteNodeListConfiguration.class);
-
+	/** The remote node configurations. */
 	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurations;
 
+	/**
+	 * Instantiates a new remote node list configuration.
+	 */
 	public RemoteNodeListConfiguration() {
 	}
 

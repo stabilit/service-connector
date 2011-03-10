@@ -40,11 +40,18 @@ public class NettyIdleTimeoutHandler extends IdleStateHandler {
 	private static final Logger LOGGER = Logger.getLogger(NettyIdleTimeoutHandler.class);
 	
 	/**
+	 * Instantiates a new NETTY idle timeout handler.
+	 * 
 	 * @param timer
+	 *            the timer
 	 * @param readerIdleTime
+	 *            the reader idle time
 	 * @param writerIdleTime
+	 *            the writer idle time
 	 * @param allIdleTime
+	 *            the all idle time
 	 * @param unit
+	 *            the unit
 	 */
 	public NettyIdleTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime,
 			TimeUnit unit) {

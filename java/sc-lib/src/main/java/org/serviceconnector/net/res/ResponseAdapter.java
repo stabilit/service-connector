@@ -46,6 +46,9 @@ public abstract class ResponseAdapter implements IResponse {
 
 	/**
 	 * Instantiates a new response adapter.
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public ResponseAdapter(ChannelEvent event) {
 		this.scmp = null;

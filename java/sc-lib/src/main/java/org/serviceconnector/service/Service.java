@@ -104,7 +104,10 @@ public abstract class Service {
 	}
 
 	/**
+	 * Sets the enabled.
+	 * 
 	 * @param enabled
+	 *            the new enabled
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;

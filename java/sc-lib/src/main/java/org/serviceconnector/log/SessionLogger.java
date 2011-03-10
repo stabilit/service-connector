@@ -24,22 +24,19 @@ import org.apache.log4j.Logger;
 /**
  * The Class SessionLogger.
  */
-public class SessionLogger {
+public final class SessionLogger {
 
 	/** The Constant sessionLogger. */
-	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final Logger SESSION_LOGGGER = Logger.getLogger(Loggers.SESSION.getValue());
 
-	/** The CREAT e_ sessio n_ str. */
-	private static String CREATE_SESSION_STR = "create session sid=%s eci=%s";
-	
-	/** The DELET e_ sessio n_ str. */
-	private static String DELETE_SESSION_STR = "delete session:%s";
-	
-	/** The ABOR t_ sessio n_ str. */
-	private static String ABORT_SESSION_STR = "abort session:%s";
-	
-	/** The TIMEOU t_ sessio n_ str. */
-	private static String TIMEOUT_SESSION_STR = "timeout session:%s";
+	/** The create session str. */
+	private static String createSessionStr = "create session sid=%s eci=%s";
+	/** The delete session str. */
+	private static String deleteSessionStr = "delete session:%s";
+	/** The abort session str. */
+	private static String abortSessionStr = "abort session:%s";
+	/** The timeout session str. */
+	private static String timeoutSessionStr = "timeout session:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -58,10 +55,10 @@ public class SessionLogger {
 	 *            the eci
 	 */
 	public static synchronized void logCreateSession(String className, String sessionId, double eci) {
-		if (sessionLogger.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(CREATE_SESSION_STR, sessionId, eci);
-			sessionLogger.trace(format.toString());
+			format.format(createSessionStr, sessionId, eci);
+			SESSION_LOGGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -75,10 +72,10 @@ public class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logDeleteSession(String className, String sessionId) {
-		if (sessionLogger.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(DELETE_SESSION_STR, sessionId);
-			sessionLogger.trace(format.toString());
+			format.format(deleteSessionStr, sessionId);
+			SESSION_LOGGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -92,10 +89,10 @@ public class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logTimeoutSession(String className, String sessionId) {
-		if (sessionLogger.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(TIMEOUT_SESSION_STR, sessionId);
-			sessionLogger.trace(format.toString());
+			format.format(timeoutSessionStr, sessionId);
+			SESSION_LOGGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -109,10 +106,10 @@ public class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logAbortSession(String className, String sessionId) {
-		if (sessionLogger.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(ABORT_SESSION_STR, sessionId);
-			sessionLogger.trace(format.toString());
+			format.format(abortSessionStr, sessionId);
+			SESSION_LOGGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -123,7 +120,7 @@ public class SessionLogger {
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
-		return sessionLogger.isTraceEnabled();
+		return SESSION_LOGGGER.isTraceEnabled();
 	}
 
 	/**
@@ -133,8 +130,8 @@ public class SessionLogger {
 	 *            the message
 	 */
 	public static void warn(String message) {
-		if (sessionLogger.isEnabledFor(Level.WARN)) {
-			sessionLogger.warn(message);
+		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
+			SESSION_LOGGGER.warn(message);
 		}
 	}
 
@@ -145,8 +142,8 @@ public class SessionLogger {
 	 *            the message
 	 */
 	public static void fatal(String message) {
-		if (sessionLogger.isEnabledFor(Level.FATAL)) {
-			sessionLogger.fatal(message);
+		if (SESSION_LOGGGER.isEnabledFor(Level.FATAL)) {
+			SESSION_LOGGGER.fatal(message);
 		}
 	}
 
@@ -157,8 +154,8 @@ public class SessionLogger {
 	 *            the message
 	 */
 	public static void error(String message) {
-		if (sessionLogger.isEnabledFor(Level.ERROR)) {
-			sessionLogger.error(message);
+		if (SESSION_LOGGGER.isEnabledFor(Level.ERROR)) {
+			SESSION_LOGGGER.error(message);
 		}
 	}
 
@@ -169,8 +166,8 @@ public class SessionLogger {
 	 *            the message
 	 */
 	public static void debug(String message) {
-		if (sessionLogger.isEnabledFor(Level.DEBUG)) {
-			sessionLogger.debug(message);
+		if (SESSION_LOGGGER.isEnabledFor(Level.DEBUG)) {
+			SESSION_LOGGGER.debug(message);
 		}
 	}
 }

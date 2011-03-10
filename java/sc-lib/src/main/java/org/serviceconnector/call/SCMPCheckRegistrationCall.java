@@ -36,6 +36,8 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 	 * 
 	 * @param requester
 	 *            the requesters to use when invoking call
+	 * @param serviceName
+	 *            the service name
 	 */
 	public SCMPCheckRegistrationCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);

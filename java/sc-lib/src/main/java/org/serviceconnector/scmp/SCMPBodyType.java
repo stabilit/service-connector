@@ -42,8 +42,8 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 
 	/** The value. */
 	private String value;
-	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, SCMPBodyType> reverseMap = new ReverseEnumMap<String, SCMPBodyType>(
+	/** The REVERSE_MAP, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPBodyType> REVERSE_MAP = new ReverseEnumMap<String, SCMPBodyType>(
 			SCMPBodyType.class);
 
 	/**
@@ -64,7 +64,7 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	 * @return the body type
 	 */
 	public static SCMPBodyType getBodyType(String bodyTypeString) {
-		SCMPBodyType bodyType = reverseMap.get(bodyTypeString);
+		SCMPBodyType bodyType = REVERSE_MAP.get(bodyTypeString);
 		if (bodyType == null) {
 			// bodyTypeString doesn't match to a valid SCMPBodyType
 			return SCMPBodyType.UNDEFINED;

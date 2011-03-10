@@ -49,6 +49,8 @@ public class NettyHttpRequest extends RequestAdapter {
 	 *            the request
 	 * @param localAddress
 	 *            the socket address
+	 * @param remoteAddress
+	 *            the remote address
 	 */
 	public NettyHttpRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);

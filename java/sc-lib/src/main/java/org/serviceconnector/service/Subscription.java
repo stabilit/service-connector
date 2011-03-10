@@ -18,6 +18,9 @@ package org.serviceconnector.service;
 
 import org.serviceconnector.server.IStatefulServer;
 
+/**
+ * The Class Subscription.
+ */
 public class Subscription extends AbstractSession {
 
 	/** The mask in bytes. */
@@ -32,6 +35,16 @@ public class Subscription extends AbstractSession {
 	 * 
 	 * @param mask
 	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param ipAddressList
+	 *            the ip address list
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param subscriptionTimeoutMillis
+	 *            the subscription timeout millis
+	 * @param cascaded
+	 *            the cascaded
 	 */
 	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval,
 			double subscriptionTimeoutMillis, boolean cascaded) {
@@ -60,11 +73,20 @@ public class Subscription extends AbstractSession {
 		this.mask = mask;
 	}
 
+	/**
+	 * Gets the subscription timeout millis.
+	 * 
+	 * @return the subscription timeout millis
+	 */
 	public double getSubscriptionTimeoutMillis() {
 		return this.subscriptionTimeoutMillis;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the server.
+	 * 
+	 * @return the server {@inheritDoc}
+	 */
 	@Override
 	public IStatefulServer getServer() {
 		return (IStatefulServer) this.server;

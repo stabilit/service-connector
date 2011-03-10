@@ -205,8 +205,11 @@ public class InspectCommand extends CommandAdapter {
 	/**
 	 * Gets the sessions of services string.
 	 * 
+	 * @param serviceNameRegex
+	 *            the service name regex
 	 * @return the sessions of services string
 	 * @throws NotFoundException
+	 *             the not found exception
 	 */
 	private String getSessionsOfServicesString(String serviceNameRegex) throws NotFoundException {
 		boolean found = false;
@@ -250,6 +253,8 @@ public class InspectCommand extends CommandAdapter {
 	/**
 	 * Gets the state of services string.
 	 * 
+	 * @param serviceNameRegex
+	 *            the service name regex
 	 * @return the state of services string
 	 */
 	private String getStateOfServicesString(String serviceNameRegex) {

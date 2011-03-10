@@ -37,6 +37,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	 * 
 	 * @param req
 	 *            the requesters to use when invoking call
+	 * @param serviceName
+	 *            the service name
 	 */
 	public SCMPRegisterServerCall(IRequester req, String serviceName) {
 		super(req, serviceName);

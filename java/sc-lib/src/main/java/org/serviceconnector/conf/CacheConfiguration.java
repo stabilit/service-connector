@@ -19,7 +19,6 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;

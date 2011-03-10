@@ -23,34 +23,59 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPFileUploadCall.
+ */
 public class SCMPFileUploadCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPFileUploadCall.class);
 
+	/**
+	 * Instantiates a new sCMP file upload call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
+	 */
 	public SCMPFileUploadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
 	}
 
+	/**
+	 * Instantiates a new sCMP file upload call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToForward
+	 *            the msg to forward
+	 */
 	public SCMPFileUploadCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.FILE_UPLOAD;
 	}
 
+	/**
+	 * Sets the remote file name.
+	 * 
+	 * @param remoteFileName
+	 *            the new remote file name
+	 */
 	public void setRemoteFileName(String remoteFileName) {
 		if (remoteFileName == null) {
 			return;
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
 	}
-
-	/** {@inheritDoc} **/
+	
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);

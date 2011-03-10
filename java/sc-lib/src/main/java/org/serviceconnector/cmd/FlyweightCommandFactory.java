@@ -36,6 +36,9 @@ public abstract class FlyweightCommandFactory {
 	/** The map stores base instances by a key. */
 	protected static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 
+	/**
+	 * Instantiates a new flyweight command factory.
+	 */
 	public FlyweightCommandFactory() {
 	}
 

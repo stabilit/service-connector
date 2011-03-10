@@ -41,7 +41,7 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handling request
 		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
 		return pipeline;

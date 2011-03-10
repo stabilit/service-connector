@@ -47,6 +47,8 @@ public class SCMPOffsetPart extends SCMPPart {
 	 *            the scmp message
 	 * @param offset
 	 *            the offset
+	 * @param largeMessageLength
+	 *            the large message length
 	 */
 	public SCMPOffsetPart(SCMPMessage message, int offset, int largeMessageLength) {
 		this.offset = offset;

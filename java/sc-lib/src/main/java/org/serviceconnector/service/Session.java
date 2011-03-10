@@ -29,9 +29,19 @@ public class Session extends AbstractSession {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Session.class);
 
+	/** The session timeout seconds. */
 	private double sessionTimeoutSeconds;
+	/** The pending request. */
 	private boolean pendingRequest;
 
+	/**
+	 * Instantiates a new session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param ipAdressList
+	 *            the ip adress list
+	 */
 	public Session(String sessionInfo, String ipAdressList) {
 		super(sessionInfo, ipAdressList);
 		this.sessionTimeoutSeconds = 0;

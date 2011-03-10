@@ -91,7 +91,7 @@ public enum SCMPVersion {
 		}
 		return;
 	}
-	
+
 	/**
 	 * Gets the version number.
 	 * 
@@ -100,7 +100,7 @@ public enum SCMPVersion {
 	public byte getVersionNumber() {
 		return this.version;
 	}
-	
+
 	/**
 	 * Gets the release number.
 	 * 
@@ -114,9 +114,9 @@ public enum SCMPVersion {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append((char)this.release);
-		sb.append((char)Constants.DOT_HEX);
-		sb.append((char)this.version);
+		sb.append((char) this.release);
+		sb.append((char) Constants.DOT_HEX);
+		sb.append((char) this.version);
 		return sb.toString();
 	}
 }

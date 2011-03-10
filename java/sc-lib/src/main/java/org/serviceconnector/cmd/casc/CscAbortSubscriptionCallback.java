@@ -21,11 +21,24 @@ import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 
+/**
+ * The Class CscAbortSubscriptionCallback.
+ */
 public class CscAbortSubscriptionCallback implements ISubscriptionCallback {
 
+	/** The subscription. */
 	private Subscription subscription;
+	/** The request. */
 	private IRequest request;
 
+	/**
+	 * Instantiates a new csc abort subscription callback.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param subscription
+	 *            the subscription
+	 */
 	public CscAbortSubscriptionCallback(IRequest request, Subscription subscription) {
 		this.subscription = subscription;
 		this.request = request;

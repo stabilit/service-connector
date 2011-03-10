@@ -22,21 +22,39 @@ import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPFileListCall.
+ */
 public class SCMPFileListCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPFileListCall.class);
 
+	/**
+	 * Instantiates a new sCMP file list call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 */
 	public SCMPFileListCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
 	}
 
+	/**
+	 * Instantiates a new sCMP file list call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToForward
+	 *            the msg to forward
+	 */
 	public SCMPFileListCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.FILE_LIST;

@@ -43,10 +43,16 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	
 	/** The timer to observe timeouts. */
 	private Timer timer;
+	/** The context. */
 	private ConnectionContext context;
 
 	/**
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
+	 * 
+	 * @param context
+	 *            the context
+	 * @param timer
+	 *            the timer
 	 */
 	public NettyHttpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
 		this.timer = timer;

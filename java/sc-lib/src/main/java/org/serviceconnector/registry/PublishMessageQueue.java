@@ -143,6 +143,10 @@ public class PublishMessageQueue<E> {
 	 * 
 	 * @param sessionId
 	 *            the session id
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @return the e
 	 */
 	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {

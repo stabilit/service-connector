@@ -42,6 +42,8 @@ public final class ValidatorUtility {
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
 	private static final Pattern PAT_IPLIST = Pattern.compile(IP_LIST_REGEX);
+	/** The Constant DATE_TIME_FORMAT. */
+	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
 
 	/**
 	 * Instantiates a new validator utility.
@@ -76,6 +78,8 @@ public final class ValidatorUtility {
 	 * 
 	 * @param dateTime
 	 *            the date and time
+	 * @param error
+	 *            the error
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
@@ -83,8 +87,8 @@ public final class ValidatorUtility {
 		if (dateTime == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
-		SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
-		validateDateTime(SDF.format(dateTime), error);
+
+		validateDateTime(DATE_TIME_FORMAT.format(dateTime), error);
 	}
 
 	/**
@@ -165,6 +169,8 @@ public final class ValidatorUtility {
 	 *            the lower limit inclusive
 	 * @param longValue
 	 *            the integer value
+	 * @param upperLimitInc
+	 *            the upper limit inc
 	 * @param error
 	 *            the error
 	 * @throws SCMPValidatorException
@@ -320,6 +326,8 @@ public final class ValidatorUtility {
 	 *            the string value
 	 * @param maxSizeInc
 	 *            the max inclusive size
+	 * @param error
+	 *            the error
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */

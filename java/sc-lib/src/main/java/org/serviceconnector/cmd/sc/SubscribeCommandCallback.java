@@ -57,7 +57,9 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	private Subscription tempSubscription;
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+	/** The req message. */
 	private SCMPMessage reqMessage;
+	/** The msg type. */
 	private String msgType;
 
 	/**
@@ -149,12 +151,12 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 		this.responderCallback.responseCallback(request, response);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Subscription getSubscription() {
 		return this.tempSubscription;
 	}
 
+	@Override
 	public IRequest getRequest() {
 		return request;
 	}

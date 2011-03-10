@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
-import java.util.AbstractCollection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.stream.XMLStreamWriter;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.conf.CacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -41,9 +41,10 @@ import org.serviceconnector.util.TimeMillis;
 public class CacheManager {
 
 	/**
-	 * this array is only used to run the generics method version {@link AbstractCollection#toArray(Object[])} inside {@link #getAllCaches} method.
+	 * this array is only used to run the generics method version {@link AbstractCollection#toArray(Object[])} inside
+	 * {@link #getAllCaches} method.
 	 */
-	private static final Cache[] genericsArrayTemplate = new Cache[0];
+	private static final Cache[] GENERICS_ARRAY_TEMPLATE = new Cache[0];
 	/** The cache map. */
 	private Map<String, Cache> cacheMap;
 	/** The cache configuration. */
@@ -151,7 +152,7 @@ public class CacheManager {
 	 * @return the all caches
 	 */
 	public Cache[] getAllCaches() {
-		return (Cache[]) this.cacheMap.values().toArray(CacheManager.genericsArrayTemplate);
+		return (Cache[]) this.cacheMap.values().toArray(CacheManager.GENERICS_ARRAY_TEMPLATE);
 	}
 
 	/**
@@ -247,7 +248,7 @@ public class CacheManager {
 			while (this.killed == false) {
 				try {
 					synchronized (this) {
-						this.wait(this.timeoutSeconds * 1000);
+						this.wait(this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 					}
 					if (this.killed) {
 						CacheLogger.debug("terminate expiration thread (killed)");

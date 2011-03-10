@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
@@ -360,11 +358,11 @@ public class ClnExecuteCommand extends CommandAdapter {
 				} else {
 					scmpReply = new SCMPPart();
 				}
-				// write cache composite header to scmp message, reply sessionId later		
+				// write cache composite header to scmp message, reply sessionId later
 				cacheComposite.writeHeaderToMessage(scmpReply);
-//				scmpReply.setServiceName(message.getServiceName()); not necessary, take service name from cache composite
-				scmpReply.setSessionId(message.getSessionId());  // replace session id
-//				scmpReply.setMessageType(getKey()); not necessary, take message type from cache composite
+				// scmpReply.setServiceName(message.getServiceName()); not necessary, take service name from cache composite
+				scmpReply.setSessionId(message.getSessionId()); // replace session id
+				// scmpReply.setMessageType(getKey()); not necessary, take message type from cache composite
 				cacheId = cacheMessage.getCacheId();
 				if (cacheId == null) {
 					CacheLogger.error("cache message has illegal state, cacheId=null");
@@ -385,7 +383,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 					throw scmpCommandException;
 				}
 				scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, cacheMessage.getMessageSequenceNr());
-				CacheLogger.debug("cache reply, cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
+				CacheLogger.debug("cache reply, cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr
+						+ ", expirationDateTime=" + cacheComposite.getExpiration());
 				if (cacheMessage.isCompressed()) {
 					scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 				}
@@ -400,7 +399,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 					session.setPendingRequest(false);
 				}
 				responderCallback.responseCallback(request, response);
-				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
+				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId + ", messageSequenceNr="
+						+ messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
 				return true; // message loaded from cache
 			}
 		}

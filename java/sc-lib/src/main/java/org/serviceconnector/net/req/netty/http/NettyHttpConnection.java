@@ -58,6 +58,11 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 
 	/**
 	 * Instantiates a new netty http connection.
+	 * 
+	 * @param channelFactory
+	 *            the channel factory
+	 * @param timer
+	 *            the timer
 	 */
 	public NettyHttpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		super(channelFactory, timer);

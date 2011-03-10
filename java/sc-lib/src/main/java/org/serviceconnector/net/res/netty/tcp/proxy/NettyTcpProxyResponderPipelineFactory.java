@@ -65,7 +65,7 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;

@@ -27,8 +27,9 @@ import org.serviceconnector.util.ReverseEnumMap;
  */
 public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 
+	/** The UNDEFINED Error. */
 	UNDEFINED("000", "Undefined error."),
-	/** 4xx errors caused by incomming request */
+	/** 4xx errors caused by incoming request */
 	/** The bad request. */
 	BAD_REQUEST("400", "Bad request. The incoming request could not be understood due to malformed syntax."),
 	/** The SERVICE_NOT_FOUND. */
@@ -165,8 +166,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The error text. */
 	private String errorText;
 
-	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, SCMPError> reverseMap = new ReverseEnumMap<String, SCMPError>(SCMPError.class);
+	/** The REVERSE_MAP, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPError> REVERSE_MAP = new ReverseEnumMap<String, SCMPError>(SCMPError.class);
 
 	/**
 	 * Instantiates a new SCMP error code.
@@ -203,6 +204,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	 * Gets the error text plus additional info.
 	 * 
 	 * @param additionalInfo
+	 *            the additional info
 	 * @return error text as string
 	 */
 	public String getErrorText(String additionalInfo) {
@@ -229,7 +231,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	 * @return the SCMP error by code
 	 */
 	public static SCMPError getSCMPErrorByCode(String errorCode) {
-		SCMPError scmpError = reverseMap.get(errorCode);
+		SCMPError scmpError = REVERSE_MAP.get(errorCode);
 		if (scmpError == null) {
 			// errorCode doesn't match to a valid SCMPError
 			return SCMPError.UNDEFINED;

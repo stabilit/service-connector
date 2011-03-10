@@ -109,7 +109,7 @@ public final class AppContext {
 	/** The Constant frameDecoderFactory. */
 	private static final FlyweightFrameDecoderFactory FRAME_DECODER_FACTORY = new FlyweightFrameDecoderFactory();
 	/** The Constant encoderDecoderFactory. */
-	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
+	private static final FlyweightEncoderDecoderFactory ENCODER_DECODER_FACTORY = new FlyweightEncoderDecoderFactory();
 
 	// Registries
 	/** The server registry. */
@@ -185,7 +185,7 @@ public final class AppContext {
 	 * @return the encoder decoder factory
 	 */
 	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
-		return AppContext.encoderDecoderFactory;
+		return AppContext.ENCODER_DECODER_FACTORY;
 	}
 
 	/**

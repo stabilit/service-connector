@@ -26,6 +26,9 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
+/**
+ * The Class CscSubscribeActiveCascClientCallback.
+ */
 public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
@@ -35,8 +38,20 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
+	
+	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 
+	/**
+	 * Instantiates a new csc subscribe active casc client callback.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param request
+	 *            the request
+	 * @param callback
+	 *            the callback
+	 */
 	public CscSubscribeActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
 		this.request = request;
 		this.commandCallback = callback;

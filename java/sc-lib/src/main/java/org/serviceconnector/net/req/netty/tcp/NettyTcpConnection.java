@@ -46,6 +46,11 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
+	 * 
+	 * @param channelFactory
+	 *            the channel factory
+	 * @param timer
+	 *            the timer
 	 */
 	public NettyTcpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		super(channelFactory, timer);

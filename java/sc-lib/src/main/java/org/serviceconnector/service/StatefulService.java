@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ import java.util.List;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 
+/**
+ * The Class StatefulService.
+ */
 public abstract class StatefulService extends Service {
 
 	/** The server index. */
@@ -29,6 +33,14 @@ public abstract class StatefulService extends Service {
 	/** The list of servers. */
 	protected List<StatefulServer> listOfServers;
 
+	/**
+	 * Instantiates a new stateful service.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 */
 	public StatefulService(String name, ServiceType type) {
 		super(name, type);
 		this.serverIndex = 0;

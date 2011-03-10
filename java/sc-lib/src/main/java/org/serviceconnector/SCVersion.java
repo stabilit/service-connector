@@ -67,8 +67,8 @@ public enum SCVersion {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCVersion.class);
 
-	/** The Constant df. */
-	private static final DecimalFormat df = new DecimalFormat("000");
+	/** The Constant REVISION_FORMAT. */
+	private static final DecimalFormat REVISION_FORMAT = new DecimalFormat("000");
 
 	/** The release. */
 	private int release; // e.g : 1
@@ -112,16 +112,16 @@ public enum SCVersion {
 		if (splitted.length != 3) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
 		}
-		int release = Integer.parseInt(splitted[0]);
-		if (this.release != release) {
+		int incomingRelease = Integer.parseInt(splitted[0]);
+		if (this.release != incomingRelease) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_RELEASE_NR, scVersion);
 		}
-		int version = Integer.parseInt(splitted[1]);
-		if (this.version < version) {
+		int incomingVersion = Integer.parseInt(splitted[1]);
+		if (this.version < incomingVersion) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_NR, scVersion);
 		}
-		int revision = Integer.parseInt(splitted[2]);
-		if ((this.version == version) && (this.revision < revision)) {
+		int incomingRevision = Integer.parseInt(splitted[2]);
+		if ((this.version == incomingVersion) && (this.revision < incomingRevision)) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_REVISION_NR, scVersion);
 		}
 		return;
@@ -130,6 +130,6 @@ public enum SCVersion {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return release + "." + version + "-" + df.format(revision);
+		return release + "." + version + "-" + REVISION_FORMAT.format(revision);
 	}
 }

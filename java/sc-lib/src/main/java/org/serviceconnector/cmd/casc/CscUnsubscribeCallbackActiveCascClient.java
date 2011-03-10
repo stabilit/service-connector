@@ -34,10 +34,19 @@ public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallb
 	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
 	/** The cascaded client. */
 	private CascadedClient cascClient;
+	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 	/** The request. */
 	protected IRequest request;
 
+	/**
+	 * Instantiates a new csc unsubscribe callback active casc client.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param callback
+	 *            the callback
+	 */
 	public CscUnsubscribeCallbackActiveCascClient(CascadedClient cascClient, ISubscriptionCallback callback) {
 		this.cascClient = cascClient;
 		this.commandCallback = callback;

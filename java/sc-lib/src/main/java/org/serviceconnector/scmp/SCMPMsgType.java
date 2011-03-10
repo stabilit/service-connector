@@ -98,8 +98,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/** The value. */
 	private String value;
-	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(SCMPMsgType.class);
+	/** The REVERSE_MAP, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPMsgType> REVERSE_MAP = new ReverseEnumMap<String, SCMPMsgType>(SCMPMsgType.class);
 
 	/**
 	 * Instantiates a SCMPMsgType.
@@ -124,7 +124,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	 * @return the msg type as object
 	 */
 	public static SCMPMsgType getMsgType(String messageTypeString) {
-		SCMPMsgType msgType = reverseMap.get(messageTypeString);
+		SCMPMsgType msgType = REVERSE_MAP.get(messageTypeString);
 		if (msgType == null) {
 			// messageTypeString doesn't match to a valid SCMPMsgType
 			return SCMPMsgType.UNDEFINED;

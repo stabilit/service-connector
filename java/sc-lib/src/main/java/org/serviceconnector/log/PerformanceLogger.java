@@ -24,10 +24,10 @@ import org.apache.log4j.Logger;
 /**
  * The Class PerformanceLogger.
  */
-public class PerformanceLogger {
+public final class PerformanceLogger {
 
 	/** The Constant performanceLogger. */
-	private static final Logger performanceLogger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
+	private static final Logger PERFORMANCE_LOGGER = Logger.getLogger(Loggers.PERFORMANCE.getValue());
 	
 	/** The Constant instance. */
 	private static final PerformanceLogger instance = new PerformanceLogger();
@@ -62,7 +62,7 @@ public class PerformanceLogger {
 	 *            the method name
 	 */
 	public synchronized void begin(String className, String methodName) {
-		if (performanceLogger.isTraceEnabled()) {
+		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
 			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 		}
 	}
@@ -76,7 +76,7 @@ public class PerformanceLogger {
 	 *            the method name
 	 */
 	public synchronized void end(String className, String methodName) {
-		if (performanceLogger.isTraceEnabled()) {
+		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
 			PerformanceItem beginItem = this.threadLocal.get();
 			if (beginItem == null) {
 				return;
@@ -89,7 +89,7 @@ public class PerformanceLogger {
 			Formatter format = new Formatter();
 			format.format(END_STR, beginClassName, beginMethodName, className, methodName, String
 					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-			performanceLogger.trace(format.toString());
+			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}
 
@@ -101,7 +101,7 @@ public class PerformanceLogger {
 	 * @return true, if is enabled
 	 */
 	public boolean isEnabled() {
-		return performanceLogger.isTraceEnabled();
+		return PERFORMANCE_LOGGER.isTraceEnabled();
 	}
 
 	/**

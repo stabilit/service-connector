@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
 import java.util.HashMap;
@@ -28,16 +29,14 @@ import org.serviceconnector.web.ctx.WebContext;
 /**
  * The Class WebSessionRegistry.
  */
-public class WebSessionRegistry extends Registry<String, IWebSession> {
+public final class WebSessionRegistry extends Registry<String, IWebSession> {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
-
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();
-
+	/** The web session scheduler. */
 	private ScheduledThreadPoolExecutor webSessionScheduler;
-
 	/** The expiration timeout run. */
 	private WebSessionExpirationTimeoutRun webSessionExpirationTimeoutRun;
 
@@ -104,6 +103,9 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 	/**
 	 * Removes the expired sessions.
+	 * 
+	 * @param timeoutMinutes
+	 *            the timeout minutes
 	 */
 	public synchronized void removeExpiredSessions(int timeoutMinutes) {
 		Object[] sessionKeys = this.getAllSessionKeys();
@@ -118,6 +120,11 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		}
 	}
 
+	/**
+	 * Gets the all session keys.
+	 * 
+	 * @return the all session keys
+	 */
 	public Object[] getAllSessionKeys() {
 		Object[] keys = this.keySetArray();
 		return keys;
@@ -172,97 +179,168 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 			LOGGER.debug("New web session created, id = " + this.sessionId);
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the attribute.
+		 * 
+		 * @param key
+		 *            the key
+		 * @return the attribute {@inheritDoc}
+		 */
 		@Override
 		public Object getAttribute(String key) {
 			return this.attrMap.get(key);
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the attribute.
+		 * 
+		 * @param key
+		 *            the key
+		 * @param value
+		 *            the value {@inheritDoc}
+		 */
 		@Override
 		public void setAttribute(String key, Object value) {
 			this.attrMap.put(key, value);
 
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Removes the attribute.
+		 * 
+		 * @param key
+		 *            the key
+		 * @return the object {@inheritDoc}
+		 */
 		@Override
 		public Object removeAttribute(String key) {
 			return this.attrMap.remove(key);
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the user agent.
+		 * 
+		 * @return the user agent {@inheritDoc}
+		 */
 		@Override
 		public String getUserAgent() {
 			return this.userAgent;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the user agent.
+		 * 
+		 * @param userAgent
+		 *            the new user agent {@inheritDoc}
+		 */
 		@Override
 		public void setUserAgent(String userAgent) {
 			this.userAgent = userAgent;
 		}
 		
-		/** {@inheritDoc} */
+		/**
+		 * Gets the host.
+		 * 
+		 * @return the host {@inheritDoc}
+		 */
 		@Override
 		public String getHost() {
 			return this.host;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the host.
+		 * 
+		 * @param host
+		 *            the new host {@inheritDoc}
+		 */
 		@Override
 		public void setHost(String host) {
 			this.host = host;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the port.
+		 * 
+		 * @return the port {@inheritDoc}
+		 */
 		@Override
 		public int getPort() {
 			return this.port;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the port.
+		 * 
+		 * @param port
+		 *            the new port {@inheritDoc}
+		 */
 		@Override
 		public void setPort(int port) {
 			this.port = port;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the remote host.
+		 * 
+		 * @return the remote host {@inheritDoc}
+		 */
 		@Override
 		public String getRemoteHost() {
 			return this.remoteHost;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the remote host.
+		 * 
+		 * @param remoteHost
+		 *            the new remote host {@inheritDoc}
+		 */
 		@Override
 		public void setRemoteHost(String remoteHost) {
 			this.remoteHost = remoteHost;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the remote port.
+		 * 
+		 * @return the remote port {@inheritDoc}
+		 */
 		@Override
 		public int getRemotePort() {
 			return this.remotePort;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Sets the remote port.
+		 * 
+		 * @param remotePort
+		 *            the new remote port {@inheritDoc}
+		 */
 		@Override
 		public void setRemotePort(int remotePort) {
 			this.remotePort = remotePort;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Gets the session id.
+		 * 
+		 * @return the session id {@inheritDoc}
+		 */
 		@Override
 		public String getSessionId() {
 			return this.sessionId;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Access. {@inheritDoc}
+		 */
 		@Override
 		public void access() {
 			this.accessTimeStamp = System.currentTimeMillis();
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public boolean isExpired(long timeoutMinutes) {
 			long timeoutMillis = timeoutMinutes * 1000 * 60;

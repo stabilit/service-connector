@@ -26,7 +26,6 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
 
-
 /**
  * The Class NettyWebResponse.
  */
@@ -41,7 +40,8 @@ public class NettyWebResponse implements IWebResponse {
 	/** The os. */
 	private ByteArrayOutputStream os;
 
-	CookieEncoder ce = null;
+	/** The ce. */
+	private CookieEncoder ce = null;
 
 	/**
 	 * Instantiates a new netty web response.
@@ -106,6 +106,11 @@ public class NettyWebResponse implements IWebResponse {
 		return response.getStatus() == HttpResponseStatus.FOUND;
 	}
 
+	/**
+	 * Gets the cookie encoder.
+	 * 
+	 * @return the cookie encoder
+	 */
 	public CookieEncoder getCookieEncoder() {
 		return this.ce;
 	}

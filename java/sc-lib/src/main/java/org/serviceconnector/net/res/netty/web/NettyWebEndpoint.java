@@ -30,7 +30,6 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	 * Instantiates a new netty web endpoint.
 	 */
 	public NettyWebEndpoint() {
-		super();
 		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors
 				.newCachedThreadPool());
 	}

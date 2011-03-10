@@ -25,6 +25,9 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
+/**
+ * The Class CscSubscribeInactiveCascClientCallback.
+ */
 public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
@@ -36,6 +39,16 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 	/** The temporary cascaded mask. */
 	private String tmpCscMask;
 
+	/**
+	 * Instantiates a new csc subscribe inactive casc client callback.
+	 * 
+	 * @param commandCallback
+	 *            the command callback
+	 * @param cascClient
+	 *            the casc client
+	 * @param tmpCscMask
+	 *            the tmp csc mask
+	 */
 	public CscSubscribeInactiveCascClientCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient,
 			String tmpCscMask) {
 		this.commandCallback = commandCallback;

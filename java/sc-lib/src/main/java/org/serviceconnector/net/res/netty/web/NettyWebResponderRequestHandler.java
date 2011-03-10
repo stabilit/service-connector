@@ -47,6 +47,9 @@ import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.netty.NettyWebRequest;
 import org.serviceconnector.web.netty.NettyWebResponse;
 
+/**
+ * The Class NettyWebResponderRequestHandler.
+ */
 public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */

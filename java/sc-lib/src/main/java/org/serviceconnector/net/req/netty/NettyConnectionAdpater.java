@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req.netty;
 
 import java.net.InetSocketAddress;
@@ -22,6 +38,9 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
+/**
+ * The Class NettyConnectionAdpater.
+ */
 public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** The Constant LOGGER. */
@@ -53,12 +72,20 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	protected int idleTimeout;
 	/** The timer to observe timeouts, static because should be shared. */
 	protected static Timer timer;
-	/*
+	/**
 	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
 	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
 	 */
 	protected static NioClientSocketChannelFactory channelFactory;
 
+	/**
+	 * Instantiates a new NETTY connection adapter.
+	 * 
+	 * @param channelFactory
+	 *            the channel factory
+	 * @param timer
+	 *            the timer
+	 */
 	public NettyConnectionAdpater(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		this.port = 0;
 		this.host = null;

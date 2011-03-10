@@ -68,6 +68,9 @@ public class Statistics {
 	
 	/**
 	 * Increment total messages.
+	 * 
+	 * @param msgLength
+	 *            the msg length
 	 */
 	public synchronized void incrementTotalMessages(long msgLength) {
 		totalMessages++;
@@ -76,6 +79,9 @@ public class Statistics {
 
 	/**
 	 * Increment cached messages.
+	 * 
+	 * @param msgLength
+	 *            the msg length
 	 */
 	public synchronized void incrementCachedMessages(long msgLength) {
 		cachedMessages++;
@@ -85,6 +91,9 @@ public class Statistics {
 	
 	/**
 	 * Increment cached messages.
+	 * 
+	 * @param msgLength
+	 *            the msg length
 	 */
 	public synchronized void decrementCachedMessages(long msgLength) {
 		cachedMessages--;
@@ -93,6 +102,9 @@ public class Statistics {
 
 	/**
 	 * Increment cached messages.
+	 * 
+	 * @param msgLength
+	 *            the msg length
 	 */
 	public synchronized void incrementCachedMessagesSize(long msgLength) {
 		cachedBytes = cachedBytes + msgLength;
@@ -101,6 +113,9 @@ public class Statistics {
 	
 	/**
 	 * Increment cached messages.
+	 * 
+	 * @param msgLength
+	 *            the msg length
 	 */
 	public synchronized void decrementCachedMessagesSize(long msgLength) {
 		cachedBytes = cachedBytes + msgLength;

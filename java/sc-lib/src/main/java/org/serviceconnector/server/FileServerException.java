@@ -17,11 +17,12 @@
 
 package org.serviceconnector.server;
 
+/**
+ * The Class FileServerException.
+ */
 public class FileServerException extends Exception {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1031464817718308499L;
 
 	/**
@@ -30,6 +31,12 @@ public class FileServerException extends Exception {
 	public FileServerException() {
 	}
 
+	/**
+	 * Instantiates a new file server exception.
+	 * 
+	 * @param msg
+	 *            the msg
+	 */
 	public FileServerException(String msg) {
 		super(msg);
 	}

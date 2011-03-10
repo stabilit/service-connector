@@ -34,8 +34,12 @@ public final class FlyweightFrameDecoderFactory {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(FlyweightFrameDecoderFactory.class);
+	/** The frame decoders. */
 	private static Map<String, IFrameDecoder> frameDecoders;
 
+	/**
+	 * Instantiates a new flyweight frame decoder factory.
+	 */
 	public FlyweightFrameDecoderFactory() {
 		FlyweightFrameDecoderFactory.frameDecoders = new HashMap<String, IFrameDecoder>();
 		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
@@ -60,6 +64,14 @@ public final class FlyweightFrameDecoderFactory {
 		return frameDecoder;
 	}
 
+	/**
+	 * Adds the frame decoder.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param frameDecoder
+	 *            the frame decoder
+	 */
 	private void addFrameDecoder(String key, IFrameDecoder frameDecoder) {
 		FlyweightFrameDecoderFactory.frameDecoders.put(key, frameDecoder);
 	}

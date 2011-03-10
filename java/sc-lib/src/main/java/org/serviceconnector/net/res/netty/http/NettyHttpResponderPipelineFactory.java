@@ -48,7 +48,7 @@ public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyHttpResponderRequestHandler());
 		return pipeline;

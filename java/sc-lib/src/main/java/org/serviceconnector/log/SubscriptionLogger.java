@@ -27,25 +27,20 @@ import org.apache.log4j.Logger;
 public final class SubscriptionLogger {
 
 	/** The Constant subscriptionLogger. */
-	private static final Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-
-	/** The SUBSCRIB e_ str. */
-	private static String SUBSCRIBE_STR = "subscription:%s - subscribing to:%s - with mask:%s";
+	private static final Logger SUBSCRIPTION_LOGGER = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 	
-	/** The CHANG e_ subscrib e_ str. */
-	private static String CHANGE_SUBSCRIBE_STR = "subscription:%s - change subscription to:%s - new mask:%s";
-	
-	/** The UNSUBSCRIB e_ str. */
-	private static String UNSUBSCRIBE_STR = "subscription:%s - unsubscribing from:%s";
-	
-	/** The CREAT e_ subscriptio n_ str. */
-	private static String CREATE_SUBSCRIPTION_STR = "create subscription:%s timeout=%s";
-	
-	/** The DELET e_ subscriptio n_ str. */
-	private static String DELETE_SUBSCRIPTION_STR = "delete subscription:%s";
-	
-	/** The ABOR t_ subscriptio n_ str. */
-	private static String ABORT_SUBSCRIPTION_STR = "abort subscription:%s";
+	/** The subscribe str. */
+	private static String subscribeStr = "subscription:%s - subscribing to:%s - with mask:%s";
+	/** The change subscribe str. */
+	private static String changeSubscribeStr = "subscription:%s - change subscription to:%s - new mask:%s";	
+	/** The unsubscribe str. */
+	private static String unsubscribeStr = "subscription:%s - unsubscribing from:%s";	
+	/** The create subscription str. */
+	private static String createSubscriptionStr = "create subscription:%s timeout=%s";	
+	/** The delete subscription str. */
+	private static String deleteSubscriptionStr = "delete subscription:%s";
+	/** The abort subscription str. */
+	private static String abortSubscriptionStr = "abort subscription:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -64,10 +59,10 @@ public final class SubscriptionLogger {
 	 *            the mask
 	 */
 	public static synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
-			subscriptionLogger.trace(format.toString());
+			format.format(subscribeStr, sessionId, serviceName, mask);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -83,10 +78,10 @@ public final class SubscriptionLogger {
 	 *            the mask
 	 */
 	public static synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
-			subscriptionLogger.trace(format.toString());
+			format.format(changeSubscribeStr, sessionId, serviceName, mask);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -100,10 +95,10 @@ public final class SubscriptionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logUnsubscribe(String serviceName, String sessionId) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
-			subscriptionLogger.trace(format.toString());
+			format.format(unsubscribeStr, sessionId, serviceName);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -114,7 +109,7 @@ public final class SubscriptionLogger {
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
-		return subscriptionLogger.isTraceEnabled();
+		return SUBSCRIPTION_LOGGER.isTraceEnabled();
 	}
 
 	/**
@@ -126,10 +121,10 @@ public final class SubscriptionLogger {
 	 *            the timeout
 	 */
 	public static void logCreateSubscription(String id, double timeout) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(CREATE_SUBSCRIPTION_STR, id, timeout);
-			subscriptionLogger.trace(format.toString());
+			format.format(createSubscriptionStr, id, timeout);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -141,10 +136,10 @@ public final class SubscriptionLogger {
 	 *            the id
 	 */
 	public static void logDeleteSubscription(String id) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(DELETE_SUBSCRIPTION_STR, id);
-			subscriptionLogger.trace(format.toString());
+			format.format(deleteSubscriptionStr, id);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -156,10 +151,10 @@ public final class SubscriptionLogger {
 	 *            the id
 	 */
 	public static void logAbortSubscription(String id) {
-		if (subscriptionLogger.isTraceEnabled()) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(ABORT_SUBSCRIPTION_STR, id);
-			subscriptionLogger.trace(format.toString());
+			format.format(abortSubscriptionStr, id);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
@@ -171,8 +166,8 @@ public final class SubscriptionLogger {
 	 *            the message
 	 */
 	public static void warn(String message) {
-		if (subscriptionLogger.isEnabledFor(Level.WARN)) {
-			subscriptionLogger.warn(message);
+		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.WARN)) {
+			SUBSCRIPTION_LOGGER.warn(message);
 		}
 	}
 	
@@ -183,8 +178,8 @@ public final class SubscriptionLogger {
 	 *            the message
 	 */
 	public static void debug(String message) {
-		if (subscriptionLogger.isEnabledFor(Level.DEBUG)) {
-			subscriptionLogger.debug(message);
+		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.DEBUG)) {
+			SUBSCRIPTION_LOGGER.debug(message);
 		}
 	}
 }

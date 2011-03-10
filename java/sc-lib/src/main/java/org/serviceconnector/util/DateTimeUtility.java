@@ -36,6 +36,7 @@ public final class DateTimeUtility {
 
 	/** The Constant SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
+	/** The Constant SDFUTC. */
 	private static final SimpleDateFormat SDFUTC = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME_UTC);
 
 	static {

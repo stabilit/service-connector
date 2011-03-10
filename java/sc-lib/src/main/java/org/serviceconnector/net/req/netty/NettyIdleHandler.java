@@ -40,13 +40,22 @@ public class NettyIdleHandler extends IdleStateHandler {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyIdleHandler.class);
 
+	/** The connection context. */
 	private ConnectionContext connectionContext;
 
 	/**
+	 * Instantiates a new netty idle handler.
+	 * 
+	 * @param connectionContext
+	 *            the connection context
 	 * @param timer
+	 *            the timer
 	 * @param readerIdleTimeSeconds
+	 *            the reader idle time seconds
 	 * @param writerIdleTimeSeconds
+	 *            the writer idle time seconds
 	 * @param allIdleTimeSeconds
+	 *            the all idle time seconds
 	 */
 	public NettyIdleHandler(ConnectionContext connectionContext, Timer timer, int readerIdleTimeSeconds,
 			int writerIdleTimeSeconds, int allIdleTimeSeconds) {

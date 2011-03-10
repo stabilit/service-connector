@@ -35,7 +35,25 @@ public interface IFrameDecoder {
 	 */
 	public int parseFrameSize(byte[] buffer) throws Exception;
 
+	/**
+	 * Parses the message size.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @return the int
+	 * @throws Exception
+	 *             the exception
+	 */
 	public int parseMessageSize(byte[] buffer) throws Exception;
 	
+	/**
+	 * Parses the header size.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @return the int
+	 * @throws Exception
+	 *             the exception
+	 */
 	public int parseHeaderSize(byte[] buffer) throws Exception;
 }

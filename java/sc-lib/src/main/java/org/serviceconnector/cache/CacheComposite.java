@@ -93,8 +93,8 @@ public class CacheComposite implements Serializable {
 	private long loadingTimeout;
 
 	/** The header containing any header attributes of initial (first) scmp message. */
-	private Map<String, String> header; 
-	
+	private Map<String, String> header;
+
 	/**
 	 * Instantiates a new SCMP cache root.
 	 */
@@ -331,17 +331,18 @@ public class CacheComposite implements Serializable {
 
 	/**
 	 * Gets the header as an instance of unmodifiable map.
-	 *
+	 * 
 	 * @return the header
 	 */
 	public Map<String, String> getHeader() {
 		return Collections.unmodifiableMap(this.header);
 	}
-	
+
 	/**
 	 * Clear the actual header and puts all header attributes from parameter instance.
-	 *
-	 * @param header the header
+	 * 
+	 * @param header
+	 *            the header
 	 */
 	public void setHeader(Map<String, String> header) {
 		if (header == null) {
@@ -350,7 +351,7 @@ public class CacheComposite implements Serializable {
 		this.header.clear();
 		synchronized (this.header) {
 			// putAll, but don't use hashMap putAll method, which throws NullPointerException if value is not set
-			for(Entry<String, String> entry : header.entrySet()) {
+			for (Entry<String, String> entry : header.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (value == null) {
@@ -358,23 +359,24 @@ public class CacheComposite implements Serializable {
 					value = "";
 				}
 				this.header.put(key, value);
-			}		
+			}
 		}
 	}
-	
-    /**
-     * Write composite header to scmp message instance (header)
-     * Note: Do not assign the header instance, assign each attribute, otherwise
-     * the header instance will be changed by the scmp message
-     *
-     * @param message the message
-     */
-    public synchronized void writeHeaderToMessage(SCMPMessage message) {
-    	for(Entry<String, String> entry : this.header.entrySet()) {
-    		message.setHeader(entry.getKey(), entry.getValue());
-    	}
-    }
-	
+
+	/**
+	 * Write composite header to scmp message instance (header).
+	 * Note: Do not assign the header instance, assign each attribute, otherwise
+	 * the header instance will be changed by the scmp message
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public synchronized void writeHeaderToMessage(SCMPMessage message) {
+		for (Entry<String, String> entry : this.header.entrySet()) {
+			message.setHeader(entry.getKey(), entry.getValue());
+		}
+	}
+
 	/**
 	 * Checks if is expired.
 	 * 

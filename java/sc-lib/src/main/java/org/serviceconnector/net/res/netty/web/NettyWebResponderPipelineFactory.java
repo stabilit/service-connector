@@ -26,7 +26,9 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.Constants;
 
-
+/**
+ * A factory for creating NettyWebResponderPipeline objects.
+ */
 public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant LOGGER. */
@@ -43,7 +45,7 @@ public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory 
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyWebResponderRequestHandler());
 		return pipeline;

@@ -22,10 +22,10 @@ import org.apache.log4j.Logger;
 /**
  * The Class CacheLogger.
  */
-public class CacheLogger {
+public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
-	private static final Logger cacheLogger = Logger.getLogger(Loggers.CACHE.getValue());
+	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
 
 	/**
 	 * Private constructor for singleton use.
@@ -39,7 +39,7 @@ public class CacheLogger {
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
-		return cacheLogger.isTraceEnabled();
+		return CACHE_LOGGER.isTraceEnabled();
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class CacheLogger {
 	 *            the message
 	 */
 	public static void debug(String message) {
-		if (cacheLogger.isDebugEnabled()) {
-			cacheLogger.debug(message);
+		if (CACHE_LOGGER.isDebugEnabled()) {
+			CACHE_LOGGER.debug(message);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class CacheLogger {
 	 *            the message
 	 */
 	public static void warn(String message) {
-		if (cacheLogger.isEnabledFor(Level.WARN)) {
-			cacheLogger.warn(message);
+		if (CACHE_LOGGER.isEnabledFor(Level.WARN)) {
+			CACHE_LOGGER.warn(message);
 		}
 	}
 
@@ -73,8 +73,8 @@ public class CacheLogger {
 	 *            the message
 	 */
 	public static void info(String message) {
-		if (cacheLogger.isEnabledFor(Level.INFO)) {
-			cacheLogger.info(message);
+		if (CACHE_LOGGER.isEnabledFor(Level.INFO)) {
+			CACHE_LOGGER.info(message);
 		}
 	}
 
@@ -85,8 +85,8 @@ public class CacheLogger {
 	 *            the message
 	 */
 	public static void error(String message) {
-		if (cacheLogger.isEnabledFor(Level.ERROR)) {
-			cacheLogger.error(message);
+		if (CACHE_LOGGER.isEnabledFor(Level.ERROR)) {
+			CACHE_LOGGER.error(message);
 		}
 	}
 
@@ -99,8 +99,8 @@ public class CacheLogger {
 	 *            the e
 	 */
 	public static void error(String message, Exception e) {
-		if (cacheLogger.isEnabledFor(Level.ERROR)) {
-			cacheLogger.error(message, e);
+		if (CACHE_LOGGER.isEnabledFor(Level.ERROR)) {
+			CACHE_LOGGER.error(message, e);
 		}
 	}
 }

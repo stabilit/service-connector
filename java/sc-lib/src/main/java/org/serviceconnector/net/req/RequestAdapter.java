@@ -42,6 +42,11 @@ public abstract class RequestAdapter implements IRequest {
 
 	/**
 	 * Instantiates a new request adapter.
+	 * 
+	 * @param localAddress
+	 *            the local address
+	 * @param remoteAddress
+	 *            the remote address
 	 */
 	public RequestAdapter(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		this.localSocketAddress = localAddress;
