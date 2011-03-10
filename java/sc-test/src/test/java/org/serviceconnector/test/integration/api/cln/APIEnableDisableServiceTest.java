@@ -35,7 +35,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	public void t01_checkNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
+		Assert.assertTrue("Service is disabled ",client.isServiceEnabled("notExistingService"));
 	}
 
 	/**
