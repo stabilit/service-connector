@@ -234,8 +234,8 @@ public class FileServer extends Server {
 			throws Exception {
 		HttpURLConnection httpCon = null;
 		String urlPath = URLUtility.makePath(path, listScriptName);
-		urlPath += "?" + Constants.UPLOAD_SERVICE_PARAM_NAME + "=" + serviceName;
-		URL url = new URL("http", this.remoteNodeConfiguration.getHost(), this.remoteNodeConfiguration.getPort(), urlPath);
+		urlPath += Constants.QUESTION_MARK + Constants.UPLOAD_SERVICE_PARAM_NAME + Constants.EQUAL_SIGN + serviceName;
+		URL url = new URL(Constants.HTTP, this.remoteNodeConfiguration.getHost(), this.remoteNodeConfiguration.getPort(), urlPath);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);
@@ -350,16 +350,16 @@ public class FileServer extends Server {
 			logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
 		}
 		String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
-		URL url = new URL("http", this.getHost(), this.getPortNr(), urlPath);
+		URL url = new URL(Constants.HTTP, this.getHost(), this.getPortNr(), urlPath);
 		StringBuilder sb = new StringBuilder();
 		sb.append(url.toString());
-		sb.append("?");
+		sb.append(Constants.QUESTION_MARK);
 		sb.append(Constants.UPLOAD_FILE_PARAM_NAME);
-		sb.append("=");
+		sb.append(Constants.EQUAL_SIGN);
 		sb.append(logsFileName);
-		sb.append("&");
+		sb.append(Constants.AMPERSAND_SIGN);
 		sb.append(Constants.UPLOAD_SERVICE_PARAM_NAME);
-		sb.append("=");
+		sb.append(Constants.EQUAL_SIGN);
 		sb.append(serviceName);
 		uploadCurrentLogFilesUsingStream(sb.toString());
 		return logsFileName;
@@ -495,7 +495,7 @@ public class FileServer extends Server {
 	public void downloadAndReplace(FileService fileService, String remoteFile, File dstFile) throws Exception {
 		String path = fileService.getPath();
 		String urlPath = URLUtility.makePath(path, remoteFile);
-		URL downloadURL = new URL("http", this.getHost(), this.getPortNr(), urlPath);
+		URL downloadURL = new URL(Constants.HTTP, this.getHost(), this.getPortNr(), urlPath);
 		FileOutputStream fos = new FileOutputStream(dstFile);
 		HttpURLConnection httpCon = (HttpURLConnection) downloadURL.openConnection();
 		httpCon.connect();

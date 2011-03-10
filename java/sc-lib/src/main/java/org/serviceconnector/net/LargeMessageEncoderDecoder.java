@@ -142,7 +142,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (body instanceof InputStream) {
 					InputStream inStream = (InputStream) body;
-					byte[] buffer = new byte[Constants.MAX_MESSAGE_SIZE];
+					byte[] buffer = new byte[scmpMsg.getPartSize()];
 					int bodyLength = inStream.read(buffer);
 					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString());
