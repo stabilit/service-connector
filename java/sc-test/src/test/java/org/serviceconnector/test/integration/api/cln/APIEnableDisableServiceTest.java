@@ -29,13 +29,13 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 
 	/**
 	 * Description: check non-existing service<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: passes
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t01_checkNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertTrue("Service is disabled ",client.isServiceEnabled("notExistingService"));
+		Assert.assertFalse("Service is existing ",client.isServiceEnabled("notExistingService"));
 	}
 
 	/**
