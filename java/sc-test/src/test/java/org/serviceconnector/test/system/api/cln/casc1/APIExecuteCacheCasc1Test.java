@@ -179,7 +179,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	public void t07_cacheLargeMessage() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
@@ -216,7 +216,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		Thread.sleep(1000);
 		{ // first time
 			String largeMessage = TestUtil.getLargeString();
@@ -255,7 +255,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
 		SCMessage response = null;
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
@@ -269,7 +269,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("163", inspectResponse.get("cacheSize"));
+		Assert.assertEquals("52", inspectResponse.get("cacheSize"));
 		request.setData("cacheFor1Hour");
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
@@ -278,8 +278,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("163", inspectResponse.get("cacheSize"));
-
+		Assert.assertEquals("52", inspectResponse.get("cacheSize"));
 		sessionService1.deleteSession();
 	}
 
@@ -500,7 +499,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	public void t14_2ClientsLargeMessage() throws Exception {
 		String largeMessage = TestUtil.getLargeString();
 		SCMessage request = new SCMessage();
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		request.setCompressed(false);
 		SCMessage response = null;
 		// session service starts storing large message with cacheId 700

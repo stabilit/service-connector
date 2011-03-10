@@ -156,8 +156,8 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		ByteArrayInputStream in = new ByteArrayInputStream(largeString.getBytes());
 		clnExecuteCall.setRequestBody(in);
 		TestCallback cbk = new TestCallback(false);
-		clnExecuteCall.invoke(cbk, 3000);
-		SCMPMessage scmpReply = cbk.getMessageSync(3000);
+		clnExecuteCall.invoke(cbk, 300000);
+		SCMPMessage scmpReply = cbk.getMessageSync(300000);
 		Assert.assertEquals(new String(largeString.getBytes()), new String((byte[]) scmpReply.getBody()));
 	}
 

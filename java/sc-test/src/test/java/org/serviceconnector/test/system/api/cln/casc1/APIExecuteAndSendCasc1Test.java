@@ -98,7 +98,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -125,7 +125,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		request.setPartSize(60 << 10); // 64KB
+		request.setPartSize(1 << 16); // 64KB
 		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
