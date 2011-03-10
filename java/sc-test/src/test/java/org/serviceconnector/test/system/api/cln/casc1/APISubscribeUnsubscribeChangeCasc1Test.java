@@ -23,9 +23,11 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
@@ -49,7 +51,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
-	
+
 		// need to have a server serving 3 sessions here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
@@ -58,10 +60,10 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
-	
+
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		APISystemSuperPublishClientTest.setUp2CascadedServiceConnectorAndServer();
-	
+
 		// need to have a server serving 3 sessions here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
@@ -602,4 +604,37 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		Assert.assertNull("the session ID is not null)", publishService.getSessionId());
 	}
 
+	/**
+	 * Description: two clients subscribe to a message queue, the server gets destroyed<br>
+	 * Expectation: clients get a not found error, passes
+	 */
+	@Test
+	public void t95_TwoSubscribersServerGetsDestroyed() throws Exception {
+		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
+		SCPublishService service2 = client2.newPublishService(TestConstants.pubServiceName1);
+
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
+		subMsgRequest.setNoDataIntervalSeconds(10);
+
+		MsgCallback cbk1 = new MsgCallback(service1);
+		MsgCallback cbk2 = new MsgCallback(service2);
+
+		subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
+		subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
+
+		// destroy the server
+		SystemSuperTest.ctrl.stopServerEnvironment(SystemSuperTest.srvCtxs);
+		cbk1.waitForMessage(2);
+		cbk2.waitForMessage(2);
+
+		Assert.assertFalse("service1 is still active", service1.isActive());
+		Assert.assertFalse("service2 is still active", service2.isActive());
+		client2.detach();
+	}
 }

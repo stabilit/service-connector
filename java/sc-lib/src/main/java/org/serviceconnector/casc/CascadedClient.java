@@ -302,10 +302,10 @@ public class CascadedClient {
 		this.destroyed = true;
 		this.subscribed = false;
 		for (String clientSubscriptionId : this.clientSubscriptionIds.keySet()) {
-			// unsubscribe from queue
-			this.publishService.getMessageQueue().unsubscribe(clientSubscriptionId);
 			// delete all client subscriptions
 			AppContext.getSubscriptionRegistry().removeSubscription(clientSubscriptionId);
+			// unsubscribe from queue
+			this.publishService.getMessageQueue().unsubscribe(clientSubscriptionId);
 		}
 		this.publishService.getMessageQueue().removeNonreferencedNodes();
 		// release threads waiting for permits, just allow any thread to continue

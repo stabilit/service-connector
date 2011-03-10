@@ -47,6 +47,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			return;
 		}
 		if (reply.isFault()) {
+			this.service.sessionActive = false;
 			// operation failed
 			SCServiceException ex = new SCServiceException("SCPublishService operation failed");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -72,5 +73,12 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			this.messageCallback.receive(replyToClient);
 		}
 		((SCPublishService) this.service).receivePublication();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void receive(Exception ex) {
+		this.service.sessionActive = false;
+		super.receive(ex);
 	}
 }
