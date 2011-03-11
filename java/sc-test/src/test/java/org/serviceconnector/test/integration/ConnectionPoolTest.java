@@ -199,7 +199,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	}
 
 	/**
-	 * Description: Create new ConnectionPool get connection send a message and free connection destroy pool - 10000 times<br>
+	 * Description: Create new ConnectionPool get connection, send a message, free connection, destroy pool - 10000 times<br>
 	 * Expectation: passes
 	 */
 	@Test

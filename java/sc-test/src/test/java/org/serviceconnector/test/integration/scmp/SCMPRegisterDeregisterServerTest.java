@@ -188,7 +188,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 
 		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
-		deRegisterServerCall.invoke(cbk, 2000);
+		deRegisterServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 	}
 
@@ -213,10 +213,10 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 		// first deregister server call
 		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
-		deRegisterServerCall.invoke(cbk, 5000);
+		deRegisterServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 		// second deregister server call
-		deRegisterServerCall.invoke(cbk, 5000);
+		deRegisterServerCall.invoke(cbk, 8000);
 		SCMPMessage reply = cbk.getMessageSync(10000);
 		Assert.assertTrue(reply.isFault());
 		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), reply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
