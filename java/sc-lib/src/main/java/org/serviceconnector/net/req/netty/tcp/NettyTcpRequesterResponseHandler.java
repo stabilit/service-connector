@@ -67,16 +67,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		this.pendingRequest = true;
 	}
 
-	/**
-	 * Message received.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param e
-	 *            the e
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		if (this.pendingRequest) {
@@ -91,16 +81,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
-	/**
-	 * Exception caught.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param e
-	 *            the e
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
@@ -148,9 +128,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			this.socketAddress = socketAddress;
 		}
 
-		/**
-		 * Run. {@inheritDoc}
-		 */
 		@Override
 		public void run() {
 			SCMPMessage ret = null;
@@ -198,9 +175,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			this.exception = exception;
 		}
 
-		/**
-		 * Run. {@inheritDoc}
-		 */
 		@Override
 		public void run() {
 			LOGGER.error("receive exception", exception);

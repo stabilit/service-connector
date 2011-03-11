@@ -29,6 +29,7 @@ import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -340,8 +341,10 @@ public class SCSessionService extends SCService {
 		SCMPEchoCall clnEchoCall = new SCMPEchoCall(this.requester, this.serviceName, this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
+			PerformanceLogger.begin();
 			clnEchoCall.invoke(callback, this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
+			PerformanceLogger.end();
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Refreshing session by echo failed.");
@@ -351,6 +354,7 @@ public class SCSessionService extends SCService {
 			this.messageCallback.receive(ex);
 			return;
 		}
+		PerformanceLogger.end();
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {

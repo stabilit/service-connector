@@ -37,7 +37,7 @@ public final class ConnectionLogger {
 	/** The write string. */
 	private static String writeStr = "%s write to:%s/%s buffer:%s";
 	/** The keep alive string. */
-	private static String keepAliveStr = "%s send keep alive to:%s/%s - idle count: %s";
+	private static String keepAliveStr = "%s send keep alive to:%s/%s - idle count:%s";
 
 	/**
 	 * Private constructor for singleton use.

@@ -49,8 +49,6 @@ import org.serviceconnector.scmp.SCMPPart;
 public class NettyResponderRequestHandlerTask implements IResponderCallback, Runnable {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
-	/** The Constant performanceLogger. */
-	private static final PerformanceLogger PERFORMANCE_LOGGER = PerformanceLogger.getInstance();
 	/** The composite registry. */
 	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
 
@@ -156,9 +154,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			if (Constants.COMMAND_VALIDATION_ENABLED) {
 				command.validate(request);
 			}
-			PERFORMANCE_LOGGER.begin(this.getClass().getName(), "run");
+			PerformanceLogger.beginThreadBound();
 			command.run(request, response, this);
-			PERFORMANCE_LOGGER.end(this.getClass().getName(), "run");
+			PerformanceLogger.endThreadBound();
 		} catch (HasFaultResponseException ex) {
 			// exception carries response inside
 			LOGGER.warn("run " + ex.toString());

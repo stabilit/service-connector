@@ -25,6 +25,7 @@ import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -257,9 +258,11 @@ public class SCPublishService extends SCService {
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
 				this.sessionId);
 		try {
+			PerformanceLogger.begin();
 			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 					* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataIntervalSeconds));
 		} catch (Exception e) {
+			PerformanceLogger.end();
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Receive publication failed.");
@@ -269,6 +272,7 @@ public class SCPublishService extends SCService {
 			this.messageCallback.receive(ex);
 			return;
 		}
+		PerformanceLogger.end();
 	}
 
 	/**

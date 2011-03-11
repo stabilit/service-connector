@@ -20,7 +20,6 @@ import java.util.Formatter;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * The Class PerformanceLogger.
  */
@@ -28,67 +27,91 @@ public final class PerformanceLogger {
 
 	/** The Constant performanceLogger. */
 	private static final Logger PERFORMANCE_LOGGER = Logger.getLogger(Loggers.PERFORMANCE.getValue());
-	
+
 	/** The Constant instance. */
 	private static final PerformanceLogger instance = new PerformanceLogger();
-
 	/** The thread local is needed to save time in running thread. */
-	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
-	
-	/** The EN d_ str. */
-	private static String END_STR = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
+	private static ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
+	/** The performance item. */
+	private static PerformanceItem performanceItem;
+
+	/** The performance string. */
+	private static String perfStr = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
 
 	/**
-	 * Private constructor for singleton use. 
+	 * Private constructor for singleton use.
 	 */
 	private PerformanceLogger() {
 	}
 
 	/**
-	 * Gets the single instance of PerformanceLogger.
-	 * 
-	 * @return single instance of PerformanceLogger
+	 * Begin. Makes performance logger active. The method end stops the measuring and logs the result. Be careful its only working
+	 * within the same thread.
 	 */
-	public static PerformanceLogger getInstance() {
-		return PerformanceLogger.instance;
-	}
-
-	/**
-	 * Begin.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param methodName
-	 *            the method name
-	 */
-	public synchronized void begin(String className, String methodName) {
+	public static synchronized void beginThreadBound() {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
+			PerformanceLogger.threadLocal.set(instance.new PerformanceItem(
+					Thread.currentThread().getStackTrace()[2].getClassName(), Thread.currentThread().getStackTrace()[2]
+							.getMethodName(), System.nanoTime()));
 		}
 	}
 
 	/**
-	 * End.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param methodName
-	 *            the method name
+	 * End. Stops current active performance logger and logs the result. Be careful its only working
+	 * within the same thread.
 	 */
-	public synchronized void end(String className, String methodName) {
+	public static synchronized void endThreadBound() {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			PerformanceItem beginItem = this.threadLocal.get();
+			long endTime = System.nanoTime();
+			PerformanceItem beginItem = PerformanceLogger.threadLocal.get();
 			if (beginItem == null) {
 				return;
 			}
 			String beginMethodName = beginItem.getMethodName();
 			String beginClassName = beginItem.getClassName();
 			long beginTime = beginItem.getTime();
-			long endTime = System.nanoTime();
 
 			Formatter format = new Formatter();
-			format.format(END_STR, beginClassName, beginMethodName, className, methodName, String
-					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
+			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
+					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime) / 1000000),
+					String.valueOf((endTime - beginTime) % 1000000));
+			PERFORMANCE_LOGGER.trace(format.toString());
+			format.close();
+		}
+
+	}
+
+	/**
+	 * Begin. Makes performance logger active. The method end stops the measuring and logs the result. Be careful begin/end is not
+	 * thread
+	 * safe. Coordinating begin and end must be done by the user of the PerformanceLogger.
+	 */
+	public static synchronized void begin() {
+		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
+			PerformanceLogger.performanceItem = instance.new PerformanceItem(Thread.currentThread().getStackTrace()[2]
+					.getClassName(), Thread.currentThread().getStackTrace()[2].getMethodName(), System.nanoTime());
+		}
+	}
+
+	/**
+	 * End. Stops current active performance logger and logs the result. Be careful begin/end is not thread
+	 * safe. Coordinating begin and end must be done by the user of the PerformanceLogger.
+	 */
+	public static synchronized void end() {
+		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
+			long endTime = System.nanoTime();
+			PerformanceItem beginItem = PerformanceLogger.performanceItem;
+			if (beginItem == null) {
+				return;
+			}
+			String beginMethodName = beginItem.getMethodName();
+			String beginClassName = beginItem.getClassName();
+			long beginTime = beginItem.getTime();
+
+			Formatter format = new Formatter();
+			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
+					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime) / 1000000),
+					String.valueOf((endTime - beginTime) % 1000000));
 			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -97,7 +120,7 @@ public final class PerformanceLogger {
 
 	/**
 	 * Checks if is enabled.
-	 *
+	 * 
 	 * @return true, if is enabled
 	 */
 	public boolean isEnabled() {
@@ -108,13 +131,11 @@ public final class PerformanceLogger {
 	 * The Class PerformanceItem.
 	 */
 	private class PerformanceItem {
-		
+
 		/** The class name. */
 		private String className;
-		
 		/** The method name. */
 		private String methodName;
-		
 		/** The time. */
 		private long time;
 
@@ -129,7 +150,6 @@ public final class PerformanceLogger {
 		 *            the time
 		 */
 		public PerformanceItem(String className, String methodName, long time) {
-			super();
 			this.className = className;
 			this.methodName = methodName;
 			this.time = time;
