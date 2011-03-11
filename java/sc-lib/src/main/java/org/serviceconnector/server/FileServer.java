@@ -398,7 +398,7 @@ public class FileServer extends Server {
 				zos.putNextEntry(entry);
 				try {
 					int readBytes = -1;
-					byte[] buffer = new byte[1 << 16];
+					byte[] buffer = new byte[Constants.SIZE_64KB];
 					while ((readBytes = is.read(buffer)) > 0) {
 						zos.write(buffer, 0, readBytes);
 					}

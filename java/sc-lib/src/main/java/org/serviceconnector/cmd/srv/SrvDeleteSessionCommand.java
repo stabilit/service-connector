@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -41,12 +42,6 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SrvDeleteSessionCommand.class);
-
-	/**
-	 * Instantiates a new SrvDeleteSessionCommand.
-	 */
-	public SrvDeleteSessionCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -103,16 +98,19 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(100, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// sessionInfo optional
 			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

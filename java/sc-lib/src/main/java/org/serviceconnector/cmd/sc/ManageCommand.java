@@ -47,12 +47,6 @@ public class ManageCommand extends CommandAdapter {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ManageCommand.class);
 
-	/**
-	 * Instantiates a new manage command.
-	 */
-	public ManageCommand() {
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {

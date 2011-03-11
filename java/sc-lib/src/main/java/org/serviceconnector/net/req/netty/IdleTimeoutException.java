@@ -22,12 +22,21 @@
 package org.serviceconnector.net.req.netty;
 
 /**
+ * The Class IdleTimeoutException.
+ * 
  * @author JTraber
  */
 public class IdleTimeoutException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Instantiates a new idle timeout exception.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public IdleTimeoutException(String message) {
 		super(message);
 	}

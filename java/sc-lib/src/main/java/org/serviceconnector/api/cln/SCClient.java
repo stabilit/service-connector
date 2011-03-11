@@ -133,7 +133,7 @@ public class SCClient {
 		if (host == null) {
 			throw new SCMPValidatorException("Host is missing.");
 		}
-		ValidatorUtility.validateInt(1, this.port, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.port, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
 		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
@@ -247,7 +247,8 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new SCMPValidatorException("Service name must be set.");
 		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility
+				.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCFileService(this, serviceName, this.requester);
 	}
 
@@ -269,7 +270,8 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new SCMPValidatorException("Service name must be set.");
 		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility
+				.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionService(this, serviceName, this.requester);
 	}
 
@@ -291,7 +293,8 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new SCMPValidatorException("Service name must be set.");
 		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility
+				.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 
@@ -588,7 +591,8 @@ public class SCClient {
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCServiceException, SCMPValidatorException {
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+		ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, this.keepAliveIntervalSeconds, Constants.MAX_KPI_VALUE,
+				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}

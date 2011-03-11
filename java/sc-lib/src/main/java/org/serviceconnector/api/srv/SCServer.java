@@ -239,8 +239,9 @@ public class SCServer {
 		if (this.connectionType == null) {
 			throw new SCMPValidatorException("ConnectionType must be set.");
 		}
-		ValidatorUtility.validateInt(1, this.scPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(1, this.listenerPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.scPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.listenerPort, Constants.MAX_PORT_VALUE,
+				SCMPError.HV_WRONG_PORTNR);
 
 		if (this.scPort == this.listenerPort) {
 			throw new SCMPValidatorException("SC port and listener port must not be the same.");

@@ -33,14 +33,14 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
+/**
+ * The Class SrvSubscribeCommand.
+ */
 public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SrvSubscribeCommand.class);
-
-	public SrvSubscribeCommand() {
-	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -117,22 +117,25 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(100, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(SrvSubscribeCommand.this.getKey());

@@ -36,19 +36,14 @@ public class EHCacheImpl implements ICacheImpl {
 
 	/** The sync obj. */
 	private static Object syncObj = new Object();
-
 	/** The manager. */
 	private static CacheManager manager = null;
-
 	/** The config. */
 	private static CacheConfiguration config = null;
-
 	/** The cache. */
 	private Cache cache;
-
 	/** The Constant DEFAULT_CACHE_DISK_PERSISTENT. */
 	public static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
-
 	/** The Constant DEFAULT_CACHE_NAME. */
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 

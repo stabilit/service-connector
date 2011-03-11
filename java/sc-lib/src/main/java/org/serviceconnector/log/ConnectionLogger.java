@@ -19,6 +19,7 @@ package org.serviceconnector.log;
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class ConnectionLogger.
@@ -98,8 +99,8 @@ public final class ConnectionLogger {
 	 */
 	public static synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
-		if (length > 100) {
-			format.format(readStr, className, hostName, String.valueOf(port), new String(data, offset, 100));
+		if (length > Constants.NUMBER_100) {
+			format.format(readStr, className, hostName, String.valueOf(port), new String(data, offset, Constants.NUMBER_100));
 		} else {
 			format.format(readStr, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
@@ -125,8 +126,8 @@ public final class ConnectionLogger {
 	 */
 	public static synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
-		if (length > 100) {
-			format.format(writeStr, className, hostName, String.valueOf(port), new String(data, offset, 100));
+		if (length > Constants.NUMBER_100) {
+			format.format(writeStr, className, hostName, String.valueOf(port), new String(data, offset, Constants.NUMBER_100));
 		} else {
 			format.format(writeStr, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}

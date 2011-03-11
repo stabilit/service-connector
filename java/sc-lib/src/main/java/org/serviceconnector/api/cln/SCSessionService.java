@@ -509,7 +509,7 @@ public class SCSessionService extends SCService {
 	 */
 	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) throws SCMPValidatorException {
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, echoTimeoutSeconds, 3600, SCMPError.HV_WRONG_ECHO_TIMEOUT);
+		ValidatorUtility.validateInt(1, echoTimeoutSeconds, Constants.MAX_ECHO_TIMEOUT_VALUE, SCMPError.HV_WRONG_ECHO_TIMEOUT);
 		this.echoTimeoutSeconds = echoTimeoutSeconds;
 	}
 

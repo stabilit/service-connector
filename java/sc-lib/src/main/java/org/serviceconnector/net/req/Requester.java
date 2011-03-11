@@ -109,6 +109,14 @@ public class Requester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutMillis;
 
+		/**
+		 * Instantiates a new requester scmp callback.
+		 * 
+		 * @param scmpCallback
+		 *            the scmp callback
+		 * @param connectionCtx
+		 *            the connection ctx
+		 */
 		public RequesterSCMPCallback(ISCMPMessageCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
@@ -206,6 +214,9 @@ public class Requester implements IRequester {
 		}
 	}
 
+	/**
+	 * Immediate connect.
+	 */
 	public void immediateConnect() {
 		// set minimum connections to max for initial process
 		this.connectionPool.setMinConnections(this.connectionPool.getMaxConnections());

@@ -20,11 +20,12 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class Statistics.
  */
-public class Statistics {
+public final class Statistics {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
@@ -174,7 +175,7 @@ public class Statistics {
 	public long getRuntimeSinceStartupSeconds() {
 		long current = System.currentTimeMillis();
 		long startup = this.startupDateTime.getTime();
-		return (current - startup) / 1000;
+		return (current - startup) / Constants.SEC_TO_MILLISEC_FACTOR;
 	}
 
 	/**

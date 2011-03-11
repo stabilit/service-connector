@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
 import org.serviceconnector.net.req.IRequest;
@@ -42,12 +43,6 @@ public class EchoCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(EchoCommand.class);
-
-	/**
-	 * Instantiates a new EchoCommand.
-	 */
-	public EchoCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -89,13 +84,13 @@ public class EchoCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 		} catch (HasFaultResponseException ex) {
 			LOGGER.warn("validation error", ex);
 			// needs to set message type at this point

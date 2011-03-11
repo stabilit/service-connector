@@ -37,6 +37,18 @@ public final class Constants {
 	}
 
 	/*
+	 *  Numbers.
+	 */
+	/** The Constant NUMBER_10. */
+	public static final int NUMBER_10 = 10;
+	/** The Constant NUMBER_100. */
+	public static final int NUMBER_100 = 100;
+	/** The Constant NUMBER_1000. */
+	public static final int NUMBER_1000 = 1000;
+	/** The Constant NUMBER_3600. */
+	private static final int NUMBER_3600 = 3600;
+
+	/*
 	 * Various Constants *********
 	 */
 	/**
@@ -49,13 +61,13 @@ public final class Constants {
 	/** The wait time in a loop waiting for a free connection. */
 	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
 	/** Maximum size of a message. Larger data must be broken into parts */
-	public static final int MAX_MESSAGE_SIZE = 7 << 20; // 7MB;
-	/** Maximum port number. */
-	public static final int MAX_PORT_NR = 65535;
+	public static final int MAX_MESSAGE_SIZE = 7340032; // 7 << 20 = 7MB;
 	/** The default SC character set (encoding). */
 	public static final String SC_CHARACTER_SET = "ISO-8859-1";
 	/** Seconds to milliseconds calculation factor. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
+	/** Seconds to milliseconds calculation factor. */
+	public static final int SEC_TO_NANOSSEC_FACTOR = SEC_TO_MILLISEC_FACTOR * SEC_TO_MILLISEC_FACTOR;
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 	/** File qualifier for Http requests. */
@@ -150,9 +162,11 @@ public final class Constants {
 	/** The write PID. */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
 	/** Default message part size. */
-	public static final int DEFAULT_MESSAGE_PART_SIZE = 200 << 10;;
+	public static final int DEFAULT_MESSAGE_PART_SIZE = 204800; // 200 << 10 = 200KB
 	/** Default service state. */
 	public static final boolean DEFAULT_SERVICE_ENABLED = true;
+	/** Size of 64KB. */
+	public static final int SIZE_64KB = 65536; // 1 << 16 = 64KB
 
 	/*
 	 * console command constants *************************
@@ -334,4 +348,38 @@ public final class Constants {
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 	/** The Constant DOT_HEX. */
 	public static final byte DOT_HEX = 0x2E;
+	/** The Constant PERCENT_SIGN. */
+	public static final byte PERCENT_SIGN = 0x25;
+
+	/*
+	 * SCMP validation constants ***********************
+	 */
+	/** The Constant MAX_LENGTH_SERVICENAME. */
+	public static final int MAX_LENGTH_SERVICENAME = 32;
+	/** The Constant MAX_STRING_LENGTH_256. */
+	public static final int MAX_STRING_LENGTH_256 = 256;
+	/** The Constant MIN_PORT_VALUE. */
+	public static final int MIN_PORT_VALUE = 1;
+	/** The Constant MAX_PORT_VALUE. */
+	public static final int MAX_PORT_VALUE = 65535; // 0xFFFF
+	/** The Constant MIN_OTI_VALUE. */
+	public static final int MIN_OTI_VALUE_CLN = 1000;
+	/** The Constant MIN_OTI_VALUE_SRV. */
+	public static final int MIN_OTI_VALUE_SRV = NUMBER_100;
+	/** The Constant MAX_OTI_VALUE. */
+	public static final int MAX_OTI_VALUE = 3600000;
+	/** The Constant MIN_NOI_VALUE. */
+	public static final int MIN_NOI_VALUE = NUMBER_10;
+	/** The Constant MAX_NOI_VALUE. */
+	public static final int MAX_NOI_VALUE = NUMBER_3600;
+	/** The Constant MIN_ECI_VALUE. */
+	public static final int MIN_ECI_VALUE = NUMBER_10;
+	/** The Constant MAX_ECI_VALUE. */
+	public static final int MAX_ECI_VALUE = NUMBER_3600;
+	/** The Constant MIN_KPI_VALUE. */
+	public static final int MIN_KPI_VALUE = 0;
+	/** The Constant MAX_KPI_VALUE. */
+	public static final int MAX_KPI_VALUE = NUMBER_3600;
+	/** The Constant MAX_ECHO_TIMEOUT_VALUE. */
+	public static final int MAX_ECHO_TIMEOUT_VALUE = NUMBER_3600;
 }

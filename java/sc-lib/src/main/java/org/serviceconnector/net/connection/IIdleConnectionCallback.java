@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,18 +13,21 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.connection;
 
 /**
+ * The Interface IIdleConnectionCallback.
+ * 
  * @author JTraber
- *
  */
 public interface IIdleConnectionCallback {
 	
+	/**
+	 * Connection idle.
+	 * 
+	 * @param connection
+	 *            the connection
+	 */
 	public abstract void connectionIdle(IConnection connection);
 }

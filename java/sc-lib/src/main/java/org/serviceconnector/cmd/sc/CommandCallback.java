@@ -37,13 +37,6 @@ public class CommandCallback extends SynchronousCallback {
 
 	/**
 	 * Instantiates a new command callback.
-	 */
-	public CommandCallback() {
-		super();
-	}
-
-	/**
-	 * Instantiates a new command callback.
 	 * 
 	 * @param synchronous
 	 *            the synchronous

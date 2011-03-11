@@ -100,7 +100,7 @@ public class HttpClientUploadUtility {
 	/**
 	 * The Class UploadRunnable. Needs to be a separate thread if UI wants show a progress bar.
 	 */
-	public class UploadRunnable implements Callable<Integer> {
+	public final class UploadRunnable implements Callable<Integer> {
 		
 		/** The cbb. */
 		private CircularByteBuffer cbb;

@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -40,12 +41,6 @@ public class PublishCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(PublishCommand.class);
-
-	/**
-	 * Instantiates a new PublishCommand.
-	 */
-	public PublishCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -91,13 +86,13 @@ public class PublishCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// message info optional
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

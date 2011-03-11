@@ -26,7 +26,7 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 /**
  * The Class WebContext.
  */
-public class WebContext {
+public final class WebContext {
 	// Factories
 	/** The loader factory. */
 	private static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();

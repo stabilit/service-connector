@@ -42,6 +42,9 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
+/**
+ * The Class CscSubscribeCommand.
+ */
 public class CscSubscribeCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
@@ -167,28 +170,30 @@ public class CscSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// noDataInterval mandatory
 			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-			ValidatorUtility.validateInt(10, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_NOI_VALUE, noDataIntervalValue, Constants.MAX_NOI_VALUE,
+					SCMPError.HV_WRONG_NODATA_INTERVAL);
 			// sessionInfo is optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 			// cascadedMask
 			String cascadedMask = message.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
-			ValidatorUtility.validateStringLengthTrim(1, cascadedMask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLengthTrim(1, cascadedMask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

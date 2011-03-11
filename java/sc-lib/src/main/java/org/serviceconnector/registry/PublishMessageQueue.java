@@ -48,6 +48,7 @@ public class PublishMessageQueue<E> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(PublishMessageQueue.class);
 
+	/** The timeout scheduler. */
 	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */
 	private LinkedQueue<E> dataQueue;

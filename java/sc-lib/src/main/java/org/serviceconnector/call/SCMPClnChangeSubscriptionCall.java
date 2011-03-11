@@ -55,18 +55,18 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
+	/**
+	 * Instantiates a new sCMP cln change subscription call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPClnChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}
 
-	/**
-	 * Invoke.
-	 * 
-	 * @param scmpCallback
-	 *            the scmp callback
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -74,7 +74,6 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
@@ -118,7 +117,6 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		}
 	}
 
-	/** {@inheritDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);

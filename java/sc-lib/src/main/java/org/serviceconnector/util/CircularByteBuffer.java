@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.BufferOverflowException;
 
+import org.serviceconnector.Constants;
+
 /**
  * Implements the Circular Buffer producer/consumer model for bytes.
  * More information about this class is available from <a target="_top" href=
@@ -511,7 +513,7 @@ public class CircularByteBuffer {
 					}
 				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(Constants.NUMBER_100);
 				} catch (Exception x) {
 					throw new IOException("Blocking read operation interrupted.");
 				}
@@ -584,7 +586,7 @@ public class CircularByteBuffer {
 					}
 				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(Constants.NUMBER_100);
 				} catch (Exception x) {
 					throw new IOException("Blocking read operation interrupted.");
 				}
@@ -654,7 +656,7 @@ public class CircularByteBuffer {
 					}
 				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(Constants.NUMBER_100);
 				} catch (Exception x) {
 					throw new IOException("Blocking read operation interrupted.");
 				}
@@ -794,7 +796,7 @@ public class CircularByteBuffer {
 				}
 				if (len > 0) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(Constants.NUMBER_100);
 					} catch (Exception x) {
 						throw new IOException("Waiting for available space in buffer interrupted.");
 					}
@@ -847,7 +849,7 @@ public class CircularByteBuffer {
 				}
 				if (!written) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(Constants.NUMBER_100);
 					} catch (Exception x) {
 						throw new IOException("Waiting for available space in buffer interrupted.");
 					}

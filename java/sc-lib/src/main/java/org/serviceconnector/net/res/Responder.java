@@ -41,6 +41,12 @@ public class Responder implements IResponder {
 	/** The endpoint connection. */
 	private List<IEndpoint> endpoints;
 
+	/**
+	 * Instantiates a new responder.
+	 * 
+	 * @param listenerConfig
+	 *            the listener config
+	 */
 	public Responder(ListenerConfiguration listenerConfig) {
 		this.listenerConfig = listenerConfig;
 		this.endpoints = new ArrayList<IEndpoint>();

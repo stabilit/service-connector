@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.sc;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ListenerConfiguration;
@@ -52,12 +53,6 @@ public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(RegisterServerCommand.class);
-
-	/**
-	 * Instantiates a new RegisterServerCommand.
-	 */
-	public RegisterServerCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -149,7 +144,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
@@ -169,10 +165,11 @@ public class RegisterServerCommand extends CommandAdapter {
 			}
 			// portNr - portNr >= 1 && portNr <= 0xFFFF mandatory
 			String portNr = message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-			ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+			ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, portNr, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
 			// keepAliveInterval mandatory
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-			ValidatorUtility.validateInt(0, kpi, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, kpi, Constants.MAX_KPI_VALUE,
+					SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

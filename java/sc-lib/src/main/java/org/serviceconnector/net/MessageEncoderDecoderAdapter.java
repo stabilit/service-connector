@@ -49,13 +49,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(MessageEncoderDecoderAdapter.class);
-
-	/** The df msg size. */
-	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
-
-	/** The df header size. */
-	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
-
+	/** The Constant FORMAT_MSG_SIZE_IN_HEADER. */
+	private static final DecimalFormat FORMAT_MSG_SIZE_IN_HEADER = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
+	/** The Constant FORMAT_HEADER_SIZE_IN_HEADER. */
+	private static final DecimalFormat FORMAT_HEADER_SIZE_IN_HEADER = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
 	/** The default frame decoder. */
 	protected IFrameDecoder defaultFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 
@@ -206,8 +203,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	 */
 	protected void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
-		bw.write(dfMsgSize.format(messageSize));
-		bw.write(dfHeaderSize.format(headerSize));
+		bw.write(FORMAT_MSG_SIZE_IN_HEADER.format(messageSize));
+		bw.write(FORMAT_HEADER_SIZE_IN_HEADER.format(headerSize));
 		bw.write(Constants.BLANK_SIGN);
 		bw.write(SCMPMessage.SCMP_VERSION.getReleaseNumber());
 		bw.write(Constants.DOT_HEX);

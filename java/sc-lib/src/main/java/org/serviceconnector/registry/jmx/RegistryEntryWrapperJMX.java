@@ -30,12 +30,10 @@ public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(RegistryEntryWrapperJMX.class);
-	
 	/** The map bean. */
-	Object obj;
-
+	private Object obj;
 	/** The registry key. */
-	String registryKey;
+	private String registryKey;
 
 	/**
 	 * Instantiates a new RegistryEntryWrapperJMX.

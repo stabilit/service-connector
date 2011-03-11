@@ -51,6 +51,14 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
+	/**
+	 * Instantiates a new sCMP echo call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPEchoCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}

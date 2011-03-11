@@ -236,7 +236,7 @@ public class SCMgmtClient extends SCClient {
 		this.manageCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, urlString);
 		try {
 			// sleep to assure kill is sent
-			Thread.sleep(1000);
+			Thread.sleep(Constants.NUMBER_1000);
 		} catch (Exception e) {
 			// ignore exception
 			LOGGER.trace("Kill SC failed.", e);

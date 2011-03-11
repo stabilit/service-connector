@@ -17,6 +17,7 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -56,7 +57,7 @@ public class SubscriptionMask {
 			return false;
 		}
 		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
-			if (msgMaskByte[byteIndex] == 0x25 || mask[byteIndex] == 0x25) {
+			if (msgMaskByte[byteIndex] == Constants.PERCENT_SIGN || mask[byteIndex] == Constants.PERCENT_SIGN) {
 				continue;
 			}
 			if (mask[byteIndex] != msgMaskByte[byteIndex]) {
@@ -66,6 +67,11 @@ public class SubscriptionMask {
 		return true;
 	}
 
+	/**
+	 * Gets the value.
+	 * 
+	 * @return the value
+	 */
 	public String getValue() {
 		return new String(this.mask);
 	}
@@ -89,13 +95,13 @@ public class SubscriptionMask {
 		}
 
 		for (int byteIndex = 0; byteIndex < baseMask.length; byteIndex++) {
-			if (baseMask[byteIndex] == 0x25) {
+			if (baseMask[byteIndex] == Constants.PERCENT_SIGN) {
 				// mask contains % on this position continue
 				continue;
 			}
 			if (baseMask[byteIndex] != newMask[byteIndex]) {
 				// mask contains a different sign on this position put % instead
-				baseMask[byteIndex] = 0x25;
+				baseMask[byteIndex] = Constants.PERCENT_SIGN;
 			}
 		}
 		return baseMask;

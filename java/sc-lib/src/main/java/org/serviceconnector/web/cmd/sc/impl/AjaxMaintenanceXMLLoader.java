@@ -84,7 +84,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		if ("sc_dump_list".equals(action)) {
 			loadDumpListBody(writer, request);
 			return;
-		}			
+		}
 		throw new InvalidParameterException("action parameter is invalid or unknown (action=" + action + ")");
 	}
 
@@ -113,7 +113,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 			FileServer fileServer = fileService.getServer();
 			try {
 				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
-						serviceName, 10);
+						serviceName, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 				Object body = reply.getBody();
 				if (body != null && body instanceof byte[]) {
 					String sBody = new String((byte[]) body);
@@ -123,7 +123,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 						writer.writeStartElement("file");
 						String file = files[i];
 						if (file != null) {
-						    writer.writeCData(files[i]);
+							writer.writeCData(files[i]);
 						}
 						writer.writeEndElement();
 					}
@@ -157,8 +157,8 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 						if (files[i].isFile()) {
 							writer.writeStartElement("file");
 							String name = files[i].getName();
-							if (name != null) {									
-							   writer.writeCData(name);
+							if (name != null) {
+								writer.writeCData(name);
 							}
 							writer.writeEndElement(); // close file tag
 						}
@@ -195,7 +195,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 			FileServer fileServer = fileService.getServer();
 			try {
 				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
-						serviceName, 10);
+						serviceName, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 				Object body = reply.getBody();
 				if (body != null && body instanceof byte[]) {
 					String sBody = new String((byte[]) body);
@@ -204,7 +204,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 					for (int i = 0; i < files.length; i++) {
 						String fileName = files[i];
 						if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
-							writer.writeStartElement("file");								
+							writer.writeStartElement("file");
 							writer.writeCData(fileName);
 							writer.writeEndElement();
 						}
@@ -259,7 +259,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("dumplist");
 		writer.writeStartElement("path");
 		if (dumpPath != null) {
-		   writer.writeCData(dumpPath);
+			writer.writeCData(dumpPath);
 		}
 		writer.writeEndElement(); // close path tag
 		if (files != null) {
@@ -270,7 +270,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 					writer.writeStartElement("name");
 					String name = files[i].getName();
 					if (name != null) {
-					   writer.writeCData(name);
+						writer.writeCData(name);
 					}
 					writer.writeEndElement(); // close name tag
 					writer.writeStartElement("length");

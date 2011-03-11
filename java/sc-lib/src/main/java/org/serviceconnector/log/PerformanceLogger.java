@@ -19,6 +19,7 @@ package org.serviceconnector.log;
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class PerformanceLogger.
@@ -29,7 +30,7 @@ public final class PerformanceLogger {
 	private static final Logger PERFORMANCE_LOGGER = Logger.getLogger(Loggers.PERFORMANCE.getValue());
 
 	/** The Constant instance. */
-	private static final PerformanceLogger instance = new PerformanceLogger();
+	private static final PerformanceLogger INSTANCE = new PerformanceLogger();
 	/** The thread local is needed to save time in running thread. */
 	private static ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
 	/** The performance item. */
@@ -50,7 +51,7 @@ public final class PerformanceLogger {
 	 */
 	public static synchronized void beginThreadBound() {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			PerformanceLogger.threadLocal.set(instance.new PerformanceItem(
+			PerformanceLogger.threadLocal.set(INSTANCE.new PerformanceItem(
 					Thread.currentThread().getStackTrace()[2].getClassName(), Thread.currentThread().getStackTrace()[2]
 							.getMethodName(), System.nanoTime()));
 		}
@@ -73,8 +74,9 @@ public final class PerformanceLogger {
 
 			Formatter format = new Formatter();
 			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
-					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime) / 1000000),
-					String.valueOf((endTime - beginTime) % 1000000));
+					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime)
+							/ Constants.SEC_TO_NANOSSEC_FACTOR), String.valueOf((endTime - beginTime)
+							% Constants.SEC_TO_NANOSSEC_FACTOR));
 			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -88,7 +90,7 @@ public final class PerformanceLogger {
 	 */
 	public static synchronized void begin() {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			PerformanceLogger.performanceItem = instance.new PerformanceItem(Thread.currentThread().getStackTrace()[2]
+			PerformanceLogger.performanceItem = INSTANCE.new PerformanceItem(Thread.currentThread().getStackTrace()[2]
 					.getClassName(), Thread.currentThread().getStackTrace()[2].getMethodName(), System.nanoTime());
 		}
 	}
@@ -110,8 +112,9 @@ public final class PerformanceLogger {
 
 			Formatter format = new Formatter();
 			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
-					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime) / 1000000),
-					String.valueOf((endTime - beginTime) % 1000000));
+					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime)
+							/ Constants.SEC_TO_NANOSSEC_FACTOR), String.valueOf((endTime - beginTime)
+							% Constants.SEC_TO_NANOSSEC_FACTOR));
 			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}

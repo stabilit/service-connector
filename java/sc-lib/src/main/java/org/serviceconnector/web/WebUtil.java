@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
 import java.io.File;
@@ -26,11 +27,16 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * The Class WebUtil.
  */
-public abstract class WebUtil {
+public final class WebUtil {
+
+	/**
+	 * Instantiates a new web util.
+	 */
+	private WebUtil() {
+	}
 
 	/** The Constant XMLSDF. */
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -71,8 +77,9 @@ public abstract class WebUtil {
 
 	/**
 	 * Gets the resource url.
-	 *
-	 * @param name the name
+	 * 
+	 * @param name
+	 *            the name
 	 * @return the resource url
 	 */
 	public static URL getResourceURL(String name) {
@@ -97,7 +104,7 @@ public abstract class WebUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Gets the xML date as string.
 	 * 

@@ -441,6 +441,11 @@ public class SCRequester implements IRequester {
 		}
 	}
 
+	/**
+	 * Gets the sCMP msg sequence nr.
+	 * 
+	 * @return the sCMP msg sequence nr
+	 */
 	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
 		return this.msgSequenceNr;
 	}

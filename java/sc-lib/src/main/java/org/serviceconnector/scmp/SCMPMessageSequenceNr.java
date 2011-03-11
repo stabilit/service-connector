@@ -33,10 +33,19 @@ public class SCMPMessageSequenceNr {
 	/** The message sequence number. */
 	private long msgSequenceNr;
 
+	/**
+	 * Instantiates a new sCMP message sequence nr.
+	 */
 	public SCMPMessageSequenceNr() {
 		this(1);
 	}
 
+	/**
+	 * Instantiates a new sCMP message sequence nr.
+	 * 
+	 * @param msgSequenceNr
+	 *            the msg sequence nr
+	 */
 	public SCMPMessageSequenceNr(long msgSequenceNr) {
 		this.msgSequenceNr = msgSequenceNr;
 	}

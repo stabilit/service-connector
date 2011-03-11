@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-
 /**
  * Service Connector Message Protocol. Data container for one message.
  */
@@ -29,8 +28,8 @@ public class SCMPKeepAlive extends SCMPMessage {
 		super();
 	}
 
+	@Override
 	public boolean isKeepAlive() {
 		return true;
 	}
-
 }

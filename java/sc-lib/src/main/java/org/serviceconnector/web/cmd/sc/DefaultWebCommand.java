@@ -31,6 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.IWebSession;
@@ -204,7 +205,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void dumpStream(InputStream is, OutputStream os) throws IOException {
-		byte[] buffer = new byte[1 << 16];
+		byte[] buffer = new byte[Constants.SIZE_64KB];
 		int readBytes = -1;
 		while ((readBytes = is.read(buffer)) > 0) {
 			os.write(buffer, 0, readBytes);

@@ -125,6 +125,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		 * @param httpResponse
 		 *            the http response
 		 * @param socketAddress
+		 *            the socket address
 		 */
 		public NettyHttpRequesterResponseHandlerTask(HttpResponse httpResponse, InetSocketAddress socketAddress) {
 			this.httpResponse = httpResponse;

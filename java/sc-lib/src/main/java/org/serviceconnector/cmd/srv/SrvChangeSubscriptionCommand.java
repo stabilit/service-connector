@@ -45,12 +45,6 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SrvChangeSubscriptionCommand.class);
 
-	/**
-	 * Instantiates a new SrvChangeSubscriptionCommand.
-	 */
-	public SrvChangeSubscriptionCommand() {
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -124,25 +118,28 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(100, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// actualMask mandatory
 			String actualMask = message.getHeader(SCMPHeaderAttributeKey.ACTUAL_MASK);
-			ValidatorUtility.validateStringLength(1, actualMask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, actualMask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

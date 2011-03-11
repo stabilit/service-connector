@@ -34,6 +34,13 @@ public class EndpointFactory {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(EndpointFactory.class);
 
+	/**
+	 * Creates a new Endpoint object.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the i endpoint
+	 */
 	public IEndpoint createEndpoint(String key) {
 		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyHttpEndpoint();

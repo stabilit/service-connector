@@ -122,6 +122,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		 * 
 		 * @param channelBuffer
 		 *            the channel buffer
+		 * @param socketAddress
+		 *            the socket address
 		 */
 		public NettyTcpRequesterResponseHandlerTask(ChannelBuffer channelBuffer, InetSocketAddress socketAddress) {
 			this.channelBuffer = channelBuffer;

@@ -31,6 +31,9 @@ public class ServerCommandFactory extends FlyweightCommandFactory {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(ServerCommandFactory.class);
 
+	/**
+	 * Instantiates a new server command factory.
+	 */
 	public ServerCommandFactory() {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
 		this.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);

@@ -23,12 +23,18 @@ import org.apache.log4j.Logger;
  * 
  * @author JTraber
  */
-public class CommandLineUtil {
+public final class CommandLineUtil {
+
+	/**
+	 * Instantiates a new command line util.
+	 */
+	private CommandLineUtil() {
+	}
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(CommandLineUtil.class);
-	
+
 	/**
 	 * Gets the arguments.
 	 * 

@@ -23,10 +23,10 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -82,6 +82,15 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
+	/**
+	 * Gets the subscription by id.
+	 * 
+	 * @param subscriptionId
+	 *            the subscription id
+	 * @return the subscription by id
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected Subscription getSubscriptionById(String subscriptionId) throws SCMPCommandException {
 		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
 

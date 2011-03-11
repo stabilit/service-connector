@@ -58,12 +58,6 @@ public class InspectCommand extends CommandAdapter {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(InspectCommand.class);
 
-	/**
-	 * Instantiates a new InspectCommand.
-	 */
-	public InspectCommand() {
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public final SCMPMsgType getKey() {

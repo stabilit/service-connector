@@ -31,6 +31,7 @@ public class SCMPPart extends SCMPMessage {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPPart.class);
+	/** The poll request. */
 	private boolean pollRequest;
 
 	/**
@@ -40,6 +41,12 @@ public class SCMPPart extends SCMPMessage {
 		this(false);
 	}
 
+	/**
+	 * Instantiates a new sCMP part.
+	 * 
+	 * @param pollRequest
+	 *            the poll request
+	 */
 	public SCMPPart(boolean pollRequest) {
 		this.pollRequest = pollRequest;
 	}

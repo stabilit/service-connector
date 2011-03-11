@@ -44,6 +44,9 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private ScheduledThreadPoolExecutor subscriptionScheduler;
 
+	/**
+	 * Instantiates a new subscription registry.
+	 */
 	public SubscriptionRegistry() {
 		this.subscriptionScheduler = new ScheduledThreadPoolExecutor(1);
 	}

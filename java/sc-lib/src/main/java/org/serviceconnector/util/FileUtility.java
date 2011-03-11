@@ -35,6 +35,7 @@ import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
@@ -210,11 +211,11 @@ public final class FileUtility {
 		if (exists(filename)) {
 			return;
 		}
-		for (int i = 0; i < (nrSeconds * 10); i++) {
+		for (int i = 0; i < (nrSeconds * Constants.NUMBER_10); i++) {
 			if (exists(filename)) {
 				return;
 			}
-			Thread.sleep(100);
+			Thread.sleep(Constants.NUMBER_100);
 		}
 		throw new TimeoutException("File:" + filename + " does not exist or unlocked after " + nrSeconds + " seconds timeout.");
 	}
@@ -231,11 +232,11 @@ public final class FileUtility {
 		if (exists(filename) && isFileLocked(filename)) {
 			return;
 		}
-		for (int i = 0; i < (nrSeconds * 10); i++) {
+		for (int i = 0; i < (nrSeconds * Constants.NUMBER_10); i++) {
 			if (exists(filename) && isFileLocked(filename)) {
 				return;
 			}
-			Thread.sleep(100);
+			Thread.sleep(Constants.NUMBER_100);
 		}
 		throw new TimeoutException("File:" + filename + " does not exist or unlocked after " + nrSeconds + " seconds timeout.");
 	}
@@ -252,11 +253,11 @@ public final class FileUtility {
 		if (notExistsOrUnlocked(filename)) {
 			return;
 		}
-		for (int i = 0; i < (nrSeconds * 10); i++) {
+		for (int i = 0; i < (nrSeconds * Constants.NUMBER_10); i++) {
 			if (notExistsOrUnlocked(filename)) {
 				return;
 			}
-			Thread.sleep(100);
+			Thread.sleep(Constants.NUMBER_100);
 		}
 		throw new TimeoutException("File=" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
 	}
@@ -362,7 +363,7 @@ public final class FileUtility {
 	 */
 	public static void readFileToWriter(String filePath, Writer writer) throws IOException {
 		FileReader fr = new FileReader(filePath);
-		char[] buffer = new char[1 << 16];
+		char[] buffer = new char[Constants.SIZE_64KB];
 		int bytesRead = -1;
 		while ((bytesRead = fr.read(buffer)) != -1) {
 			writer.write(buffer, 0, bytesRead);

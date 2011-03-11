@@ -31,6 +31,9 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(ServiceConnectorCommandFactory.class);
 
+	/**
+	 * Instantiates a new service connector command factory.
+	 */
 	public ServiceConnectorCommandFactory() {
 		ICommand attachCommand = new AttachCommand();
 		this.addCommand(attachCommand.getKey(), attachCommand);
