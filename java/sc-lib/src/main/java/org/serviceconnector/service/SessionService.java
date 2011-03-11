@@ -23,7 +23,7 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
-import org.serviceconnector.cmd.sc.ClnCreateSessionCommandCallback;
+import org.serviceconnector.cmd.sc.CreateSessionCommandCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
@@ -61,7 +61,7 @@ public class SessionService extends StatefulService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, ClnCreateSessionCommandCallback callback,
+	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, CreateSessionCommandCallback callback,
 			Session session, int timeoutMillis) throws Exception {
 		int numberOfServer = this.listOfServers.size();
 		if (numberOfServer == 0) {

@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
+import org.serviceconnector.cmd.casc.CommandCascCallback;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
@@ -58,7 +58,7 @@ public class FileUploadCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_FILE_SERVICE:
 			CascadedSC cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
-			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.serverUploadFile(message, callback, oti);
 			return;
 		}

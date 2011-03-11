@@ -32,7 +32,7 @@ import org.serviceconnector.service.SubscriptionMask;
 /**
  * The Class CscChangeSubscriptionCallbackForCasc.
  */
-public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback implements ISubscriptionCallback {
 
 	/** The subscription. */
 	private Subscription cascSCSubscription;

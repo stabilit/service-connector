@@ -23,10 +23,8 @@ package org.serviceconnector.call;
 import java.net.InetAddress;
 
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -46,10 +44,6 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 */
 	public SCMPClnSubscribeCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
-	}
-
-	public SCMPClnSubscribeCall(Requester requester, SCMPMessage msgToSend) {
-		super(requester, msgToSend);
 	}
 
 	/** {@inheritDoc} */

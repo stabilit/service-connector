@@ -42,11 +42,6 @@ public class SCMPCscUnsubscribeCall extends SCMPCallAdapter {
 		super(requester, msgToSend);
 	}
 
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type {@inheritDoc}
-	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_UNSUBSCRIBE;

@@ -41,20 +41,20 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a session means:
+ * The Class CscDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a session means:
  * Free up backend server from session and delete session entry in SC session registry.
  * 
  * @author JTraber
  */
-public class ClnDeleteSessionCommand extends CommandAdapter {
+public class CscDeleteSessionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscDeleteSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
+		return SCMPMsgType.CSC_DELETE_SESSION;
 	}
 
 	/** {@inheritDoc} */

@@ -25,7 +25,7 @@ import org.serviceconnector.service.Subscription;
 /**
  * The Class CscUnsubscribeCallbackForCasc.
  */
-public class CscUnsubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscUnsubscribeCallbackForCasc extends CommandCascCallback implements ISubscriptionCallback {
 
 	/** The subscription. */
 	private Subscription subscription;

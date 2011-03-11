@@ -47,20 +47,20 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
+ * The Class CscExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
  * server. Execute command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
-public class ClnExecuteCommand extends CommandAdapter {
+public class CscExecuteCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnExecuteCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscExecuteCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_EXECUTE;
+		return SCMPMsgType.CSC_EXECUTE;
 	}
 
 	/** {@inheritDoc} */
@@ -93,11 +93,11 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			CacheLogger.debug("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+			CacheLogger.debug("execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is "
 					+ reqMessage.isPollRequest());
-			// try to load response from cache
 			try {
+				// try to load response from cache
 				if (tryLoadingMessageFromCache(request, response, responderCallback, false)) {
 					return;
 				}
@@ -159,7 +159,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			LOGGER.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+			LOGGER.info("execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr());
 			// try to load response from cache
 			try {
@@ -406,5 +406,4 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 		return false; // message not loaded from cache
 	}
-
 }

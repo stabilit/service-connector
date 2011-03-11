@@ -18,7 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
+import org.serviceconnector.cmd.casc.CommandCascCallback;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
@@ -67,7 +67,7 @@ public class EchoCommand extends CommandAdapter {
 		case CASCADED_SESSION_SERVICE:
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.echo(message, callback, oti);
 			return;
 		}

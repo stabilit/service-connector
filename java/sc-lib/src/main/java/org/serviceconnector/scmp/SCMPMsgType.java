@@ -37,10 +37,14 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	MANAGE("MGT"),
 	/** The CLN_CREATE_SESSION. */
 	CLN_CREATE_SESSION("CCS"),
+	/** The CSC_CREATE_SESSION. */
+	CSC_CREATE_SESSION("XCS"),
 	/** The SRV_CREATE_SESSION. */
 	SRV_CREATE_SESSION("SCS"),
 	/** The CLN_DELETE_SESSION. */
 	CLN_DELETE_SESSION("CDS"),
+	/** The CSC_DELETE_SESSION. */
+	CSC_DELETE_SESSION("XDS"),
 	/** The SRV_DELETE_SESSION. */
 	SRV_DELETE_SESSION("SDS"),
 	/** The SRV_ABORT_SESSION. */
@@ -57,6 +61,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	DEREGISTER_SERVER("DRG"),
 	/** The CLN_EXECUTE. */
 	CLN_EXECUTE("CXE"),
+	/** The CSC_EXECUTE. */
+	CSC_EXECUTE("XXE"),
 	/** The SRV_EXECUTE. */
 	SRV_EXECUTE("SXE"),
 	/** The ECHO. */

@@ -18,7 +18,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 /**
  * The Class ClnExecuteCommandCascCallback.
  */
-public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
+public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ClnExecuteCommandCascCallback.class);

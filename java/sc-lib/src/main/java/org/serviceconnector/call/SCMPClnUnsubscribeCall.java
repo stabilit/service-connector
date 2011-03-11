@@ -18,9 +18,7 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -46,10 +44,6 @@ public class SCMPClnUnsubscribeCall extends SCMPCallAdapter {
 	 */
 	public SCMPClnUnsubscribeCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
-	}
-
-	public SCMPClnUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
-		super(requester, msgToSend);
 	}
 
 	/** {@inheritDoc} */

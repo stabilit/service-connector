@@ -16,52 +16,49 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
+import java.net.InetAddress;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPClnDeleteSessionCall. Call deletes a session.
+ * The Class SCMPCscCreateSessionCall. Call tries creating a session to a backend server over a SC.
  * 
  * @author JTraber
  */
-public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
+public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnDeleteSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCscCreateSessionCall.class);
 
 	/**
-	 * Instantiates a new SCMPClnDeleteSessionCall.
+	 * Instantiates a new SCMP csc create session call.
 	 * 
 	 * @param req
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *            the req
+	 * @param messageToForward
+	 *            the message to forward
 	 */
-	public SCMPClnDeleteSessionCall(IRequester req, String serviceName, String sessionId) {
-		super(req, serviceName, sessionId);
+	public SCMPCscCreateSessionCall(IRequester req, SCMPMessage messageToForward) {
+		super(req, messageToForward);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		super.invoke(scmpCallback, timeoutMillis);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
-	}
-
-	/**
-	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
-	 */
-	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			return;
-		}
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+		return SCMPMsgType.CSC_CREATE_SESSION;
 	}
 }

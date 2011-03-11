@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
+import org.serviceconnector.cmd.casc.CommandCascCallback;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -90,12 +90,12 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
 		case CASCADED_FILE_SERVICE:
 			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
-			callback = new ClnCommandCascCallback(request, response, responderCallback);
+			callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
 		case SESSION_SERVICE:
@@ -132,14 +132,14 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		ClnCreateSessionCommandCallback callback = null;
+		CreateSessionCommandCallback callback = null;
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
-			callback = new ClnCreateSessionCommandCallback(request, response, responderCallback, session);
+			callback = new CreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
 				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));

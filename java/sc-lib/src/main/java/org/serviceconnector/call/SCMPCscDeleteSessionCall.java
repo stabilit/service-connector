@@ -18,50 +18,35 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPClnDeleteSessionCall. Call deletes a session.
+ * The Class SCMPCscDeleteSessionCall. Call deletes a session.
  * 
  * @author JTraber
  */
-public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
+public class SCMPCscDeleteSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnDeleteSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCscDeleteSessionCall.class);
 
 	/**
-	 * Instantiates a new SCMPClnDeleteSessionCall.
+	 * Instantiates a new sCMP csc delete session call.
 	 * 
 	 * @param req
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *            the req
+	 * @param receivedMessage
+	 *            the received message
 	 */
-	public SCMPClnDeleteSessionCall(IRequester req, String serviceName, String sessionId) {
-		super(req, serviceName, sessionId);
+	public SCMPCscDeleteSessionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
-	}
-
-	/**
-	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
-	 */
-	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			return;
-		}
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+		return SCMPMsgType.CSC_DELETE_SESSION;
 	}
 }

@@ -44,6 +44,10 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(clnCreateSessionCommand.getKey(), clnCreateSessionCommand);
 		ICommand clnDeleteSessionCommand = new ClnDeleteSessionCommand();
 		this.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
+		ICommand cscCreateSessionCommand = new CscCreateSessionCommand();
+		this.addCommand(cscCreateSessionCommand.getKey(), cscCreateSessionCommand);
+		ICommand cscDeleteSessionCommand = new CscDeleteSessionCommand();
+		this.addCommand(cscDeleteSessionCommand.getKey(), cscDeleteSessionCommand);
 		ICommand registerServerCommand = new RegisterServerCommand();
 		this.addCommand(registerServerCommand.getKey(), registerServerCommand);
 		ICommand checkRegistrationCommand = new CheckRegistrationCommand();
@@ -54,6 +58,8 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnExecuteCommand = new ClnExecuteCommand();
 		this.addCommand(clnExecuteCommand.getKey(), clnExecuteCommand);
+		ICommand cscExecuteCommand = new CscExecuteCommand();
+		this.addCommand(cscExecuteCommand.getKey(), cscExecuteCommand);
 		// publish subscribe commands
 		ICommand clnSubscribeCommand = new ClnSubscribeCommand();
 		this.addCommand(clnSubscribeCommand.getKey(), clnSubscribeCommand);

@@ -32,102 +32,124 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
-import org.serviceconnector.server.IServer;
-import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.CascadedSessionService;
+import org.serviceconnector.service.FileService;
+import org.serviceconnector.service.FileSession;
+import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a session means:
- * Free up backend server from session and delete session entry in SC session registry.
+ * The Class CscCreateSessionCommand. Responsible for validation and execution of cascaded creates session command. Command runs successfully
+ * if backend server accepts clients request and allows creating a session. Session is saved in a session registry of SC.
  * 
  * @author JTraber
  */
-public class ClnDeleteSessionCommand extends CommandAdapter {
+public class CscCreateSessionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscCreateSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_DELETE_SESSION;
+		return SCMPMsgType.CSC_CREATE_SESSION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		String serviceName = reqMessage.getServiceName();
-		// check service is present
+		// check service is present and enabled
 		Service abstractService = this.getService(serviceName);
+		if (abstractService.isEnabled() == false) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
+					+ abstractService.getName() + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+
+		// enhance ipAddressList
+		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
 			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
-			cascadedSC.deleteSession(reqMessage, callback, oti);
+			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
 		case CASCADED_FILE_SERVICE:
 			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
 			callback = new CommandCascCallback(request, response, responderCallback);
-			cascadedSC.deleteSession(reqMessage, callback, oti);
+			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
-		}
-
-		String sessionId = reqMessage.getSessionId();
-		// lookup session and checks properness
-		Session session = this.getSessionById(sessionId);
-		// delete entry from session registry
-		this.sessionRegistry.removeSession(session);
-
-		IServer abstractServer = session.getServer();
-
-		switch (abstractServer.getType()) {
-		case STATEFUL_SERVER:
+		case SESSION_SERVICE:
 			// code for type session service is below switch statement
 			break;
-		case FILE_SERVER:
-			this.sessionRegistry.removeSession(session);
-			((FileServer) abstractServer).removeSession(session);
+		case FILE_SERVICE:
+			FileService fileService = (FileService) abstractService;
+			// create file session
+			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService
+					.getUploadFileScriptName(), fileService.getGetFileListScriptName());
+			fileSession.setService(fileService);
+			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
+			// add server to session
+			fileSession.setServer(fileServer);
+			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
+			// finally add file session to the registry
+			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
 			// reply to client
 			SCMPMessage reply = new SCMPMessage();
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
+			reply.setSessionId(fileSession.getId());
 			response.setSCMP(reply);
 			responderCallback.responseCallback(request, response);
 			return;
-		case CASCADED_SC:
-		case UNDEFINED:
-		default:
-			throw new SCMPCommandException(SCMPError.SC_ERROR, "delete session not allowed for service "
-					+ abstractService.getName());
 		}
-		StatefulServer statefulServer = (StatefulServer) abstractServer;
-		DeleteSessionCommandCallback callback;
-		// free server from session
-		statefulServer.removeSession(session);
+
+		// create session
+		Session session = new Session(sessionInfo, ipAddressList);
+		session.setService(abstractService);
+		session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
+		reqMessage.setSessionId(session.getId());
+		// no need to forward echo attributes
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+
+		// tries allocating a server for this session
+		CreateSessionCommandCallback callback = null;
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
-			callback = new DeleteSessionCommandCallback(request, response, responderCallback, session, statefulServer);
+			callback = new CreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
-				statefulServer.deleteSession(reqMessage, callback, otiOnSCMillis
+				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
-			} catch (ConnectionPoolBusyException ex) {
+			} catch (NoFreeServerException ex) {
+				LOGGER.debug("NoFreeServerException caught in wait mec of create session");
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
-					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					throw ex;
+				}
+			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of create session");
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
+					LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
@@ -142,20 +164,23 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
-		SCMPMessage message = request.getMessage();
 		try {
+			SCMPMessage message = request.getMessage();
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
-			String serviceName = message.getServiceName();
+			String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// sessionId mandatory
-			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			// ipAddressList mandatory
+			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// echoInterval mandatory
+			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+			ValidatorUtility.validateInt(10, echoIntervalValue, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
