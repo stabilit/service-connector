@@ -595,7 +595,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting session failed because of busy connection pool");
 				}
-				SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
+				SessionLogger.logAbortSession(abortMessage.getSessionId());
 			}
 		}
 		this.destroy();

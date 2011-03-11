@@ -166,6 +166,9 @@ public class CscCreateSessionCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
+			// scVersion mandatory
+			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+			SCMPMessage.SC_VERSION.isSupported(scVersion);
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);

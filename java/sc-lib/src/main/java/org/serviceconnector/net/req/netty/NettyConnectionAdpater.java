@@ -189,6 +189,16 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	public void setHost(String host) {
 		this.host = host;
 	}
+	
+	@Override
+	public int getPort() {
+		return port;
+	}
+
+	@Override
+	public String getHost() {
+		return host;
+	}
 
 	/** {@inheritDoc} */
 	@Override

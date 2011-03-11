@@ -17,6 +17,7 @@
 package org.serviceconnector.net.req.netty.tcp;
 
 import java.io.ByteArrayInputStream;
+import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -82,7 +83,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			this.pendingRequest = false;
 			// set up responderRequestHandlerTask to take care of the request
 			NettyTcpRequesterResponseHandlerTask responseHandlerTask = new NettyTcpRequesterResponseHandlerTask((ChannelBuffer) e
-					.getMessage());
+					.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
 			AppContext.getExecutor().submit(responseHandlerTask);
 			return;
 		}
@@ -133,6 +134,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 
 		/** The channel buffer. */
 		private ChannelBuffer channelBuffer;
+		/** The socket address. */
+		private InetSocketAddress socketAddress;
 
 		/**
 		 * Instantiates a new netty tcp requester response handler task.
@@ -140,8 +143,9 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		 * @param channelBuffer
 		 *            the channel buffer
 		 */
-		public NettyTcpRequesterResponseHandlerTask(ChannelBuffer channelBuffer) {
+		public NettyTcpRequesterResponseHandlerTask(ChannelBuffer channelBuffer, InetSocketAddress socketAddress) {
 			this.channelBuffer = channelBuffer;
+			this.socketAddress = socketAddress;
 		}
 
 		/**
@@ -155,7 +159,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				channelBuffer.readBytes(buffer);
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), socketAddress.getHostName(), socketAddress
+							.getPort(), buffer, 0, buffer.length);
 				}
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);

@@ -17,6 +17,7 @@
 package org.serviceconnector.net.req.netty.http;
 
 import java.io.ByteArrayInputStream;
+import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -67,23 +68,13 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		this.pendingRequest = true;
 	}
 
-	/**
-	 * Message received.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param e
-	 *            the e
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			// set up responderRequestHandlerTask to take care of the request
 			NettyHttpRequesterResponseHandlerTask responseHandlerTask = new NettyHttpRequesterResponseHandlerTask((HttpResponse) e
-					.getMessage());
+					.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
 			AppContext.getExecutor().submit(responseHandlerTask);
 			return;
 		}
@@ -91,16 +82,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
-	/**
-	 * Exception caught.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param e
-	 *            the e
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
@@ -135,20 +116,21 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 		/** The http response. */
 		private HttpResponse httpResponse;
+		/** The socket address. */
+		private InetSocketAddress socketAddress;
 
 		/**
 		 * Instantiates a new netty http requester response handler task.
 		 * 
 		 * @param httpResponse
 		 *            the http response
+		 * @param socketAddress
 		 */
-		public NettyHttpRequesterResponseHandlerTask(HttpResponse httpResponse) {
+		public NettyHttpRequesterResponseHandlerTask(HttpResponse httpResponse, InetSocketAddress socketAddress) {
 			this.httpResponse = httpResponse;
+			this.socketAddress = socketAddress;
 		}
 
-		/**
-		 * Run. {@inheritDoc}
-		 */
 		@Override
 		public void run() {
 			SCMPMessage ret = null;
@@ -158,7 +140,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				content.readBytes(buffer);
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), socketAddress.getHostName(), socketAddress
+							.getPort(), buffer, 0, buffer.length);
 				}
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
@@ -196,9 +179,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			this.exception = exception;
 		}
 
-		/**
-		 * Run. {@inheritDoc}
-		 */
 		@Override
 		public void run() {
 			LOGGER.error("receive exception", exception);

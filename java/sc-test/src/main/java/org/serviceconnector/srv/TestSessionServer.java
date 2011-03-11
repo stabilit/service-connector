@@ -140,18 +140,18 @@ public class TestSessionServer extends TestStatefulServer {
 					response.setAppErrorText(TestConstants.appErrorText);
 				}
 			}
-			SessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId(), -1);
+			SessionLogger.logCreateSession(request.getSessionId(), -1);
 			return response;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
-			SessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logDeleteSession(request.getSessionId());
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutMillis) {
-			SessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logAbortSession(request.getSessionId());
 		}
 
 		@Override

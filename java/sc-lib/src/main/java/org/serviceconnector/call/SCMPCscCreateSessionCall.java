@@ -53,6 +53,7 @@ public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
@@ -60,5 +61,15 @@ public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_CREATE_SESSION;
+	}
+	
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            the new version
+	 */
+	private void setVersion(String version) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 }

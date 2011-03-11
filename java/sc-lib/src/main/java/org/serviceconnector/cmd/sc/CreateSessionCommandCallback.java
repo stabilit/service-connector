@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -89,6 +90,7 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 		} else {
 			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			if (rejectSessionFlag) {
+				SessionLogger.logRejectSession(session.getId());
 				// session has been rejected by the server - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 				// remove session from server

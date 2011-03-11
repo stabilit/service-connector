@@ -159,6 +159,9 @@ public class CscSubscribeCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
+			// scVersion mandatory
+			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+			SCMPMessage.SC_VERSION.isSupported(scVersion);
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);

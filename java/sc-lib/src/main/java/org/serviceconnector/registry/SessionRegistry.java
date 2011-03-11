@@ -60,7 +60,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		SessionLogger.logCreateSession(this.getClass().getName(), session.getId(), session.getSessionTimeoutSeconds());
+		SessionLogger.logCreateSession(session.getId(), session.getSessionTimeoutSeconds());
 		this.put(key, session);
 		this.scheduleSessionTimeout(session);
 	}
@@ -88,7 +88,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		this.cancelSessionTimeout(session);
 		super.remove(key);
-		SessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
+		SessionLogger.logDeleteSession(session.getId());
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			Session[] sessions = new Session[entries.size()];
 			int index = 0;
 			for (Entry<String, Session> entry : entries) {
-				//String key = entry.getKey();
+				// String key = entry.getKey();
 				Session session = entry.getValue();
 				sessions[index++] = session;
 			}
@@ -213,7 +213,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			IServer server = session.getServer();
 			// aborts session on server
 			server.abortSession(session, "session timed out in session registry");
-			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
+			SessionLogger.logTimeoutSession(session.getId());
 		}
 
 		/** {@inheritDoc} */

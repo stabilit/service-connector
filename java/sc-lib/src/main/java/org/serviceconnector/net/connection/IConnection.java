@@ -47,8 +47,14 @@ public interface IConnection {
 	 * @param host
 	 *            the host
 	 */
-
 	public void setHost(String host);
+
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
+	public String getHost();
 
 	/**
 	 * Sets the port.
@@ -57,6 +63,13 @@ public interface IConnection {
 	 *            the port
 	 */
 	public void setPort(int port);
+
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
+	public int getPort();
 
 	/**
 	 * Connect.

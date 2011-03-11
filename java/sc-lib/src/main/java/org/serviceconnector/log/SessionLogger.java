@@ -29,14 +29,16 @@ public final class SessionLogger {
 	/** The Constant sessionLogger. */
 	private static final Logger SESSION_LOGGGER = Logger.getLogger(Loggers.SESSION.getValue());
 
-	/** The create session str. */
+	/** The create session string. */
 	private static String createSessionStr = "create session sid=%s eci=%s";
-	/** The delete session str. */
-	private static String deleteSessionStr = "delete session:%s";
-	/** The abort session str. */
-	private static String abortSessionStr = "abort session:%s";
-	/** The timeout session str. */
-	private static String timeoutSessionStr = "timeout session:%s";
+	/** The delete session string. */
+	private static String deleteSessionStr = "delete session sid=%s";
+	/** The abort session string. */
+	private static String abortSessionStr = "abort session sid=%s";
+	/** The timeout session string. */
+	private static String timeoutSessionStr = "timeout session sid=%s";
+	/** The timeout reject session string. */
+	private static String rejectSessionStr = "reject session sid=%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -47,14 +49,12 @@ public final class SessionLogger {
 	/**
 	 * Log create session.
 	 * 
-	 * @param className
-	 *            the class name
 	 * @param sessionId
 	 *            the session id
 	 * @param eci
 	 *            the eci
 	 */
-	public static synchronized void logCreateSession(String className, String sessionId, double eci) {
+	public static synchronized void logCreateSession(String sessionId, double eci) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(createSessionStr, sessionId, eci);
@@ -66,12 +66,10 @@ public final class SessionLogger {
 	/**
 	 * Log delete session.
 	 * 
-	 * @param className
-	 *            the class name
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static synchronized void logDeleteSession(String className, String sessionId) {
+	public static synchronized void logDeleteSession(String sessionId) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(deleteSessionStr, sessionId);
@@ -83,12 +81,10 @@ public final class SessionLogger {
 	/**
 	 * Log timeout session.
 	 * 
-	 * @param className
-	 *            the class name
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static synchronized void logTimeoutSession(String className, String sessionId) {
+	public static synchronized void logTimeoutSession(String sessionId) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(timeoutSessionStr, sessionId);
@@ -100,15 +96,28 @@ public final class SessionLogger {
 	/**
 	 * Log abort session.
 	 * 
-	 * @param className
-	 *            the class name
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static synchronized void logAbortSession(String className, String sessionId) {
+	public static synchronized void logAbortSession(String sessionId) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(abortSessionStr, sessionId);
+			SESSION_LOGGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Log reject session.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	public static synchronized void logRejectSession(String sessionId) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(rejectSessionStr, sessionId);
 			SESSION_LOGGGER.trace(format.toString());
 			format.close();
 		}

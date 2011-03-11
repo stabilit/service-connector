@@ -34,12 +34,12 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 
 	/**
-	 * Instantiates a new sCMP csc subscribe call.
+	 * Instantiates a new SCMP cascaded subscribe call.
 	 * 
 	 * @param requester
 	 *            the requester
 	 * @param msgToSend
-	 *            the msg to send
+	 *            the message to send
 	 */
 	public SCMPCscSubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
@@ -49,11 +49,22 @@ public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_SUBSCRIBE;
+	}
+	
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            the new version
+	 */
+	private void setVersion(String version) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 }

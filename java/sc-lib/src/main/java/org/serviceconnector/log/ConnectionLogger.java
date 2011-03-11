@@ -28,15 +28,15 @@ public final class ConnectionLogger {
 	/** The Constant connectionLogger. */
 	private static final Logger CONNECTION_LOGGER = Logger.getLogger(Loggers.CONNECTION.getValue());
 
-	/** The connect str. */
+	/** The connect string. */
 	private static String connectStr = "%s connect to:%s/%s";
-	/** The disconnect str. */
+	/** The disconnect string. */
 	private static String disconnectStr = "%s disconnect from:%s/%s";
-	/** The read str. */
+	/** The read string. */
 	private static String readStr = "%s read from:%s/%s buffer:%s";
-	/** The write str. */
+	/** The write string. */
 	private static String writeStr = "%s write to:%s/%s buffer:%s";
-	/** The keep alive str. */
+	/** The keep alive string. */
 	private static String keepAliveStr = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**

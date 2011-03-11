@@ -70,7 +70,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext
+			ConnectionLogger.logKeepAlive(this.getClass().getSimpleName(), connection.getHost(), 0, this.connectionContext
 					.getConnection().getNrOfIdlesInSequence());
 		}
 		IIdleConnectionCallback callback = this.connectionContext.getIdleCallback();
