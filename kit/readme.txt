@@ -53,7 +53,7 @@ Service Connector - open source messaging middleware
  Software removal
  ----------------
  1. Stop the running SC
- 2. If you made changes to the SC configuration check where you have defined:
+ 2. Find directories configured in sc.properties or log4j-sc.properties as:
  			- the log directory
  			- the root.pidPath
  			- the root.dumpPath
