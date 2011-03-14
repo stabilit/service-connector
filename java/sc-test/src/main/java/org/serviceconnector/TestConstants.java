@@ -57,6 +57,7 @@ public class TestConstants {
 	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";
 	public static final String filServiceLocation2 = "up-download/";
+	public static final String sesServiceName1Casc = "session-1-casc";
 
 	public static final String killServerCmd = "kill";
 	public static final String rejectCmd = "reject";

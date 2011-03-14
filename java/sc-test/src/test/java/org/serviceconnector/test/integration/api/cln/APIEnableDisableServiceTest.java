@@ -15,11 +15,14 @@
  */
 package org.serviceconnector.test.integration.api.cln;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
@@ -35,7 +38,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	public void t01_checkNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertFalse("Service is existing ",client.isServiceEnabled("notExistingService"));
+		Assert.assertFalse("Service is existing ", client.isServiceEnabled("notExistingService"));
 	}
 
 	/**
@@ -143,6 +146,17 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 			client.enableService(TestConstants.sesServiceName1);
 			Assert.assertTrue("Disabled ", client.isServiceEnabled(TestConstants.sesServiceName1));
 		}
+		client.detach();
+	}
+
+	@Test
+	public void t15_enableDisableCascadedService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		client.disableService(TestConstants.sesServiceName1Casc);
+		Assert.assertFalse("Enabled ", client.isServiceEnabled(TestConstants.sesServiceName1Casc));
+		client.enableService(TestConstants.sesServiceName1Casc);
+		Assert.assertTrue("Disabled ", client.isServiceEnabled(TestConstants.sesServiceName1Casc));
 		client.detach();
 	}
 }
