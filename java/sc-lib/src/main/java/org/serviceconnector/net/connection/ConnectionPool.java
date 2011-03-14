@@ -218,6 +218,7 @@ public class ConnectionPool {
 			this.disconnectConnection(connection);
 			return;
 		}
+		// reset number of ildes - someone did just use the connection
 		connection.resetNrOfIdles();
 		// insert used connection at first position of list
 		this.freeConnections.add(0, connection);

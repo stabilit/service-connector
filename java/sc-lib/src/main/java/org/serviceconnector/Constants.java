@@ -122,13 +122,13 @@ public final class Constants {
 	/** Default timeout for file session creation. */
 	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
 	/** Default timeout for creation of a connection to peer. */
-	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
+	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
 	/**
 	 * Maximal time between subsequent receive publication.
 	 * After this time subscription is marked as dead.
 	 * This is analogous to echoInterval in session services
 	 */
-	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 60000;
+	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 10000;
 	/**
 	 * Default interval used for publishing services if the NO_DATA_INTERVAL was
 	 * not set by API.

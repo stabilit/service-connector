@@ -234,6 +234,20 @@ public class InspectCommand extends CommandAdapter {
 				sb.append(statefulService.getCountAvailableSessions());
 				found = true;
 				break;
+			case FILE_SERVICE:
+			case CASCADED_FILE_SERVICE:
+			case CASCADED_PUBLISH_SERVICE:
+			case CASCADED_SESSION_SERVICE:
+				if (counter != 0) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+				counter++;
+				statefulService = (StatefulService) service;
+				sb.append(statefulService.getName());
+				sb.append(Constants.EQUAL_SIGN);
+				sb.append("-/-");
+				found = true;
+				break;
 			default:
 				continue;
 			}
@@ -262,26 +276,18 @@ public class InspectCommand extends CommandAdapter {
 				// pattern does not match
 				continue;
 			}
-			switch (service.getType()) {
-			case SESSION_SERVICE:
-			case PUBLISH_SERVICE:
-			case FILE_SERVICE:
-				if (counter != 0) {
-					sb.append(Constants.AMPERSAND_SIGN);
-				}
-				counter++;
-				sb.append(service.getName());
-				sb.append(Constants.EQUAL_SIGN);
-				if (service.isEnabled() == true) {
-					sb.append(Constants.STATE_ENABLED);
-				} else {
-					sb.append(Constants.STATE_DISABLED);
-				}
-				found = true;
-				break;
-			default:
-				continue;
+			if (counter != 0) {
+				sb.append(Constants.AMPERSAND_SIGN);
 			}
+			counter++;
+			sb.append(service.getName());
+			sb.append(Constants.EQUAL_SIGN);
+			if (service.isEnabled() == true) {
+				sb.append(Constants.STATE_ENABLED);
+			} else {
+				sb.append(Constants.STATE_DISABLED);
+			}
+			found = true;
 		}
 		if (found == false) {
 			LOGGER.debug("service=" + serviceNameRegex + " not found");
