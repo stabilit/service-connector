@@ -149,6 +149,10 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client.detach();
 	}
 
+	/**
+	 * Description: enable / disable cascaded service 1000 times<br>
+	 * Expectation: passes
+	 */
 	@Test
 	public void t15_enableDisableCascadedService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
