@@ -27,6 +27,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The is the main Cache class which represents an active cache instance. For each service instance
@@ -751,4 +752,32 @@ public class Cache {
 		}
 		return;
 	}
+	
+	/**
+	 * Dump the cache into the xml writer.
+	 * 
+	 * @param cache
+	 *            the cache
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("cache");
+		writer.writeAttribute("service", this.getServiceName());
+		writer.writeAttribute("name", this.getCacheName());
+		writer.writeAttribute("elementSize", this.getElementSize());
+		writer.writeAttribute("diskStoreSize", this.getDiskStoreSize());
+		writer.writeAttribute("memoryStoreSize", this.getMemoryStoreSize());
+		Object[] compositeKeys = this.getCompositeKeys();
+		if (compositeKeys != null) {
+			writer.writeStartElement("messages");
+			for (Object key : compositeKeys) {
+				CacheKey cacheKey = (CacheKey) key;
+				cacheKey.dump(writer, this);
+			}
+			writer.writeEndElement(); // end of messages
+		}
+		writer.writeEndElement(); // end of cache
+	}
+
 }

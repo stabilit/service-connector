@@ -15,14 +15,11 @@
  */
 package org.serviceconnector.test.integration.api.cln;
 
-import java.io.UnsupportedEncodingException;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 

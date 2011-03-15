@@ -27,9 +27,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -37,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Log4JLoggerFactory;
 import org.serviceconnector.Constants;
-import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
@@ -58,7 +54,7 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
@@ -458,17 +454,14 @@ public final class AppContext {
 				// create file
 				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
 				// create xml writer
-				XMLOutputFactory factory = XMLOutputFactory.newInstance();
-				XMLStreamWriter writer = factory.createXMLStreamWriter(fos);
-				writer.writeStartDocument();
-				writer.writeComment("SC version=" + SCVersion.CURRENT.toString());
-				writer.writeComment("Dump created at=" + DateTimeUtility.getCurrentTimeZoneMillis());
-				// dump the 
+				XMLDumpWriter writer = new XMLDumpWriter(fos);
+				writer.startDocument();
+				
+				// dump the ??
 				
 				// dump the cache manager
 				cacheManager.dump(writer);
-				writer.writeEndDocument();
-				writer.flush();
+				writer.endDocument();
 				fos.close();
 				LOGGER.info("SC dump created into file=" + dumpCacheFile);
 				return dumpFileName;

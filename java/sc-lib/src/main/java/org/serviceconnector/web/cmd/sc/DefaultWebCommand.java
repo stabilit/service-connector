@@ -356,6 +356,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 * @param msg
 		 *            the msg
 		 */
+		@SuppressWarnings("unused")
 		public void addMessage(String msg) {
 			this.messageList.add(new Message(msg, "info"));
 		}

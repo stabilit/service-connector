@@ -16,10 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
+import java.util.AbstractCollection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.impl.CacheImplFactory;
@@ -31,6 +30,7 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class CacheManager is the overall cache control class. All cache instance were controlled
@@ -198,9 +198,24 @@ public class CacheManager {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void dump(XMLStreamWriter writer) throws Exception {
-		XMLCacheDump cacheDump = new XMLCacheDump(writer);
-		cacheDump.dumpAll(this);
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("cache-manager");
+		writer.writeAttribute("enabled", this.isCacheEnabled());
+		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
+		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
+		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
+		writer.writeStartElement("cache-list");
+		Cache[] caches = this.getAllCaches();
+		if (caches == null) {
+			writer.writeAttribute("information", "no caches found");
+		} else {
+			for (Cache cache : caches) {
+				cache.dump(writer);
+			}
+		}
+		writer.writeEndElement(); // end of cache-list
+		writer.writeEndElement(); // end of cache-manager
+
 	}
 
 	/**

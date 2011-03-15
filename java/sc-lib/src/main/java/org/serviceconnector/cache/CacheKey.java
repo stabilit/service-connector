@@ -17,6 +17,8 @@ package org.serviceconnector.cache;
 
 import java.io.Serializable;
 
+import org.serviceconnector.util.XMLDumpWriter;
+
 /**
  * The CacheKey class is a hash key identifying any instance located in the cache (e.g. Composite or Message).
  * The class the wrapper class for any given cacheId String of the format <CacheId>/<SequenceNr> (@see {@link CacheId} The only
@@ -117,5 +119,55 @@ public class CacheKey implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	/**
+	 * Dump the composite into the xml writer.
+	 * 
+	 * @param cache
+	 *            the cache
+	 * @param cacheKey
+	 *            the cache key
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer, Cache cache) throws Exception {
+		writer.writeStartElement("message");
+		String cacheId = this.getCacheId();
+		writer.writeAttribute("cacheId", cacheId);
+		CacheComposite cacheComposite = cache.getComposite(cacheId);
+		if (cacheComposite == null) {
+			writer.writeAttribute("exception", "invalid cacheId (not found) but stored in cache registry.");
+		} else {
+			writer.writeAttribute("state", cacheComposite.getCacheState().toString());
+			writer.writeAttribute("expiration", cacheComposite.getExpiration());
+			writer.writeAttribute("creation", cacheComposite.getCreationTime().toString());
+			writer.writeAttribute("loadingTimeout", cacheComposite.getLoadingTimeout());
+			int size = cacheComposite.getSize();
+			writer.writeAttribute("size", size);
+			writer.writeAttribute("isExpired", cacheComposite.isExpired());
+			writer.writeAttribute("isLoaded", cacheComposite.isLoaded());
+			writer.writeAttribute("isLoading", cacheComposite.isLoading());
+			writer.writeAttribute("isLoadingExpired", cacheComposite.isLoadingExpired());
+			// dump all messages
+			writer.writeStartElement("message-parts");
+			CacheId localCacheId = new CacheId(cacheId);
+			for (int i = 1; i <= size; i++) {
+				localCacheId.setSequenceNr(String.valueOf(i));
+				CacheMessage cacheMessage = cache.getMessage(localCacheId);
+				writer.writeStartElement("part");
+				writer.writeAttribute("cacheId", localCacheId.getFullCacheId());
+				if (cacheMessage == null) {
+					writer.writeElement("exception", "cache message " + localCacheId.getFullCacheId() + " does not exists.");
+				} else {
+					writer.writeAttribute("messageType", cacheMessage.getMessageType());
+					writer.writeAttribute("isCompressed", cacheMessage.isCompressed());
+				}
+				writer.writeEndElement(); // end of part
+			}
+			writer.writeEndElement(); // end of message-parts
+		}
+		writer.writeEndElement(); // end of message
+	}
+
 
 }
