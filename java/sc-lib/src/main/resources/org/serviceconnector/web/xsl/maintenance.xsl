@@ -12,8 +12,10 @@
           <tr class="sc_table_even">
             <td id="sc_dump" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="SC Dump" onclick="javascript:scDump('{$urlencoded}')"></input></td> 
             <td id="sc_dump_list" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump List" type="button" value="Show SC Dump List" onclick="javascript:maintenanceCall('{$urlencoded}', 'sc_dump_list')"></input></td> 
-            <td id="sc_dump_delete" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="Delete All SC Dumps" onclick="javascript:scDumpDelete('{$urlencoded}', 'sc_dump_delete')"></input></td> 
-            <td id="sc_terminate" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Terminate SC" onclick="javascript:terminateSC('{$urlencoded}')"></input></td> 
+            <td id="sc_dump_delete" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="Delete All SC Dumps" onclick="javascript:scDumpDelete('{$urlencoded}', 'sc_dump_delete')"></input></td>
+            <xsl:if test="$body/maintenance/web-config/scTerminateAllowed = 'true'"> 
+              <td id="sc_terminate" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Terminate SC" onclick="javascript:terminateSC('{$urlencoded}')"></input></td>
+            </xsl:if>
             <td id="sc_cache_clear" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Clear Cache" onclick="javascript:clearCache('{$urlencoded}')"></input></td> 
             <td id="sc_translet_reset" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Reset Translet" onclick="javascript:resetTranslet('{$urlencoded}')"></input></td>
           </tr>

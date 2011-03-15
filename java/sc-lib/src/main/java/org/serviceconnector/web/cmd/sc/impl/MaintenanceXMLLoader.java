@@ -77,6 +77,10 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		   writer.writeCData(scUploadService);
 		}
 		writer.writeEndElement(); // end of scUploadService
+		Boolean scTerminateAllowed = webConfiguration.isScTerminateAllowed();
+		writer.writeStartElement("scTerminateAllowed");
+		writer.writeCharacters(scTerminateAllowed.toString());
+		writer.writeEndElement(); // end of scTerminateAllowed
 		writer.writeEndElement(); // end of web-config
 	}
 
