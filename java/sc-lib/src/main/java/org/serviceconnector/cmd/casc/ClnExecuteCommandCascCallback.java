@@ -116,8 +116,8 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 						// so delete cache entry for clients id
 						if (cacheId != null && this.requestCacheId != null && cacheId != this.requestCacheId) {
 							CacheId replyCacheId = new CacheId(cacheId);
-							CacheId requestCacheId = new CacheId(this.requestCacheId);
-							if (replyCacheId.equalsCacheId(requestCacheId) == false) {
+							CacheId requestCacheIdLocal = new CacheId(this.requestCacheId);
+							if (replyCacheId.equalsCacheId(requestCacheIdLocal) == false) {
 								// remove clients cache id from cache
 								// remove cacheId from cache
 								CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);

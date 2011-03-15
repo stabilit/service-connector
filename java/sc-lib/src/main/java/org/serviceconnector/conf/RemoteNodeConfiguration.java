@@ -141,8 +141,8 @@ public class RemoteNodeConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE + " is missing");
 		}
-		ConnectionType connectionType = ConnectionType.getType(this.connectionType);
-		if (connectionType == ConnectionType.UNDEFINED) {
+		ConnectionType connectionTypeConf = ConnectionType.getType(this.connectionType);
+		if (connectionTypeConf == ConnectionType.UNDEFINED) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown connectionType=" + this.name
 					+ this.connectionType);
 		}

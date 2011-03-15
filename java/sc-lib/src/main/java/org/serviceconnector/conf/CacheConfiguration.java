@@ -71,9 +71,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 *             the sCMP validator exception
 	 */
 	public synchronized void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {	//TODO JOT why is this synchronized?
-		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
-		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
-			this.cacheEnabled = cacheEnabled;
+		Boolean cacheEnabledConf = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
+		if (cacheEnabledConf != null && this.cacheEnabled != cacheEnabledConf) {
+			this.cacheEnabled = cacheEnabledConf;
 		}
 		LOGGER.info(Constants.CACHE_DISK_PATH + "cacheEnabled=" + this.cacheEnabled);
 
@@ -89,16 +89,16 @@ public class CacheConfiguration implements ICacheConfiguration {
 		LOGGER.info(Constants.CACHE_DISK_PATH + "=" + this.diskPath);
 
 		// maxElementsInMemory
-		Integer maxElementsInMemory = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
-		if (maxElementsInMemory != null && maxElementsInMemory != this.maxElementsInMemory) {
-			this.maxElementsInMemory = maxElementsInMemory;
+		Integer maxElementsInMemoryConf = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
+		if (maxElementsInMemoryConf != null && maxElementsInMemoryConf != this.maxElementsInMemory) {
+			this.maxElementsInMemory = maxElementsInMemoryConf;
 		}
 		LOGGER.info(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY + "=" + this.maxElementsInMemory);
 
 		// maxElementsOnDisk
-		Integer maxElementsOnDisk = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
-		if (maxElementsOnDisk != null && maxElementsOnDisk != this.maxElementsOnDisk) {
-			this.maxElementsOnDisk = maxElementsOnDisk;
+		Integer maxElementsOnDiskConf = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
+		if (maxElementsOnDiskConf != null && maxElementsOnDiskConf != this.maxElementsOnDisk) {
+			this.maxElementsOnDisk = maxElementsOnDiskConf;
 		}
 		LOGGER.info(Constants.CACHE_MAX_ELEMENTS_ON_DISK + "=" + this.maxElementsOnDisk);
 

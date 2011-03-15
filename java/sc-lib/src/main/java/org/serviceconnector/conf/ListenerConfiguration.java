@@ -126,14 +126,14 @@ public class ListenerConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE + " is missing");
 		}
-		ConnectionType connectionType = ConnectionType.getType(this.connectionType);
-		if (connectionType == ConnectionType.UNDEFINED) {
+		ConnectionType connectionTypeConf = ConnectionType.getType(this.connectionType);
+		if (connectionTypeConf == ConnectionType.UNDEFINED) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown connectionType=" + this.name
 					+ this.connectionType);
 		}
 
 		// get username & password for netty.web
-		if (connectionType == ConnectionType.NETTY_WEB) {
+		if (connectionTypeConf == ConnectionType.NETTY_WEB) {
 			this.username = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME, null);
 			if (this.username == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
@@ -147,7 +147,7 @@ public class ListenerConfiguration {
 		}
 
 		// get remote host config for http-proxy
-		if (connectionType == ConnectionType.NETTY_PROXY_HTTP) {
+		if (connectionTypeConf == ConnectionType.NETTY_PROXY_HTTP) {
 			String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name

@@ -214,12 +214,11 @@ public class CacheId implements Serializable {
 	 *             the cache exception
 	 */
 	public boolean isCompositeId() throws CacheException {
-		String cacheId = this.getCacheId();
-		String fullCacheId = this.getFullCacheId();
-		if (cacheId == null) {
+		String fullCacheIdLocal = this.getFullCacheId();
+		if (this.cacheId == null) {
 			throw new CacheException("invalid cacheId (null)");
 		}
-		return cacheId.equals(fullCacheId);
+		return cacheId.equals(fullCacheIdLocal);
 	}
 
 	/**

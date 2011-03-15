@@ -85,9 +85,9 @@ public class ServiceConfiguration {
 		}
 		String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 		if (remoteNode != null) {
-			RemoteNodeConfiguration remoteNodeConfiguration = AppContext.getRequesterConfiguration().getRequesterConfigurations()
+			RemoteNodeConfiguration remoteNodeConfigurationLocal = AppContext.getRequesterConfiguration().getRequesterConfigurations()
 					.get(remoteNode);
-			if (remoteNodeConfiguration == null) {
+			if (remoteNodeConfigurationLocal == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown remoteNode=" + remoteNode);
 			}
 			serviceType = ServiceConfiguration.adaptServiceTypeIfCascService(serviceType, remoteNode);

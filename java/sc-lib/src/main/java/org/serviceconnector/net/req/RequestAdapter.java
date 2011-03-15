@@ -81,11 +81,10 @@ public abstract class RequestAdapter implements IRequest {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() throws Exception {
-		SCMPMessage message = this.getMessage();
-		if (message == null) {
+		if (this.message == null) {
 			return null;
 		}
-		String messageType = message.getMessageType();
+		String messageType = this.message.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
 	}
 }

@@ -82,10 +82,10 @@ public class WebConfiguration {
 	 *             the exception
 	 */
 	public synchronized void load(CompositeConfiguration compositeConfiguration) throws Exception {
-		Boolean xslTransformationCacheEnabled = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED,
+		Boolean xslTransformationCacheEnabledConf = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED,
 				null);
-		if (xslTransformationCacheEnabled != null) {
-			this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
+		if (xslTransformationCacheEnabledConf != null) {
+			this.xslTransformationCacheEnabled = xslTransformationCacheEnabledConf;
 		}
 		LOGGER.info(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED + "=" + this.xslTransformationCacheEnabled);
 
