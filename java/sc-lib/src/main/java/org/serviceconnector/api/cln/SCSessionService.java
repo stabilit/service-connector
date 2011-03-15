@@ -230,14 +230,17 @@ public class SCSessionService extends SCService {
 		clnExecuteCall.setRequestBody(scMessage.getData());
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
+			PerformanceLogger.begin();
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.triggerSessionTimeout();
+			PerformanceLogger.end();
 			throw new SCServiceException("Execute request failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.triggerSessionTimeout();
+		PerformanceLogger.end();
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("Execute failed.");
 			scEx.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

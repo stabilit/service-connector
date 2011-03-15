@@ -497,13 +497,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 				Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 			} while (++i < tries);
 
-			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
-				// session server - validate reply of server
-				SCMPMessage reply = callback.getMessageSync(oti);
-				if (reply.isFault()) {
-					// error in server abort session - destroy server
-					this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
-				}
+			// validate reply of server
+			SCMPMessage reply = callback.getMessageSync(oti);
+			if (reply.isFault()) {
+				// error in server abort session - destroy server
+				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
 		} catch (SCMPCommandException scmpCommandException) {
 			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec");
@@ -523,21 +521,17 @@ public class StatefulServer extends Server implements IStatefulServer {
 				return;
 			}
 			sasRequester.destroy();
-			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
-				// session server - validate reply of server
-				SCMPMessage reply = callback.getMessageSync(oti);
-				if (reply.isFault()) {
-					LOGGER.warn("Fault in aborting session wait mec over special connection");
-					// error in server abort session - destroy server
-					this.abortSessionsAndDestroy("Session abort over a new connection failed");
-				}
+			// validate reply of server
+			SCMPMessage reply = callback.getMessageSync(oti);
+			if (reply.isFault()) {
+				LOGGER.warn("Fault in aborting session wait mec over special connection");
+				// error in server abort session - destroy server
+				this.abortSessionsAndDestroy("Session abort over a new connection failed");
 			}
 		} catch (Exception e) {
-			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
-				LOGGER.error("Exceptiont in aborting session wait mec over special connection", e);
-				// session server - destroy server in case of an error
-				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
-			}
+			LOGGER.error("Exceptiont in aborting session wait mec over special connection", e);
+			// session server - destroy server in case of an error
+			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 		}
 	}
 
