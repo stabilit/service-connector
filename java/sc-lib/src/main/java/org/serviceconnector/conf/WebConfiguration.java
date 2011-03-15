@@ -59,6 +59,9 @@ public class WebConfiguration {
 	/** The web session timeout minutes. Defines how long a session is valid after inactivity. */
 	private int webSessionTimeoutMinutes;
 
+	/** if true the GUI will display Sc terminate button in maintenance menu and allow Sc terminationn from the GUI. */
+	private boolean scTerminateAllowed;
+	
 	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
@@ -69,6 +72,7 @@ public class WebConfiguration {
 		this.scDownloadService = null;
 		this.scUploadService = null;
 		this.pageHeaderPrefix = null;
+		this.scTerminateAllowed = false;
 	}
 
 	/**
@@ -110,6 +114,10 @@ public class WebConfiguration {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_UPLOAD_SERVICE + "="
 						+ this.scUploadService + " service not found");
 			}
+		}
+		Boolean scTerminateAllowedConf = compositeConfiguration.getBoolean(Constants.WEB_SC_TERMINATE_ALLOWED, null);
+		if (scTerminateAllowedConf != null) {
+			this.scTerminateAllowed = scTerminateAllowedConf;
 		}
 	}
 
@@ -165,5 +173,14 @@ public class WebConfiguration {
 	 */
 	public String getScUploadService() {
 		return scUploadService;
+	}
+	
+	/**
+	 * Checks if is SC can be terminated from the GUI
+	 * 
+	 * @return true, if termination is allowed
+	 */
+	public boolean isScTerminateAllowed() {
+		return scTerminateAllowed;
 	}
 }

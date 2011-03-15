@@ -314,7 +314,9 @@ public final class Constants {
 	public static final String WEB_SC_UPLOAD_SERVICE = "web.scUploadService";
 	/** file service used for download via GUI. */
 	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
-
+	/** allow termination button in Web GUI. */
+	public static final String WEB_SC_TERMINATE_ALLOWED = "web.scTerminateAllowed";
+	
 	/*
 	 * SCMP protocol constants ***********************
 	 */
