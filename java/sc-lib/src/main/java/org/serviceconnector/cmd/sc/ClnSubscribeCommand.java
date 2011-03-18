@@ -98,6 +98,9 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			SubscribeCommandCallback callback = new SubscribeCommandCallback(request, response, responderCallback, tmpSubscription);
 			cascadedSC.cascadedSCSubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 		// modify message only if it goes to server
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);

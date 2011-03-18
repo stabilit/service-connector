@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -106,11 +106,11 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		int readBytes = is.read(buffer);
 		for (int index = 0; index < readBytes; index++) {
 			// looping until <=> found, looking for key value pair
-			if (buffer[index] == 0x3D) {
+			if (buffer[index] == Constants.SCMP_EQUAL) {
 				// <=> found
 				for (int inLoopIndex = index; inLoopIndex < readBytes; inLoopIndex++) {
 					// looping until <LF> got found
-					if (buffer[inLoopIndex] == 0x0A) {
+					if (buffer[inLoopIndex] == Constants.SCMP_LF) {
 						// <LF> found
 						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(buffer,
 								index + 1, (inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
@@ -126,7 +126,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				continue;
 			}
 			// looping until <LF> found, looking for header flag
-			if (buffer[index] == 0x0A) {
+			if (buffer[index] == Constants.SCMP_LF) {
 				// <LF> found
 				metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), null);
 				// updating offset for next key, +1 for <LF>
@@ -179,12 +179,13 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			case TEXT:
 				scmpMsg.setBody(new String(body, 0, bodySize));
 				return scmpMsg;
+			default:
+				throw new EncodingDecodingException("unknown body type of SCMP type=" + scmpBodyTypeString);
 			}
 		} catch (Exception ex) {
 			LOGGER.error("decode", ex);
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
-		return scmpMsg;
 	}
 
 	/**

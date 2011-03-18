@@ -65,6 +65,9 @@ public class FileListCommand extends CommandAdapter {
 			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.serverGetFileList(message, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		FileService fileService = this.validateFileService(message.getServiceName());
@@ -77,8 +80,8 @@ public class FileListCommand extends CommandAdapter {
 		SCMPMessage reply = null;
 		try {
 			FileServer fileServer = fileService.getServer();
-			reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(), message
-					.getServiceName(), oti);
+			reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+					message.getServiceName(), oti);
 		} catch (Exception e) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.GET_FILE_LIST_FAILED,
 					"Error occured in get file list on SC.");
@@ -98,10 +101,12 @@ public class FileListCommand extends CommandAdapter {
 			SCMPMessage message = request.getMessage();
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

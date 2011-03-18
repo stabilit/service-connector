@@ -77,6 +77,9 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.deleteSession(reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		String sessionId = reqMessage.getSessionId();

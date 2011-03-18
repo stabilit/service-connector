@@ -176,7 +176,7 @@ public class WebConfiguration {
 	}
 	
 	/**
-	 * Checks if is SC can be terminated from the GUI
+	 * Checks if is SC can be terminated from the GUI.
 	 * 
 	 * @return true, if termination is allowed
 	 */

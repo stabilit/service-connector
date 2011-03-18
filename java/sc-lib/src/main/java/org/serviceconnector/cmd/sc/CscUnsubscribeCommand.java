@@ -96,6 +96,9 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// delete unreferenced nodes in queue
 			publishMessageQueue.removeNonreferencedNodes();
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		if (cascadedSCMask == null) {

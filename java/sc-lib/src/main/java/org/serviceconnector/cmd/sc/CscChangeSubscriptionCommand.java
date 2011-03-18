@@ -78,6 +78,9 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 					responderCallback, cascSubscription, cascadedSCMask);
 			cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 		StatefulServer server = (StatefulServer) cascSubscription.getServer();
 

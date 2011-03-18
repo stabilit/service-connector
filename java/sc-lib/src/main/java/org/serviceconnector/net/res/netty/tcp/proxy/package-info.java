@@ -14,25 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req.netty;
-
 /**
- * The Class IdleTimeoutException.
- * 
- * @author JTraber
+ * NETTY specific implementation of a proxy endpoint. A proxy endpoint just forwards incoming request.
  */
-public class IdleTimeoutException extends Exception {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Instantiates a new idle timeout exception.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public IdleTimeoutException(String message) {
-		super(message);
-	}
-}
+package org.serviceconnector.net.res.netty.tcp.proxy;

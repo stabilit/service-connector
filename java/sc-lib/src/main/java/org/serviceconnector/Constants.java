@@ -316,7 +316,7 @@ public final class Constants {
 	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
 	/** allow termination button in Web GUI. */
 	public static final String WEB_SC_TERMINATE_ALLOWED = "web.scTerminateAllowed";
-	
+
 	/*
 	 * SCMP protocol constants ***********************
 	 */
@@ -324,6 +324,10 @@ public final class Constants {
 	public static final byte SCMP_CR = 0x0D; // Carriage return character.
 	/** The Constant SCMP_LF. */
 	public static final byte SCMP_LF = 0x0A; // Line feed character
+	/** The Constant SCMP_EQUAL. */
+	public static final byte SCMP_EQUAL = 0x3D; // Equal character
+	/** The Constant SCMP_ZERO. */
+	public static final byte SCMP_ZERO = 0x30; // Zero character
 	/** The Constant SCMP_HEADLINE_SIZE. */
 	public static final int SCMP_HEADLINE_SIZE = 22;
 	/** The Constant SCMP_HEADLINE_SIZE_WITHOUT_VERSION. */

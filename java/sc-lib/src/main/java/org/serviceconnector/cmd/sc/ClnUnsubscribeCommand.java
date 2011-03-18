@@ -83,6 +83,9 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					subscription);
 			cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 		ISCMPMessageCallback callback;
 		StatefulServer server = (StatefulServer) subscription.getServer();

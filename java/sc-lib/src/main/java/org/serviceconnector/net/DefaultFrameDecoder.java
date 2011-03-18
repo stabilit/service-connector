@@ -91,8 +91,8 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		int factor = 1;
 		for (int i = endOffset; i >= startOffset; i--) {
 			if (b[i] >= '0' && b[i] <= '9') {
-				scmpLength += ((int) b[i] - 0x30) * factor;
-				factor *= 10;
+				scmpLength += ((int) b[i] - Constants.SCMP_ZERO) * factor;
+				factor *= Constants.NUMBER_10;
 			} else {
 				throw new FrameDecoderException("invalid scmp message length");
 			}

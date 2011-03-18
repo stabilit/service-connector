@@ -81,6 +81,9 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 					responderCallback, subscription);
 			cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		StatefulServer server = (StatefulServer) subscription.getServer();

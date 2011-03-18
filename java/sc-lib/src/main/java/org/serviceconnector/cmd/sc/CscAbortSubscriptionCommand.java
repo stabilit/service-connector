@@ -89,6 +89,9 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 			CscAbortSubscriptionCallback callback = new CscAbortSubscriptionCallback(request, cascSubscription);
 			cascadedSC.cascadedSCAbortSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 		StatefulServer server = (StatefulServer) cascSubscription.getServer();
 
@@ -109,8 +112,8 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 		// set up abort message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT
-				.getErrorText("Cascaded subscription abort received."));
+		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
+				SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
 		abortMessage.setServiceName(serviceName);
 		abortMessage.setSessionId(reqMessage.getSessionId());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
@@ -133,10 +136,12 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// cascadedSubscriptionId mandatory
 			String cascadedSubscriptionId = message.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 			ValidatorUtility.validateStringLengthTrim(1, cascadedSubscriptionId, Constants.MAX_STRING_LENGTH_256,

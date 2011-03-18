@@ -14,25 +14,8 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.req.netty;
-
 /**
- * The Class IdleTimeoutException.
- * 
- * @author JTraber
+ * The core server API which allows synchronous and asynchronous communication with an SC. Contains interfaces to implement session
+ * or publish server.
  */
-public class IdleTimeoutException extends Exception {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Instantiates a new idle timeout exception.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public IdleTimeoutException(String message) {
-		super(message);
-	}
-}
+package org.serviceconnector.api.srv;

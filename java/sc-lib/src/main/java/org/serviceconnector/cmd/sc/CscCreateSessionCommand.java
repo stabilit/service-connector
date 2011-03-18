@@ -99,8 +99,8 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		case FILE_SERVICE:
 			FileService fileService = (FileService) abstractService;
 			// create file session
-			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService
-					.getUploadFileScriptName(), fileService.getGetFileListScriptName());
+			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(),
+					fileService.getUploadFileScriptName(), fileService.getGetFileListScriptName());
 			fileSession.setService(fileService);
 			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
 			// add server to session
@@ -116,6 +116,9 @@ public class CscCreateSessionCommand extends CommandAdapter {
 			response.setSCMP(reply);
 			responderCallback.responseCallback(request, response);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		// create session

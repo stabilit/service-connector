@@ -65,6 +65,9 @@ public class FileDownloadCommand extends CommandAdapter {
 			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.serverDownloadFile(message, callback, oti);
 			return;
+		default:
+			// code for other types of services is below
+			break;
 		}
 
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
@@ -98,13 +101,16 @@ public class FileDownloadCommand extends CommandAdapter {
 			SCMPMessage message = request.getMessage();
 			// remoteFileName mandatory
 			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
-			ValidatorUtility.validateStringLengthTrim(1, remoteFileName, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_REMOTE_FILE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, remoteFileName, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_REMOTE_FILE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
