@@ -23,17 +23,21 @@ import java.security.InvalidParameterException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.DateTimeUtility;
@@ -108,33 +112,21 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("service");
 		Service service = serviceRegistry.getService(serviceName);
 		this.writeBean(writer, service);
-		if (service instanceof FileService) {
-			FileService fileService = (FileService) service;
-			FileServer fileServer = fileService.getServer();
-			try {
-				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
-						serviceName, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
-				Object body = reply.getBody();
-				if (body != null && body instanceof byte[]) {
-					String sBody = new String((byte[]) body);
-					String[] files = sBody.split("\\|");
-					writer.writeStartElement("files");
-					for (int i = 0; i < files.length; i++) {
-						writer.writeStartElement("file");
-						String file = files[i];
-						if (file != null) {
-							writer.writeCData(files[i]);
-						}
-						writer.writeEndElement();
-					}
-					writer.writeEndElement();
-				}
-			} catch (Exception e) {
-				writer.writeComment("exception:" + e.toString() + ":exception");
-				writer.writeStartElement("exception");
-				writer.writeCData(e.toString());
+		if (service instanceof FileService || service instanceof CascadedFileService) {
+			SCClientInternal client = null;
+			// try to connect client
+			client = connectClientToService(service);
+			SCFileService scFileService = client.newFileService(serviceName);
+			List<String> fileList = scFileService.listFiles();
+			writer.writeStartElement("files");
+			for (String fileName : fileList) {
+				writer.writeStartElement("file");
+				writer.writeCData(fileName);
 				writer.writeEndElement();
-				DefaultXMLLoaderFactory.LOGGER.error(e.toString());
+			}
+			writer.writeEndElement();
+			if (client != null) {
+				client.detach();
 			}
 		}
 		writer.writeEndElement(); // close service tag
@@ -190,33 +182,23 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("service");
 		Service service = serviceRegistry.getService(serviceName);
 		this.writeBean(writer, service);
-		if (service instanceof FileService) {
-			FileService fileService = (FileService) service;
-			FileServer fileServer = fileService.getServer();
-			try {
-				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
-						serviceName, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
-				Object body = reply.getBody();
-				if (body != null && body instanceof byte[]) {
-					String sBody = new String((byte[]) body);
-					String[] files = sBody.split("\\|");
-					writer.writeStartElement("files");
-					for (int i = 0; i < files.length; i++) {
-						String fileName = files[i];
-						if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
-							writer.writeStartElement("file");
-							writer.writeCData(fileName);
-							writer.writeEndElement();
-						}
-					}
+		if (service instanceof FileService || service instanceof CascadedFileService) {
+			SCClientInternal client = null;
+			// try to connect client
+			client = connectClientToService(service);
+			SCFileService scFileService = client.newFileService(serviceName);
+			List<String> fileList = scFileService.listFiles();
+			writer.writeStartElement("files");
+			for (String fileName : fileList) {
+				if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
+					writer.writeStartElement("file");
+					writer.writeCData(fileName);
 					writer.writeEndElement();
 				}
-			} catch (Exception e) {
-				writer.writeComment("exception:" + e.toString() + ":exception");
-				writer.writeStartElement("exception");
-				writer.writeCData(e.toString());
-				writer.writeEndElement();
-				DefaultXMLLoaderFactory.LOGGER.error(e.toString());
+			}
+			writer.writeEndElement();
+			if (client != null) {
+				client.detach();
 			}
 		}
 		writer.writeEndElement(); // close service tag

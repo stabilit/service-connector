@@ -142,12 +142,21 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (body instanceof InputStream) {
 					InputStream inStream = (InputStream) body;
-					byte[] buffer = new byte[scmpMsg.getPartSize()];
-					int bodyLength = inStream.read(buffer);
-					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
+					int msgPartSize = scmpMsg.getPartSize();
+					byte[] buffer = new byte[msgPartSize];
+					// try reading as much as we can until stream is closed or part size reached
+					int bytesRead = 0;
+				    bytesRead = inStream.read(buffer, bytesRead, buffer.length - bytesRead);
+					if (bytesRead <= 0) {
+						bytesRead = 0;
+					    scmpMsg.setPartSize(bytesRead);
+					    // this is the last message
+					    headerKey = SCMPHeaderKey.REQ;
+					}
+					this.writeHeadLine(bw, headerKey, bytesRead + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					os.write(buffer, 0, bodyLength);
+					os.write(buffer, 0, bytesRead);
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));

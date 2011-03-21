@@ -37,20 +37,29 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.res.IResponder;
+import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.registry.PublishMessageQueue;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.CascadedFileService;
+import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
+import org.serviceconnector.web.cmd.sc.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
 
 /**
@@ -566,5 +575,72 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeCharacters(msg);
 		writer.writeEndElement(); // message
 		writer.writeEndElement(); // messages
+	}
+
+	/**
+	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint
+	 * if no netty tcp endpoint is available
+	 * 
+	 * @param service
+	 *            the service
+	 * @param responder
+	 *            the responder
+	 * @return the sC mgmt client
+	 * @throws WebCommandException 
+	 */
+	protected SCClientInternal connectClientToService(Service service) throws WebCommandException {
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+		if (service instanceof FileService) {
+			// get local service connector listener using sc-tcp
+			IResponder responder = responderRegistry.getFirstResponderForConnectionType(ConnectionType.NETTY_TCP);
+			if (responder != null) {
+				ListenerConfiguration myLocalListenerConfiguration = responder.getListenerConfig();
+				List<String> networkInterfaces = myLocalListenerConfiguration.getNetworkInterfaces();
+				for (String networkInterface : networkInterfaces) {
+					String host = networkInterface;
+					int port = myLocalListenerConfiguration.getPort();
+					try {
+						SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.NETTY_TCP);
+						localClient.attach();
+						return localClient;
+					} catch (Exception e) {
+						LOGGER.warn("upload current log files, connect to network interface " + host + " failed", e);
+					}
+				}
+			}
+			responder = responderRegistry.getFirstResponderForConnectionType(ConnectionType.NETTY_HTTP);
+			if (responder != null) {
+				ListenerConfiguration myLocalListenerConfiguration = responder.getListenerConfig();
+				List<String> networkInterfaces = myLocalListenerConfiguration.getNetworkInterfaces();
+				// no netty tcp endpoint is available, try to get netty http
+				for (String networkInterface : networkInterfaces) {
+					String host = networkInterface;
+					int port = myLocalListenerConfiguration.getPort();
+					try {
+						SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.NETTY_HTTP);
+						localClient.attach();
+						return localClient;
+					} catch (Exception e) {
+						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
+					}
+				}
+			}
+			return null;
+		}
+		if (service instanceof CascadedFileService) {
+			CascadedFileService cascadedFileService = (CascadedFileService) service;
+			CascadedSC cascadedSC = cascadedFileService.getCascadedSC();
+			String host = cascadedSC.getHost();
+			int port = cascadedSC.getPortNr();
+			String connectionType = cascadedSC.getConnectionType();
+			try {
+				SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.getType(connectionType));
+				localClient.attach();
+				return localClient;
+			} catch (Exception e) {
+				LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
+			}
+		}
+		return null;
 	}
 }

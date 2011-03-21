@@ -74,14 +74,17 @@ public class SCMPCompositeSender extends SCMPMessage {
 	 */
 	public boolean hasNext() {
 		if (this.message.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
-			// needs to be different in case of STREAM - total length is misleading
-			try {
-				if (((InputStream) this.message.getBody()).available() <= 0) {
-					return false;
-				}
-			} catch (IOException e) {
-				return false;
-			}
+			// we never know if the stream has data available or not until
+			// the stream has been closed.
+			return true;
+//			// needs to be different in case of STREAM - total length is misleading
+//			try {
+//				if (((InputStream) this.message.getBody()).available() <= 0) {
+//					return false;
+//				}
+//			} catch (IOException e) {
+//				return false;
+//			}
 		}
 		return this.offset < this.largeMessageLength;
 	}

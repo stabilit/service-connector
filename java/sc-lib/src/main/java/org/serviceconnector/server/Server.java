@@ -112,6 +112,15 @@ public abstract class Server implements IServer {
 	}
 
 	/**
+	 * Gets the connection type
+	 * 
+	 * @return the host
+	 */
+	public String getConnectionType() {
+		return this.remoteNodeConfiguration.getConnectionType();
+	}
+
+	/**
 	 * Gets the max connections.
 	 * 
 	 * @return the max connections

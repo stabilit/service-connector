@@ -33,7 +33,7 @@ import org.serviceconnector.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-class SCServiceCallback extends SynchronousCallback {
+public class SCServiceCallback extends SynchronousCallback {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")

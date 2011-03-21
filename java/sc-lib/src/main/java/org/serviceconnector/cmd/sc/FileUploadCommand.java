@@ -90,7 +90,6 @@ public class FileUploadCommand extends CommandAdapter {
 		// schedule session timeout
 		this.sessionRegistry.scheduleSessionTimeout(session);
 		responderCallback.responseCallback(request, response);
-
 	}
 
 	/** {@inheritDoc} */

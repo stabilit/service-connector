@@ -18,19 +18,44 @@
 package org.serviceconnector.web.cmd.sc.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Writer;
+import java.net.InetAddress;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.server.FileServer;
+import org.serviceconnector.server.FileServerException;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.util.CircularByteBuffer;
 import org.serviceconnector.util.DumpUtility;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
@@ -44,6 +69,12 @@ import org.serviceconnector.web.cmd.sc.XSLTTransformerFactory;
  * The Class AjaxSystemXMLLoader.
  */
 public class AjaxSystemXMLLoader extends AbstractXMLLoader {
+
+	/** The Constant LOGS_FILE_SDF. */
+	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
+
+	/** The Constant LOGGER. */
+	public static final Logger LOGGER = Logger.getLogger(AjaxSystemXMLLoader.class);
 
 	/**
 	 * Instantiates a new system xml loader.
@@ -184,8 +215,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("uploadLogFiles".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files");
+				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files 1");
 				uploadCurrentLogFiles(writer, request);
+				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files 2");
 				return;
 			}
 			// action is not valid or unknown
@@ -238,14 +270,12 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		if (service == null) {
 			throw new WebCommandException("service " + serviceName + " not found");
 		}
-		if (service instanceof FileService == false) {
-			throw new WebCommandException("service " + serviceName + " is not a file service");
+		if (service instanceof FileService == false && service instanceof CascadedFileService == false) {
+			throw new WebCommandException("service " + serviceName + " is not a file or cascaded file service");
 		}
 		writer.writeStartElement("service");
 		writer.writeCharacters(serviceName);
 		writer.writeEndElement();
-		FileService fileService = (FileService) service;
-		FileServer fileServer = fileService.getServer();
 		List<String> fileList = request.getParameterList("file");
 		writer.writeStartElement("messages");
 		writer.writeStartElement("message");
@@ -266,7 +296,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 							File resourceURLFile = new File(resourceURL.toURI());
 							localDestinationFile = new File(resourceURLFile.getParent() + File.separator + file);
 						}
-						downloadAndReplaceSingleFile(writer, fileServer, fileService, file, localDestinationFile);
+						downloadAndReplaceSingleFile(writer, service, file, localDestinationFile);
 					} catch (Exception e) {
 						writer.writeStartElement("message");
 						writer.writeCharacters(file + " did fail, " + e.getMessage());
@@ -298,23 +328,39 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void downloadAndReplaceSingleFile(XMLStreamWriter writer, FileServer fileServer, FileService fileService,
-			String remoteFile, File dstFile) throws Exception {
+	private void downloadAndReplaceSingleFile(XMLStreamWriter writer, Service service, String remoteFile, File dstFile)
+			throws Exception {
 		String status = "successful (copied)";
 		if (dstFile.exists()) {
 			status = "successful (replaced)";
 		}
+		FileOutputStream dstStream = null;
+		SCClientInternal client = null;
 		try {
-			fileServer.downloadAndReplace(fileService, remoteFile, dstFile);
+			// try to connect client
+			client = connectClientToService(service);
+			SCFileService scFileService = client.newFileService(service.getName());
+			dstStream = new FileOutputStream(dstFile);
+			scFileService.downloadFile(remoteFile, dstStream);
 			writer.writeStartElement("message");
 			writer.writeCharacters(dstFile.getName() + "  " + status);
-			writer.writeEndElement();
+			writer.writeEndElement();			
 		} catch (Exception e) {
 			status = "failed";
 			writer.writeStartElement("message");
 			writer.writeCharacters(dstFile.getName() + "  " + status);
 			writer.writeEndElement();
 			throw e;
+		} finally {
+			if (dstStream != null) {
+				try {
+					dstStream.close();
+				} catch (Exception e) {
+				}
+			}
+			if (client != null) {
+				client.detach();
+			}
 		}
 	}
 
@@ -338,17 +384,16 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		if (service == null) {
 			throw new WebCommandException("service " + serviceName + " not found");
 		}
-		if (service instanceof FileService == false) {
-			throw new WebCommandException("service " + serviceName + " is not a file service");
+		if (service instanceof FileService == false && service instanceof CascadedFileService == false) {
+			throw new WebCommandException("service " + serviceName + " is not a file or cascaded file service");
 		}
 		writer.writeStartElement("service");
 		writer.writeCharacters(serviceName);
 		writer.writeEndElement();
 		// get current log files and write them to the remote file server using a stream
-		FileService fileService = (FileService) service;
-		FileServer fileServer = fileService.getServer();
 		try {
-			String logsFileName = fileServer.uploadCurrentLogFiles(fileService, serviceName);
+			String logsFileName = this.uploadCurrentLogFiles(service, serviceName);
+			// String logsFileName = fileServer.uploadCurrentLogFiles(fileService, serviceName);
 			writer.writeStartElement("status");
 			writer.writeCharacters("success");
 			writer.writeEndElement();
@@ -376,6 +421,201 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
+	 * Upload current log files.
+	 * 
+	 * @param service
+	 *            the service
+	 * @param serviceName
+	 *            the service name
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	private String uploadCurrentLogFiles(Service service, String serviceName) throws Exception {
+		if (!(service instanceof FileService || service instanceof CascadedFileService)) {
+			throw new WebCommandException("upload current log files, service is not a file or cascaded file service");
+		}
+		SCClientInternal client = null;
+		// try to connect client
+		client = connectClientToService(service);
+		if (client == null) {
+			throw new WebCommandException("upload current log files, client cannot connect and attach to local responder");
+		}
+		String fileName = this.uploadLogFiles(client, service, serviceName);
+		// File inputFile = new File(localpath + localFile);
+		// InputStream inpStream = new FileInputStream(inputFile);
+		// service.uploadFile(300, remoteFileName, inpStream);
+		// inpStream.close();
+		if (client != null) {
+			// client.detach(); TODO, destoys AppContext inside????
+		}
+		client = null;
+		return fileName;
+	}
+
+	/**
+	 * Upload log files.
+	 * 
+	 * @param client
+	 *            the client
+	 * @param fileService
+	 *            the file service
+	 * @param serviceName
+	 *            the service name
+	 * @throws Exception
+	 *             the exception
+	 */
+	private String uploadLogFiles(SCClientInternal client, Service service, String serviceName) throws Exception {
+		// get all log file names
+		List<String> logFiles = this.getCurrentLogFiles();
+		if (logFiles.isEmpty()) {
+			throw new FileServerException("upload log files failed, no logs files found");
+		}
+		OutputStream os = null;
+		ZipOutputStream zos = null;
+		CircularByteBuffer cbb = new CircularByteBuffer();
+		String remotePath = this.getUploadLogFileRemotePath(service, serviceName);
+		UploadRunnable uploadRunnable = new UploadRunnable(client, remotePath, serviceName, cbb);
+		Future<Integer> submit = AppContext.getExecutor().submit(uploadRunnable);
+		uploadRunnable.future = submit;
+		try {
+			os = uploadRunnable.getOutputStream();
+			zos = new ZipOutputStream(os);
+			for (String logFile : logFiles) {
+				String path = logFile.replace(File.separatorChar, '/');
+				// important:
+				// get current log file size and stop reading the file after the size reached,
+				// this prevents from an endless read when other logs were written in the meantime
+				long logFileSize = WebUtil.getResourceSize(path);
+				InputStream is = WebUtil.loadResource(path);
+				if (is == null) {
+					continue;
+				}
+				ZipEntry entry = new ZipEntry(logFile);
+				entry.setComment("log file " + logFile);
+				zos.putNextEntry(entry);
+				try {
+					long totalReadBytes = 0L;
+					int readBytes = -1;
+					byte[] buffer = new byte[Constants.SIZE_64KB];
+					while ((readBytes = is.read(buffer)) > 0) {
+						if (totalReadBytes >= logFileSize) {
+							break;
+						}
+						zos.write(buffer, 0, readBytes);
+						totalReadBytes += readBytes;
+					}
+				} finally {
+					if (is != null) {
+						try {
+							is.close();
+						} catch (Exception e) {
+							LOGGER.error(e.toString());
+						}
+					}
+				}
+				zos.closeEntry();
+			}
+			zos.close();
+		} catch (Exception e) {
+			Integer ret = uploadRunnable.close();
+			throw e;
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+		Integer ret = uploadRunnable.close();
+		return remotePath;
+	}
+
+	/**
+	 * Gets the current log file names in a list. Any distinct filenames will be ignored.
+	 * 
+	 * @return the current log file in a list
+	 */
+	private List<String> getCurrentLogFiles() {
+		Set<String> distinctLoggerSet = new HashSet<String>();
+		List<String> logFileList = new ArrayList<String>();
+		Logger rootLogger = LogManager.getRootLogger();
+		addLogFiles(rootLogger, logFileList, distinctLoggerSet);
+		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
+		while (currentLoggers.hasMoreElements()) {
+			Logger currentLogger = (Logger) currentLoggers.nextElement();
+			Enumeration<?> appenders = currentLogger.getAllAppenders();
+			if (appenders.hasMoreElements()) {
+				addLogFiles(currentLogger, logFileList, distinctLoggerSet);
+			}
+		}
+		return logFileList;
+	}
+
+	/**
+	 * Adds the log files for given LOGGER instance to the list. Any distinct file names will be ignored.
+	 * 
+	 * @param logger
+	 *            the LOGGER
+	 * @param logFileList
+	 *            the log file list
+	 * @param distinctLoggerSet
+	 *            the distinct LOGGER set
+	 */
+	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
+		Enumeration<?> appenders = logger.getAllAppenders();
+		while (appenders.hasMoreElements()) {
+			Appender appender = (Appender) appenders.nextElement();
+			String appenderName = appender.getName();
+			if (distinctLoggerSet.contains(appenderName)) {
+				continue;
+			}
+			distinctLoggerSet.add(appenderName);
+			if (appender instanceof FileAppender) {
+				FileAppender fileAppender = (FileAppender) appender;
+				String sFile = fileAppender.getFile();
+				File file = new File(sFile);
+				if (file.exists() && file.isFile()) {
+					logFileList.add(sFile);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gets the upload log file remote path.
+	 * 
+	 * @param fileService
+	 *            the file service
+	 * @param serviceName
+	 *            the service name
+	 * @return the upload log file remote path
+	 * @throws Exception
+	 *             the exception
+	 */
+	private String getUploadLogFileRemotePath(Service service, String serviceName) throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		String logsFileName = null;
+		synchronized (LOGS_FILE_SDF) {
+			String dateTimeString = LOGS_FILE_SDF.format(now);
+			String hostName = InetAddress.getLocalHost().getHostName();
+			StringBuilder sb = new StringBuilder();
+			sb.append(Constants.LOGS_FILE_NAME);
+			sb.append(hostName);
+			sb.append("_");
+			sb.append(serviceName);
+			sb.append("_");
+			sb.append(dateTimeString);
+			sb.append(Constants.LOGS_FILE_EXTENSION);
+			logsFileName = sb.toString();
+		}
+		return logsFileName;
+	}
+
+	/**
 	 * Enable service.
 	 * 
 	 * @param writer
@@ -396,13 +636,13 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		Service service = serviceRegistry.getService(serviceName);
 		if (service == null) {
 			this.writeFailure(writer, "Can not enable service " + serviceName + ", not found!");
-			return;		
+			return;
 		}
 		service.setEnabled(true);
 		this.writeSuccess(writer, "Service " + serviceName + " has been enabled!");
 		return;
 	}
-	
+
 	/**
 	 * Disable service.
 	 * 
@@ -424,12 +664,90 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		Service service = serviceRegistry.getService(serviceName);
 		if (service == null) {
 			this.writeFailure(writer, "Can not disable service " + serviceName + ", not found!");
-			return;		
+			return;
 		}
 		service.setEnabled(false);
 		this.writeSuccess(writer, "Service " + serviceName + " has been disabled!");
 		return;
 
+	}
+
+	/**
+	 * The Class UploadRunnable. Needs to be a separate thread if UI wants show a progress bar.
+	 */
+	public final class UploadRunnable implements Callable<Integer> {
+
+		/** The client. */
+		private SCClientInternal client;
+		/** The service name. */
+		private String serviceName;
+		/** The remote path. */
+		private String remotePath;
+		/** The cbb. */
+		private CircularByteBuffer cbb;
+		/** input stream */
+		private InputStream is;
+		/** The future. */
+		private Future<Integer> future;
+
+		/**
+		 * Instantiates a new upload runnable.
+		 * 
+		 * @param cbb
+		 *            the cbb
+		 */
+		private UploadRunnable(SCClientInternal client, String remotePath, String serviceName, CircularByteBuffer cbb) {
+			this.client = client;
+			this.serviceName = serviceName;
+			this.remotePath = remotePath;
+			this.cbb = cbb;
+			this.is = cbb.getInputStream();
+			this.future = null;
+		}
+
+		/**
+		 * Gets the output stream.
+		 * 
+		 * @return the output stream
+		 */
+		public OutputStream getOutputStream() {
+			return this.cbb.getOutputStream();
+		}
+
+		/**
+		 * Close.
+		 * 
+		 * @return the integer
+		 * @throws Exception
+		 *             the exception
+		 */
+		public Integer close() throws Exception {
+			this.cbb.getOutputStream().close();
+			return this.future.get(5, TimeUnit.SECONDS);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public Integer call() {
+			try {
+				SCFileService scFileService = client.newFileService(this.serviceName);
+				scFileService.uploadFile(360, this.remotePath, this.is);
+				// reads buffer intern until the end of output stream
+				// HttpClientUploadUtility.this.client.executeMethod(HttpClientUploadUtility.this.httpMethod);
+				// Integer statusCode = HttpClientUploadUtility.this.httpMethod.getStatusCode();
+				// return statusCode;
+				return 0;
+			} catch (Exception e) {
+				LOGGER.error(e.toString());
+				try {
+					this.close();
+				} catch (Exception e1) {
+				}
+				return -1;
+			} finally {
+				// HttpClientUploadUtility.this.httpMethod.releaseConnection();
+			}
+		}
 	}
 
 }

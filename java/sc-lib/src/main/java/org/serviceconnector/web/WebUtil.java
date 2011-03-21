@@ -76,6 +76,36 @@ public final class WebUtil {
 	}
 
 	/**
+	 * get size of resource.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the size 
+	 */
+	public static long getResourceSize(String name) {
+		if (name == null) {
+			return 0L;
+		}
+		try {
+			URL url = ClassLoader.getSystemResource(name);
+			if (url != null) {
+				return new File(url.toURI()).length();
+			}
+			url = WebUtil.class.getResource(name);
+			if (url != null) {
+				return new File(url.toURI()).length();
+			}
+			File file = new File(name);
+			return file.length();
+		} catch (Exception e) {
+			if (name.startsWith("/resources")) {
+				return 0L;
+			}
+			return getResourceSize("/resources" + name);
+		}
+	}
+
+	/**
 	 * Gets the resource url.
 	 * 
 	 * @param name

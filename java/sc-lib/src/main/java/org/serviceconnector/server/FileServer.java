@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -115,6 +116,7 @@ public class FileServer extends Server {
 			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
 					+ "/" + path + session.getUploadFileScriptName() + "?" + Constants.UPLOAD_FILE_PARAM_NAME + "="
 					+ remoteFileName + "&" + Constants.UPLOAD_SERVICE_PARAM_NAME + "=" + message.getServiceName());
+			LOGGER.debug("file upload url = " + url.toString());
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
@@ -129,7 +131,10 @@ public class FileServer extends Server {
 			session.setOutputStream(out);
 		}
 		// write the data to the server
-		out.write((byte[]) message.getBody());
+		Object body = message.getBody();
+		if (body != null) {
+		   out.write((byte[])body);
+		}
 		out.flush();
 
 		SCMPMessage reply = null;
@@ -347,7 +352,16 @@ public class FileServer extends Server {
 		String logsFileName = null;
 		synchronized (LOGS_FILE_SDF) {
 			String dateTimeString = LOGS_FILE_SDF.format(now);
-			logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
+			String hostName = InetAddress.getLocalHost().getHostName();
+			StringBuilder sb = new StringBuilder();
+			sb.append(Constants.LOGS_FILE_NAME);
+			sb.append(hostName);
+			sb.append("_");
+			sb.append(serviceName);
+			sb.append("_");
+			sb.append(dateTimeString);
+			sb.append(Constants.LOGS_FILE_EXTENSION);
+			logsFileName = sb.toString();
 		}
 		String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
 		URL url = new URL(Constants.HTTP, this.getHost(), this.getPortNr(), urlPath);

@@ -16,10 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.conf.ListenerConfiguration;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.registry.Registry;
 
 /**
@@ -118,5 +120,22 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		Object key = this.threadLocal.get();
 		IResponder responder = this.getResponder(key);
 		return responder;
+	}
+
+	/**
+	 * Gets the first responder matching given connection type.
+	 *
+	 * @param connectionType the connection type
+	 * @return the first responder for connection type
+	 */
+	public IResponder getFirstResponderForConnectionType(ConnectionType connectionType) {
+		IResponder[] responderArray = this.getResponders();
+		for (IResponder responder : responderArray) {
+ 			ListenerConfiguration listenerConfiguration = responder.getListenerConfig();
+            if (listenerConfiguration.getConnectionType().equals(connectionType.getValue())) {
+            	return responder;
+            }
+		}
+		return null;
 	}
 }

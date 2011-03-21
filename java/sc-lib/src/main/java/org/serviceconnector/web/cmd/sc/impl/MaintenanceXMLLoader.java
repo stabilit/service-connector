@@ -23,6 +23,7 @@ import org.serviceconnector.conf.WebConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
@@ -102,11 +103,10 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		String scDownloadService = webConfiguration.getScDownloadService();
 		String scUploadService = webConfiguration.getScUploadService();
 		for (Service service : services) {
-			if (service instanceof FileService) {
+			if (service instanceof FileService || service instanceof CascadedFileService) {
 				// check if upload or download is active for this service
-				FileService fileService = (FileService) service;
 				writer.writeStartElement("service");
-				String fileServiceName = fileService.getName();
+				String fileServiceName = service.getName();
 				if (fileServiceName.equals(scDownloadService)) {
 					writer.writeStartElement("scDownloadService");
 					writer.writeCharacters("true");

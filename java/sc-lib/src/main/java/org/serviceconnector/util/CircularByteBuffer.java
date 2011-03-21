@@ -48,7 +48,7 @@ public class CircularByteBuffer {
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
-	private static final int DEFAULT_SIZE = 1024;
+	private static final int DEFAULT_SIZE = Constants.SIZE_64KB;
 
 	/**
 	 * A buffer that will grow as things are added.

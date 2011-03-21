@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
@@ -59,6 +58,7 @@ public class SCMPOffsetPart extends SCMPPart {
 		} else {
 			this.size = message.getPartSize();
 		}
+		this.setPartSize(message.getPartSize());
 		this.setHeader(message);
 		this.setInternalStatus(message.getInternalStatus());
 		this.setBody(message.getBody());
@@ -72,14 +72,17 @@ public class SCMPOffsetPart extends SCMPPart {
 			return true;
 		}
 		if (this.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
-			// needs to be different in case of STREAM - total length is misleading
-			try {
-				if (((InputStream) this.getBody()).available() - this.size <= 0) {
-					return false;
-				}
-			} catch (IOException e) {
-				return false;
-			}
+			// we never know if the stream has data available do not know its size
+			InputStream is = (InputStream) this.getBody();
+			return true;
+//			// needs to be different in case of STREAM - total length is misleading
+//			try {
+//				if (((InputStream) this.getBody()).available() - this.size <= 0) {
+//					return false;
+//				}
+//			} catch (IOException e) {
+//				return false;
+//			}
 		}
 		return offset + size < callLength;
 	}

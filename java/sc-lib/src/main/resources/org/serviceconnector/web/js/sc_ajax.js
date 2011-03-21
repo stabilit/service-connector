@@ -302,6 +302,12 @@ function maintenanceCall(sid, action, service, query) {
 //       showLayer("DialogBox");
 //       centerLayer("DialogBox", 400, 400, 0, 0);
 //	}
+	if (action == "sc_logs_upload" || action == "sc_property_download") {
+		var scMaintenance = document.getElementById("sc_maintenance");
+		if (scMaintenance != null) {
+			scMaintenance.innerHTML = "... please wait ... <img src='ajaxloader.gif' width='24'></img> ... contacting the remote file system ";
+		}
+	}
 	ajaxMaintenance.ajaxCall('ajax/maintenance' + sid + '?action=' + action + '&service='+service + '&' + query);
 }
 
