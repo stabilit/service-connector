@@ -121,6 +121,12 @@ function resetTranslet(sid) {
 	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=resetTranslet');	
 }
 
+function changeLogLevel(sid, log, obj) {
+	var selIndex = obj.selectedIndex;
+	var level = obj.options[selIndex].value;
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=changeLogLevel&log=' + log + '&level=' + level);	
+}
+
 function getDialogText(msg) {
     callPending = true;
 	var text = '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="sc_dialog_table">';

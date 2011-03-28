@@ -275,6 +275,16 @@ div#sc_resource {
 	padding: 4px;
 }
 
+.sc_select_even {
+	background: #EEEEEE;
+	color:black;
+}
+
+.sc_select_odd {
+	background: #DDDDDD;
+	color:black;
+}
+
 .sc_error {
 	background: #FFDDDD;
 	border-bottom: 1px solid #B61F34;

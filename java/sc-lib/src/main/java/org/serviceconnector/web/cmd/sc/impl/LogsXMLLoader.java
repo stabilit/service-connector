@@ -31,6 +31,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.factory.IFactoryable;
@@ -89,6 +90,8 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		if (current.before(today)) {
 			writer.writeAttribute("next", next);
 		}
+		// write available log levels
+		writeLogLevels(writer);
 		Logger rootLogger = LogManager.getRootLogger();
 		writeLogger(writer, rootLogger, today, current);
 		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
@@ -100,6 +103,35 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 			}
 		}
 		writer.writeEndElement(); // close logs tag
+	}
+
+	private void writeLogLevels(XMLStreamWriter writer) throws Exception {
+		writer.writeStartElement("log-levels");
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.ALL.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.DEBUG.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.ERROR.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.FATAL.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.INFO.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.OFF.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.TRACE.toString());
+		writer.writeEndElement();
+		writer.writeStartElement("level");
+		writer.writeCharacters(Level.WARN.toString());
+		writer.writeEndElement();
+		writer.writeEndElement();  // end of log-levels		
 	}
 
 	/**
@@ -120,6 +152,10 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("logger");
 		writer.writeAttribute("name", logger.getName());
 		Enumeration<?> appenders = logger.getAllAppenders();
+		Level level = logger.getLevel();
+		writer.writeStartElement("level");
+		writer.writeCharacters(level.toString());
+		writer.writeEndElement();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
 			String appenderName = appender.getName();

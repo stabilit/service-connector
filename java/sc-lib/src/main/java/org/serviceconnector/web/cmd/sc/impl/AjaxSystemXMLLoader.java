@@ -41,7 +41,9 @@ import java.util.zip.ZipOutputStream;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Appender;
+import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -191,6 +193,10 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				writer.writeCharacters("Cache has been cleared.");
 				writer.writeEndElement(); // message
 				writer.writeEndElement(); // messages
+				return;
+			}
+			if ("changeLogLevel".equals(action)) {
+				changeLogLevel(writer, request);
 				return;
 			}
 			if ("resetTranslet".equals(action)) {
@@ -669,7 +675,43 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		service.setEnabled(false);
 		this.writeSuccess(writer, "Service " + serviceName + " has been disabled!");
 		return;
+	}
 
+	/**
+	 * Change log level.
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception 
+	 */
+	private void changeLogLevel(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		DefaultXMLLoaderFactory.LOGGER.debug("change log level");
+		String logName = request.getParameter("log");
+		if (logName == null) {
+			this.writeFailure(writer, "Missing log name!");
+			return;
+		}
+		String level = request.getParameter("level");
+		if (level == null) {
+			this.writeFailure(writer, "Missing log level!");
+			return;
+		}
+		Logger logger = LogManager.getLogger(logName);
+		if (logger == null) {
+			this.writeFailure(writer, "Log name [" + logName + "] is not valid (not found)!");
+			return;
+		}
+		Level newLevel = Level.toLevel(level);
+		logger.setLevel(newLevel);
+		if ("root".equals(logName)) {
+			Logger rootLogger = LogManager.getRootLogger();
+			if (rootLogger != null) {
+				rootLogger.setLevel(newLevel);
+			}
+		}
+		this.writeSuccess(writer, "Log level has been changed! log name = " + logName + ", new level = " + logger.getLevel());
+		return;
+		
 	}
 
 	/**
