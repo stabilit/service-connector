@@ -73,6 +73,7 @@ public class SCMPOffsetPart extends SCMPPart {
 		}
 		if (this.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
 			// we never know if the stream has data available do not know its size
+			@SuppressWarnings("unused")
 			InputStream is = (InputStream) this.getBody();
 			return true;
 //			// needs to be different in case of STREAM - total length is misleading

@@ -483,6 +483,8 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		UploadRunnable uploadRunnable = new UploadRunnable(client, remotePath, serviceName, cbb);
 		Future<Integer> submit = AppContext.getExecutor().submit(uploadRunnable);
 		uploadRunnable.future = submit;
+		@SuppressWarnings("unused")
+		Integer ret;
 		try {
 			os = uploadRunnable.getOutputStream();
 			zos = new ZipOutputStream(os);
@@ -523,7 +525,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			}
 			zos.close();
 		} catch (Exception e) {
-			Integer ret = uploadRunnable.close();
+			ret = uploadRunnable.close();
 			throw e;
 		} finally {
 			if (zos != null) {
@@ -534,7 +536,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				}
 			}
 		}
-		Integer ret = uploadRunnable.close();
+		ret = uploadRunnable.close();
 		return remotePath;
 	}
 
