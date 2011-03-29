@@ -61,10 +61,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	public Object decode(InputStream is) throws Exception {
 		// read headline
 		byte[] headline = new byte[Constants.SCMP_HEADLINE_SIZE_WITHOUT_VERSION];
-		is.read(headline);
+		this.readBufferFromStream(is, headline);
 
 		byte[] version = new byte[Constants.SCMP_VERSION_LENGTH_IN_HEADLINE];
-		is.read(version);
+		this.readBufferFromStream(is, version);
 		SCMPMessage.SCMP_VERSION.isSupported(version);
 		is.skip(1); // read LF
 
@@ -100,19 +100,19 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 		// storing header fields in meta map
 		Map<String, String> metaMap = new HashMap<String, String>();
-		byte[] buffer = new byte[scmpHeaderSize];
+		byte[] header = new byte[scmpHeaderSize];
+		int readBytes = this.readBufferFromStream(is, header);
 		int keyOff = 0;
 		// decoding header
-		int readBytes = is.read(buffer);
 		for (int index = 0; index < readBytes; index++) {
 			// looping until <=> found, looking for key value pair
-			if (buffer[index] == Constants.SCMP_EQUAL) {
+			if (header[index] == Constants.SCMP_EQUAL) {
 				// <=> found
 				for (int inLoopIndex = index; inLoopIndex < readBytes; inLoopIndex++) {
 					// looping until <LF> got found
-					if (buffer[inLoopIndex] == Constants.SCMP_LF) {
+					if (header[inLoopIndex] == Constants.SCMP_LF) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(buffer,
+						metaMap.put(new String(header, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(header,
 								index + 1, (inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
 						// updating outer loop index
 						index = inLoopIndex;
@@ -126,9 +126,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				continue;
 			}
 			// looping until <LF> found, looking for header flag
-			if (buffer[index] == Constants.SCMP_LF) {
+			if (header[index] == Constants.SCMP_LF) {
 				// <LF> found
-				metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), null);
+				metaMap.put(new String(header, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), null);
 				// updating offset for next key, +1 for <LF>
 				keyOff = index + 1;
 			}
@@ -146,7 +146,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
 			byte[] body = new byte[scmpBodySize];
-			int bodySize = is.read(body);
+			int bodySize = this.readBufferFromStream(is, body);
 			if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION)) {
 				if (AppContext.isScEnvironment() == false) {
 					// message decompression required
@@ -186,6 +186,35 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			LOGGER.error("decode", ex);
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
+	}
+
+	/**
+	 * Read buffer from stream.
+	 * 
+	 * @param is
+	 *            the is
+	 * @param buffer
+	 *            the buffer
+	 * @return the int
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws EncodingDecodingException
+	 *             the encoding decoding exception
+	 */
+	private int readBufferFromStream(InputStream is, byte[] buffer) throws IOException, EncodingDecodingException {
+		int readOffset = 0;
+		int readBytes = 0;
+		while (true) {
+			if (readOffset >= buffer.length) {
+				break;
+			}
+			readBytes = is.read(buffer, readOffset, buffer.length - readOffset);
+			if (readBytes <= 0) {
+				throw new EncodingDecodingException("input stream read failed at position " + readOffset);
+			}
+			readOffset += readBytes;
+		}
+		return readOffset;
 	}
 
 	/**

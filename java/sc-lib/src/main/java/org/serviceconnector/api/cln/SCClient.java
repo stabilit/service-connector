@@ -17,6 +17,7 @@
 package org.serviceconnector.api.cln;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -369,7 +370,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Gets the state of services.
+	 * Gets the state of services. If service is not found, map will be empty.
 	 * 
 	 * @param operationTimeout
 	 *            the operation timeout
@@ -389,11 +390,13 @@ public class SCClient {
 			throw new SCServiceException("Client not attached - getStateOfServices not possible.");
 		}
 		String urlString = URLString.toURLRequestString(Constants.CC_CMD_STATE, Constants.SERVICE_NAME, serviceNamePattern);
-		String body = this.inspectCall(operationTimeout, urlString);
 		try {
+			String body = this.inspectCall(operationTimeout, urlString);
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
 			return urlResponse.getParameterMap();
+		} catch (SCServiceException serviceEx) {
+			return new HashMap<String, String>();
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}

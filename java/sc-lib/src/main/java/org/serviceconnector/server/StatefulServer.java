@@ -561,10 +561,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 				try {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
+					SubscriptionLogger.logAbortSubscription(abortMessage.getSessionId());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting subscription failed because of busy connection pool");
+				} catch (Exception e) {
+					LOGGER.warn("aborting subscription failed");
 				}
-				SubscriptionLogger.logAbortSubscription(abortMessage.getSessionId());
 			} else {
 				AppContext.getSessionRegistry().removeSession((Session) session);
 				if (session.isCascaded() == true) {
@@ -574,10 +576,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 				try {
 					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
+					SessionLogger.logAbortSession(abortMessage.getSessionId());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting session failed because of busy connection pool");
+				} catch (Exception e) {
+					LOGGER.warn("aborting session failed");
 				}
-				SessionLogger.logAbortSession(abortMessage.getSessionId());
 			}
 		}
 		this.destroy();

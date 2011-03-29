@@ -25,9 +25,9 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -85,8 +85,13 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
 			LOGGER.debug("state request for service=" + serviceName);
-			// get state of all services
-			scmpReply.setBody(this.getStateOfServicesString(serviceName));
+			try {
+				// get state of all services
+				scmpReply.setBody(this.getStateOfServicesString(serviceName));
+			} catch (Exception e) {
+				LOGGER.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+			}
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
@@ -203,7 +208,7 @@ public class InspectCommand extends CommandAdapter {
 	 *            the service name regex
 	 * @return the sessions of services string
 	 * @throws NotFoundException
-	 *             the not found exception
+	 *             pattern not found
 	 */
 	private String getSessionsOfServicesString(String serviceNameRegex) throws NotFoundException {
 		boolean found = false;
@@ -264,8 +269,10 @@ public class InspectCommand extends CommandAdapter {
 	 * @param serviceNameRegex
 	 *            the service name regex
 	 * @return the state of services string
+	 * @throws NotFoundException
+	 *             pattern not found
 	 */
-	private String getStateOfServicesString(String serviceNameRegex) {
+	private String getStateOfServicesString(String serviceNameRegex) throws NotFoundException {
 		boolean found = false;
 		StringBuilder sb = new StringBuilder();
 
@@ -290,10 +297,7 @@ public class InspectCommand extends CommandAdapter {
 			found = true;
 		}
 		if (found == false) {
-			LOGGER.debug("service=" + serviceNameRegex + " not found");
-			sb.append(serviceNameRegex);
-			sb.append(Constants.EQUAL_SIGN);
-			sb.append(Constants.NOT_FOUND);
+			throw new NotFoundException("no service found pattern=" + serviceNameRegex);
 		}
 		return sb.toString();
 	}
