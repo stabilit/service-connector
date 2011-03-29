@@ -17,8 +17,8 @@ package org.serviceconnector.console;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
@@ -138,23 +138,28 @@ public class SCConsole {
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
-				Map<String, String> stateMap = client.getStateOfServices(serviceName);
-				Set<Entry<String, String>> parameters = stateMap.entrySet();
-				StringBuilder sb = new StringBuilder();
-				for (Entry<String, String> param : parameters) {
-					if (parameters.size() == 1 && param.getValue().equals(Constants.NOT_FOUND)) {
+				try {
+					Map<String, String> stateMap = client.getStateOfServices(serviceName);
+					Set<Entry<String, String>> parameters = stateMap.entrySet();
+					StringBuilder sb = new StringBuilder();
+					if (parameters.size() == 0) {
 						System.out.println("Service [" + serviceName + "] does not exist!");
 						status = 4;
-						break;
+					} else {
+						for (Entry<String, String> param : parameters) {
+							sb.append("Service [");
+							sb.append(param.getKey());
+							sb.append("] is ");
+							sb.append(param.getValue());
+							sb.append("\n");
+						}
+						if (sb.length() > 0) {
+							System.out.println(sb.toString());
+						}
 					}
-					sb.append("Service [");
-					sb.append(param.getKey());
-					sb.append("] is ");
-					sb.append(param.getValue());
-					sb.append("\n");
-				}
-				if (sb.length() > 0) {
-					System.out.println(sb.toString());
+				} catch (SCServiceException e) {
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
