@@ -84,12 +84,6 @@ div#sc_root {
 	height: 100%;
 }
 
-div#sc_header {
-	background-color: #B61F34;
-	width: 100%;
-	height: 56px;
-}
-
 div#sc_logo {
 	background: transparent;
 	color: white;
@@ -115,27 +109,12 @@ div#sc_meta {
 	text-align: right;
 }
 
-div#sc_menu {
-	background-color: #EEEEEE;
-	border-bottom: solid 4px #B61F34;
-	padding: 0px;
-	height: 24px;
-}
-
 div#sc_menu_left {
 	padding-left: 160px;
 	float: left;
 }
 
 div.sc_menu_item {
-	padding:4px;
-	float:left;
-	height:16px;
-}
-
-div.sc_menu_item_over {
-	background-color: #B61F34;
-	color:#FFFFFF;
 	padding:4px;
 	float:left;
 	height:16px;
@@ -174,15 +153,6 @@ a.sc_navigation_item {
 	color:#000000;
 }
 
-.sc_navigation_item_over {
-	background-color: #B61F34;
-	color:#FFFFFF;
-	border-bottom: 1px solid #666666;
-	border-right: 0px solid #666666;
-	text-align: center;
-	padding: 1px;
-}
-
 div#sc_content {
 	background:white;
 	position: absolute;
@@ -212,17 +182,6 @@ div#sc_login {
 	margin-top: 40px;
 	margin-left: auto;
 	margin-right: auto;
-}
-
-div#sc_login_title {
-	background: #B61F34;
-	color: white;
-	padding-top: 4px;
-	font-size: 14px;
-	font-weight: bold;
-	height: 18px;
-	width: 260px;
-	text-align: center;
 }
 
 div#sc_login_form {
@@ -317,16 +276,6 @@ tr.sc_table_odd {
 	padding: 0px;
 }
 
-tr.sc_table_odd_over {
-	background-color: #B61F34;
-	color:#FFFFFF;
-}
-
-tr.sc_table_even_over {
-	background-color: #B61F34;
-	color:#FFFFFF;
-}
-
 tr.sc_sub_table_even {
 	background: #FFAAAA;
 	color:#000000;
@@ -349,26 +298,6 @@ td.sc_sub_table_odd {
 	background: #FFEEEE;
 	color:#000000;
 	padding: 0px;
-}
-
-tr.sc_sub_table_odd_over {
-	background-color: #1FB634;
-	color:#FFFFFF;
-}
-
-td.sc_sub_table_odd_over {
-	background-color: #1FB634;
-	color:#FFFFFF;
-}
-
-tr.sc_sub_table_even_over {
-	background-color: #1FB634;
-	color:#FFFFFF;
-}
-
-td.sc_sub_table_even_over {
-	background-color: #1FB634;
-	color:#FFFFFF;
 }
 
 th.sc_table {
@@ -398,21 +327,6 @@ td.sc_table_odd {
 	vertical-align: top;
 }
 
-td.sc_table_even_over {
-	background-color: #B61F34;
-	border-bottom: 1px solid #666666;
-	border-right: 1px solid #666666;
-	padding: 1px;
-	vertical-align: top;
-}
-
-td.sc_table_odd_over {
-	background-color: #B61F34;
-	border-bottom: 1px solid #666666;
-	border-right: 1px solid #666666;
-	padding: 1px;
-	vertical-align: top;
-}
 
 a.sc_table {
 	color: #000000;
@@ -439,16 +353,6 @@ a.sc_table_title:hover {
 	text-decoration: underline;
 }
 
-div.sc_table_title {
-	background: #B61F34;
-	color: white;
-	padding-top: 4px;
-	font-size: 12px;
-	font-weight: bold;
-	height: 18px;
-	text-align: center;
-}
-
 .sc_separator {
 	background:white;
 	height:1px;
@@ -457,9 +361,4 @@ div.sc_table_title {
 .sc_separator_big {
 	background:white;
 	height:10px;
-}
-
-.sc_table_details {
-	padding:1px;
-	border:2px solid #B61F34;
 }
