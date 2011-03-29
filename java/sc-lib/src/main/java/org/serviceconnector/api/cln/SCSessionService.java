@@ -547,6 +547,15 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
+	 * Checks if has a session.
+	 * 
+	 * @return true, if is subscribed
+	 */
+	public boolean hasSession() {
+		return this.sessionActive;
+	}
+	
+	/**
 	 * The Class SCSessionTimeout. Get control at the time a session refresh is needed. Takes care of sending an echo to SC which
 	 * gets the session refreshed.
 	 */

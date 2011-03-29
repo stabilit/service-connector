@@ -138,6 +138,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertEquals("sessionInfo is not the same", sessionInfo, subMsgResponse.getSessionInfo());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 		publishService.unsubscribe();
 	}
 
