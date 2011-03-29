@@ -295,7 +295,9 @@ public final class Constants {
 	/** The Constant UPLOAD_SERVICE_PARAM_NAME. */
 	public static final String UPLOAD_SERVICE_PARAM_NAME = "servicename";
 	/** The Constant DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED. web default values */
-	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
+	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;	
+	/** The Constant DEFAULT_WEB_COLOR_SCHEME. */
+	public static final String DEFAULT_WEB_COLOR_SCHEME = "classic";
 	/**
 	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS.
 	 * default session inactivity control schedule timeout (3 minutes)

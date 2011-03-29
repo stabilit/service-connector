@@ -76,7 +76,7 @@ public class WebConfiguration {
 		this.scUploadService = null;
 		this.pageHeaderPrefix = null;
 		this.scTerminateAllowed = false;
-		this.colorSchema = "";
+		this.colorSchema = Constants.DEFAULT_WEB_COLOR_SCHEME;
 	}
 
 	/**
@@ -124,6 +124,9 @@ public class WebConfiguration {
 			this.scTerminateAllowed = scTerminateAllowedConf;
 		}
 		this.colorSchema = compositeConfiguration.getString(Constants.WEB_COLOR_SCHEMA, "");
+		if (this.colorSchema == null  || this.colorSchema.isEmpty()) {
+			this.colorSchema = Constants.DEFAULT_WEB_COLOR_SCHEME;
+		}
 		LOGGER.info(Constants.WEB_COLOR_SCHEMA + "=" + this.colorSchema);
 	}
 

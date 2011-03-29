@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -40,6 +40,7 @@ import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.conf.WebConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -179,9 +180,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
 		writer.writeEndElement(); // close meta tag
+		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
+		// write web color schema
+		writer.writeStartElement("meta");
+		writer.writeAttribute("colorschema", webConfiguration.getColorSchema());
+		writer.writeEndElement(); // close meta tag
 		// write sc header prefix
 		writer.writeStartElement("meta");
-		writer.writeAttribute("headerprefix", WebContext.getWebConfiguration().getPageHeaderPrefix());
+		writer.writeAttribute("headerprefix", webConfiguration.getPageHeaderPrefix());
 		writer.writeEndElement(); // close meta tag
 		// write sc status
 		writer.writeStartElement("meta");
