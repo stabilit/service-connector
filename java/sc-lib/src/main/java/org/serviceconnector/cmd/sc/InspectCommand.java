@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.SCVersion;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
@@ -117,6 +118,15 @@ public class InspectCommand extends CommandAdapter {
 			LOGGER.debug("cache inspect for serviceName=" + serviceName + ", cacheId=" + cacheId);
 			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
+			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
+			return;
+		}
+		if (Constants.CC_CMD_SC_VERSION.equalsIgnoreCase(callKey)) {
+			LOGGER.debug("sc version request");
+			String scVersion = Constants.CC_CMD_SC_VERSION + Constants.EQUAL_SIGN + SCVersion.CURRENT;
+			scmpReply.setBody(scVersion);
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);

@@ -300,6 +300,28 @@ public class SCClient {
 	}
 
 	/**
+	 * Gets the SC version. Version of the SC which the client is currently connected to.
+	 * 
+	 * @return the SC version
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 */
+	public String getSCVersion() throws SCServiceException, UnsupportedEncodingException {
+		if (this.attached == false) {
+			throw new SCServiceException("Client not attached - getStateOfServices not possible.");
+		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_SC_VERSION);
+		String body = this.inspectCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, urlString);
+		URLString urlResponse = new URLString();
+		urlResponse.parseResponseURLString(body);
+		return urlResponse.getParameterMap().get(Constants.CC_CMD_SC_VERSION);
+	}
+
+	/**
 	 * Checks if service is enabled on SC with default operation timeout.
 	 * 
 	 * @param serviceName
@@ -337,8 +359,8 @@ public class SCClient {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
 		String urlString = URLString.toURLRequestString(Constants.CC_CMD_STATE, Constants.SERVICE_NAME, serviceName);
-		String body = this.inspectCall(operationTimeout, urlString);
 		try {
+			String body = this.inspectCall(operationTimeout, urlString);
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
 			String value = urlResponse.getParamValue(serviceName);
@@ -346,6 +368,12 @@ public class SCClient {
 				return true;
 			}
 			return false;
+		} catch (SCServiceException e) {
+			// TODO JOT ::convert SCMPERROR to int
+			if (e.getSCErrorCode().equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
+				return false;
+			}
+			throw e;
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}
