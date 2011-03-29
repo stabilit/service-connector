@@ -16,9 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.log4j.Logger;
 
 /**

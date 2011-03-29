@@ -33,7 +33,6 @@ import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.CommandCallback;
-import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
@@ -41,8 +40,6 @@ import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.registry.PublishMessageQueue;
-import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -53,6 +50,7 @@ import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class StatefulServer.
@@ -62,25 +60,15 @@ public class StatefulServer extends Server implements IStatefulServer {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(StatefulServer.class);
 
-	/** The session registry. */
-	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
-
-	/** The subscription registry. */
-	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
-	/** The basic configuration. */
-	protected BasicConfiguration basicConf = AppContext.getBasicConfiguration();
-	/** The sessions, list of sessions allocated to the server. */
+	/** List of sessions and subscriptions allocated to the server. */
 	private List<AbstractSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
-
 	/** The service. */
 	private StatefulService service;
-
 	/** The service name. */
 	private String serviceName;
-
-	/** The sas remote node configuration. */
+	/** The remote node configuration for SRV_SBORT_SESSION request . */
 	private RemoteNodeConfiguration sasRemoteNodeConfiguration;
 
 	/**
@@ -100,7 +88,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.service = null;
-		// set up separate remote node configuration for server session abort request in case of busy connection pool
+		// set up separate remote node configuration for SRV_SBORT_SESSION request in case of busy connection pool
 		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
 				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
 				0, 1, 1);
@@ -421,7 +409,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	public void abortSession(AbstractSession session, String reason) {
 		// delete session in global registries
 		if (session instanceof Subscription) {
-			StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
+			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
 			PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
 					.getService()).getMessageQueue();
 			// unsubscribe subscription
@@ -429,7 +417,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			// remove non referenced nodes
 			publishMessageQueue.removeNonreferencedNodes();
 		} else {
-			StatefulServer.sessionRegistry.removeSession((Session) session);
+			AppContext.getSessionRegistry().removeSession((Session) session);
 		}
 		// delete session on this server
 		this.removeSession(session);
@@ -438,7 +426,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			// session is of type cascaded - do not forward to server
 			return;
 		}
-		int oti = this.basicConf.getSrvAbortOTIMillis();
+		int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
 		// set up abort message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
@@ -466,7 +454,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the abort subscription
 	 */
 	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason, boolean abortSubscription) {
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
+		int tries = (int) ((oti * AppContext.getBasicConfiguration().getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		CommandCallback callback = null;
 		int otiOnServerMillis = 0;
@@ -555,7 +543,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			abortMessage.setServiceName(this.getServiceName());
 			// delete session in global registries
 			if (session instanceof Subscription) {
-				StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
+				AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
 				if (session.getServer() == null) {
 					// server already destroyed
 					continue;
@@ -578,7 +566,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				}
 				SubscriptionLogger.logAbortSubscription(abortMessage.getSessionId());
 			} else {
-				StatefulServer.sessionRegistry.removeSession((Session) session);
+				AppContext.getSessionRegistry().removeSession((Session) session);
 				if (session.isCascaded() == true) {
 					// session is of type cascaded - do not forward to server
 					return;
@@ -633,5 +621,30 @@ public class StatefulServer extends Server implements IStatefulServer {
 	@Override
 	public String toString() {
 		return super.getServerKey() + ":" + this.remoteNodeConfiguration.getPort() + " : " + maxSessions;
+	}
+	
+	/**
+	 * Dump the server into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("stateful-server");
+		writer.writeAttribute("key",this.serverKey);
+		writer.writeAttribute("serviceName",this.serviceName);
+		writer.writeAttribute("maxSessions",this.maxSessions);
+		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
+		this.requester.dump(writer);
+		writer.writeStartElement("sessions");
+		List<AbstractSession> sessionList = this.sessions;
+		for (AbstractSession session : sessionList) {
+			session.dump(writer);
+		}
+		writer.writeEndElement(); // end of sessions
+		writer.writeEndElement(); // end of stateful-server
 	}
 }

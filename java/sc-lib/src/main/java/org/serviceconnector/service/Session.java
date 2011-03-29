@@ -16,8 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client
@@ -93,5 +96,26 @@ public class Session extends AbstractSession {
 	 */
 	public boolean hasPendingRequest() {
 		return this.pendingRequest;
+	}
+	
+	/**
+	 * Dump the session into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("session");
+		writer.writeAttribute("id", this.getId());
+		writer.writeAttribute("sessionInfo", this.getSessionInfo());
+		writer.writeAttribute("isCascaded", this.isCascaded());
+		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
+		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
+		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));
+		writer.writeElement("ipAddressList", this.getIpAddressList());
+		this.getService().dump(writer);
+		writer.writeEndElement(); // session
 	}
 }

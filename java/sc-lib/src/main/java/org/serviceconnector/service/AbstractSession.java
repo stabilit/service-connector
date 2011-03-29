@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.serviceconnector.server.IServer;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class AbstractSession.
@@ -198,4 +199,14 @@ public abstract class AbstractSession {
 	public String toString() {
 		return id + ":" + server;
 	}
+	
+	/**
+	 * Dump the session into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }

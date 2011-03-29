@@ -316,6 +316,8 @@ public final class Constants {
 	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
 	/** allow termination button in Web GUI. */
 	public static final String WEB_SC_TERMINATE_ALLOWED = "web.scTerminateAllowed";
+	/** color schema for Web GUI. */
+	public static final String WEB_COLOR_SCHEMA = "web.colorSchema";
 
 	/*
 	 * SCMP protocol constants ***********************

@@ -31,6 +31,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
@@ -223,5 +224,20 @@ public class Requester implements IRequester {
 		this.connectionPool.initMinConnections();
 		// initial done - set it back to 1
 		this.connectionPool.setMinConnections(Constants.DEFAULT_MIN_CONNECTION_POOL_SIZE);
+	}
+	
+	/**
+	 * Dump the requester into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("requester");
+		this.remoteNodeConfiguration.dump(writer);
+		this.connectionPool.dump(writer);
+		writer.writeEndElement(); // end of requester
 	}
 }

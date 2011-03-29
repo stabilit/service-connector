@@ -154,15 +154,15 @@ public class CacheKey implements Serializable {
 			for (int i = 1; i <= size; i++) {
 				localCacheId.setSequenceNr(String.valueOf(i));
 				CacheMessage cacheMessage = cache.getMessage(localCacheId);
-				writer.writeStartElement("part");
+				writer.writeStartElement("message-part");
 				writer.writeAttribute("cacheId", localCacheId.getFullCacheId());
 				if (cacheMessage == null) {
-					writer.writeElement("exception", "cache message " + localCacheId.getFullCacheId() + " does not exists.");
+					writer.writeElement("exception", "cache message part=" + localCacheId.getFullCacheId() + " does not exists.");
 				} else {
 					writer.writeAttribute("messageType", cacheMessage.getMessageType());
 					writer.writeAttribute("isCompressed", cacheMessage.isCompressed());
 				}
-				writer.writeEndElement(); // end of part
+				writer.writeEndElement(); // end of message-part
 			}
 			writer.writeEndElement(); // end of message-parts
 		}

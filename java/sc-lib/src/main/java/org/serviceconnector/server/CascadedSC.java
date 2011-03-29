@@ -52,7 +52,6 @@ import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.netty.NettyHttpRequest;
 import org.serviceconnector.registry.PublishMessageQueue;
-import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -61,6 +60,7 @@ import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class CascadedSC.
@@ -73,9 +73,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
 	private List<AbstractSession> subscriptions;
 	
-	/** The subscription registry. */
-	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
-
 	/**
 	 * Instantiates a new cascaded sc.
 	 * 
@@ -694,7 +691,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 *            the subscription id
 	 */
 	public void removeSession(String subscriptionId) {
-		Subscription subscription = CascadedSC.subscriptionRegistry.getSubscription(subscriptionId);
+		Subscription subscription = AppContext.getSubscriptionRegistry().getSubscription(subscriptionId);
 		this.removeSession(subscription);
 	}
 
@@ -726,5 +723,28 @@ public class CascadedSC extends Server implements IStatefulServer {
 	@Override
 	public int getMaxSessions() {
 		return Integer.MAX_VALUE;
+	}
+	
+	/**
+	 * Dump the cascaded SC into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("cascaded-sc");
+		writer.writeAttribute("key",this.serverKey);
+		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
+		this.requester.dump(writer);
+		writer.writeStartElement("subscriptions");
+		List<AbstractSession> subscriptionList = this.subscriptions;
+		for (AbstractSession subscription : subscriptionList) {
+			subscription.dump(writer);
+		}
+		writer.writeEndElement(); // end of subscriptions
+		writer.writeEndElement(); // end of cascaded-sc
 	}
 }

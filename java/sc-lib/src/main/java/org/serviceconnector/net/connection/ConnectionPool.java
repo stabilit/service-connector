@@ -26,6 +26,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ConnectionPool. Concrete implementation of connection pooling.<br>
@@ -306,6 +307,28 @@ public class ConnectionPool {
 		}
 	}
 
+	/**
+	 * Dump the connection pool into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("connection-pool");
+		writer.writeAttribute("host", this.host);
+		writer.writeAttribute("port", this.port);
+		writer.writeAttribute("connectionType", this.connectionType);
+		writer.writeAttribute("maxConnections", this.maxConnections);
+		writer.writeAttribute("minConnections", this.minConnections);
+		writer.writeAttribute("closeOnFree", this.closeOnFree);
+		writer.writeAttribute("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
+		writer.writeElement("freeConnections", this.freeConnections.toString());
+		writer.writeElement("usedConnections", this.usedConnections.toString());
+		writer.writeEndElement(); // end of connection-pool
+	}
+	
 	/**
 	 * Sets the close on free. Indicates that connection should be closed at the time they get freed.
 	 * 

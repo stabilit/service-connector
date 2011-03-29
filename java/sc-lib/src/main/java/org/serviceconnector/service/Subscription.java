@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.concurrent.TimeUnit;
+
 import org.serviceconnector.server.IStatefulServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Subscription.
@@ -99,5 +102,27 @@ public class Subscription extends AbstractSession {
 	 */
 	public int getNoDataInterval() {
 		return noDataInterval;
+	}
+	
+	/**
+	 * Dump the subscription into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("subscription");
+		writer.writeAttribute("id", this.getId());
+		writer.writeAttribute("sessionInfo", this.getSessionInfo());
+		writer.writeAttribute("isCascaded", this.isCascaded());
+		writer.writeAttribute("mask", this.getMask().getValue());
+		writer.writeAttribute("noDataInterval", this.noDataInterval);
+		writer.writeAttribute("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
+		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));
+		writer.writeElement("ipAddressList", this.getIpAddressList());
+		this.getService().dump(writer);
+		writer.writeEndElement(); // subscription
 	}
 }

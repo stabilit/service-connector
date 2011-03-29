@@ -31,6 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ListenerConfiguration.
@@ -172,7 +173,7 @@ public class ListenerConfiguration {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
 		builder.append(" on=");
-		builder.append(this.networkInterfaces);
+		builder.append(this.networkInterfaces.toString());
 		builder.append(":");
 		builder.append(this.port);
 		builder.append(" /type=");
@@ -184,6 +185,23 @@ public class ListenerConfiguration {
 		return builder.toString();
 	}
 
+	/**
+	 * Dump the listener config into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.connectionType);
+		writer.writeElement("interfaces", this.networkInterfaces.toString());
+		if (username != null) writer.writeElement("username", this.username);
+		if (password != null) writer.writeElement("password", this.password);
+		if (remoteNodeConfiguration != null) this.remoteNodeConfiguration.dump(writer);
+	}
+	
 	/**
 	 * Gets the communicator name.
 	 * 

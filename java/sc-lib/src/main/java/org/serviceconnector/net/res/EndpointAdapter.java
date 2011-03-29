@@ -32,6 +32,7 @@ import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
@@ -202,5 +203,17 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	@Override
 	public void setPort(int port) {
 		this.port = port;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("end-point");
+		writer.writeAttribute("host", this.host);
+		writer.writeAttribute("port", this.port);
+		writer.writeElement("thread-id", this.serverThread.getId());
+		writer.writeElement("thread", this.serverThread.toString());
+		writer.writeElement("channel", this.channel.toString());
+		writer.writeEndElement(); // end of endpoint
 	}
 }

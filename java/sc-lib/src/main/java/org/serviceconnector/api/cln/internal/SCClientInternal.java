@@ -25,7 +25,6 @@ import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
@@ -41,6 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCClientInternal extends SCClient {
 
 	/** The Constant LOGGER. */
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCClientInternal.class);
 
 	/**

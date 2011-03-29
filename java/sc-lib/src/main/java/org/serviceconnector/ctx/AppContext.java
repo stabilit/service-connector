@@ -120,7 +120,6 @@ public final class AppContext {
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
 	/** The Constant scmpSessionCompositeRegistry. */
 	private static final SCMPSessionCompositeRegistry SCMP_COMPOSITE_REGISTRY = new SCMPSessionCompositeRegistry();
-
 	/** The Constant cacheManager. */
 	private static final CacheManager CACHE_MANAGER = new CacheManager();
 	/** The executor to submit runnable objects. */
@@ -449,18 +448,19 @@ public final class AppContext {
 		try {
 			// create directory if non existent
 			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
-				CacheManager cacheManager = AppContext.getCacheManager();
 				String dumpCacheFile = dumpDir + fs + dumpFileName;
 				// create file
 				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
-				// create xml writer
+				// create xml writer and start dump
 				XMLDumpWriter writer = new XMLDumpWriter(fos);
 				writer.startDocument();
-				
-				// dump the ??
-				
-				// dump the cache manager
-				cacheManager.dump(writer);
+				writer.writeStartElement("sc-dump");
+				AppContext.getBasicConfiguration().dump(writer);
+				AppContext.getResponderRegistry().dump(writer);
+				AppContext.getServerRegistry().dump(writer);
+				AppContext.getCacheManager().dump(writer);
+				// end dump
+				writer.writeEndElement(); // end of sc-dump
 				writer.endDocument();
 				fos.close();
 				LOGGER.info("SC dump created into file=" + dumpCacheFile);

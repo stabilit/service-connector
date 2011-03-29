@@ -22,6 +22,7 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Service.
@@ -117,5 +118,22 @@ public abstract class Service {
 	@Override
 	public String toString() {
 		return this.name + ":" + this.enabled + ":" + this.type.getValue();
+	}
+	
+	/**
+	 * Dump the service into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("location", this.location);
+		writer.writeAttribute("enabled", this.enabled);
+		writer.writeEndElement(); // service
 	}
 }

@@ -763,7 +763,7 @@ public class Cache {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("cache");
-		writer.writeAttribute("service", this.getServiceName());
+		writer.writeAttribute("service", this.serviceName);
 		writer.writeAttribute("name", this.getCacheName());
 		writer.writeAttribute("elementSize", this.getElementSize());
 		writer.writeAttribute("diskStoreSize", this.getDiskStoreSize());

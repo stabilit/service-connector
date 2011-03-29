@@ -19,8 +19,10 @@ package org.serviceconnector.service;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.TimeUnit;
 
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class FileSession.
@@ -103,6 +105,31 @@ public class FileSession extends Session {
 		this.streaming = false;
 	}
 
+	/**
+	 * Dump the session into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("file-session");
+		writer.writeAttribute("id", this.getId());
+		writer.writeAttribute("sessionInfo", this.getSessionInfo());
+		writer.writeAttribute("isCascaded", this.isCascaded());
+		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
+		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
+		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));;
+		writer.writeAttribute("isStreaming", this.isStreaming());
+		writer.writeAttribute("path", this.getPath());
+		writer.writeAttribute("uploadScript", this.uploadScript);
+		writer.writeAttribute("getFileListScript", this.getFileListScript);
+		writer.writeElement("ipAddressList", this.getIpAddressList());
+		this.getService().dump(writer);
+		writer.writeEndElement(); // file-session
+	}
+	
 	/**
 	 * Gets the path.
 	 * 

@@ -41,7 +41,6 @@ import java.util.zip.ZipOutputStream;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Appender;
-import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;

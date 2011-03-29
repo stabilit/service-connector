@@ -61,7 +61,10 @@ public class WebConfiguration {
 
 	/** if true the GUI will display Sc terminate button in maintenance menu and allow Sc terminationn from the GUI. */
 	private boolean scTerminateAllowed;
-	
+
+	/** name of the colorSchema. */
+	private String colorSchema;
+
 	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
@@ -73,6 +76,7 @@ public class WebConfiguration {
 		this.scUploadService = null;
 		this.pageHeaderPrefix = null;
 		this.scTerminateAllowed = false;
+		this.colorSchema = "";
 	}
 
 	/**
@@ -86,8 +90,8 @@ public class WebConfiguration {
 	 *             the exception
 	 */
 	public synchronized void load(CompositeConfiguration compositeConfiguration) throws Exception {
-		Boolean xslTransformationCacheEnabledConf = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED,
-				null);
+		Boolean xslTransformationCacheEnabledConf = compositeConfiguration.getBoolean(
+				Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED, null);
 		if (xslTransformationCacheEnabledConf != null) {
 			this.xslTransformationCacheEnabled = xslTransformationCacheEnabledConf;
 		}
@@ -119,6 +123,8 @@ public class WebConfiguration {
 		if (scTerminateAllowedConf != null) {
 			this.scTerminateAllowed = scTerminateAllowedConf;
 		}
+		this.colorSchema = compositeConfiguration.getString(Constants.WEB_COLOR_SCHEMA, "");
+		LOGGER.info(Constants.WEB_COLOR_SCHEMA + "=" + this.colorSchema);
 	}
 
 	/**
@@ -174,7 +180,7 @@ public class WebConfiguration {
 	public String getScUploadService() {
 		return scUploadService;
 	}
-	
+
 	/**
 	 * Checks if is SC can be terminated from the GUI.
 	 * 
@@ -182,5 +188,14 @@ public class WebConfiguration {
 	 */
 	public boolean isScTerminateAllowed() {
 		return scTerminateAllowed;
+	}
+	
+	/**
+	 * Gets the color schema
+	 * 
+	 * @return the color schema name
+	 */
+	public String getColorSchema() {
+		return colorSchema;
 	}
 }

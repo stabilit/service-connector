@@ -35,8 +35,6 @@ import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.server.FileServer;
 import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;

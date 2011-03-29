@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class BasicConfiguration.
@@ -173,6 +174,29 @@ public class BasicConfiguration {
 		LOGGER.info("srvAbortOTIMillis=" + this.srvAbortOTIMillis);
 	}
 
+	/**
+	 * Dump the basic configuration into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("configuration");
+		writer.writeElement("commandValidation", this.commandValidation);
+		writer.writeElement("dumpPath", this.dumpPath);
+		writer.writeElement("pidPath", this.pidPath);
+		writer.writeElement("writePID", this.writePID);
+		writer.writeElement("echoIntervalMultiplier", this.echoIntervalMultiplier);
+		writer.writeElement("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
+		writer.writeElement("connectionTimeoutMillis", this.connectionTimeoutMillis);
+		writer.writeElement("keepAliveOTIMillis", this.keepAliveOTIMillis);
+		writer.writeElement("srvAbortOTIMillis", this.srvAbortOTIMillis);
+		writer.writeElement("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
+		writer.writeEndElement(); // end of configuration
+	}
+	
 	/**
 	 * Checks if is write pid.
 	 * 

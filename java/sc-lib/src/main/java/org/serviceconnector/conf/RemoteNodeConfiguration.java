@@ -23,6 +23,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class RemoteNodeConfiguration.
@@ -194,6 +195,25 @@ public class RemoteNodeConfiguration {
 		}
 	}
 
+	/**
+	 * Dump the remote node into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("remote-node");
+		writer.writeAttribute("host", this.host);
+		writer.writeAttribute("port", this.port);
+		writer.writeElement("maxPoolSize", this.maxPoolSize);
+		writer.writeElement("maxSessions", this.maxSessions);
+		writer.writeElement("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
+		writer.writeElement("serverType", this.serverType.getValue());
+		writer.writeEndElement(); // end of remote-node
+	}
+	
 	/**
 	 * Gets the name.
 	 * 

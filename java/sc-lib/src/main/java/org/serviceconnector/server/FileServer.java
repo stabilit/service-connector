@@ -54,6 +54,7 @@ import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.HttpClientUploadUtility;
 import org.serviceconnector.util.URLUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.web.WebUtil;
 
@@ -533,4 +534,29 @@ public class FileServer extends Server {
 	public int getMaxSessions() {
 		return maxSessions;
 	}
+	
+	/**
+	 * Dump the server into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("file-server");
+		writer.writeAttribute("key",this.serverKey);
+		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
+		writer.writeAttribute("maxSessions",this.maxSessions);
+		this.requester.dump(writer);
+		writer.writeStartElement("sessions");
+		List<FileSession> sessionList = this.sessions;
+		for (FileSession session : sessionList) {
+			session.dump(writer);
+		}
+		writer.writeEndElement(); // end of sessions
+		writer.writeEndElement(); // end of file-server
+	}
+	
 }

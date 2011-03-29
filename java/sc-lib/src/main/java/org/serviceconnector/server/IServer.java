@@ -17,6 +17,7 @@
 package org.serviceconnector.server;
 
 import org.serviceconnector.service.AbstractSession;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Interface IServer.
@@ -39,4 +40,15 @@ public interface IServer {
 	 *            the reason
 	 */
 	public abstract void abortSession(AbstractSession session, String reason);
+	
+	
+	/**
+	 * Dump the server into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.registry.Registry;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
@@ -109,6 +110,23 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		return null;
 	}
 
+	/**
+	 * Dump the responders into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("responders");
+		IResponder[] responderArray = this.getResponders();
+		for (IResponder responder : responderArray) {
+			responder.dump(writer);
+		}
+		writer.writeEndElement(); // end of responders
+	}
+	
 	/**
 	 * Gets the current responder.
 	 * 

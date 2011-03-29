@@ -70,7 +70,7 @@ public class ServiceListConfiguration {
 			LOGGER.info("Service=" + serviceConfig.toString());
 		}
 	}
-
+	
 	/**
 	 * Gets the service configurations.
 	 * 

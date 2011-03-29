@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation of a
@@ -126,5 +127,24 @@ public class Responder implements IResponder {
 	 */
 	public List<IEndpoint> getEndpoints() {
 		return Collections.unmodifiableList(endpoints);
+	}
+
+	/**
+	 * Dump the responder into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("responder");
+		this.getListenerConfig().dump(writer);
+		writer.writeStartElement("endpoints");
+		for (IEndpoint endpoint : this.endpoints) {
+			endpoint.dump(writer);
+		}
+		writer.writeEndElement(); // end of endpoints
+		writer.writeEndElement(); // end of responder
 	}
 }

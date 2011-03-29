@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import org.serviceconnector.util.XMLDumpWriter;
+
 
 /**
  * The Interface IEndpoint.
@@ -85,4 +87,14 @@ public interface IEndpoint {
 	 *            the new responder
 	 */
 	public void setResponder(IResponder resp);
+	
+	/**
+	 * Dump the endpoint into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception;
 }

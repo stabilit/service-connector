@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.server.Server;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ServerRegistry. Stores an entry for every registered server in system.
@@ -78,6 +79,24 @@ public class ServerRegistry extends Registry<String, Server> {
 		return null;
 	}
 
+	/**
+	 * Dump the responders into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("servers");
+		Set<Entry<String, Server>> entries = this.registryMap.entrySet();
+		for (Entry<String, Server> entry : entries) {
+			Server server = entry.getValue();
+			server.dump(writer);
+		}
+		writer.writeEndElement(); // end of servers
+	}
+	
 	/**
 	 * Removes the server.
 	 * 

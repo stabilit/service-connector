@@ -19,6 +19,7 @@ package org.serviceconnector.net.res;
 import java.util.List;
 
 import org.serviceconnector.conf.ListenerConfiguration;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Interface IRequester.
@@ -76,6 +77,7 @@ public interface IResponder {
 	 */
 	public ListenerConfiguration getListenerConfig();
 	
+
 	/**
 	 * Gets the endpoint.
 	 *
@@ -83,4 +85,13 @@ public interface IResponder {
 	 */
 	public List<IEndpoint> getEndpoints();
 
+	/**
+	 * Dump the responder into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception;
 }
