@@ -97,7 +97,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t03_ValidSCMPVersionTest() {
-		String requestString = "REQ 0000053 00053 1.0\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
+		String requestString = "REQ 0000052 00052 1.0\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
