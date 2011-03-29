@@ -17,6 +17,7 @@ package org.serviceconnector.test.integration.api.cln;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.serviceconnector.SCVersion;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -158,6 +159,18 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		Assert.assertFalse("Enabled ", client.isServiceEnabled(TestConstants.sesServiceName1Casc));
 		client.enableService(TestConstants.sesServiceName1Casc);
 		Assert.assertTrue("Disabled ", client.isServiceEnabled(TestConstants.sesServiceName1Casc));
+		client.detach();
+	}
+
+	/**
+	 * Description: get SCVersion<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t20_getSCVersion() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		Assert.assertEquals("ScVersion not equal", SCVersion.CURRENT.toString(), client.getSCVersion());
 		client.detach();
 	}
 }
