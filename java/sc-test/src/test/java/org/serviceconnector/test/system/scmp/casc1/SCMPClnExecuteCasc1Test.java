@@ -343,7 +343,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SCMPMessage scmpReply = cbk.getMessageSync(300000);
 
 		String expectedResponse = TestUtil.get10MBString();
-		Assert.assertEquals(expectedResponse.length() + "", scmpReply.getBodyLength() + "");
+		Assert.assertEquals("unequal length", expectedResponse.length(), scmpReply.getBodyLength());
 		Assert.assertEquals(expectedResponse, scmpReply.getBody());
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), scmpReply.getMessageType());
