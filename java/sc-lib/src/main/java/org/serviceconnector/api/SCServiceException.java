@@ -33,7 +33,7 @@ public class SCServiceException extends Exception {
 	/** The sc error text. */
 	private String scErrorText;
 	/** The sc error code. */
-	private String scErrorCode;
+	private int scErrorCode;
 
 	/**
 	 * Instantiates a new SC service exception.
@@ -105,7 +105,11 @@ public class SCServiceException extends Exception {
 	 * @param scErrorCode
 	 *            the new SC error code
 	 */
-	public void setSCErrorCode(String scErrorCode) {
+	public void setSCErrorCode(Integer scErrorCode) {
+		if (scErrorCode == null) {
+			this.scErrorCode = 0;
+			return;
+		}
 		this.scErrorCode = scErrorCode;
 	}
 
@@ -124,7 +128,7 @@ public class SCServiceException extends Exception {
 	 * 
 	 * @return the SC error code
 	 */
-	public String getSCErrorCode() {
+	public int getSCErrorCode() {
 		return this.scErrorCode;
 	}
 

@@ -19,7 +19,6 @@ package org.serviceconnector.web.cmd.sc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.cmd.sc.impl.AjaxContentXMLLoader;

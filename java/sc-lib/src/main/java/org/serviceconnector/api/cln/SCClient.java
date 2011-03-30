@@ -155,7 +155,7 @@ public class SCClient {
 				// release resources
 				AppContext.destroy();
 				SCServiceException ex = new SCServiceException("Attach to " + host + ":" + port + " failed.");
-				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
@@ -213,7 +213,7 @@ public class SCClient {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("Detach client failed.");
-				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
@@ -370,7 +370,7 @@ public class SCClient {
 			return false;
 		} catch (SCServiceException e) {
 			// TODO JOT ::convert SCMPERROR to int
-			if (e.getSCErrorCode().equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
+			if (e.getSCErrorCode() == SCMPError.SERVICE_NOT_FOUND.getErrorCode()) {
 				return false;
 			}
 			throw e;
@@ -565,7 +565,7 @@ public class SCClient {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("Inspect failed.");
-			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}

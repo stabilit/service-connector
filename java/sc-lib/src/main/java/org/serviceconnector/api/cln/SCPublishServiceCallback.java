@@ -50,7 +50,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			this.service.sessionActive = false;
 			// operation failed
 			SCServiceException ex = new SCServiceException("SCPublishService operation failed");
-			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			super.receive(ex);
 			return;

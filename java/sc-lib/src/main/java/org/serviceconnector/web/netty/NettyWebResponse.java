@@ -20,8 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.handler.codec.http.Cookie;
-import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
@@ -33,15 +31,10 @@ public class NettyWebResponse implements IWebResponse {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyWebResponse.class);
-
 	/** The response. */
 	private HttpResponse response;
-
 	/** The os. */
 	private ByteArrayOutputStream os;
-
-	/** The ce. */
-	private CookieEncoder ce = null;
 
 	/**
 	 * Instantiates a new netty web response.
@@ -52,7 +45,6 @@ public class NettyWebResponse implements IWebResponse {
 	public NettyWebResponse(HttpResponse httpResponse) {
 		this.response = httpResponse;
 		this.os = null;
-		this.ce = null; // server side encoding
 	}
 	
 	/** {@inheritDoc} */
@@ -85,15 +77,6 @@ public class NettyWebResponse implements IWebResponse {
 		this.response.addHeader("Content-Type", contentType);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final void addCookie(Cookie cookie) {
-		if (this.ce == null) {
-			this.ce = new CookieEncoder(true);
-		}
-		this.ce.addCookie(cookie);
-	}
-
 	@Override
 	public void redirect(String path) {
 		LOGGER.debug("redirect location = " + path);
@@ -104,14 +87,5 @@ public class NettyWebResponse implements IWebResponse {
 	@Override
 	public boolean isRedirect() {
 		return response.getStatus() == HttpResponseStatus.FOUND;
-	}
-
-	/**
-	 * Gets the cookie encoder.
-	 * 
-	 * @return the cookie encoder
-	 */
-	public CookieEncoder getCookieEncoder() {
-		return this.ce;
 	}
 }

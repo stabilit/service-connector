@@ -154,36 +154,6 @@ public abstract class AbstractWebRequest implements IWebRequest {
 				}
 			}
 		}
-		// cookie replaced by url encoding
-		// // try to get JSESSIONID from cookie request
-		// Cookie jsessionidCookie = this.getCookie("JSESSIONID");
-		// if (jsessionidCookie != null) {
-		// String sessionId = jsessionidCookie.getValue();
-		// if (sessionId != null) {
-		// IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-		// if (webSession != null) {
-		// // check if web session belongs to same port
-		// String webSessionHost = webSession.getHost();
-		// String myHost = this.getHost();
-		// if (webSessionHost != null && webSessionHost.equals(myHost)) {
-		// int webSessionPort = webSession.getPort();
-		// int myPort = this.getPort();
-		// if (webSessionPort == myPort) {
-		// return webSession;
-		// }
-		// }
-		// }
-		// }
-		// // session is no more valid
-		// }
-		// // check for jsessionid in request attribute
-		// String sessionId = (String) this.getAttribute("JSESSIONID");
-		// if (sessionId != null) {
-		// IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-		// if (webSession != null) {
-		// return webSession;
-		// }
-		// }
 		if (create == true) {
 			return WebSessionRegistry.getCurrentInstance().newSession();
 		}

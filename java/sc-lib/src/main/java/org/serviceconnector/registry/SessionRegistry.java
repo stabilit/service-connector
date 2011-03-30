@@ -16,8 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

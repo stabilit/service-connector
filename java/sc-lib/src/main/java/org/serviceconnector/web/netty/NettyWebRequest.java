@@ -21,12 +21,9 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.handler.codec.http.Cookie;
-import org.jboss.netty.handler.codec.http.CookieDecoder;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
@@ -49,9 +46,6 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The url. */
 	private String url;
-
-	/** The cookies. */
-	private Set<Cookie> cookies;
 
 	/**
 	 * Instantiates a new netty web request.
@@ -98,15 +92,6 @@ public class NettyWebRequest extends AbstractWebRequest {
 				Map<String, List<String>> postParams = queryStringDecoder.getParameters();
 				this.parameters.putAll(postParams);
 			}
-			try {
-				CookieDecoder cd = new CookieDecoder();
-				String cookie = this.request.getHeader("Cookie");
-				if (cookie != null) {
-					this.cookies = cd.decode(cookie);
-				}
-			} catch (Exception e) {
-				this.cookies = null;
-			}
 		}
 	}
 
@@ -143,20 +128,6 @@ public class NettyWebRequest extends AbstractWebRequest {
 	public List<String> getParameterList(String name) {
 		List<String> paramList = this.parameters.get(name);
 		return paramList;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Cookie getCookie(String key) {
-		if (key == null || this.cookies == null) {
-			return null;
-		}
-		for (Cookie cookie : cookies) {
-			if (key.equals(cookie.getName())) {
-				return cookie;
-			}
-		}
-		return null;
 	}
 
 	/** {@inheritDoc} */

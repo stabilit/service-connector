@@ -149,7 +149,7 @@ public class SCMPMessageFault extends SCMPMessage {
 	 *            the additional info
 	 */
 	public void setError(SCMPError scmpError, String additionalInfo) {
-		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
+		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), String.valueOf(scmpError.getErrorCode()));
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText() + " [" + additionalInfo + "]");
 	}
 
@@ -160,7 +160,7 @@ public class SCMPMessageFault extends SCMPMessage {
 	 *            the new error code
 	 */
 	public void setError(SCMPError scmpError) {
-		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
+		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), String.valueOf(scmpError.getErrorCode()));
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText());
 	}
 

@@ -16,30 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.server;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
@@ -49,14 +34,10 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
-import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.util.HttpClientUploadUtility;
 import org.serviceconnector.util.URLUtility;
 import org.serviceconnector.util.XMLDumpWriter;
-import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
-import org.serviceconnector.web.WebUtil;
 
 /**
  * The Class FileServer.
@@ -65,9 +46,6 @@ public class FileServer extends Server {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(FileServer.class);
-
-	/** The Constant LOGS_FILE_SDF. */
-	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 	/** The sessions, list of sessions allocated to the server. */
 	private List<FileSession> sessions;
 	/** The max sessions. */
@@ -134,7 +112,7 @@ public class FileServer extends Server {
 		// write the data to the server
 		Object body = message.getBody();
 		if (body != null) {
-		   out.write((byte[])body);
+			out.write((byte[]) body);
 		}
 		out.flush();
 
@@ -232,7 +210,7 @@ public class FileServer extends Server {
 	 *            the service name
 	 * @param timeoutSeconds
 	 *            the timeout seconds
-	 * @return the sCMP message
+	 * @return the SCMP message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -334,199 +312,6 @@ public class FileServer extends Server {
 	}
 
 	/**
-	 * Upload current log files. This method gets all current log file names and store them all in zip compressed stream.
-	 * This stream is loaded up to our file server (this). The uploading path is identified by the file service instance.
-	 * The service name identifies the uploading service instance which is part of the zipped file name.
-	 * Note: There is no file session required.
-	 * 
-	 * @param fileService
-	 *            the file service
-	 * @param serviceName
-	 *            the service name
-	 * @return the string
-	 * @throws Exception
-	 *             the exception
-	 */
-	public String uploadCurrentLogFiles(FileService fileService, String serviceName) throws Exception {
-		Calendar cal = Calendar.getInstance();
-		Date now = cal.getTime();
-		String logsFileName = null;
-		synchronized (LOGS_FILE_SDF) {
-			String dateTimeString = LOGS_FILE_SDF.format(now);
-			String hostName = InetAddress.getLocalHost().getHostName();
-			StringBuilder sb = new StringBuilder();
-			sb.append(Constants.LOGS_FILE_NAME);
-			sb.append(hostName);
-			sb.append("_");
-			sb.append(serviceName);
-			sb.append("_");
-			sb.append(dateTimeString);
-			sb.append(Constants.LOGS_FILE_EXTENSION);
-			logsFileName = sb.toString();
-		}
-		String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
-		URL url = new URL(Constants.HTTP, this.getHost(), this.getPortNr(), urlPath);
-		StringBuilder sb = new StringBuilder();
-		sb.append(url.toString());
-		sb.append(Constants.QUESTION_MARK);
-		sb.append(Constants.UPLOAD_FILE_PARAM_NAME);
-		sb.append(Constants.EQUAL_SIGN);
-		sb.append(logsFileName);
-		sb.append(Constants.AMPERSAND_SIGN);
-		sb.append(Constants.UPLOAD_SERVICE_PARAM_NAME);
-		sb.append(Constants.EQUAL_SIGN);
-		sb.append(serviceName);
-		uploadCurrentLogFilesUsingStream(sb.toString());
-		return logsFileName;
-	}
-
-	/**
-	 * Upload current log files using stream. This methods does the main log file zip and upload job.
-	 * All log files of today were written to a zipped stream which is loaded up to this file server instance.
-	 * 
-	 * @param uploadUri
-	 *            the upload uri
-	 * @throws Exception
-	 *             the exception
-	 */
-	private void uploadCurrentLogFilesUsingStream(String uploadUri) throws Exception {
-		// get all log file names
-		List<String> logFiles = this.getCurrentLogFiles();
-		if (logFiles.isEmpty()) {
-			throw new FileServerException("upload log files failed, no logs files found");
-		}
-		HttpClientUploadUtility uploadUtility = new HttpClientUploadUtility(uploadUri);
-		UploadRunnable uploadRunnable = uploadUtility.startUpload();
-		OutputStream os = null;
-		ZipOutputStream zos = null;
-		try {
-			os = uploadRunnable.getOutputStream();
-			zos = new ZipOutputStream(os);
-			for (String logFile : logFiles) {
-				String path = logFile.replace(File.separatorChar, '/');
-				InputStream is = WebUtil.loadResource(path);
-				if (is == null) {
-					continue;
-				}
-				ZipEntry entry = new ZipEntry(logFile);
-				entry.setComment("log file " + logFile);
-				zos.putNextEntry(entry);
-				try {
-					int readBytes = -1;
-					byte[] buffer = new byte[Constants.SIZE_64KB];
-					while ((readBytes = is.read(buffer)) > 0) {
-						zos.write(buffer, 0, readBytes);
-					}
-				} finally {
-					if (is != null) {
-						try {
-							is.close();
-						} catch (Exception e) {
-							LOGGER.error(e.toString());
-						}
-					}
-				}
-				zos.closeEntry();
-			}
-			zos.close();
-		} catch (Exception e) {
-			uploadRunnable.close();
-			throw e;
-		} finally {
-			if (zos != null) {
-				zos.close();
-			}
-		}
-		Integer ret = uploadRunnable.close();
-		if (ret != HttpStatus.SC_OK) {
-			throw new FileServerException("upload log files failed, http return code is " + ret);
-		}
-		return;
-	}
-
-	/**
-	 * Gets the current log file names in a list. Any distinct filenames will be ignored.
-	 * 
-	 * @return the current log file in a list
-	 */
-	private List<String> getCurrentLogFiles() {
-		Set<String> distinctLoggerSet = new HashSet<String>();
-		List<String> logFileList = new ArrayList<String>();
-		Logger rootLogger = LogManager.getRootLogger();
-		addLogFiles(rootLogger, logFileList, distinctLoggerSet);
-		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
-		while (currentLoggers.hasMoreElements()) {
-			Logger currentLogger = (Logger) currentLoggers.nextElement();
-			Enumeration<?> appenders = currentLogger.getAllAppenders();
-			if (appenders.hasMoreElements()) {
-				addLogFiles(currentLogger, logFileList, distinctLoggerSet);
-			}
-		}
-		return logFileList;
-	}
-
-	/**
-	 * Adds the log files for given LOGGER instance to the list. Any distinct file names will be ignored.
-	 * 
-	 * @param logger
-	 *            the LOGGER
-	 * @param logFileList
-	 *            the log file list
-	 * @param distinctLoggerSet
-	 *            the distinct LOGGER set
-	 */
-	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
-		Enumeration<?> appenders = logger.getAllAppenders();
-		while (appenders.hasMoreElements()) {
-			Appender appender = (Appender) appenders.nextElement();
-			String appenderName = appender.getName();
-			if (distinctLoggerSet.contains(appenderName)) {
-				continue;
-			}
-			distinctLoggerSet.add(appenderName);
-			if (appender instanceof FileAppender) {
-				FileAppender fileAppender = (FileAppender) appender;
-				String sFile = fileAppender.getFile();
-				File file = new File(sFile);
-				if (file.exists() && file.isFile()) {
-					logFileList.add(sFile);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Download and replace.
-	 * 
-	 * @param fileService
-	 *            the file service
-	 * @param remoteFile
-	 *            the remote file
-	 * @param dstFile
-	 *            the dst file
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void downloadAndReplace(FileService fileService, String remoteFile, File dstFile) throws Exception {
-		String path = fileService.getPath();
-		String urlPath = URLUtility.makePath(path, remoteFile);
-		URL downloadURL = new URL(Constants.HTTP, this.getHost(), this.getPortNr(), urlPath);
-		FileOutputStream fos = new FileOutputStream(dstFile);
-		HttpURLConnection httpCon = (HttpURLConnection) downloadURL.openConnection();
-		httpCon.connect();
-		InputStream in = httpCon.getInputStream();
-		byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
-		int readBytes = -1;
-		while ((readBytes = in.read(fullBuffer)) > 0) {
-			fos.write(fullBuffer, 0, readBytes);
-		}
-		in.close();
-		fos.close();
-		httpCon.disconnect();
-		return;
-	}
-
-	/**
 	 * Gets the max sessions.
 	 * 
 	 * @return the max sessions
@@ -534,7 +319,7 @@ public class FileServer extends Server {
 	public int getMaxSessions() {
 		return maxSessions;
 	}
-	
+
 	/**
 	 * Dump the server into the xml writer.
 	 * 
@@ -545,10 +330,10 @@ public class FileServer extends Server {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("file-server");
-		writer.writeAttribute("key",this.serverKey);
-		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
-		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
-		writer.writeAttribute("maxSessions",this.maxSessions);
+		writer.writeAttribute("key", this.serverKey);
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
+		writer.writeAttribute("maxSessions", this.maxSessions);
 		this.requester.dump(writer);
 		writer.writeStartElement("sessions");
 		List<FileSession> sessionList = this.sessions;
@@ -558,5 +343,4 @@ public class FileServer extends Server {
 		writer.writeEndElement(); // end of sessions
 		writer.writeEndElement(); // end of file-server
 	}
-	
 }

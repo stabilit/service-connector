@@ -163,7 +163,7 @@ public class SCPublishServer extends SCSessionServer {
 			SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (message.isFault()) {
 				SCServiceException ex = new SCServiceException("Publish failed.");
-				ex.setSCErrorCode(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorCode(message.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}

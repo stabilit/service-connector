@@ -20,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.netty.handler.codec.http.Cookie;
-
 /**
  * The Interface IWebRequest abstracts a web request.
  */
@@ -75,15 +73,6 @@ public interface IWebRequest {
 	 * @return the uRL
 	 */
 	public abstract String getURL();
-
-	/**
-	 * Gets the cookie.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the cookie
-	 */
-	public abstract Cookie getCookie(String key);
 
 	/**
 	 * Gets the http header for given key if any otherwise null.

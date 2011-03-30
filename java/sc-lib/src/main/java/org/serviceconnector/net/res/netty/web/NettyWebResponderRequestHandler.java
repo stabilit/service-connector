@@ -27,7 +27,6 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -75,15 +74,6 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
 		httpResponse.setContent(buffer);
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		// encode any cookies
-		CookieEncoder ce = ((NettyWebResponse) webResponse).getCookieEncoder();
-		if (ce != null) {
-			String encodedCookies = ce.encode();
-			if (encodedCookies != null && encodedCookies.length() > 0) {
-				// LOGGER.debug(encodedCookies);
-				httpResponse.addHeader("Set-Cookie", encodedCookies);
-			}
-		}
 		// Write the response.
 		event.getChannel().write(httpResponse);
 	}

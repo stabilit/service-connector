@@ -86,14 +86,6 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			return;
 		}
 		IWebSession webSession = request.getSession(false);
-		// cookie replaced by url encoding
-		// if (webSession == null) {
-		// Cookie jsessionidCookie = request.getCookie("JSESSIONID");
-		// if (jsessionidCookie != null) {
-		// jsessionidCookie.setMaxAge(0);
-		// response.addCookie(jsessionidCookie);
-		// }
-		// }
 		// load xml model as stream
 		ByteArrayOutputStream xmlOS = new ByteArrayOutputStream();
 		XMLDocument xmlDocument = new XMLDocument(request);

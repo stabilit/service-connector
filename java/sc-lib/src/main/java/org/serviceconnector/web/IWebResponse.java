@@ -18,8 +18,6 @@ package org.serviceconnector.web;
 
 import java.io.OutputStream;
 
-import org.jboss.netty.handler.codec.http.Cookie;
-
 /**
  * The Interface IWebResponse abstracts a web response.
  */
@@ -56,14 +54,6 @@ public interface IWebResponse {
 	 *            the new content type
 	 */
 	public abstract void setContentType(String string);
-
-	/**
-	 * Adds the cookie.
-	 * 
-	 * @param cookie
-	 *            the cookie
-	 */
-	public abstract void addCookie(Cookie cookie);
 
 	/**
 	 * Redirect.

@@ -119,10 +119,6 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			webSession.setRemotePort(request.getRemotePort());
 			webSession.setHost(request.getHost());
 			webSession.setPort(request.getPort());
-// cookie replaced by url encoding			
-//			DefaultCookie cookie = new DefaultCookie("JSESSIONID", webSession.getSessionId());
-//			cookie.setPath("/");
-//			response.addCookie(cookie);
 			request.setAttribute("JSESSIONID", webSession.getSessionId());
 			webSession.setAttribute("userid", userid);
 			return webSession;

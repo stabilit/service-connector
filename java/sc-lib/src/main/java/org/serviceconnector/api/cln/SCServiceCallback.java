@@ -25,7 +25,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
@@ -77,10 +76,9 @@ public class SCServiceCallback extends SynchronousCallback {
 			return;
 		}
 		if (reply.isFault()) {
-			SCMPMessageFault fault = (SCMPMessageFault) reply;
-			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-			e.setSCErrorCode(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			e.setSCErrorText(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException e = new SCServiceException(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			e.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			e.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			// inform service request is completed
 			this.service.setRequestComplete();
 			this.messageCallback.receive(e);
