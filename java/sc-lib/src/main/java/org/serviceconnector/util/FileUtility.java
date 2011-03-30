@@ -33,7 +33,6 @@ import java.util.concurrent.TimeoutException;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -291,7 +290,7 @@ public final class FileUtility {
 			}
 			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel();
 			FileLock lock = channel.lock();
-			LOGGER.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
+			LOGGER.info("Create PID-file=" + fileNameFull + " PID=" + pid);
 			return lock;
 		} finally {
 			if (fw != null) {

@@ -183,7 +183,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
 		// write web color schema
 		writer.writeStartElement("meta");
-		writer.writeAttribute("colorschema", webConfiguration.getColorSchema());
+		writer.writeAttribute("colorscheme", webConfiguration.getColorScheme());
 		writer.writeEndElement(); // close meta tag
 		// write sc header prefix
 		writer.writeStartElement("meta");

@@ -18,7 +18,7 @@
                 <META HTTP-EQUIV="Cache-Control" CONTENT="post-check=1, pre-check=2"></META>
                 <META HTTP-EQUIV="Expires" CONTENT="-1"></META>				
 				<link rel="stylesheet" href="sc-web.css"></link>
-				<link rel="stylesheet" href="sc-web-{$head/meta/@colorschema}.css"></link>
+				<link rel="stylesheet" href="sc-web-{$head/meta/@colorscheme}.css"></link>
 				<script type="text/javascript" src="ajax.js"></script>
 				<script type="text/javascript" src="sc_ajax.js"></script>
 				<script type="text/javascript" src="sc.js"></script>

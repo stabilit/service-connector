@@ -62,8 +62,8 @@ public class WebConfiguration {
 	/** if true the GUI will display Sc terminate button in maintenance menu and allow Sc terminationn from the GUI. */
 	private boolean scTerminateAllowed;
 
-	/** name of the colorSchema. */
-	private String colorSchema;
+	/** name of the colorScheme. */
+	private String colorScheme;
 
 	/**
 	 * Instantiates a new SCMP cache configuration.
@@ -76,7 +76,7 @@ public class WebConfiguration {
 		this.scUploadService = null;
 		this.pageHeaderPrefix = null;
 		this.scTerminateAllowed = false;
-		this.colorSchema = Constants.DEFAULT_WEB_COLOR_SCHEME;
+		this.colorScheme = Constants.DEFAULT_WEB_COLOR_SCHEME;
 	}
 
 	/**
@@ -123,11 +123,11 @@ public class WebConfiguration {
 		if (scTerminateAllowedConf != null) {
 			this.scTerminateAllowed = scTerminateAllowedConf;
 		}
-		this.colorSchema = compositeConfiguration.getString(Constants.WEB_COLOR_SCHEMA, "");
-		if (this.colorSchema == null  || this.colorSchema.isEmpty()) {
-			this.colorSchema = Constants.DEFAULT_WEB_COLOR_SCHEME;
+		this.colorScheme = compositeConfiguration.getString(Constants.WEB_COLOR_SCHEMA, null);
+		if (this.colorScheme == null  || this.colorScheme.isEmpty()) {
+			this.colorScheme = Constants.DEFAULT_WEB_COLOR_SCHEME;
 		}
-		LOGGER.info(Constants.WEB_COLOR_SCHEMA + "=" + this.colorSchema);
+		LOGGER.info(Constants.WEB_COLOR_SCHEMA + "=" + this.colorScheme);
 	}
 
 	/**
@@ -194,11 +194,11 @@ public class WebConfiguration {
 	}
 	
 	/**
-	 * Gets the color schema
+	 * Gets the color scheme
 	 * 
-	 * @return the color schema name
+	 * @return the color scheme name
 	 */
-	public String getColorSchema() {
-		return colorSchema;
+	public String getColorScheme() {
+		return colorScheme;
 	}
 }

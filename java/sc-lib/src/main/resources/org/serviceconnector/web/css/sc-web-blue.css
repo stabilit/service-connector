@@ -1,19 +1,19 @@
 
 div#sc_header {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	width: 100%;
 	height: 56px;
 }
 
 div#sc_menu {
 	background-color: #EEEEEE;
-	border-bottom: solid 4px #341FB6;
+	border-bottom: solid 4px #0000B7;
 	padding: 0px;
 	height: 24px;
 }
 
 div.sc_menu_item_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	color:#FFFFFF;
 	padding:4px;
 	float:left;
@@ -21,7 +21,7 @@ div.sc_menu_item_over {
 }
 
 .sc_navigation_item_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	color:#FFFFFF;
 	border-bottom: 1px solid #666666;
 	border-right: 0px solid #666666;
@@ -30,7 +30,7 @@ div.sc_menu_item_over {
 }
 
 div#sc_login_title {
-	background: #341FB6;
+	background: #0000B7;
 	color: white;
 	padding-top: 4px;
 	font-size: 14px;
@@ -41,12 +41,12 @@ div#sc_login_title {
 }
 
 tr.sc_table_odd_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	color:#FFFFFF;
 }
 
 tr.sc_table_even_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	color:#FFFFFF;
 }
 
@@ -72,7 +72,7 @@ td.sc_sub_table_even_over {
 }
 
 td.sc_table_even_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;
 	padding: 1px;
@@ -80,7 +80,7 @@ td.sc_table_even_over {
 }
 
 td.sc_table_odd_over {
-	background-color: #341FB6;
+	background-color: #0000B7;
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;
 	padding: 1px;
@@ -88,7 +88,7 @@ td.sc_table_odd_over {
 }
 
 div.sc_table_title {
-	background: #341FB6;
+	background: #0000B7;
 	color: white;
 	padding-top: 4px;
 	font-size: 12px;
@@ -99,5 +99,5 @@ div.sc_table_title {
 
 .sc_table_details {
 	padding:1px;
-	border:2px solid #341FB6;
+	border:2px solid #0000B7;
 }
