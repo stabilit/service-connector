@@ -56,7 +56,7 @@ public class TestUtil {
 
 	public static void verifyError(SCMPMessage result, SCMPError error, SCMPMsgType msgType) {
 		Assert.assertEquals(msgType.getValue(), result.getMessageType());
-		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+		Assert.assertEquals(error.getErrorCode(), result.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE).intValue());
 	}
 
 	public static void checkReply(SCMPMessage message) throws Exception {
