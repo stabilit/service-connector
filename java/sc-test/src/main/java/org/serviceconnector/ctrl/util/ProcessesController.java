@@ -159,7 +159,7 @@ public class ProcessesController {
 		 * [3] SC runnable
 		 * [4] -sc.configuration
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " "
+		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " "
 				+ Constants.CLI_CONFIG_ARG + " " + scPropertiesFullName;
 
 		Process process = Runtime.getRuntime().exec(command);
@@ -324,7 +324,7 @@ public class ProcessesController {
 			// empty timezoneParam
 			timezoneParam = "";
 		}
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar " + srvRunablFullName
+		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar " + srvRunablFullName
 				+ " " + serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " "
 				+ maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
 		Process srvProcess = Runtime.getRuntime().exec(command);
