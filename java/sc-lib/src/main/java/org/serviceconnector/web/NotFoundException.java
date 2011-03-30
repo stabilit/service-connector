@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,18 +13,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
-
 
 /**
  * The Class NotFoundException.
  */
 public class NotFoundException extends Exception {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7695341821523840247L;
 
 	/**
