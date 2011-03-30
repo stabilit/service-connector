@@ -218,7 +218,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertTrue(scmpReply.isFault());
-		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE).intValue());
 	}
 
 	/**
