@@ -14,29 +14,21 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.Writer;
 
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.util.DumpUtility;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class DumpXMLLoader.
  */
 public class DumpXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public DumpXMLLoader() {
-	}
-
+	
 	@Override
 	public void loadBody(Writer writer, IWebRequest request) throws Exception {
 		String name = request.getParameter("name");
@@ -53,10 +45,5 @@ public class DumpXMLLoader extends AbstractXMLLoader {
 	@Override
 	public boolean isText() {
 		return true;
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new DumpXMLLoader();
 	}
 }

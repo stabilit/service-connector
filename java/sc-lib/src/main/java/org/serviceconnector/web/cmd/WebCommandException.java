@@ -17,21 +17,25 @@
 package org.serviceconnector.web.cmd;
 
 /**
- * The Interface IWebAccessibleContext.
+ * The Class WebCommandException.
  */
-public interface IWebCommandAccessibleContext {
+public class WebCommandException extends Exception {
+
+	private static final long serialVersionUID = -4819887993950715812L;
 
 	/**
-	 * Gets the userid.
-	 * 
-	 * @return the userid
+	 * Instantiates a new not found exception.
 	 */
-	public abstract String getUserid();
+	public WebCommandException() {
+	}
 
 	/**
-	 * Gets the password.
+	 * Instantiates a new not found exception.
 	 * 
-	 * @return the password
+	 * @param msg
+	 *            the msg
 	 */
-	public abstract String getPassword();
+	public WebCommandException(String msg) {
+		super(msg);
+	}
 }

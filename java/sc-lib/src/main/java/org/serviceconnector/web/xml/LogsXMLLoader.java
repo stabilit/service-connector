@@ -15,7 +15,7 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,8 +34,6 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
 
@@ -187,13 +185,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		}
 		writer.writeEndElement(); // close logger tag
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new LogsXMLLoader();
-	}
-
+	
 	/**
 	 * Gets the current log files.
 	 * 

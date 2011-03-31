@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.web.ctx.WebContext;
 
 /**
  * The Class AbstractWebRequest.
@@ -144,9 +145,9 @@ public abstract class AbstractWebRequest implements IWebRequest {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IWebSession getSession(boolean create) {
+	public WebSession getSession(boolean create) {
 		if (this.encodedSessionId != null) {
-			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(encodedSessionId);
+			WebSession webSession = WebContext.getWebSessionRegistry().getSession(encodedSessionId);
 			if (webSession != null) {
 				// check if web session belongs to same local port, client and user agent
 				if (this.isMySession(webSession)) {
@@ -155,7 +156,7 @@ public abstract class AbstractWebRequest implements IWebRequest {
 			}
 		}
 		if (create == true) {
-			return WebSessionRegistry.getCurrentInstance().newSession();
+			return WebContext.getWebSessionRegistry().createSession();
 		}
 		return null;
 	}
@@ -167,7 +168,7 @@ public abstract class AbstractWebRequest implements IWebRequest {
 	 *            the web session
 	 * @return true, if is my session
 	 */
-	private boolean isMySession(IWebSession webSession) {
+	private boolean isMySession(WebSession webSession) {
 		String userAgent = webSession.getUserAgent();
 		String webLocalHost = webSession.getHost();
 		String webRemoteHost = webSession.getRemoteHost();

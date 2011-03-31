@@ -14,33 +14,41 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
+
+import java.io.Writer;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.web.AbstractXMLLoader;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.registry.ServerRegistry;
+import org.serviceconnector.server.Server;
 import org.serviceconnector.web.IWebRequest;
 
 /**
- * The Class DefaultXMLLoader.
+ * The Class ServersXMLLoader.
  */
-public class DefaultXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public DefaultXMLLoader() {
-	}
+public class ServersXMLLoader extends AbstractXMLLoader {
 
 	/** {@inheritDoc} */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		ServerRegistry serverRegistry = AppContext.getServerRegistry();
+		writer.writeStartElement("servers");
+		Server[] servers = serverRegistry.getServers();
+		for (Server server : servers) {
+			writer.writeStartElement("server");
+			this.writeBean(writer, server);
+			writer.writeEndElement();
+		}
+		writer.writeEndElement(); // close sessions tag
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public IFactoryable newInstance() {
-		return new DefaultXMLLoader();
+	public final void loadBody(Writer writer, IWebRequest request) throws Exception {
+		if (writer instanceof XMLStreamWriter) {
+			this.loadBody((XMLStreamWriter) writer, request);
+		}
 	}
-
 }

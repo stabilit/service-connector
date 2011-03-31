@@ -16,60 +16,42 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.web.ctx.WebContext;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class WebSessionRegistry.
  */
-public final class WebSessionRegistry extends Registry<String, IWebSession> {
+public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
-	/** The instance. */
-	private static WebSessionRegistry instance = new WebSessionRegistry();
-	/** The web session scheduler. */
-	private ScheduledThreadPoolExecutor webSessionScheduler;
-	/** The expiration timeout run. */
-	private WebSessionExpirationTimeoutRun webSessionExpirationTimeoutRun;
+	/** The timer. Timer instance is responsible to observe session timeouts. */
+	private ScheduledThreadPoolExecutor sessionScheduler;
 
 	/**
 	 * Instantiates a new web session registry.
 	 */
-	private WebSessionRegistry() {
-		this.webSessionScheduler = new ScheduledThreadPoolExecutor(1);
-		int webSessionScheduleTimeoutSeconds = WebContext.getWebConfiguration().getWebSessionScheduleTimeoutSeconds();
-		int webSessionTimeoutMinutes = WebContext.getWebConfiguration().getWebSessionTimeoutMinutes();
-		this.webSessionExpirationTimeoutRun = new WebSessionExpirationTimeoutRun(webSessionTimeoutMinutes);
-		this.webSessionScheduler.scheduleAtFixedRate(this.webSessionExpirationTimeoutRun, webSessionScheduleTimeoutSeconds,
-				webSessionScheduleTimeoutSeconds, TimeUnit.SECONDS);
-		LOGGER.debug("start web session expiration thread using timeout (s) = " + webSessionScheduleTimeoutSeconds);
+	public WebSessionRegistry() {
+		this.sessionScheduler = new ScheduledThreadPoolExecutor(1);
 	}
 
 	/**
-	 * Gets the current instance of web session registry.
-	 * 
-	 * @return the current instance
-	 */
-	public static WebSessionRegistry getCurrentInstance() {
-		return instance;
-	}
-
-	/**
-	 * New session.
+	 * Create new session.
 	 * 
 	 * @return the i web session
 	 */
-	public IWebSession newSession() {
-		IWebSession webSession = new WebSession();
-		this.put(webSession.getSessionId(), webSession);
+	public WebSession createSession() {
+		WebSession webSession = new WebSession();
+		this.put(webSession.getId(), webSession);
+		this.scheduleSessionTimeout(webSession);
 		return webSession;
 	}
 
@@ -80,10 +62,10 @@ public final class WebSessionRegistry extends Registry<String, IWebSession> {
 	 *            the session id
 	 * @return the session
 	 */
-	public IWebSession getSession(String sessionId) {
-		IWebSession webSession = this.get(sessionId);
+	public WebSession getSession(String sessionId) {
+		WebSession webSession = this.get(sessionId);
 		if (webSession != null) {
-			webSession.access();
+			this.scheduleSessionTimeout(webSession);
 		}
 		return webSession;
 	}
@@ -94,30 +76,67 @@ public final class WebSessionRegistry extends Registry<String, IWebSession> {
 	 * @param session
 	 *            the session
 	 */
-	public void removeSession(IWebSession session) {
+	public void removeSession(WebSession session) {
 		if (session == null) {
 			return;
 		}
-		this.remove(session.getSessionId());
+		this.cancelSessionTimeout(session);
+		this.remove(session.getId());
 	}
 
 	/**
-	 * Removes the expired sessions.
+	 * Schedule session timeout.
 	 * 
-	 * @param timeoutMinutes
-	 *            the timeout minutes
+	 * @param session
+	 *            the session
 	 */
-	public synchronized void removeExpiredSessions(int timeoutMinutes) {
-		Object[] sessionKeys = this.getAllSessionKeys();
-		if (sessionKeys == null) {
+	@SuppressWarnings("unchecked")
+	private void scheduleSessionTimeout(WebSession session) {
+		if (session == null) {
+			// no scheduling of session timeout
 			return;
 		}
-		for (Object sessionKey : sessionKeys) {
-			IWebSession session = (IWebSession) this.get((String) sessionKey);
-			if (session.isExpired(timeoutMinutes)) {
-				this.remove((String) sessionKey);
+		LOGGER.debug("schedule session using timeout(sec)=" + session.getSessionTimeoutSeconds());
+		// always cancel old timeouter before setting up a new one
+		this.cancelSessionTimeout(session);
+		// sets up session timeout
+		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new WebSessionTimeout(session));
+		// schedule sessionTimeouter in registry timer
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
+				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		session.setTimeout(timeout);
+		session.setTimeouterTask(sessionTimeouter);
+	}
+
+	/**
+	 * Cancel session timeout.
+	 * 
+	 * @param session
+	 *            the session
+	 */
+	private void cancelSessionTimeout(WebSession session) {
+		if (session == null) {
+			return;
+		}
+		ScheduledFuture<TimeoutWrapper> sessionTimeout = session.getTimeout();
+		if (sessionTimeout == null) {
+			// no session timeout has been set up for this session
+			return;
+		}
+		LOGGER.debug("cancel session timeout " + session.getId());
+		boolean cancelSuccess = sessionTimeout.cancel(false);
+		if (cancelSuccess == false) {
+			LOGGER.warn("cancel of session timeout failed :" + session.getId() + " delay millis: "
+					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
+			if (remove == false) {
+				LOGGER.warn("remove of session timeout failed :" + session.getId() + " delay millis: "
+						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			}
 		}
+		this.sessionScheduler.purge();
+		// important to set timeouter null - rescheduling of same instance not possible
+		session.setTimeout(null);
 	}
 
 	/**
@@ -131,259 +150,38 @@ public final class WebSessionRegistry extends Registry<String, IWebSession> {
 	}
 
 	/**
-	 * The Class WebSession.
+	 * The Class WebSessionTimeout. Gets control when a session times out. Responsible for cleaning up when session gets broken.
 	 */
-	private class WebSession implements IWebSession {
-
-		/** The attr map. */
-		private Map<String, Object> attrMap;
-
-		/** The user agent. */
-		private String userAgent;
-		
-		/** The local server host. */
-		private String host;
-
-		/** The local server port. */
-		private int port;
-
-		/** The remote host. */
-		private String remoteHost;
-
-		/** The remote port. */
-		private int remotePort;
-
-		/** The session id. */
-		private String sessionId;
-
-		/** The creation time stamp. */
-		private long creationTimeStamp;
-
-		/** The last access time stamp. */
-		private long accessTimeStamp;
+	private class WebSessionTimeout implements ITimeout {
+		/** The session. */
+		private WebSession session;
+		/** The timeout. */
+		private double timeoutSeconds;
 
 		/**
-		 * Instantiates a new web session.
-		 */
-		public WebSession() {
-			attrMap = new HashMap<String, Object>();
-			UUID uuid = UUID.randomUUID();
-			this.userAgent = null;
-			this.host = null;
-			this.remoteHost = null;
-			this.port = 0;
-			this.remotePort = 0;
-			this.sessionId = uuid.toString();
-			this.creationTimeStamp = System.currentTimeMillis();
-			this.accessTimeStamp = this.creationTimeStamp;
-			LOGGER.debug("New web session created, id = " + this.sessionId);
-		}
-
-		/**
-		 * Gets the attribute.
+		 * Instantiates a new session timer run.
 		 * 
-		 * @param key
-		 *            the key
-		 * @return the attribute {@inheritDoc}
+		 * @param session
+		 *            the session
 		 */
-		@Override
-		public Object getAttribute(String key) {
-			return this.attrMap.get(key);
+		public WebSessionTimeout(WebSession session) {
+			this.session = session;
+			this.timeoutSeconds = session.getSessionTimeoutSeconds();
 		}
 
 		/**
-		 * Sets the attribute.
-		 * 
-		 * @param key
-		 *            the key
-		 * @param value
-		 *            the value {@inheritDoc}
+		 * Timeout. Session timeout run out.
 		 */
 		@Override
-		public void setAttribute(String key, Object value) {
-			this.attrMap.put(key, value);
-
-		}
-
-		/**
-		 * Removes the attribute.
-		 * 
-		 * @param key
-		 *            the key
-		 * @return the object {@inheritDoc}
-		 */
-		@Override
-		public Object removeAttribute(String key) {
-			return this.attrMap.remove(key);
-		}
-
-		/**
-		 * Gets the user agent.
-		 * 
-		 * @return the user agent {@inheritDoc}
-		 */
-		@Override
-		public String getUserAgent() {
-			return this.userAgent;
-		}
-
-		/**
-		 * Sets the user agent.
-		 * 
-		 * @param userAgent
-		 *            the new user agent {@inheritDoc}
-		 */
-		@Override
-		public void setUserAgent(String userAgent) {
-			this.userAgent = userAgent;
-		}
-		
-		/**
-		 * Gets the host.
-		 * 
-		 * @return the host {@inheritDoc}
-		 */
-		@Override
-		public String getHost() {
-			return this.host;
-		}
-
-		/**
-		 * Sets the host.
-		 * 
-		 * @param host
-		 *            the new host {@inheritDoc}
-		 */
-		@Override
-		public void setHost(String host) {
-			this.host = host;
-		}
-
-		/**
-		 * Gets the port.
-		 * 
-		 * @return the port {@inheritDoc}
-		 */
-		@Override
-		public int getPort() {
-			return this.port;
-		}
-
-		/**
-		 * Sets the port.
-		 * 
-		 * @param port
-		 *            the new port {@inheritDoc}
-		 */
-		@Override
-		public void setPort(int port) {
-			this.port = port;
-		}
-
-		/**
-		 * Gets the remote host.
-		 * 
-		 * @return the remote host {@inheritDoc}
-		 */
-		@Override
-		public String getRemoteHost() {
-			return this.remoteHost;
-		}
-
-		/**
-		 * Sets the remote host.
-		 * 
-		 * @param remoteHost
-		 *            the new remote host {@inheritDoc}
-		 */
-		@Override
-		public void setRemoteHost(String remoteHost) {
-			this.remoteHost = remoteHost;
-		}
-
-		/**
-		 * Gets the remote port.
-		 * 
-		 * @return the remote port {@inheritDoc}
-		 */
-		@Override
-		public int getRemotePort() {
-			return this.remotePort;
-		}
-
-		/**
-		 * Sets the remote port.
-		 * 
-		 * @param remotePort
-		 *            the new remote port {@inheritDoc}
-		 */
-		@Override
-		public void setRemotePort(int remotePort) {
-			this.remotePort = remotePort;
-		}
-
-		/**
-		 * Gets the session id.
-		 * 
-		 * @return the session id {@inheritDoc}
-		 */
-		@Override
-		public String getSessionId() {
-			return this.sessionId;
-		}
-
-		/**
-		 * Access. {@inheritDoc}
-		 */
-		@Override
-		public void access() {
-			this.accessTimeStamp = System.currentTimeMillis();
+		public void timeout() {
+			LOGGER.debug("web session timed out sid=" + session.getId() + " timeout(millis)=" + this.getTimeoutMillis());
+			WebSessionRegistry.this.removeSession(session);
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public boolean isExpired(long timeoutMinutes) {
-			long timeoutMillis = timeoutMinutes * 1000 * 60;
-			long currentMillis = System.currentTimeMillis();
-			if (this.accessTimeStamp + timeoutMillis < currentMillis) {
-				// current time is higher than max planned session inactivity time
-				return true;
-			}
-			return false;
-		}
-
-	}
-
-	/**
-	 * The Class WebSessionExpirationTimeoutThread.
-	 * 
-	 * This class controls within a thread any web session instance for expiration
-	 */
-	private class WebSessionExpirationTimeoutRun implements Runnable {
-
-		/** The max session inactivity timeout minutes. */
-		private int timeoutMinutes;
-
-		/**
-		 * Instantiates a new expiration timeout thread.
-		 * 
-		 * @param timeoutMinutes
-		 *            the timeout minutes
-		 */
-		public WebSessionExpirationTimeoutRun(int timeoutMinutes) {
-			this.timeoutMinutes = timeoutMinutes;
-		}
-
-		/**
-		 * web session expiration thread run method, checks withing given interval if web session elements were expired and removes
-		 * them
-		 * from web session registry.
-		 * 
-		 */
-		@Override
-		public void run() {
-			WebSessionRegistry.this.removeExpiredSessions(this.timeoutMinutes);
-			return;
+		public int getTimeoutMillis() {
+			return (int) (this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		}
 	}
 }

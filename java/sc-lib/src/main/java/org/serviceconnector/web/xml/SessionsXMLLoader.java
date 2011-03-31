@@ -14,33 +14,25 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.Writer;
 
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class SessionsXMLLoader.
  */
 public class SessionsXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public SessionsXMLLoader() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -83,10 +75,4 @@ public class SessionsXMLLoader extends AbstractXMLLoader {
 			this.loadBody((XMLStreamWriter) writer, request);
 		}
 	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new SessionsXMLLoader();
-	}
-
 }

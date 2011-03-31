@@ -15,18 +15,16 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.conf.WebConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.ctx.WebContext;
 
@@ -34,12 +32,6 @@ import org.serviceconnector.web.ctx.WebContext;
  * The Class MaintenanceXMLLoader.
  */
 public class MaintenanceXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public MaintenanceXMLLoader() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -69,13 +61,13 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		String scDownloadService = webConfiguration.getScDownloadService();
 		writer.writeStartElement("scDownloadService");
 		if (scDownloadService != null) {
-		   writer.writeCData(scDownloadService);
+			writer.writeCData(scDownloadService);
 		}
 		writer.writeEndElement(); // end of scDownloadService
 		String scUploadService = webConfiguration.getScUploadService();
 		writer.writeStartElement("scUploadService");
 		if (scUploadService != null) {
-		   writer.writeCData(scUploadService);
+			writer.writeCData(scUploadService);
 		}
 		writer.writeEndElement(); // end of scUploadService
 		Boolean scTerminateAllowed = webConfiguration.isScTerminateAllowed();
@@ -123,11 +115,4 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		}
 		writer.writeEndElement(); // close services tag
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new MaintenanceXMLLoader();
-	}
-
 }

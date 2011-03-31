@@ -14,70 +14,39 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
 
 /**
- * The Class AjaxResourceXMLLoader.
+ * The Class ResourceXMLLoader.
  */
-public class AjaxResourceXMLLoader extends AbstractXMLLoader {
-	/**
-	 * Instantiates a new timer xml loader.
-	 */
-	public AjaxResourceXMLLoader() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new AjaxResourceXMLLoader();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean isText() {
-		return true;
-	}
+public class ResourceXMLLoader extends AbstractXMLLoader {
 
 	/** {@inheritDoc} */
 	@Override
 	public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void loadBody(Writer writer, IWebRequest request) throws Exception {
 		String name = request.getParameter("name");
-		InputStream is = WebUtil.loadResource(name);
+		if (name == null) {
+			return;
+		}
+		String path = name.replace(File.separatorChar, '/');
+		InputStream is = WebUtil.loadResource(path);
 		if (is == null) {
 			this.addMeta("exception", "resource for name = " + name + " not found");
 			return;
 		}
 		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				writer.write(line);
-				writer.write("<br/>");
-			}
-			writer.flush();
+			writer.writeStartElement("resource");
+			writer.writeAttribute("name", name);
+			writer.writeAttribute("path", path);
+			writer.writeEndElement();
 		} catch (Exception e) {
 			this.addMeta("exception", e.toString());
 			return;

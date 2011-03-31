@@ -17,23 +17,22 @@
 package org.serviceconnector.web.ctx;
 
 import org.serviceconnector.conf.WebConfiguration;
-import org.serviceconnector.web.IWebRequest;
-import org.serviceconnector.web.IXMLLoader;
-import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
-import org.serviceconnector.web.cmd.IWebCommand;
-import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
+import org.serviceconnector.web.WebCredentials;
+import org.serviceconnector.web.WebSessionRegistry;
+import org.serviceconnector.web.cmd.WebCommand;
+import org.serviceconnector.web.cmd.XMLLoaderFactory;
+import org.serviceconnector.web.xml.IXMLLoader;
 
 /**
  * The Class WebContext.
  */
 public final class WebContext {
-	// Factories
-	/** The loader factory. */
-	private static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
-	/** The web command factory. */
-	private static FlyweightWebCommandFactory webCommandFactory;
 	/** The web configuration. */
 	private static WebConfiguration webConfiguration = new WebConfiguration();
+	/** The web command. */
+	private static WebCommand webCommand = new WebCommand();
+	private static WebCredentials webContextCredentials;
+	private static WebSessionRegistry webSessionRegistry;
 
 	/**
 	 * Instantiates a new web context. Singelton.
@@ -44,20 +43,7 @@ public final class WebContext {
 	// initialize configurations in every case
 	static {
 		WebContext.webConfiguration = new WebConfiguration();
-	}
-
-	/**
-	 * Initializes the commands.
-	 * 
-	 * @param webCommandFactory
-	 *            the web command factory
-	 */
-	public static void initCommands(FlyweightWebCommandFactory webCommandFactory) {
-		if (WebContext.webCommandFactory != null) {
-			// set only one time
-			return;
-		}
-		WebContext.webCommandFactory = webCommandFactory;
+		WebContext.webSessionRegistry = new WebSessionRegistry();
 	}
 
 	/**
@@ -69,6 +55,10 @@ public final class WebContext {
 		return webConfiguration;
 	}
 
+	public static WebSessionRegistry getWebSessionRegistry() {
+		return WebContext.webSessionRegistry;
+	}
+
 	/**
 	 * Gets the web command.
 	 * 
@@ -76,8 +66,8 @@ public final class WebContext {
 	 *            the web request
 	 * @return the web command
 	 */
-	public static IWebCommand getWebCommand(IWebRequest webRequest) {
-		return WebContext.webCommandFactory.getWebCommand(webRequest);
+	public static WebCommand getWebCommand() {
+		return WebContext.webCommand;
 	}
 
 	/**
@@ -88,6 +78,25 @@ public final class WebContext {
 	 * @return the xML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {
-		return WebContext.loaderFactory.getXMLLoader(url);
+		return XMLLoaderFactory.getXMLLoader(url);
+	}
+
+	/**
+	 * Gets the web context credentials.
+	 * 
+	 * @return the web context credentials
+	 */
+	public static WebCredentials getWebSCContextCredentials() {
+		return WebContext.webContextCredentials;
+	}
+
+	/**
+	 * Sets the SC web credentials.
+	 * 
+	 * @param webCredentials
+	 *            the new SC web credentials
+	 */
+	public static void setSCWebCredentials(WebCredentials webCredentials) {
+		WebContext.webContextCredentials = webCredentials;
 	}
 }

@@ -15,7 +15,7 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,7 +50,6 @@ import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.server.FileServerException;
 import org.serviceconnector.service.CascadedFileService;
@@ -59,12 +58,11 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.util.CircularByteBuffer;
 import org.serviceconnector.util.DumpUtility;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
-import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
-import org.serviceconnector.web.cmd.sc.WebCommandException;
-import org.serviceconnector.web.cmd.sc.XSLTTransformerFactory;
+import org.serviceconnector.web.cmd.WebCommandException;
+import org.serviceconnector.web.cmd.XMLLoaderFactory;
+import org.serviceconnector.web.cmd.XSLTTransformerFactory;
 
 /**
  * The Class AjaxSystemXMLLoader.
@@ -76,18 +74,6 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/** The Constant LOGGER. */
 	public static final Logger LOGGER = Logger.getLogger(AjaxSystemXMLLoader.class);
-
-	/**
-	 * Instantiates a new system xml loader.
-	 */
-	public AjaxSystemXMLLoader() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new AjaxSystemXMLLoader();
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -107,7 +93,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // action
 		try {
 			if ("gc".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("run gc");
+				XMLLoaderFactory.LOGGER.debug("run gc");
 				System.gc();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -128,7 +114,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("dump".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("SC dump by user interface");
+				XMLLoaderFactory.LOGGER.debug("SC dump by user interface");
 				try {
 					String dumpPath = AppContext.dump();
 					writer.writeStartElement("status");
@@ -155,7 +141,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("terminate".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("SC terminated by user interface");
+				XMLLoaderFactory.LOGGER.debug("SC terminated by user interface");
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
 				writer.writeEndElement();
@@ -167,7 +153,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				System.exit(1);
 			}
 			if ("deleteDump".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("delete dump by user interface");
+				XMLLoaderFactory.LOGGER.debug("delete dump by user interface");
 				String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 				DumpUtility.deleteAllDumpFiles(dumpPath);
 				writer.writeStartElement("status");
@@ -181,7 +167,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("clearCache".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("clear cache by user interface");
+				XMLLoaderFactory.LOGGER.debug("clear cache by user interface");
 				CacheManager cacheManager = AppContext.getCacheManager();
 				cacheManager.clearAll();
 				writer.writeStartElement("status");
@@ -199,7 +185,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("resetTranslet".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("reset translet by user interface");
+				XMLLoaderFactory.LOGGER.debug("reset translet by user interface");
 				XSLTTransformerFactory.getInstance().clearTranslet();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -212,7 +198,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("downloadAndReplace".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("download and replace configuration");
+				XMLLoaderFactory.LOGGER.debug("download and replace configuration");
 				downloadAndReplace(writer, request);
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -220,9 +206,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("uploadLogFiles".equals(action)) {
-				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files 1");
+				XMLLoaderFactory.LOGGER.debug("upload current log files 1");
 				uploadCurrentLogFiles(writer, request);
-				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files 2");
+				XMLLoaderFactory.LOGGER.debug("upload current log files 2");
 				return;
 			}
 			// action is not valid or unknown
@@ -349,7 +335,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			scFileService.downloadFile(remoteFile, dstStream);
 			writer.writeStartElement("message");
 			writer.writeCharacters(dstFile.getName() + "  " + status);
-			writer.writeEndElement();			
+			writer.writeEndElement();
 		} catch (Exception e) {
 			status = "failed";
 			writer.writeStartElement("message");
@@ -633,7 +619,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 *             the exception
 	 */
 	private void enableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		DefaultXMLLoaderFactory.LOGGER.debug("run disable service");
+		XMLLoaderFactory.LOGGER.debug("run disable service");
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			this.writeFailure(writer, "Missing service name!");
@@ -661,7 +647,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 *             the exception
 	 */
 	private void disableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		DefaultXMLLoaderFactory.LOGGER.debug("run disable service");
+		XMLLoaderFactory.LOGGER.debug("run disable service");
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			this.writeFailure(writer, "Missing service name!");
@@ -680,13 +666,15 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Change log level.
-	 *
-	 * @param writer the writer
-	 * @param request the request
-	 * @throws Exception 
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
 	 */
 	private void changeLogLevel(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		DefaultXMLLoaderFactory.LOGGER.debug("change log level");
+		XMLLoaderFactory.LOGGER.debug("change log level");
 		String logName = request.getParameter("log");
 		if (logName == null) {
 			this.writeFailure(writer, "Missing log name!");
@@ -712,7 +700,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		}
 		this.writeSuccess(writer, "Log level has been changed! log name = " + logName + ", new level = " + logger.getLevel());
 		return;
-		
+
 	}
 
 	/**

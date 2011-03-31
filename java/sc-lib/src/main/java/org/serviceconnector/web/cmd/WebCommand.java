@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.web.cmd.sc;
+package org.serviceconnector.web.cmd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,43 +30,31 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.sf.ehcache.config.InvalidConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
-import org.serviceconnector.web.IWebSession;
-import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.LoginException;
 import org.serviceconnector.web.NotFoundException;
+import org.serviceconnector.web.WebCredentials;
+import org.serviceconnector.web.WebSession;
 import org.serviceconnector.web.WebUtil;
-import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 import org.serviceconnector.web.ctx.WebContext;
+import org.serviceconnector.web.xml.IXMLLoader;
 
 /**
- * The Class DefaultWebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
+ * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
  * model and the view is built using xsl transformation.
  * 
  * @author JTraber
  */
-public class DefaultWebCommand extends WebCommandAdapter {
+public class WebCommand {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultWebCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(WebCommand.class);
 
-	/**
-	 * Instantiates a new default web command.
-	 */
-	public DefaultWebCommand() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getKey() {
-		return "default";
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void run(IWebRequest request, IWebResponse response) throws Exception {
 		// check if session is available
 		String url = request.getURL();
@@ -85,15 +73,15 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			dumpStream(is, responseOutputStream);
 			return;
 		}
-		IWebSession webSession = request.getSession(false);
+		WebSession webSession = request.getSession(false);
 		// load xml model as stream
 		ByteArrayOutputStream xmlOS = new ByteArrayOutputStream();
 		XMLDocument xmlDocument = new XMLDocument(request);
 		if (this.isLoginAction(request)) {
 			try {
-				webSession = this.webCommandAccessible.login(request, response);
+				webSession = this.login(request, response);
 				if (webSession != null) {
-					response.redirect("/;sid=" + webSession.getSessionId());
+					response.redirect("/;sid=" + webSession.getId());
 				} else {
 					response.redirect("/;");
 				}
@@ -108,7 +96,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		}
 		if (this.isLogoutAction(request)) {
 			try {
-				this.webCommandAccessible.logout(request);
+				this.logout(request);
 				response.redirect("/");
 				return;
 			} catch (Exception e) {
@@ -123,15 +111,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		// load stylesheet as stream
 		XSLDocument xslDocument = new XSLDocument(request);
 		// check if this web command is accessible
-		if (this.webCommandAccessible.isAccessible(request)) {
-			IWebCommandAccessibleContext accessibleContext = this.webCommandAccessible.getAccessibleContext();
-			xmlDocument.setAccessibleContext(accessibleContext);
-			xslDocument.setAccessibleContext(accessibleContext);
-		}
-		try {
-			this.webCommandValidator.validate(request);
-		} catch (Exception e) {
-			xmlDocument.addException(e);
+		if (this.isAccessible(request)) {
+			xmlDocument.setCredentials(WebContext.getWebSCContextCredentials());
+			xslDocument.setCredentials(WebContext.getWebSCContextCredentials());
 		}
 		if (xmlDocument.isText()) {
 			xmlDocument.load(responseOutputStream);
@@ -295,9 +277,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 
 		/** The message list. */
 		private List<Message> messageList;
-
-		/** The accessible context. */
-		private IWebCommandAccessibleContext accessibleContext;
+		private WebCredentials credentials;
 
 		/**
 		 * Instantiates a new xML document.
@@ -309,7 +289,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			this.request = request;
 			this.exceptionList = new ArrayList<Exception>();
 			this.messageList = new ArrayList<Message>();
-			this.accessibleContext = null;
+			this.credentials = null;
 			this.loader = WebContext.getXMLLoader(this.request.getURL());
 		}
 
@@ -323,13 +303,13 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		}
 
 		/**
-		 * Sets the accessible context.
+		 * Sets the credentials.
 		 * 
-		 * @param accessibleContext
-		 *            the new accessible context
+		 * @param credentials
+		 *            the new credentials
 		 */
-		public void setAccessibleContext(IWebCommandAccessibleContext accessibleContext) {
-			this.accessibleContext = accessibleContext;
+		public void setCredentials(WebCredentials credentials) {
+			this.credentials = credentials;
 		}
 
 		/**
@@ -378,8 +358,8 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			for (Message msg : messageList) {
 				this.loader.addMeta(msg.getMap());
 			}
-			if (this.accessibleContext != null) {
-				String userid = this.accessibleContext.getUserid();
+			if (this.credentials != null) {
+				String userid = this.credentials.getUserId();
 				if (userid != null) {
 					this.loader.addMeta("userid", userid);
 				}
@@ -428,9 +408,8 @@ public class DefaultWebCommand extends WebCommandAdapter {
 
 		/** The request. */
 		private IWebRequest request;
-
-		/** The accessible context. */
-		private IWebCommandAccessibleContext accessibleContext;
+		/** The credentials. */
+		private WebCredentials credentials;
 
 		/**
 		 * Instantiates a new xSL document.
@@ -440,17 +419,17 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public XSLDocument(IWebRequest request) {
 			this.request = request;
-			this.accessibleContext = null;
+			this.credentials = null;
 		}
 
 		/**
-		 * Sets the accessible context.
+		 * Sets the credentials.
 		 * 
-		 * @param accessibleContext
-		 *            the new accessible context
+		 * @param credentials
+		 *            the new credentials
 		 */
-		public void setAccessibleContext(IWebCommandAccessibleContext accessibleContext) {
-			this.accessibleContext = accessibleContext;
+		public void setCredentials(WebCredentials credentials) {
+			this.credentials = credentials;
 		}
 
 		/**
@@ -472,7 +451,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 					return rootAjaxPath + id + ".xsl";
 				}
 			}
-			if (this.accessibleContext == null) {
+			if (this.credentials == null) {
 				return rootPath + "login.xsl";
 			}
 			String[] splitted = url.split("\\?");
@@ -526,6 +505,66 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			transformer.transform(xmlSourceStream, resultStream);
 			transformer = null;
 		}
+	}
+
+	public WebSession login(IWebRequest request, IWebResponse response) throws Exception {
+		String userid = (String) request.getParameter("userid");
+		String password = (String) request.getParameter("password");
+		String contextUserid = WebContext.getWebSCContextCredentials().getUserId();
+		String contextPassword = WebContext.getWebSCContextCredentials().getPassword();
+		if (contextUserid == null || contextPassword == null) {
+			throw new InvalidConfigurationException("system configuration has no credentials");
+		}
+		if (userid == null || password == null) {
+			throw new LoginException("not authorized");
+		}
+		if (userid.equals(contextUserid) == false) {
+			throw new LoginException("not authorized");
+		}
+		if (password.equals(contextPassword) == false) {
+			throw new LoginException("not authorized");
+		}
+		WebSession webSession = request.getSession(true);
+		if (webSession == null) {
+			// check if has been created before
+			throw new LoginException("internal error, no session");
+		}
+		webSession.setCredentials(new WebCredentials(contextUserid, contextPassword));
+		webSession.setUserAgent(request.getHeader("User-Agent"));
+		webSession.setRemoteHost(request.getRemoteHost());
+		webSession.setRemotePort(request.getRemotePort());
+		webSession.setHost(request.getHost());
+		webSession.setPort(request.getPort());
+		request.setAttribute("JSESSIONID", webSession.getId());
+		return webSession;
+	}
+
+	public void logout(IWebRequest request) throws Exception {
+		WebSession webSession = request.getSession(false);
+		if (webSession == null) {
+			return;
+		}
+		webSession.getCredentials().clear();
+		WebContext.getWebSessionRegistry().removeSession(webSession);
+	}
+
+	public boolean isAccessible(IWebRequest request) throws Exception {
+		String url = request.getURL();
+		if (url == null) {
+			return false;
+		}
+		if (url.startsWith("/ajax/")) {
+			return true;
+		}
+		WebSession webSession = request.getSession(false);
+		if (webSession == null) {
+			return false;
+		}
+		String userid = webSession.getCredentials().getUserId();
+		if (userid != null) {
+			return true;
+		}
+		return false;
 	}
 
 }

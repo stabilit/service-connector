@@ -14,14 +14,13 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.Writer;
 
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
@@ -31,19 +30,12 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class SubscriptionsXMLLoader.
  */
 public class SubscriptionsXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public SubscriptionsXMLLoader() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -93,10 +85,4 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 			this.loadBody((XMLStreamWriter) writer, request);
 		}
 	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new SubscriptionsXMLLoader();
-	}
-
 }

@@ -14,33 +14,19 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
- * The Class TimerXMLLoader.
+ * The Class DefaultXMLLoader.
  */
-public class TimerXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new timer xml loader.
-	 */
-	public TimerXMLLoader() {
-	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new TimerXMLLoader();
-	}
+public class DefaultXMLLoader extends AbstractXMLLoader {
 
 	/** {@inheritDoc} */
 	@Override
-	public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 	}
-
 }

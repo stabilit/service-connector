@@ -15,7 +15,7 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.util.Map;
 
@@ -31,21 +31,13 @@ import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.util.DateTimeUtility;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class CacheXMLLoader.
  */
 public class CacheXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public CacheXMLLoader() {
-	}
 
 	/**
 	 * Load body.
@@ -80,8 +72,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheConfiguration(XMLStreamWriter writer, ICacheConfiguration cacheConfiguration)
-			throws XMLStreamException {
+	private void writeCacheConfiguration(XMLStreamWriter writer, ICacheConfiguration cacheConfiguration) throws XMLStreamException {
 		writer.writeStartElement("config");
 		writer.writeStartElement("diskPath");
 		writer.writeCharacters(cacheConfiguration.getDiskPath());
@@ -277,11 +268,5 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			writer.writeCharacters(String.valueOf(((String) body).length()));
 			writer.writeEndElement();
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new CacheXMLLoader();
 	}
 }

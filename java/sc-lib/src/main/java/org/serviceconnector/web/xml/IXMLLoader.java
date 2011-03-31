@@ -14,58 +14,81 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.web.cmd;
+package org.serviceconnector.web.xml;
+
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.web.IWebRequest;
-import org.serviceconnector.web.IWebResponse;
-import org.serviceconnector.web.IWebSession;
 
 
 /**
- * The Interface IAuthorized.
- * 
- * @author JTraber
+ * The Interface IXMLLoader.
  */
-public interface IWebCommandAccessible {
+public interface IXMLLoader {
 
 	/**
-	 * Login.
+	 * Checks if this loader returns raw text instead of xml.
+	 * 
+	 * @return true, if is raw
+	 */
+	public abstract boolean isText();
+
+	/**
+	 * Load.
 	 * 
 	 * @param request
 	 *            the request
-	 * @param response
-	 *            the response
-	 * @return the i web session
+	 * @param os
+	 *            the os
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract IWebSession login(IWebRequest request, IWebResponse response) throws Exception;
+	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
 
 	/**
-	 * Checks if is accessible.
+	 * Load body.
 	 * 
-	 * @param request
-	 *            the request
-	 * @return true, if is accessible
-	 * @throws Exception
-	 *             the exception
-	 */
-	public abstract boolean isAccessible(IWebRequest request) throws Exception;
-
-	/**
-	 * Logout.
-	 * 
+	 * @param writer
+	 *            the writer
 	 * @param request
 	 *            the request
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void logout(IWebRequest request) throws Exception;
+	public abstract void loadBody(Writer writer, IWebRequest request) throws Exception;
 
 	/**
-	 * Gets the accessible context.
+	 * Load body.
 	 * 
-	 * @return the accessible context
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
-	public abstract IWebCommandAccessibleContext getAccessibleContext();
+	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
+
+	/**
+	 * Adds the meta.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
+	public abstract void addMeta(String name, String value);
+
+	/**
+	 * Adds the meta.
+	 * 
+	 * @param map
+	 *            the map
+	 */
+	public abstract void addMeta(Map<String, String> map);
+
 }

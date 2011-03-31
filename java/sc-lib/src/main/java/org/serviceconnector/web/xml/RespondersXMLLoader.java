@@ -14,7 +14,7 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.Writer;
 import java.util.List;
@@ -22,23 +22,15 @@ import java.util.List;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.IEndpoint;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class RespondersXMLLoader.
  */
 public class RespondersXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public RespondersXMLLoader() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -71,10 +63,4 @@ public class RespondersXMLLoader extends AbstractXMLLoader {
 			this.loadBody((XMLStreamWriter) writer, request);
 		}
 	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new RespondersXMLLoader();
-	}
-
 }

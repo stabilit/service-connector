@@ -14,24 +14,52 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.web.cmd;
-
-import org.serviceconnector.web.IWebRequest;
+package org.serviceconnector.web;
 
 /**
- * The Interface ICommandValidator.
- * 
- * @author JTraber
+ * The Class WebCredentials.
  */
-public interface IWebCommandValidator {
+public class WebCredentials {
+
+	/** The user id. */
+	private String userId;
+
+	/** The password. */
+	private String password;
 
 	/**
-	 * Validate request.
+	 * Instantiates a new web credentials.
 	 * 
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 * @param userId
+	 *            the user id
+	 * @param password
+	 *            the password
 	 */
-	public void validate(IWebRequest request) throws Exception;
+	public WebCredentials(String userId, String password) {
+		this.userId = userId;
+		this.password = password;
+	}
+
+	/**
+	 * Gets the user id.
+	 * 
+	 * @return the user id
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+	/**
+	 * Gets the password.
+	 * 
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	public void clear() {
+		this.userId = null;
+		this.password = null;
+	}
 }

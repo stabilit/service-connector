@@ -14,7 +14,7 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.Writer;
 import java.util.Iterator;
@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -33,19 +32,12 @@ import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.StatefulService;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 
 /**
  * The Class ServicesXMLLoader.
  */
 public class ServicesXMLLoader extends AbstractXMLLoader {
-
-	/**
-	 * Instantiates a new default xml loader.
-	 */
-	public ServicesXMLLoader() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -115,10 +107,4 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 			this.loadBody((XMLStreamWriter) writer, request);
 		}
 	}
-
-	@Override
-	public IFactoryable newInstance() {
-		return new ServicesXMLLoader();
-	}
-
 }

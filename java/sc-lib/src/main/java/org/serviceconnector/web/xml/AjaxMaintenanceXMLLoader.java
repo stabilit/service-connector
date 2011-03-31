@@ -15,7 +15,7 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.io.File;
 import java.net.URL;
@@ -33,7 +33,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
@@ -41,26 +40,14 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
-import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
+import org.serviceconnector.web.cmd.XMLLoaderFactory;
 
 /**
  * The Class AjaxMaintenanceXMLLoader.
  */
 public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
-	/**
-	 * Instantiates a new system xml loader.
-	 */
-	public AjaxMaintenanceXMLLoader() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new AjaxMaintenanceXMLLoader();
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -201,7 +188,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		}
 		writer.writeEndElement(); // close service tag
 		// get logs xml loader from factory
-		LogsXMLLoader logsXMLLoader = (LogsXMLLoader) DefaultXMLLoaderFactory.getLoaderFactory().getXMLLoader("/logs");
+		LogsXMLLoader logsXMLLoader = (LogsXMLLoader) XMLLoaderFactory.getXMLLoader("/logs");
 		// load available logs file list for current date (today)
 		writer.writeStartElement("logs");
 		Calendar cal = Calendar.getInstance();

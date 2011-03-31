@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.web;
+package org.serviceconnector.web.xml;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -60,7 +60,9 @@ import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.web.cmd.sc.WebCommandException;
+import org.serviceconnector.web.IWebRequest;
+import org.serviceconnector.web.WebSession;
+import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
 
 /**
@@ -167,7 +169,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			return;
 
 		}
-		IWebSession webSession = request.getSession(false);
+		WebSession webSession = request.getSession(false);
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		XMLStreamWriter writer = factory.createXMLStreamWriter(os);
 		writer.writeStartDocument();
@@ -183,7 +185,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
 		// write web color schema
 		writer.writeStartElement("meta");
-		writer.writeAttribute("colorscheme", webConfiguration.getColorScheme());
+		writer.writeAttribute("colorschema", webConfiguration.getColorSchema());
 		writer.writeEndElement(); // close meta tag
 		// write sc header prefix
 		writer.writeStartElement("meta");
@@ -204,10 +206,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeEndElement(); // close meta tag
 		if (webSession != null) {
 			writer.writeStartElement("meta");
-			writer.writeAttribute("jsessionid", webSession.getSessionId());
+			writer.writeAttribute("jsessionid", webSession.getId());
 			writer.writeEndElement(); // close meta tag
 			writer.writeStartElement("meta");
-			writer.writeAttribute("urlencoded", ";sid=" + webSession.getSessionId());
+			writer.writeAttribute("urlencoded", ";sid=" + webSession.getId());
 			writer.writeEndElement(); // close meta tag
 		}
 		for (Entry<String, String> entry : this.metaMap.entrySet()) {
@@ -502,7 +504,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 */
 	public void writeWebInfo(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("sessions");
-		int size = WebSessionRegistry.getCurrentInstance().getSize();
+		int size = WebContext.getWebSessionRegistry().getSize();
 		writer.writeCharacters(String.valueOf(size));
 		writer.writeEndElement(); // end of sessions
 	}

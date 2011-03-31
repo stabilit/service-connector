@@ -126,7 +126,7 @@ public interface IWebRequest {
 	 *            the create
 	 * @return the session
 	 */
-	public abstract IWebSession getSession(boolean create);
+	public abstract WebSession getSession(boolean create);
 
 	/**
 	 * Gets the parameter map.

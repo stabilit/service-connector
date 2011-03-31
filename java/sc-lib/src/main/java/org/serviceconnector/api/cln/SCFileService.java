@@ -19,6 +19,7 @@ package org.serviceconnector.api.cln;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -234,6 +235,10 @@ public class SCFileService extends SCService {
 			throw ex;
 		}
 		// 4. post process, reply to client
+		byte[] body = (byte[]) reply.getBody();
+		if (body == null) {
+			return new ArrayList<String>();
+		}
 		String fileNameList = new String((byte[]) reply.getBody());
 		String[] fileNames = fileNameList.split(Constants.FILE_LIST_DELIMITER);
 		return Arrays.asList(fileNames);

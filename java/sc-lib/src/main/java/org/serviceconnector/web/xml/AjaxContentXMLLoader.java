@@ -14,16 +14,13 @@
  * limitations under the License. *
  */
 
-package org.serviceconnector.web.cmd.sc.impl;
+package org.serviceconnector.web.xml;
 
 import java.security.InvalidParameterException;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
-import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.NotFoundException;
 import org.serviceconnector.web.ctx.WebContext;
 
@@ -31,17 +28,6 @@ import org.serviceconnector.web.ctx.WebContext;
  * The Class AjaxContentXMLLoader.
  */
 public class AjaxContentXMLLoader extends AbstractXMLLoader {
-	/**
-	 * Instantiates a new system xml loader.
-	 */
-	public AjaxContentXMLLoader() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final IFactoryable newInstance() {
-		return new AjaxContentXMLLoader();
-	}
 
 	/** {@inheritDoc} */
 	@Override
