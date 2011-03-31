@@ -74,7 +74,6 @@ public final class ConnectionLogger {
 	 *            the port
 	 */
 	public static synchronized void logDisconnect(String className, String hostName, int port) {
-
 		Formatter format = new Formatter();
 		format.format(disconnectStr, className, hostName, String.valueOf(port));
 		CONNECTION_LOGGER.debug(format.toString());

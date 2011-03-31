@@ -46,8 +46,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
@@ -326,7 +326,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			status = "successful (replaced)";
 		}
 		FileOutputStream dstStream = null;
-		SCClientInternal client = null;
+		SCClient client = null;
 		try {
 			// try to connect client
 			client = connectClientToService(service);
@@ -426,21 +426,15 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		if (!(service instanceof FileService || service instanceof CascadedFileService)) {
 			throw new WebCommandException("upload current log files, service is not a file or cascaded file service");
 		}
-		SCClientInternal client = null;
+		SCClient client = null;
 		// try to connect client
 		client = connectClientToService(service);
+		// client gets destroyed at the end of upload inside the uploadLogFiles method
+		// has to be inside because the upload works asynchronous
 		if (client == null) {
 			throw new WebCommandException("upload current log files, client cannot connect and attach to local responder");
 		}
 		String fileName = this.uploadLogFiles(client, service, serviceName);
-		// File inputFile = new File(localpath + localFile);
-		// InputStream inpStream = new FileInputStream(inputFile);
-		// service.uploadFile(300, remoteFileName, inpStream);
-		// inpStream.close();
-		if (client != null) {
-			// client.detach(); TODO, destoys AppContext inside????
-		}
-		client = null;
 		return fileName;
 	}
 
@@ -456,7 +450,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private String uploadLogFiles(SCClientInternal client, Service service, String serviceName) throws Exception {
+	private String uploadLogFiles(SCClient client, Service service, String serviceName) throws Exception {
 		// get all log file names
 		List<String> logFiles = this.getCurrentLogFiles();
 		if (logFiles.isEmpty()) {
@@ -709,7 +703,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	public final class UploadRunnable implements Callable<Integer> {
 
 		/** The client. */
-		private SCClientInternal client;
+		private SCClient client;
 		/** The service name. */
 		private String serviceName;
 		/** The remote path. */
@@ -727,7 +721,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		 * @param cbb
 		 *            the cbb
 		 */
-		private UploadRunnable(SCClientInternal client, String remotePath, String serviceName, CircularByteBuffer cbb) {
+		private UploadRunnable(SCClient client, String remotePath, String serviceName, CircularByteBuffer cbb) {
 			this.client = client;
 			this.serviceName = serviceName;
 			this.remotePath = remotePath;
@@ -764,9 +758,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				SCFileService scFileService = client.newFileService(this.serviceName);
 				scFileService.uploadFile(360, this.remotePath, this.is);
 				// reads buffer intern until the end of output stream
-				// HttpClientUploadUtility.this.client.executeMethod(HttpClientUploadUtility.this.httpMethod);
-				// Integer statusCode = HttpClientUploadUtility.this.httpMethod.getStatusCode();
-				// return statusCode;
+				client.detach();
 				return 0;
 			} catch (Exception e) {
 				LOGGER.error(e.toString());
@@ -775,8 +767,6 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				} catch (Exception e1) {
 				}
 				return -1;
-			} finally {
-				// HttpClientUploadUtility.this.httpMethod.releaseConnection();
 			}
 		}
 	}

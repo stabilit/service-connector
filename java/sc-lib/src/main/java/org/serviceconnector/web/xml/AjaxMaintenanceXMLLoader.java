@@ -30,8 +30,8 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.api.cln.internal.SCClientInternal;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.CascadedFileService;
@@ -98,7 +98,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		Service service = serviceRegistry.getService(serviceName);
 		this.writeBean(writer, service);
 		if (service instanceof FileService || service instanceof CascadedFileService) {
-			SCClientInternal client = null;
+			SCClient client = null;
 			// try to connect client
 			client = connectClientToService(service);
 			SCFileService scFileService = client.newFileService(serviceName);
@@ -168,7 +168,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		Service service = serviceRegistry.getService(serviceName);
 		this.writeBean(writer, service);
 		if (service instanceof FileService || service instanceof CascadedFileService) {
-			SCClientInternal client = null;
+			SCClient client = null;
 			// try to connect client
 			client = connectClientToService(service);
 			SCFileService scFileService = client.newFileService(serviceName);

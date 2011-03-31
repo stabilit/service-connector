@@ -394,7 +394,9 @@ public final class AppContext {
 			if (AppContext.eciScheduler == null) {
 				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1);
 			}
-			AppContext.executor = Executors.newCachedThreadPool();
+			if (AppContext.executor == null) {
+				AppContext.executor = Executors.newCachedThreadPool();
+			}
 		}
 	}
 
@@ -402,6 +404,10 @@ public final class AppContext {
 	 * Destroy the whole application context and release resources.
 	 */
 	public static void destroy() {
+		if (AppContext.isScEnvironment() == true) {
+			// AppContext gets never destroyed in SC environment
+			return;
+		}
 		synchronized (AppContext.communicatorsLock) {
 			// got lock to complete destroy
 			if (attachedCommunicators.get() == 0) {

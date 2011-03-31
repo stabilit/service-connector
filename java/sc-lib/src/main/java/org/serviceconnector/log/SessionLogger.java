@@ -167,16 +167,4 @@ public final class SessionLogger {
 			SESSION_LOGGGER.error(message);
 		}
 	}
-
-	/**
-	 * Debug.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void debug(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.DEBUG)) {
-			SESSION_LOGGGER.debug(message);
-		}
-	}
 }

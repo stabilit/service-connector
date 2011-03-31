@@ -170,16 +170,4 @@ public final class SubscriptionLogger {
 			SUBSCRIPTION_LOGGER.warn(message);
 		}
 	}
-	
-	/**
-	 * Debug.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void debug(String message) {
-		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.DEBUG)) {
-			SUBSCRIPTION_LOGGER.debug(message);
-		}
-	}
 }

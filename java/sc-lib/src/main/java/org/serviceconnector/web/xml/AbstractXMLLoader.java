@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.api.cln.internal.SCClientInternal;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.conf.WebConfiguration;
@@ -599,7 +599,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 * @return the sC mgmt client
 	 * @throws WebCommandException
 	 */
-	protected SCClientInternal connectClientToService(Service service) throws WebCommandException {
+	protected SCClient connectClientToService(Service service) throws WebCommandException {
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		if (service instanceof FileService) {
 			// get local service connector listener using sc-tcp
@@ -611,7 +611,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					String host = networkInterface;
 					int port = myLocalListenerConfiguration.getPort();
 					try {
-						SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.NETTY_TCP);
+						SCClient localClient = new SCClient(host, port, ConnectionType.NETTY_TCP);
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
@@ -628,7 +628,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					String host = networkInterface;
 					int port = myLocalListenerConfiguration.getPort();
 					try {
-						SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.NETTY_HTTP);
+						SCClient localClient = new SCClient(host, port, ConnectionType.NETTY_HTTP);
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
@@ -646,7 +646,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			int port = cascadedSC.getPortNr();
 			String connectionType = cascadedSC.getConnectionType();
 			try {
-				SCClientInternal localClient = new SCClientInternal(host, port, ConnectionType.getType(connectionType));
+				SCClient localClient = new SCClient(host, port, ConnectionType.getType(connectionType));
 				localClient.attach();
 				return localClient;
 			} catch (Exception e) {
