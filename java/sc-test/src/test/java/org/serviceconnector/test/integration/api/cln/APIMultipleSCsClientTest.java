@@ -95,7 +95,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 * <td>TestConstants.PORT_HTTP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both clients are detached.
 	 */
 	@Test
@@ -140,7 +140,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 * <td>TestConstants.PORT_TCP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both clients are detached.
 	 */
 	@Test
@@ -185,7 +185,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 * <td>TestConstants.PORT_TCP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both clients are detached.
 	 */
 	@Test
@@ -230,7 +230,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 * <td>TestConstants.PORT_HTTP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both clients are detached.
 	 */
 	@Test
@@ -280,7 +280,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 * <td>TestConstants.PORT_TCP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both clients are detached.
 	 */
 	@Test

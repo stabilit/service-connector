@@ -107,7 +107,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 * <td>TestConstants.PORT_TCP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both servers are registered.
 	 */
 	@Test
@@ -167,7 +167,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 * <td>TestConstants.PORT_HTTP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both servers are registered.
 	 */
 	@Test
@@ -227,7 +227,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 * <td>TestConstants.PORT_HTTP</td>
 	 * </tr>
 	 * </table>
-	 * </br>
+	 * <br />
 	 * Expectation: Both servers are registered.
 	 */
 	@Test
