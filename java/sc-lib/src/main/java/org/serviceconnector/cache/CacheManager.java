@@ -29,7 +29,6 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.Statistics;
-import org.serviceconnector.util.TimeMillis;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -121,7 +120,7 @@ public class CacheManager {
 			this.expirationTimeoutRun.setKilled(true);
 			try {
 				CacheLogger.debug("destroy, join expiration thread");
-				this.expirationThread.join(5 * TimeMillis.SECOND.getMillis()); // wait 5 seconds max to join this thread
+				this.expirationThread.join(5 * Constants.SEC_TO_MILLISEC_FACTOR); // wait 5 seconds max to join this thread
 				CacheLogger.debug("destroy, join done");
 			} catch (InterruptedException e) {
 				CacheLogger.debug(e.toString());
