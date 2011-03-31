@@ -29,19 +29,19 @@ import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class ConnectionPool. Concrete implementation of connection pooling.</br>
- * </br>
- * This connection pool takes care of following listed points:</br>
- * - creating / destroying of connections</br>
- * - observing the max numbers of connections</br>
- * - keeping a minimum of connections active</br>
- * - disconnect connection after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE </br>
- * - destroying connection pool, destroys all connections </br>
- * </br>
- * optional functions:</br>
- * - closing connection after getting it back</br>
- * - initializing pool by starting a minimum of connections immediately</br>
- * - observing connection idle timeout and sending keep alive messages to refresh firewall</br>
+ * The Class ConnectionPool. Concrete implementation of connection pooling.<br />
+ * <br />
+ * This connection pool takes care of following listed points:<br />
+ * - creating / destroying of connections<br />
+ * - observing the max numbers of connections<br />
+ * - keeping a minimum of connections active<br />
+ * - disconnect connection after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE <br />
+ * - destroying connection pool, destroys all connections <br />
+ * <br />
+ * optional functions:<br />
+ * - closing connection after getting it back<br />
+ * - initializing pool by starting a minimum of connections immediately<br />
+ * - observing connection idle timeout and sending keep alive messages to refresh firewall<br />
  * - force closing of a specific connection, very useful if connection has a curious state
  * 
  * @author JTraber

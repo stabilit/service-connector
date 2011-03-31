@@ -37,7 +37,7 @@ public class ConnectionFactory {
 	private static final Logger LOGGER = Logger.getLogger(ConnectionFactory.class);
 
 	/**
-	 * NETTY stuff</br>
+	 * NETTY stuff<br />
 	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket.
 	 * A worker thread performs non-blocking read and write on a channel.
 	 */
@@ -68,7 +68,7 @@ public class ConnectionFactory {
 	}
 
 	/**
-	 * Shutdown connection factory.</br>
+	 * Shutdown connection factory.<br />
 	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down. Be very
 	 * careful if you use this method - every connection in relation to this channelFactory must be closed otherwise you end up in
 	 * indefinitely loop. In most cases closing the connections is good enough NETTY will release other resources.
