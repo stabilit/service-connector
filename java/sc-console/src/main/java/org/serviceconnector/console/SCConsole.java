@@ -42,7 +42,7 @@ public class SCConsole {
 	 *            java -jar sc-console.jar -h localhost -p 7000 clearCache
 	 *            java -jar sc-console.jar -h localhost -p 7000 dump
 	 *            java -jar sc-console.jar -h localhost -p 7000 kill
-	 *            system exit status<br>
+	 *            system exit status</br>
 	 *            0 = success
 	 *            1 = error parsing arguments
 	 *            3 = invalid command
