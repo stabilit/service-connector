@@ -23,6 +23,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TimeMillis;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
@@ -39,7 +40,6 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
-import org.serviceconnector.util.TimeMillis;
 
 /**
  * The class CacheExpirationThreadRunTest tests the cache expiration functionality.

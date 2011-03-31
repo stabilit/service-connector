@@ -22,6 +22,7 @@ import java.util.Iterator;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TimeMillis;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
@@ -31,7 +32,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.DateTimeUtility;
-import org.serviceconnector.util.TimeMillis;
 
 /**
  * The Class CacheTest tests the core cache functionality.

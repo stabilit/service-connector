@@ -21,6 +21,7 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TimeMillis;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
@@ -28,7 +29,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.DateTimeUtility;
-import org.serviceconnector.util.TimeMillis;
 
 /**
  * The class CacheExpirationTest tests the cache expiration functionality.
