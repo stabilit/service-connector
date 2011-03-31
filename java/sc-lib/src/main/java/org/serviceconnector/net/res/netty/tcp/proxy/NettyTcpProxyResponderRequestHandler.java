@@ -42,13 +42,13 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 	/** The cf. */
 	private final ClientSocketChannelFactory cf;
-	
+
 	/** The remote host. */
 	private final String remoteHost;
-	
+
 	/** The remote port. */
 	private final int remotePort;
-	
+
 	/** The outbound channel. */
 	private volatile Channel outboundChannel;
 
@@ -94,6 +94,18 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 				}
 			}
 		});
+	}
+
+	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		if (this.outboundChannel != null) {
+			try {
+				this.outboundChannel.close();
+			} catch (Exception ex) {
+                LOGGER.error("outboundChannel close", ex);
+			}
+		}
+		super.channelClosed(ctx, e);
 	}
 
 	/**
