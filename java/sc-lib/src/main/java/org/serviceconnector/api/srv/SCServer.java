@@ -219,14 +219,14 @@ public class SCServer {
 	 * Start listener.
 	 * 
 	 * @throws SCServiceException
-	 *             listener is already started</br>
-	 *             SC host not set</br>
-	 *             ConnectionType not set</br>
-	 *             starting listener fails</br>
+	 *             listener is already started<br />
+	 *             SC host not set<br />
+	 *             ConnectionType not set<br />
+	 *             starting listener fails<br />
 	 * @throws SCMPValidatorException
-	 *             scPort Number > 1 and < 65535</br>
-	 *             listenerPort Number > 1 and < 65535</br>
-	 *             SC port and listener port are the same</br>
+	 *             scPort Number > 1 and < 65535<br />
+	 *             listenerPort Number > 1 and < 65535<br />
+	 *             SC port and listener port are the same<br />
 	 *             bind to interface failed<be>
 	 */
 	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
@@ -317,9 +317,9 @@ public class SCServer {
 	 *            the service name
 	 * @return the SC session server
 	 * @throws SCServiceException
-	 *             server not listening</br>
+	 *             server not listening<br />
 	 * @throws SCMPValidatorException
-	 *             service name not set</br>
+	 *             service name not set<br />
 	 */
 	public SCSessionServer newSessionServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
@@ -338,9 +338,9 @@ public class SCServer {
 	 *            the service name
 	 * @return the SC publish server
 	 * @throws SCServiceException
-	 *             server not listening</br>
+	 *             server not listening<br />
 	 * @throws SCMPValidatorException
-	 *             service name not set</br>
+	 *             service name not set<br />
 	 */
 	public SCPublishServer newPublishServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
