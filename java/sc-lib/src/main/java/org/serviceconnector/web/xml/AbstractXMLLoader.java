@@ -185,7 +185,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
 		// write web color schema
 		writer.writeStartElement("meta");
-		writer.writeAttribute("colorschema", webConfiguration.getColorSchema());
+		writer.writeAttribute("colorscheme", webConfiguration.getColorScheme());
 		writer.writeEndElement(); // close meta tag
 		// write sc header prefix
 		writer.writeStartElement("meta");
@@ -475,10 +475,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write header map.
-	 *
-	 * @param writer the writer
-	 * @param map the map
-	 * @throws XMLStreamException the XML stream exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param map
+	 *            the map
+	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	public void writeHeaderMap(XMLStreamWriter writer, Map<String, String> map) throws XMLStreamException {
 		if (map == null) {
@@ -594,7 +597,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 * @param responder
 	 *            the responder
 	 * @return the sC mgmt client
-	 * @throws WebCommandException 
+	 * @throws WebCommandException
 	 */
 	protected SCClientInternal connectClientToService(Service service) throws WebCommandException {
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
@@ -629,7 +632,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
-						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
+						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port
+								+ " failed", e);
 					}
 				}
 			}
