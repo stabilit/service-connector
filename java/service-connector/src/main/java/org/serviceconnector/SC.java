@@ -41,7 +41,6 @@ import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
 import org.serviceconnector.web.ctx.WebContext;
 
 /**
@@ -119,9 +118,8 @@ public final class SC {
 
 		// Initialize service connector command factory
 		AppContext.initCommands(new ServiceConnectorCommandFactory());
-		// Initialize web command factory
+		// Initialize web configuration
 		WebContext.getWebConfiguration().load(AppContext.getApacheCompositeConfig());
-		WebContext.initCommands(new ServiceConnectorWebCommandFactory());
 		// initialize JMX
 		SC.initializeJMX();
 
