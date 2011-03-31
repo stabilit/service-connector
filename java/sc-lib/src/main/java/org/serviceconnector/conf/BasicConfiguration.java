@@ -39,12 +39,12 @@ public class BasicConfiguration {
 	private String dumpPath = null;
 
 	/**
-	 * Multiplier to calculate the operation timeout.<br>
+	 * Multiplier to calculate the operation timeout.</br>
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
 	 */
 	private double operationTimeoutMultiplier = Constants.DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
 	/**
-	 * Multiplier to calculate the echo timeout of a session. <br>
+	 * Multiplier to calculate the echo timeout of a session. </br>
 	 * SC must adapt (extend) echo interval passed from client to get the right interval for echo messages.
 	 */
 	private double echoIntervalMultiplier = Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER;
@@ -58,12 +58,12 @@ public class BasicConfiguration {
 	/** The command validation. */
 	private boolean commandValidation = Constants.COMMAND_VALIDATION_ENABLED;
 	/**
-	 * Used to observe the reply of a keep alive message. <br>
+	 * Used to observe the reply of a keep alive message. </br>
 	 * If the peer does not reply within this time, connection will be cleaned up.
 	 */
 	private int keepAliveOTIMillis = Constants.DEFAULT_KEEP_ALIVE_OTI_MILLIS;
 	/**
-	 * Used to observe the reply of a abort session. <br>
+	 * Used to observe the reply of a abort session. </br>
 	 * If server does not reply within this time, the server will be cleaned up.
 	 */
 	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
