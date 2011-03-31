@@ -70,11 +70,11 @@ public class SCMgmtClient extends SCClient {
 	 * @param serviceName
 	 *            the service name
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
-	 *             body not null after manage call</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
+	 *             body not null after manage call<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void disableService(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		this.disableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -88,11 +88,11 @@ public class SCMgmtClient extends SCClient {
 	 * @param serviceName
 	 *            the service name
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
-	 *             body not null after manage call</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
+	 *             body not null after manage call<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void disableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -113,11 +113,11 @@ public class SCMgmtClient extends SCClient {
 	 * @param serviceName
 	 *            the service name
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
-	 *             body not null after manage call</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
+	 *             body not null after manage call<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request failed</br>
+	 *             encoding of request failed<br />
 	 */
 	public void enableService(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		this.enableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -131,11 +131,11 @@ public class SCMgmtClient extends SCClient {
 	 * @param serviceName
 	 *            the service name
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
-	 *             body not null after manage call</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
+	 *             body not null after manage call<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request failed</br>
+	 *             encoding of request failed<br />
 	 */
 	public void enableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -154,11 +154,11 @@ public class SCMgmtClient extends SCClient {
 	 * Clears the cache. Uses default operation timeout to complete operation.
 	 * 
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             body not null after manage call</br>
-	 *             manage call to SC failed</br>
+	 *             client not attached<br />
+	 *             body not null after manage call<br />
+	 *             manage call to SC failed<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void clearCache() throws SCServiceException, UnsupportedEncodingException {
 		this.clearCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -170,11 +170,11 @@ public class SCMgmtClient extends SCClient {
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             body not null after manage call</br>
-	 *             manage call to SC failed</br>
+	 *             client not attached<br />
+	 *             body not null after manage call<br />
+	 *             manage call to SC failed<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void clearCache(int operationTimeoutSeconds) throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
@@ -191,10 +191,10 @@ public class SCMgmtClient extends SCClient {
 	 * Request dump of SC. Uses default operation timeout to complete operation.
 	 * 
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void dump() throws SCServiceException, UnsupportedEncodingException {
 		this.dump(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -206,10 +206,10 @@ public class SCMgmtClient extends SCClient {
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void dump(int operationTimeoutSeconds) throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
@@ -223,10 +223,10 @@ public class SCMgmtClient extends SCClient {
 	 * Kill SC.
 	 * 
 	 * @throws SCServiceException
-	 *             client not attached</br>
-	 *             manage call to SC failed</br>
+	 *             client not attached<br />
+	 *             manage call to SC failed<br />
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed</br>
+	 *             encoding of request URL failed<br />
 	 */
 	public void killSC() throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
@@ -260,8 +260,8 @@ public class SCMgmtClient extends SCClient {
 	 *            the instruction
 	 * @return the string
 	 * @throws SCServiceException
-	 *             manage call to SC failed</br>
-	 *             error message received from SC</br>
+	 *             manage call to SC failed<br />
+	 *             error message received from SC<br />
 	 */
 	private String manageCall(int operationTimeoutSeconds, String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = new SCMPManageCall(this.requester);

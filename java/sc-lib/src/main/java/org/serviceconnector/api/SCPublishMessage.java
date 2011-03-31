@@ -65,8 +65,8 @@ public class SCPublishMessage extends SCMessage {
 	 * Sets the mask.
 	 * 
 	 * @param mask
-	 *            Any printable character, length > 0 and < 256 Byte</br>
-	 *            Client may not subscribe with mask containing "%" character.</br>
+	 *            Any printable character, length > 0 and < 256 Byte<br />
+	 *            Client may not subscribe with mask containing "%" character.<br />
 	 *            Example: "000012100012832102FADF-----------X-----------"
 	 */
 	public void setMask(String mask) {
