@@ -64,12 +64,12 @@ public class SCPublishServer extends SCSessionServer {
 	 * @param scCallback
 	 *            the SC callback
 	 * @throws SCServiceException
-	 *             listener not started yet<br>
-	 *             server already registered for service<br>
-	 *             register server on SC failed<br>
-	 *             error message received from SC <br>
+	 *             listener not started yet</br>
+	 *             server already registered for service</br>
+	 *             register server on SC failed</br>
+	 *             error message received from SC </br>
 	 * @throws SCMPValidatorException
-	 *             callback is not set<br>
+	 *             callback is not set</br>
 	 */
 	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
 			throws SCServiceException, SCMPValidatorException {
@@ -88,12 +88,12 @@ public class SCPublishServer extends SCSessionServer {
 	 * @param scCallback
 	 *            the SC callback
 	 * @throws SCServiceException
-	 *             listener not started yet<br>
-	 *             server already registered for service<br>
-	 *             register server on SC failed<br>
-	 *             error message received from SC <br>
+	 *             listener not started yet</br>
+	 *             server already registered for service</br>
+	 *             register server on SC failed</br>
+	 *             error message received from SC </br>
 	 * @throws SCMPValidatorException
-	 *             callback is not set<br>
+	 *             callback is not set</br>
 	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCPublishServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
@@ -114,11 +114,11 @@ public class SCPublishServer extends SCSessionServer {
 	 * @param publishMessage
 	 *            the publish message
 	 * @throws SCServiceException
-	 *             server not registered yet<br>
-	 *             publish to SC failed<br>
-	 *             error message received from SC <br>
+	 *             server not registered yet</br>
+	 *             publish to SC failed</br>
+	 *             error message received from SC </br>
 	 * @throws SCMPValidatorException
-	 *             publish message is not set<br>
+	 *             publish message is not set</br>
 	 */
 	public void publish(SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
@@ -132,11 +132,11 @@ public class SCPublishServer extends SCSessionServer {
 	 * @param publishMessage
 	 *            the publish message
 	 * @throws SCServiceException
-	 *             server not registered yet<br>
-	 *             publish to SC failed<br>
-	 *             error message received from SC <br>
+	 *             server not registered yet</br>
+	 *             publish to SC failed</br>
+	 *             error message received from SC </br>
 	 * @throws SCMPValidatorException
-	 *             publish message is not set<br>
+	 *             publish message is not set</br>
 	 */
 	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException,
 			SCMPValidatorException {

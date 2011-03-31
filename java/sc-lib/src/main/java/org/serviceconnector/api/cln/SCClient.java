@@ -39,8 +39,28 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The class SCClient. Client to a SC.
+ * Communication between client and SC starts with attaching the client to the SC. Settings like keep alive interval or max number
+ * of connections must be set before attaching the client. After successful attaching the client API user may create session,
+ * publish or file services. More information available in specific classes.<br />
+ * <br />
+ * Never forget at the end of a communication to detach the client of the SC. Even in case of an error the detach must be done!
+ * Like closing a file or a stream. The detach operation does detach client from SC and releases local resources (connections,
+ * timers, threads) if not used by another client.<br />
+ * <br />
+ * State Diagram<br />
  * 
- * @author JTraber
+ * <pre>
+ *        ||
+ *        \/
+ *    |---------|              |----------|
+ *    | initial |----attach--->| attached |
+ *    |         |<---detach----|          |
+ *    |---------|              |----------|
+ *        ||
+ *        \/
+ * <br />
+ * 
+ * <pre />
  */
 public class SCClient {
 
@@ -99,32 +119,36 @@ public class SCClient {
 	}
 
 	/**
-	 * Attach client to SC with default operation timeout.
+	 * Attach client to SC with default operation timeout. <br />
+	 * Attach starts the communication to the SC. Once an attach is called a detach must be done at the end of
+	 * communication.
 	 * 
 	 * @throws SCMPValidatorException
-	 *             port is not within limits 0 to 0xFFFF<br>
-	 *             host is missing<br>
+	 *             port is not within limits 0 to 0xFFFF</br>
+	 *             host is missing</br>
 	 * @throws SCServiceException
-	 *             instance already attached before<br>
-	 *             attach to host failed<br>
-	 *             error message received from SC <br>
+	 *             instance already attached before</br>
+	 *             attach to host failed</br>
+	 *             error message received from SC </br>
 	 */
 	public synchronized void attach() throws SCServiceException, SCMPValidatorException {
 		this.attach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
-	 * Attach client to SC.
+	 * Attach client to SC.<br />
+	 * Attach starts the communication to the SC. Once an attach is called a detach must be done at the end of
+	 * communication.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCMPValidatorException
-	 *             port is not within limits 0 to 0xFFFF<br>
-	 *             host is missing<br>
+	 *             port is not within limits 0 to 0xFFFF</br>
+	 *             host is missing</br>
 	 * @throws SCServiceException
-	 *             instance already attached before<br>
-	 *             attach to host failed<br>
-	 *             error message received from SC <br>
+	 *             instance already attached before</br>
+	 *             attach to host failed</br>
+	 *             error message received from SC </br>
 	 */
 	public synchronized void attach(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and validate
@@ -175,24 +199,26 @@ public class SCClient {
 	}
 
 	/**
-	 * Detach client from SC with default operation timeout.
+	 * Detach client from SC with default operation timeout.<br />
+	 * Detach end the communication to the SC. Resources (connections, timers, threads) are released if not used by another client.
 	 * 
 	 * @throws SCServiceException
-	 *             detach to host failed<br>
-	 *             error message received from SC<br>
+	 *             detach to host failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void detach() throws SCServiceException {
 		this.detach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
-	 * Detach client from SC.
+	 * Detach client from SC.<br />
+	 * Detach end the communication to the SC. Resources (connections, timers, threads) are released if not used by another client.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             detach to host failed<br>
-	 *             error message received from SC<br>
+	 *             detach to host failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void detach(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
@@ -236,7 +262,7 @@ public class SCClient {
 	 * @param serviceName
 	 *            the service name of the file service to use
 	 * @throws SCMPValidatorException
-	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 *             serviceName not within length limits 1 to 32 bytes </br>
 	 * @throws SCServiceException
 	 *             called method after attach
 	 * @return the file service
@@ -259,7 +285,7 @@ public class SCClient {
 	 * @param serviceName
 	 *            the service name of the session service to use
 	 * @throws SCMPValidatorException
-	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 *             serviceName not within length limits 1 to 32 bytes </br>
 	 * @throws SCServiceException
 	 *             called method after attach
 	 * @return the session service
@@ -282,7 +308,7 @@ public class SCClient {
 	 * @param serviceName
 	 *            the service name of the publish service to use
 	 * @throws SCMPValidatorException
-	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 *             serviceName not within length limits 1 to 32 bytes </br>
 	 * @throws SCServiceException
 	 *             called method after attach
 	 * @return the publish service
@@ -304,9 +330,9 @@ public class SCClient {
 	 * 
 	 * @return the SC version
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
 	 *             the unsupported encoding exception
 	 */
@@ -328,18 +354,19 @@ public class SCClient {
 	 *            the service name
 	 * @return true, if is service enabled
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.isServiceEnabled(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
 	/**
-	 * Checks if service is enabled on SC.
+	 * Checks if service is enabled on SC.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeout
 	 *            the operation timeout
@@ -347,11 +374,11 @@ public class SCClient {
 	 *            the service name
 	 * @return true, if is service enabled
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public boolean isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -380,17 +407,18 @@ public class SCClient {
 	}
 
 	/**
-	 * Gets the state of services with default operation timeout.
+	 * Gets the state of services with default operation timeout.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param serviceNamePattern
 	 *            the service name pattern
 	 * @return map containing serviceName and state enabled/disabled.
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> getStateOfServices(String serviceNamePattern) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -398,7 +426,8 @@ public class SCClient {
 	}
 
 	/**
-	 * Gets the state of services. If service is not found, map will be empty.
+	 * Gets the state of services. If service is not found, map will be empty.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeout
 	 *            the operation timeout
@@ -406,11 +435,11 @@ public class SCClient {
 	 *            the service name pattern
 	 * @return map containing serviceName and state enabled/disabled.
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> getStateOfServices(int operationTimeout, String serviceNamePattern) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -432,24 +461,26 @@ public class SCClient {
 
 	/**
 	 * Returns the number of available and allocated sessions for given service name. Uses default operation timeout to complete
-	 * operation.
+	 * operation.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @return map containing serviceName and the available/allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> getWorkload(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.getWorkload(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
 	/**
-	 * Returns the number of available and allocated sessions for given service name.
+	 * Returns the number of available and allocated sessions for given service name. <br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -457,11 +488,11 @@ public class SCClient {
 	 *            the service name
 	 * @return map containing serviceName and the available/allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -481,7 +512,8 @@ public class SCClient {
 
 	/**
 	 * inspects the cache for given service name and cacheId. Uses default operation timeout to complete
-	 * operation.
+	 * operation.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -490,11 +522,11 @@ public class SCClient {
 	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
 	 *         ("cacheSize", size), ("cacheExpiration", expirationDateTime)
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> inspectCache(String serviceName, String cacheId) throws SCServiceException,
 			UnsupportedEncodingException {
@@ -502,7 +534,8 @@ public class SCClient {
 	}
 
 	/**
-	 * Inspects the cache for given service name and cacheId.
+	 * Inspects the cache for given service name and cacheId.<br />
+	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -513,11 +546,11 @@ public class SCClient {
 	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
 	 *         ("cacheSize", size), ("cacheExpiration", expirationDateTime)
 	 * @throws SCServiceException
-	 *             client not attached<br>
-	 *             the inspect call failed<br>
-	 *             error message received from SC<br>
+	 *             client not attached</br>
+	 *             the inspect call failed</br>
+	 *             error message received from SC</br>
 	 * @throws UnsupportedEncodingException
-	 *             encoding of request URL failed<br>
+	 *             encoding of request URL failed</br>
 	 */
 	public Map<String, String> inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId)
 			throws SCServiceException, UnsupportedEncodingException {
@@ -545,8 +578,8 @@ public class SCClient {
 	 *            the instruction
 	 * @return the string
 	 * @throws SCServiceException
-	 *             the inspect call to SC failed<br>
-	 *             error message received from SC<br>
+	 *             the inspect call to SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	private String inspectCall(int operationTimeoutSeconds, String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
@@ -611,12 +644,13 @@ public class SCClient {
 	/**
 	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive
 	 * message is solely used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle
-	 * connection. The value = 0 means no keep alive messages will be sent.
+	 * connection. The value = 0 means no keep alive messages will be sent. <br />
+	 * Setting the attribute only possible if client is not attached yet.
 	 * 
 	 * @param keepAliveIntervalSeconds
 	 *            Example: 300
 	 * @throws SCMPValidatorException
-	 *             keepAliveIntervalSeconds not within limits 0 to 3600 <br>
+	 *             keepAliveIntervalSeconds not within limits 0 to 3600 </br>
 	 * @throws SCServiceException
 	 *             called method after attach
 	 */
@@ -631,12 +665,13 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the max connections of the pool which is connecting to SC.
+	 * Sets the max connections of the pool which is connecting to SC. <br />
+	 * Setting the attribute only possible if client is not attached yet.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
 	 * @throws SCMPValidatorException
-	 *             maxConnections smaller one<br>
+	 *             maxConnections smaller one</br>
 	 * @throws SCServiceException
 	 *             called method after attach
 	 */

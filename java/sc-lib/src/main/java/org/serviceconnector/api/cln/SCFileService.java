@@ -67,9 +67,9 @@ public class SCFileService extends SCService {
 	 * @param inStream
 	 *            stream to upload
 	 * @throws SCServiceException
-	 *             create file session to SC failed<br>
-	 *             upload file to Server failed<br>
-	 *             error message received from SC<br>
+	 *             create file session to SC failed</br>
+	 *             upload file to Server failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws SCServiceException {
 		this.uploadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, inStream);
@@ -85,9 +85,9 @@ public class SCFileService extends SCService {
 	 * @param inStream
 	 *            stream to upload
 	 * @throws SCServiceException
-	 *             create file session to SC failed<br>
-	 *             upload file to Server failed<br>
-	 *             error message received from SC<br>
+	 *             create file session to SC failed</br>
+	 *             upload file to Server failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream)
 			throws SCServiceException {
@@ -132,9 +132,9 @@ public class SCFileService extends SCService {
 	 * @param outStream
 	 *            the out stream to store download
 	 * @throws SCServiceException
-	 *             create file session to SC failed<br>
-	 *             download file from Server failed<br>
-	 *             error message received from SC<br>
+	 *             create file session to SC failed</br>
+	 *             download file from Server failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void downloadFile(String remoteFileName, OutputStream outStream) throws SCServiceException {
 		this.downloadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, outStream);
@@ -150,10 +150,10 @@ public class SCFileService extends SCService {
 	 * @param outStream
 	 *            the out stream to store download
 	 * @throws SCServiceException
-	 *             create file session to SC failed<br>
-	 *             download file from Server failed<br>
-	 *             writing to OutputStream failed<br>
-	 *             error message received from SC<br>
+	 *             create file session to SC failed</br>
+	 *             download file from Server failed</br>
+	 *             writing to OutputStream failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void downloadFile(int operationTimeoutSeconds, String remoteFileName, OutputStream outStream)
 			throws SCServiceException {
@@ -198,8 +198,8 @@ public class SCFileService extends SCService {
 	 * 
 	 * @return the list of files on the remote server
 	 * @throws SCServiceException
-	 *             list files from Server failed<br>
-	 *             error message received from SC<br>
+	 *             list files from Server failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized List<String> listFiles() throws SCServiceException {
 		return this.listFiles(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -212,8 +212,8 @@ public class SCFileService extends SCService {
 	 *            the allowed time in seconds to complete the operation
 	 * @return the list of files on the remote server
 	 * @throws SCServiceException
-	 *             list files from Server failed<br>
-	 *             error message received from SC<br>
+	 *             list files from Server failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
@@ -250,8 +250,8 @@ public class SCFileService extends SCService {
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             create file session on SC failed<br>
-	 *             error message received from SC<br>
+	 *             create file session on SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize

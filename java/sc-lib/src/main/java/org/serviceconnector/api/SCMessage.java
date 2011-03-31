@@ -125,8 +125,8 @@ public class SCMessage {
 	 * 
 	 * @param messageInfo
 	 *            Optional information passed together with the message body that helps to identify the message content without
-	 *            investigating the body.<br>
-	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 *            investigating the body.</br>
+	 *            Any printable character, length > 0 and < 256 Byte</br>
 	 *            Example: SECURITY_MARKET_QUERY
 	 */
 	public void setMessageInfo(String messageInfo) {
@@ -146,7 +146,7 @@ public class SCMessage {
 	 * Sets the session info.
 	 * 
 	 * @param sessionInfo
-	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br>
+	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte</br>
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.sessionInfo = sessionInfo;

@@ -40,8 +40,23 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
- * functions.
+ * functions. <br />
+ * After creating a session a delete session must be done in every case at the end of communication. <br />
+ * <br />
+ * State Diagram<br />
  * 
+ * <pre>
+ *        ||                                                            |-------execute-------|
+ *        \/                                                            |                     |
+ *    |---------|              |----------|                      |--------------|             |
+ *    | initial |----attach--->| attached |----create session--->| has session  |--echo--|    |
+ *    |         |<---detach----|          |<---delete session----| with service |<-------|    |
+ *    |---------|              |----------|                      |--------------|<------------|
+ *        ||
+ *        \/
+ * </>
+ * 
+ * <pre />
  * @author JTraber
  */
 public class SCSessionService extends SCService {
@@ -77,7 +92,8 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Creates the session on SC. Uses default operation timeout to complete operation.
+	 * Creates the session on SC. Uses default operation timeout to complete operation. <br />
+	 * Once a create session has been called a delete session must be done at the end of communication.
 	 * 
 	 * @param scMessage
 	 *            the SC message
@@ -85,13 +101,13 @@ public class SCSessionService extends SCService {
 	 *            the message callback which is used to inform the client in case of asynchronous operations
 	 * @return the SC message
 	 * @throws SCServiceException
-	 *             session already created<br>
-	 *             create session on SC failed<br>
-	 *             error message received from SC<br>
-	 *             create session has been rejected by the server<br>
+	 *             session already created</br>
+	 *             create session on SC failed</br>
+	 *             error message received from SC</br>
+	 *             create session has been rejected by the server</br>
 	 * @throws SCMPValidatorException
-	 *             create session message is null<br>
-	 *             message callback is null<br>
+	 *             create session message is null</br>
+	 *             message callback is null</br>
 	 */
 	public synchronized SCMessage createSession(SCMessage scMessage, SCMessageCallback callback) throws SCServiceException,
 			SCMPValidatorException {
@@ -99,7 +115,8 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Creates the session on SC.
+	 * Creates the session on SC. <br />
+	 * Once a create session has been called a delete session must be done at the end of communication.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -109,13 +126,13 @@ public class SCSessionService extends SCService {
 	 *            the message callback which is used to inform the client in case of asynchronous operations
 	 * @return the SC message
 	 * @throws SCServiceException
-	 *             session already created<br>
-	 *             create session on SC failed<br>
-	 *             error message received from SC<br>
-	 *             create session has been rejected by the server<br>
+	 *             session already created</br>
+	 *             create session on SC failed</br>
+	 *             error message received from SC</br>
+	 *             create session has been rejected by the server</br>
 	 * @throws SCMPValidatorException
-	 *             create session message is null<br>
-	 *             message callback is null<br>
+	 *             create session message is null</br>
+	 *             message callback is null</br>
 	 */
 	public synchronized SCMessage createSession(int operationTimeoutSeconds, SCMessage scMessage, SCMessageCallback messageCallback)
 			throws SCServiceException, SCMPValidatorException {
@@ -178,12 +195,12 @@ public class SCSessionService extends SCService {
 	 *            the request message
 	 * @return the SC message
 	 * @throws SCServiceException
-	 *             session not active (not created yet or dead)<br>
-	 *             pending request, no second request allowed<br>
-	 *             execute on SC failed<br>
-	 *             error message received from SC<br>
+	 *             session not active (not created yet or dead)</br>
+	 *             pending request, no second request allowed</br>
+	 *             execute on SC failed</br>
+	 *             error message received from SC</br>
 	 * @throws SCMPValidatorException
-	 *             execute message is null<br>
+	 *             execute message is null</br>
 	 */
 	public synchronized SCMessage execute(SCMessage requestMsg) throws SCServiceException, SCMPValidatorException {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
@@ -198,12 +215,12 @@ public class SCSessionService extends SCService {
 	 *            the SC message to execute
 	 * @return the reply
 	 * @throws SCServiceException
-	 *             session not active (not created yet or dead)<br>
-	 *             pending request, no second request allowed<br>
-	 *             execute on SC failed<br>
-	 *             error message received from SC<br>
+	 *             session not active (not created yet or dead)</br>
+	 *             pending request, no second request allowed</br>
+	 *             execute on SC failed</br>
+	 *             error message received from SC</br>
 	 * @throws SCMPValidatorException
-	 *             execute message is null<br>
+	 *             execute message is null</br>
 	 */
 	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage scMessage) throws SCServiceException,
 			SCMPValidatorException {
@@ -268,11 +285,11 @@ public class SCSessionService extends SCService {
 	 * @param requestMsg
 	 *            the request message
 	 * @throws SCServiceException
-	 *             session not active (not created yet or dead)<br>
-	 *             pending request, no second request allowed<br>
-	 *             send on SC failed<br>
+	 *             session not active (not created yet or dead)</br>
+	 *             pending request, no second request allowed</br>
+	 *             send on SC failed</br>
 	 * @throws SCMPValidatorException
-	 *             send message is null<br>
+	 *             send message is null</br>
 	 */
 	public synchronized void send(SCMessage requestMsg) throws SCServiceException, SCMPValidatorException {
 		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
@@ -286,11 +303,11 @@ public class SCSessionService extends SCService {
 	 * @param scMessage
 	 *            the SC message
 	 * @throws SCServiceException
-	 *             session not active (not created yet or dead)<br>
-	 *             pending request, no second request allowed<br>
-	 *             send on SC failed<br>
+	 *             session not active (not created yet or dead)</br>
+	 *             pending request, no second request allowed</br>
+	 *             send on SC failed</br>
 	 * @throws SCMPValidatorException
-	 *             send message is null<br>
+	 *             send message is null</br>
 	 */
 	public synchronized void send(int operationtTimeoutSeconds, SCMessage scMessage) throws SCServiceException,
 			SCMPValidatorException {
@@ -378,9 +395,9 @@ public class SCSessionService extends SCService {
 	 * Delete session on SC with default operation timeout.
 	 * 
 	 * @throws SCServiceException
-	 *             pending request, no second request allowed<br>
-	 *             delete session on SC failed<br>
-	 *             error message received from SC<br>
+	 *             pending request, no second request allowed</br>
+	 *             delete session on SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void deleteSession() throws SCServiceException {
 		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
@@ -392,9 +409,9 @@ public class SCSessionService extends SCService {
 	 * @param operationTimeoutSeconds
 	 *            allowed time to complete operation
 	 * @throws SCServiceException
-	 *             pending request, no second request allowed<br>
-	 *             delete session on SC failed<br>
-	 *             error message received from SC<br>
+	 *             pending request, no second request allowed</br>
+	 *             delete session on SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void deleteSession(int operationTimeoutSeconds) throws SCServiceException {
 		this.deleteSession(operationTimeoutSeconds, null);
@@ -406,9 +423,9 @@ public class SCSessionService extends SCService {
 	 * @param scMessage
 	 *            the SC message
 	 * @throws SCServiceException
-	 *             pending request, no second request allowed<br>
-	 *             delete session on SC failed<br>
-	 *             error message received from SC<br>
+	 *             pending request, no second request allowed</br>
+	 *             delete session on SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void deleteSession(SCMessage scMessage) throws SCServiceException {
 		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
@@ -422,9 +439,9 @@ public class SCSessionService extends SCService {
 	 * @param scMessage
 	 *            the sc message
 	 * @throws SCServiceException
-	 *             pending request, no second request allowed<br>
-	 *             delete session on SC failed<br>
-	 *             error message received from SC<br>
+	 *             pending request, no second request allowed</br>
+	 *             delete session on SC failed</br>
+	 *             error message received from SC</br>
 	 */
 	public synchronized void deleteSession(int operationTimeoutSeconds, SCMessage scMessage) throws SCServiceException {
 		// 1. checking preconditions and initialize
@@ -508,7 +525,7 @@ public class SCSessionService extends SCService {
 	 *            time to wait for completion of an echo request
 	 *            Example: 10
 	 * @throws SCMPValidatorException
-	 *             echoTimeoutSeconds > 1 and < 3600<br>
+	 *             echoTimeoutSeconds > 1 and < 3600</br>
 	 */
 	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) throws SCMPValidatorException {
 		// validate in this case its a local needed information
@@ -530,7 +547,7 @@ public class SCSessionService extends SCService {
 	 * message is sent only when no message is pending.
 	 * 
 	 * @param echoIntervalSeconds
-	 *            Validation: echoIntervalSeconds > 1 and < 3600<br>
+	 *            Validation: echoIntervalSeconds > 1 and < 3600</br>
 	 *            Example: 360
 	 */
 	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
