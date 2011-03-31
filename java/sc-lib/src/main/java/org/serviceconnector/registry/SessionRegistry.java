@@ -205,9 +205,9 @@ public class SessionRegistry extends Registry<String, Session> {
 		@Override
 		public void timeout() {
 			/**
-			 * broken session procedure</br>
-			 * 1. remove session from session registry</br>
-			 * 2. abort session on backend server</br>
+			 * broken session procedure<br />
+			 * 1. remove session from session registry<br />
+			 * 2. abort session on backend server<br />
 			 */
 			SessionRegistry.this.removeSession(session);
 			IServer server = session.getServer();

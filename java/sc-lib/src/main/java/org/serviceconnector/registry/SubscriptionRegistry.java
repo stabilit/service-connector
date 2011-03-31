@@ -260,10 +260,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		@Override
 		public void timeout() {
 			/**
-			 * broken subscription procedure</br>
-			 * 1. remove subscription from registry</br>
-			 * 2. unsubscribe (discard messages for client) subscription in queue</br>
-			 * 3. abort subscription on backend server</br>
+			 * broken subscription procedure<br />
+			 * 1. remove subscription from registry<br />
+			 * 2. unsubscribe (discard messages for client) subscription in queue<br />
+			 * 3. abort subscription on backend server<br />
 			 */
 			SubscriptionRegistry.this.removeSubscription(subscription);
 			IStatefulServer server = subscription.getServer();
