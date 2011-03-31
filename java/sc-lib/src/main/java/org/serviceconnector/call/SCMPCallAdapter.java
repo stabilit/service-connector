@@ -145,14 +145,14 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * message request and response. But all of them are handled as partial messages, large calls will be split into partial calls
 	 * (PRQ). The client uses group calls if the active communication is open end. Closing the group will send the completing
 	 * request
-	 * (REQ). <br>
-	 * Communication sample: <br>
-	 * openGroup (no transport) <br>
-	 * PRQ -> <-PRS <br>
-	 * .... <br>
-	 * PRQ-> <-PRS <br>
-	 * closeGroup (terminates group) <br>
-	 * REQ-> <-RES <br>
+	 * (REQ). </br>
+	 * Communication sample: </br>
+	 * openGroup (no transport) </br>
+	 * PRQ -> <-PRS </br>
+	 * .... </br>
+	 * PRQ-> <-PRS </br>
+	 * closeGroup (terminates group) </br>
+	 * REQ-> <-RES </br>
 	 */
 	public final class SCMPGroupCall implements ISCMPCall {
 
