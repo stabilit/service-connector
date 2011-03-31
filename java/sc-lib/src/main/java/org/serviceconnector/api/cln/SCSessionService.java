@@ -41,7 +41,6 @@ import org.serviceconnector.util.ValidatorUtility;
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
  * functions. <br />
- * After creating a session a delete session must be done in every case at the end of communication. <br />
  * <br />
  * State Diagram<br />
  * 
@@ -54,9 +53,10 @@ import org.serviceconnector.util.ValidatorUtility;
  *    |---------|              |----------|                      |--------------|<------------|
  *        ||
  *        \/
- * </>
+ * </pre>
  * 
- * <pre />
+ * After creating a session a delete session must be done in every case at the end of communication.
+ * 
  * @author JTraber
  */
 public class SCSessionService extends SCService {

@@ -43,10 +43,6 @@ import org.serviceconnector.util.ValidatorUtility;
  * of connections must be set before attaching the client. After successful attaching the client API user may create session,
  * publish or file services. More information available in specific classes.<br />
  * <br />
- * Never forget at the end of a communication to detach the client of the SC. Even in case of an error the detach must be done!
- * Like closing a file or a stream. The detach operation does detach client from SC and releases local resources (connections,
- * timers, threads) if not used by another client.<br />
- * <br />
  * State Diagram<br />
  * 
  * <pre>
@@ -58,8 +54,11 @@ import org.serviceconnector.util.ValidatorUtility;
  *    |---------|              |----------|
  *        ||
  *        \/
- * 
  * </pre>
+ * 
+ * Never forget at the end of a communication to detach the client of the SC. Even in case of an error the detach must be done!
+ * Like closing a file or a stream. The detach operation does detach client from SC and releases local resources (connections,
+ * timers, threads) if not used by another client.
  */
 public class SCClient {
 

@@ -35,7 +35,6 @@ import org.serviceconnector.util.ValidatorUtility;
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
  * functions. <br />
- * After subscribing the service a unsubscribe must follow in every case at the end of communication. <br />
  * <br />
  * State Diagram<br />
  * 
@@ -49,6 +48,8 @@ import org.serviceconnector.util.ValidatorUtility;
  *        ||
  *        \/
  * </pre>
+ * 
+ * After subscribing the service a unsubscribe must follow in every case at the end of communication.
  * 
  * @author JTraber
  */
