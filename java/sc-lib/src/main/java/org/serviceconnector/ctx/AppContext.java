@@ -427,7 +427,7 @@ public final class AppContext {
 					AppContext.executor = null;
 				}
 			} else {
-				LOGGER.warn("resources can not be released - pending communicators active");
+				LOGGER.debug("resources can not be released - pending communicators active");
 			}
 		}
 	}
