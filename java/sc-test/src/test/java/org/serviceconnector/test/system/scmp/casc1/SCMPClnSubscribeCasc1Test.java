@@ -40,7 +40,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
-import org.serviceconnector.test.system.scmp.SCMPClnSubscribeTest;
 
 public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
@@ -52,28 +51,20 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-		// needs a publish server for this test
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-		SCMPClnSubscribeTest.srvDefs = srvToSC0Defs;
+		SCMPClnSubscribeCasc1Test.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
-		// needs a publish server for this test
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SCMPClnSubscribeCasc1Test.srvDefs = srvToSC0CascDefs;
+		SCMPClnSubscribeCasc1Test.setUpServer();
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+		SCMPClnSubscribeCasc1Test.setUpServer();
+	}
+
+	public static void setUpServer() {
 		// need to have a publish service here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
@@ -87,7 +78,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
 	}
 

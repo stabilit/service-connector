@@ -60,35 +60,27 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
 		this.createSession();
 	}
 
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-		// needs a server with 1 session/connection
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.sesServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+		SCMPClnExecuteCasc1Test.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
-		// needs a server with 1 session/connection
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.sesServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		SCMPClnExecuteCasc1Test.setUpServer();
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+		SCMPClnExecuteCasc1Test.setUpServer();
+	}
+
+	public static void setUpServer() {
 		// needs a server with 1 session/connection
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
@@ -218,7 +210,8 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertTrue(scmpReply.isFault());
-		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE).intValue());
+		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE)
+				.intValue());
 	}
 
 	/**

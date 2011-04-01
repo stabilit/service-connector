@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp.casc2;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.junit.Before;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 
 /**
@@ -33,16 +33,11 @@ public class SCMPClnCreateSessionCasc2Test extends SCMPClnCreateSessionCasc1Test
 		SCMPClnCreateSessionCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
 
-	public static void setUp2CascadedServiceConnectorAndServer() {
-		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
-
-		// need to have a publish service here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+		AppContext.init();
 	}
 }

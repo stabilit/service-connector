@@ -18,6 +18,7 @@ package org.serviceconnector.test.system.scmp;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -25,6 +26,10 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -35,6 +40,14 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 
 	public SCMPClnSubscribeTest() {
 		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();
+	}
+	
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+		AppContext.init();
 	}
 
 	/**

@@ -16,6 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp.casc2;
 
+import org.junit.Before;
+import org.serviceconnector.TestConstants;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
 
 /**
@@ -25,5 +31,13 @@ public class SCMPClnExecuteCasc2Test extends SCMPClnExecuteCasc1Test {
 
 	public SCMPClnExecuteCasc2Test() {
 		SCMPClnExecuteCasc2Test.setUp2CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+		AppContext.init();
 	}
 }
