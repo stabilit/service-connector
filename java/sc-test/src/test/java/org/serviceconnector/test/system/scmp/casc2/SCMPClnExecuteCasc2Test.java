@@ -39,5 +39,6 @@ public class SCMPClnExecuteCasc2Test extends SCMPClnExecuteCasc1Test {
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
+		this.createSession();
 	}
 }
