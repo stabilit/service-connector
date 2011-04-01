@@ -31,6 +31,10 @@ import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeCha
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
+	public APISubscribeUnsubscribeChangeTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();

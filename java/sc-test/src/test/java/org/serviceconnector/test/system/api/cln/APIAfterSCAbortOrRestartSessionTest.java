@@ -20,11 +20,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionClientTest {
 
+	public APIAfterSCAbortOrRestartSessionTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	/**
 	 * Description: client has session and gets notified after SC was aborted<br>
 	 * Expectation: passes

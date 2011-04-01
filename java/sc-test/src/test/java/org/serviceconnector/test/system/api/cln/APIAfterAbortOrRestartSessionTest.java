@@ -22,11 +22,16 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClientTest {
 
+	public APIAfterAbortOrRestartSessionTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	/**
 	 * Description: create session after SC was aborted<br>
 	 * Expectation: throws SCMPValidatorException

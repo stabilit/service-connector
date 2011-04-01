@@ -16,9 +16,15 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Before;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
 public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
+	
+	public APIExecuteCacheTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();

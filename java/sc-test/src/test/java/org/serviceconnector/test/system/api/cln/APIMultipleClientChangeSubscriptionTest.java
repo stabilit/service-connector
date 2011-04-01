@@ -20,10 +20,15 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientChangeSubscriptionCasc1Test;
 
 public class APIMultipleClientChangeSubscriptionTest extends APIMultipleClientChangeSubscriptionCasc1Test {
 
+	public APIMultipleClientChangeSubscriptionTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	/**
 	 * Description: 3 clients Subscribe, 1 receives 10000, 2 receives 500 message and unsubscribe<br>
 	 * Expectation: passes

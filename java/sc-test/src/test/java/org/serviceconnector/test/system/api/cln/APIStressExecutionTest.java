@@ -20,10 +20,16 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIStressExecutionCasc1Test;
 
 public class APIStressExecutionTest extends APIStressExecutionCasc1Test {
+	
+	public APIStressExecutionTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
 	/**
 	 * Description: Create session (regular)<br>
 	 * Expectation: passes

@@ -23,10 +23,15 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
 @SuppressWarnings("unused")
 public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test {
+
+	public APICreateDeleteSessionTest() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
@@ -35,7 +40,7 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		client.attach();
 		messageReceived = false;
 	}
-	
+
 	/**
 	 * Description: create session service with service name = "service = gaga"<br>
 	 * Expectation: throws SCMPValidatorException (contains "=")
@@ -216,7 +221,7 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		response = sessionService1.createSession(request, msgCallback1);
 		Assert.assertTrue("has not session", sessionService1.hasSession());
 	}
-	
+
 	/**
 	 * Description: creates a session - deletes the session - tries creating session on same sessionService instance<br>
 	 * Expectation: passes, reuse of sessionService instances is allowed
