@@ -48,10 +48,10 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		if (casc1Test == true) {
 			this.setUpClientToSC1();
 			client.attach();
+			messageReceived = false;
+			mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+			mgmtClient.attach();
 		}
-		messageReceived = false;
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
-		client.attach();
 	}
 
 	@After
