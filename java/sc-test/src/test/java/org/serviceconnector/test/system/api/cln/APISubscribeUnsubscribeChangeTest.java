@@ -26,13 +26,14 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {
-		SystemSuperTest.setUpServiceConnectorAndServer();
+		APIReceivePublicationCasc1Test.setUpServiceConnectorAndServer();
 	}
 	
 	@Before

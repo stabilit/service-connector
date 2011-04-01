@@ -20,13 +20,12 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 
 public class APIMultipleClientSubscribeTest extends APIMultipleClientSubscribeCasc1Test {
 	
 	public APIMultipleClientSubscribeTest() {
-		SystemSuperTest.setUpServiceConnectorAndServer();
+		APIMultipleClientSubscribeCasc1Test.setUpServiceConnectorAndServer();
 	}
 	
 	/**

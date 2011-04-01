@@ -16,13 +16,12 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Before;
-import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 
 public class APIReceivePublicationTest extends APIReceivePublicationCasc1Test {
 
 	public APIReceivePublicationTest() {
-		SystemSuperTest.setUpServiceConnectorAndServer();
+		APIReceivePublicationCasc1Test.setUpServiceConnectorAndServer();
 	}
 	
 	@Before
