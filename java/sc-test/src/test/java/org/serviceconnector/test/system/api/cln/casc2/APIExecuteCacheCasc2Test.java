@@ -15,11 +15,19 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.junit.Before;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
 public class APIExecuteCacheCasc2Test extends APIExecuteCacheCasc1Test {
 
 	public APIExecuteCacheCasc2Test() {
 		APIExecuteCacheCasc2Test.setUp2CascadedServiceConnectorAndServer();
+	}
+	
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC2();
+		client.attach();
 	}
 }

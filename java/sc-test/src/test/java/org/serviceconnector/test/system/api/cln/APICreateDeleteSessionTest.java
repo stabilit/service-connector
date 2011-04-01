@@ -17,21 +17,25 @@ package org.serviceconnector.test.system.api.cln;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
 @SuppressWarnings("unused")
 public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test {
 
-	public APICreateDeleteSessionTest() {
-		APISystemSuperSessionClientTest.setUpServiceConnectorAndServer();
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC0();
+		client.attach();
+		messageReceived = false;
 	}
-
+	
 	/**
 	 * Description: create session service with service name = "service = gaga"<br>
 	 * Expectation: throws SCMPValidatorException (contains "=")

@@ -38,7 +38,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP,
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP,
 				ConnectionType.NETTY_TCP);
 		client.attach();
 	}

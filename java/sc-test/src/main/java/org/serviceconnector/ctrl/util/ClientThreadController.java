@@ -109,7 +109,7 @@ public class ClientThreadController {
 			sum += messages[i].value();
 		}
 		try {
-			SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP);
+			SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP);
 			sc.attach();
 			SCSessionService service = sc.newSessionService(TestConstants.sesServiceName1);
 			SCMessage scMessage = new SCMessage();

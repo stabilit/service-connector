@@ -39,8 +39,8 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		scCtx1 = ctrl.startSC(TestConstants.SC0_CASC, TestConstants.log4jSC0CASCProperties, TestConstants.SC0CASCProperties);
-		scCtx2 = ctrl.startSC(TestConstants.SC1_CASC, TestConstants.log4jSC1CASCProperties, TestConstants.SC1CASC1Properties);
+		scCtx1 = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
+		scCtx2 = ctrl.startSC(TestConstants.SC1, TestConstants.log4jSC1Properties, TestConstants.SC1Properties);
 		client1 = null;
 		client2 = null;
 	}
@@ -100,9 +100,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t01_attachDetach() throws Exception {
-		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_HTTP, ConnectionType.NETTY_HTTP);
+		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
-		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_HTTP, ConnectionType.NETTY_HTTP);
+		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
@@ -145,9 +145,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t02_attachDetach() throws Exception {
-		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_TCP, ConnectionType.NETTY_TCP);
+		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
-		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_TCP, ConnectionType.NETTY_TCP);
+		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
@@ -190,9 +190,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t03_attachDetach() throws Exception {
-		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_HTTP, ConnectionType.NETTY_HTTP);
+		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
-		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_TCP, ConnectionType.NETTY_TCP);
+		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
@@ -235,9 +235,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t05_attachDetach() throws Exception {
-		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_HTTP, ConnectionType.NETTY_HTTP);
+		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
-		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_HTTP, ConnectionType.NETTY_HTTP);
+		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		int nr = 500;
@@ -285,9 +285,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t06_attachDetach() throws Exception {
-		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_TCP, ConnectionType.NETTY_TCP);
+		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
-		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_CASC_TCP, ConnectionType.NETTY_TCP);
+		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		int nr = 500;

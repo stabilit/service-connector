@@ -15,11 +15,67 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import org.junit.Test;
+import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
+import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIStressExecutionCasc1Test;
 
 public class APIStressExecutionTest extends APIStressExecutionCasc1Test {
+	/**
+	 * Description: Create session (regular)<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t01_2Clients10000Messages() throws Exception {
+		int numberOfClients = 2;
+		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
-	public APIStressExecutionTest() {
-		APIStressExecutionTest.setUp1CascadedServiceConnectorAndServer();
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+					"f_execute1000MessagesAndExit");
+			clientCtxs[i] = clientCtx;
+		}
+		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+	}
+
+	/**
+	 * Description: Create session (regular)<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t05_10Clients100000Messages() throws Exception {
+		int numberOfClients = 10;
+		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
+
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
+					"f_execute100000MessagesAndExit");
+			clientCtxs[i] = clientCtx;
+		}
+		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+	}
+
+	/**
+	 * Description: Exchanges a 10MB message with the server<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t160_10MBMessageExchange() throws Exception {
+		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
+				TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+				"f_execute10MBMessageAndExit");
+
+		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
 	}
 }

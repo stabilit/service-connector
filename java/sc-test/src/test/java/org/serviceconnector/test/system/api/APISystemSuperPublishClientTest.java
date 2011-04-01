@@ -28,10 +28,10 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
+import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 
 public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
@@ -43,47 +43,103 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 	
+	public void setUpClientToSC0() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+	}
+
+	public void setUpClientToSC1() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+	}
+
+	public void setUpClientToSC2() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
+	}
+	
 	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
-
-		// server definitions
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-
-		SystemSuperTest.scDefs = sc0Defs;
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+		SystemSuperTest.setUpServiceConnectorAndServer();
+		APIReceivePublicationCasc1Test.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+		APIReceivePublicationCasc1Test.setUpServer();
+	}
 
+	public static void setUp2CascadedServiceConnectorAndServer() {
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+		APIReceivePublicationCasc1Test.setUpServer();
+	}
+
+	public static void setUpServer() {
+		// need to have a server serving 3 sessions here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
-
-		SystemSuperTest.scDefs = scCascDefs;
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
+
+	
+//	public static void setUpServiceConnectorAndServer() {
+//		// SC definitions
+//		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+//		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+//				TestConstants.log4jSC0Properties);
+//		sc0Defs.add(sc0Def);
+//
+//		// server definitions
+//		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+//		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+//				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
+//		srvToSC0Defs.add(srvToSC0Def);
+//
+//		SystemSuperTest.scDefs = sc0Defs;
+//		SystemSuperTest.srvDefs = srvToSC0Defs;
+//	}
+//
+//	public static void setUp1CascadedServiceConnectorAndServer() {
+//		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
+//		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
+//				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
+//		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
+//				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
+//		scCascDefs.add(sc0CascDef);
+//		scCascDefs.add(sc1CascDef);
+//
+//		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+//		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+//				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
+//		srvToSC0CascDefs.add(srvToSC0CascDef);
+//
+//		SystemSuperTest.scDefs = scCascDefs;
+//		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+//	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 

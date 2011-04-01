@@ -43,7 +43,7 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
@@ -53,10 +53,10 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 
 		ServerDefinition sessSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 10, 5, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_TCP, 10, 5, TestConstants.sesServiceName1);
 		ServerDefinition pubSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.pubServiceName1);
 		srvToSC0Defs.add(pubSrvToSC0Def);
 		srvToSC0Defs.add(sessSrvToSC0Def);
 		APISessionSubscriptionTest.srvDefs = srvToSC0Defs;

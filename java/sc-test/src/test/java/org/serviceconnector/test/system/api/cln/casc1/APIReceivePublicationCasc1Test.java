@@ -15,18 +15,15 @@
  */
 package org.serviceconnector.test.system.api.cln.casc1;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientTest {
@@ -35,41 +32,15 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 		APIReceivePublicationCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
-	public static void setUpServiceConnectorAndServer() {
-		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
 	}
 
-	public static void setUp1CascadedServiceConnectorAndServer() {
-		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
-	
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
-	}
-
-	public static void setUp2CascadedServiceConnectorAndServer() {
-		APISystemSuperPublishClientTest.setUp2CascadedServiceConnectorAndServer();
-
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
-	}
-	
 	/**
 	 * Description: receive one message (regular)<br>
 	 * Expectation: passes

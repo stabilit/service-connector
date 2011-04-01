@@ -39,7 +39,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
 		for (int i = 0; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
 					"f_execute1000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
@@ -59,7 +59,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
 		for (int i = 0; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
 					"f_execute100000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
@@ -76,7 +76,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 	@Test
 	public void t160_10MBMessageExchange() throws Exception {
 		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
-				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+				TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
 				"f_execute10MBMessageAndExit");
 
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);

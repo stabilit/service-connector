@@ -464,7 +464,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t22_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", String.valueOf(TestConstants.HOST), "-p",
-					String.valueOf(TestConstants.PORT_SC_HTTP), Constants.CC_CMD_STATE + "?serviceName=something",
+					String.valueOf(TestConstants.PORT_SC0_HTTP), Constants.CC_CMD_STATE + "?serviceName=something",
 					Constants.CC_CMD_STATE + "?serviceName=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(1, e.status);
@@ -483,7 +483,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t23_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_HTTP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_HTTP),
 					Constants.CC_CMD_STATE + "?serviceName=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
@@ -502,7 +502,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t24_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_MGMT),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_MGMT),
 					Constants.CC_CMD_STATE + "?serviceName=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
@@ -521,7 +521,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t25_stateUnknownService() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_STATE + "?serviceName=gaga" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
@@ -538,7 +538,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t26_state() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_STATE + "?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -555,7 +555,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t27_state_wildCard() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_STATE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -572,17 +572,17 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t50_enable_disable_command() throws Exception {
-		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_DISABLE + "?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
 		Assert.assertFalse(client.isServiceEnabled(TestConstants.sesServiceName1));
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_ENABLE + "?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -601,17 +601,17 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t51_enable_disable_wildCard_command() throws Exception {
-		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_DISABLE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
 		Assert.assertFalse(client.isServiceEnabled(TestConstants.sesServiceName1));
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_ENABLE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -632,7 +632,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t54_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SESSIONS + "?serviceName=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
@@ -649,7 +649,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t55_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SESSIONS + "?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -667,7 +667,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t56_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SESSIONS + "?serviceName=" + TestConstants.pubServerName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -685,7 +685,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t57_sessions_command_wildCard() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SESSIONS + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -702,7 +702,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t60_dump_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_DUMP });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -719,7 +719,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t70_clearCache() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_CLEAR_CACHE });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -738,7 +738,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t90_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					"gaga?serviceName=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(3, e.status);
@@ -757,7 +757,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t91_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					"gaga?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(3, e.status);
@@ -775,7 +775,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	@Test
 	public void t99_kill_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_KILL });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);

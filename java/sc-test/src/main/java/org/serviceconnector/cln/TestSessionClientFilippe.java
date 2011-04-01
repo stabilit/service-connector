@@ -45,7 +45,7 @@ public class TestSessionClientFilippe extends Thread {
 
 	@Override
 	public void run() {
-		SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 
 		try {
 			client.attach();

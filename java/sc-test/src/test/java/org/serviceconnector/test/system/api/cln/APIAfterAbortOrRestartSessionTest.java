@@ -238,7 +238,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
 		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 		srvCtxs.put(TestConstants.sesServerName1, sesSrvCtx);
 
@@ -259,7 +259,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
 		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 		srvCtxs.put(TestConstants.sesServerName1, sesSrvCtx);
 		sessionService1.deleteSession();

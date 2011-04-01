@@ -32,7 +32,7 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 	 */
 	@Test
 	public void publish_100000_msg_compressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -64,7 +64,7 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 	 */
 	@Test
 	public void publish_100000_msg_uncompressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);

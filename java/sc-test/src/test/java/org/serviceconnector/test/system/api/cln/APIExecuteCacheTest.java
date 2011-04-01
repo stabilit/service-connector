@@ -15,12 +15,15 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
+import org.junit.Before;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
 public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
-
-	public APIExecuteCacheTest() {
-		APISystemSuperSessionClientTest.setUpServiceConnectorAndServer();
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC0();
+		client.attach();
+		messageReceived = false;
 	}
 }

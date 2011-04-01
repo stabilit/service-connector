@@ -44,7 +44,7 @@ public class MultipleNICTest extends IntegrationSuperTest {
 			for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 				try {
 					IRequester req = new Requester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-							TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+							TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 					SCMPAttachCall attachCall = new SCMPAttachCall(req);
 					attachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));

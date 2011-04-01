@@ -42,6 +42,7 @@ public class SystemSuperTest {
 	protected static Map<String, ProcessCtx> scCtxs;
 	protected int threadCount = 0;
 	protected static List<ServiceConnectorDefinition> scDefs;
+	protected static boolean casc1Test = false;
 
 	protected static List<ServerDefinition> srvDefs;
 	protected static Map<String, ProcessCtx> srvCtxs;
@@ -97,51 +98,56 @@ public class SystemSuperTest {
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
 		SystemSuperTest.srvDefs = srvToSC0Defs;
+		casc1Test = false;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		 scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
+		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		scDefs.add(sc0Def);
+		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties,
+				TestConstants.log4jSC1Properties);
+		scDefs.add(sc1);
 
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+		// server definitions
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
+				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
 
-		SystemSuperTest.scDefs = scCascDefs;
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.scDefs = scDefs;
+		SystemSuperTest.srvDefs = srvToSC0Defs;
+		casc1Test = true;
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC2Properties, TestConstants.log4jSC1CASCProperties);
-		ServiceConnectorDefinition sc2CascDef = new ServiceConnectorDefinition(TestConstants.SC2_CASC,
-				TestConstants.SC2CASC2Properties, TestConstants.log4jSC2CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-		scCascDefs.add(sc2CascDef);
+		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		scDefs.add(sc0Def);
+		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties,
+				TestConstants.log4jSC1Properties);
+		scDefs.add(sc1);
+		ServiceConnectorDefinition sc2 = new ServiceConnectorDefinition(TestConstants.SC2, TestConstants.SC2Properties,
+				TestConstants.log4jSC2Properties);
+		scDefs.add(sc2);
 
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+		// server definitions
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
+				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
 
-		SystemSuperTest.scDefs = scCascDefs;
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.scDefs = scDefs;
+		SystemSuperTest.srvDefs = srvToSC0Defs;
+		casc1Test = false;
 	}
 }

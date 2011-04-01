@@ -30,21 +30,27 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.FileUtility;
 
 public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 
-	public APIFileServiceCasc1() {
-		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
-	}
-
 	protected SCMgmtClient client;
+
+	public APIFileServiceCasc1() {
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
+		messageReceived = false;
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 

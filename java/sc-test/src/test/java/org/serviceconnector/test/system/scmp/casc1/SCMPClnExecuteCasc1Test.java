@@ -60,7 +60,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
 		this.createSession();
 	}
@@ -71,7 +71,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
@@ -82,7 +82,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
@@ -93,7 +93,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}

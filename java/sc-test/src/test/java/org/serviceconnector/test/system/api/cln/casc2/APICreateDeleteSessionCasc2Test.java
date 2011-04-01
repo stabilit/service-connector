@@ -15,11 +15,20 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.junit.Before;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
 public class APICreateDeleteSessionCasc2Test extends APICreateDeleteSessionCasc1Test {
 
 	public APICreateDeleteSessionCasc2Test() {
 		APICreateDeleteSessionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC2();
+		client.attach();
+		messageReceived = false;
 	}
 }

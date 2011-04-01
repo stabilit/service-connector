@@ -30,22 +30,28 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 
-	public APIExecuteCacheCasc1Test() {
-		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
-	}
-
 	protected SCMgmtClient mgmtClient;
+
+	public APIExecuteCacheCasc1Test() {
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
-		mgmtClient.attach();
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
+		messageReceived = false;
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	@After

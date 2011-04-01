@@ -16,6 +16,7 @@
 package org.serviceconnector.test.system.api.cln.casc1;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
@@ -23,13 +24,24 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APIExecuteAndSendCasc1Test() {
-		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
+		messageReceived = false;
 	}
 
 	/**
@@ -253,8 +265,8 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
-		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE, response
-				.getAppErrorCode());
+		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE,
+				response.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
@@ -385,7 +397,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		response = sessionService1.createSession(request, msgCallback1);
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
@@ -664,7 +676,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		response = sessionService1.createSession(request, msgCallback1);
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
@@ -842,7 +854,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		response = msgCallback1.getResponse();
 		sessionService1.deleteSession();
 	}
-	
+
 	/**
 	 * Description: send 1 uncompressed 20MB message 1MB parts<br>
 	 * Expectation: passes
@@ -870,7 +882,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		response = msgCallback1.getResponse();
 		sessionService1.deleteSession();
 	}
-	
+
 	/**
 	 * Description: send 1 uncompressed 20MB message 100KB parts<br>
 	 * Expectation: passes
@@ -898,7 +910,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		response = msgCallback1.getResponse();
 		sessionService1.deleteSession();
 	}
-	
+
 	/**
 	 * Description: send 1 uncompressed 20MB message 200KB parts<br>
 	 * Expectation: passes

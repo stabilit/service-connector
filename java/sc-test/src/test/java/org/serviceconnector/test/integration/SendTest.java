@@ -43,7 +43,7 @@ public class SendTest extends IntegrationSuperTest {
 		ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 		IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
 		connection.setHost(TestConstants.HOST);
-		connection.setPort(TestConstants.PORT_SC_HTTP);
+		connection.setPort(TestConstants.PORT_SC0_HTTP);
 		connection.setIdleTimeoutSeconds(0); // idle timeout inactive
 		IIdleConnectionCallback idleCallback = new IdleCallback();
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);

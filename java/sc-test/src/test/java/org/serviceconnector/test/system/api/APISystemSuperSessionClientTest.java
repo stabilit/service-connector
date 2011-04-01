@@ -38,9 +38,39 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		this.setUpClientToSC0();
 		client.attach();
 		messageReceived = false;
+	}
+
+	public void setUpClientToSC0() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+	}
+
+	public void setUpClientToSC1() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+	}
+
+	public void setUpClientToSC2() {
+		if (client != null) {
+			try {
+				client.detach();
+			} catch (Exception e) {
+			}
+		}
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
 	}
 
 	@After
@@ -109,6 +139,5 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 		public String getScErrorText() {
 			return scErrorText;
 		}
-
 	}
 }

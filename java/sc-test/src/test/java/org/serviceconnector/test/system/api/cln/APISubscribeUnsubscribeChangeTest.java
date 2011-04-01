@@ -15,26 +15,27 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
-import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
-	public APISubscribeUnsubscribeChangeTest() {
-		APISubscribeUnsubscribeChangeTest.setUpServiceConnectorAndServer();
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC0();
+		client.attach();
 	}
 
 	/**
@@ -363,5 +364,39 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 
 		subMsgRequest.setMask("abc%xy");
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+	}
+	
+	/**
+	 * Description: two clients subscribe to a message queue, the server gets destroyed<br>
+	 * Expectation: clients get a not found error, passes
+	 */
+	@Test
+	public void t95_TwoSubscribersServerGetsDestroyed() throws Exception {
+		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
+		SCPublishService service2 = client2.newPublishService(TestConstants.pubServiceName1);
+
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
+		subMsgRequest.setNoDataIntervalSeconds(10);
+
+		MsgCallback cbk1 = new MsgCallback(service1);
+		MsgCallback cbk2 = new MsgCallback(service2);
+
+		subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
+		subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
+
+		// destroy the server
+		SystemSuperTest.ctrl.stopServerEnvironment(SystemSuperTest.srvCtxs);
+		cbk1.waitForMessage(2);
+		cbk2.waitForMessage(2);
+
+		Assert.assertFalse("service1 is still active", service1.isActive());
+		Assert.assertFalse("service2 is still active", service2.isActive());
+		client2.detach();
 	}
 }

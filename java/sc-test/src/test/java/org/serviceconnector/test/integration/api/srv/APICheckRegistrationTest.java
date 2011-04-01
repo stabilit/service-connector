@@ -37,7 +37,7 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t01_checkSessionServer() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -53,7 +53,7 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t02_checkPublishServer() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);

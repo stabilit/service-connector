@@ -38,7 +38,7 @@ public class APINewServerTest extends SuperUnitTest{
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP); 
 		server.startListener();
 	}
 
@@ -95,7 +95,7 @@ public class APINewServerTest extends SuperUnitTest{
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
-		Assert.assertEquals("SC Port", TestConstants.PORT_SC_TCP, sessionServer.getSCPort());
+		Assert.assertEquals("SC Port", TestConstants.PORT_SC0_TCP, sessionServer.getSCPort());
 	}
 	
 	/**
@@ -141,7 +141,7 @@ public class APINewServerTest extends SuperUnitTest{
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
-		Assert.assertEquals("SC Port", TestConstants.PORT_SC_TCP, publishServer.getSCPort());
+		Assert.assertEquals("SC Port", TestConstants.PORT_SC0_TCP, publishServer.getSCPort());
 	}		
 
 	

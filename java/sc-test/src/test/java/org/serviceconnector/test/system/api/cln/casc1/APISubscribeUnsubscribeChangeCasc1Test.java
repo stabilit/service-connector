@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
@@ -35,43 +36,52 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublishClientTest {
 
 	public APISubscribeUnsubscribeChangeCasc1Test() {
-		APISubscribeUnsubscribeChangeCasc1Test.setUp1CascadedServiceConnectorAndServer();
-	}
-
-	public static void setUpServiceConnectorAndServer() {
-		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-		SystemSuperTest.srvDefs = srvToSC0Defs;
-	}
-
-	public static void setUp1CascadedServiceConnectorAndServer() {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
-
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
-	public static void setUp2CascadedServiceConnectorAndServer() {
-		APISystemSuperPublishClientTest.setUp2CascadedServiceConnectorAndServer();
-
-		// need to have a server serving 3 sessions here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
 	}
+	
+//	public static void setUpServiceConnectorAndServer() {
+//		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();
+//		// need to have a server serving 3 sessions here
+//		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+//		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+//				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.pubServiceName1);
+//		srvToSC0Defs.add(srvToSC0Def);
+//		SystemSuperTest.srvDefs = srvToSC0Defs;
+//	}
+//
+//	public static void setUp1CascadedServiceConnectorAndServer() {
+//		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
+//
+//		// need to have a server serving 3 sessions here
+//		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+//		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+//				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
+//		srvToSC0CascDefs.add(srvToSC0CascDef);
+//		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+//	}
+//
+//	public static void setUp2CascadedServiceConnectorAndServer() {
+//		APISystemSuperPublishClientTest.setUp2CascadedServiceConnectorAndServer();
+//
+//		// need to have a server serving 3 sessions here
+//		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+//		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+//				TestConstants.PORT_SC0_CASC_TCP, 3, 3, TestConstants.pubServiceName1);
+//		srvToSC0CascDefs.add(srvToSC0CascDef);
+//		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+//	}
 
 	/**
 	 * Description: subscribe (regular)<br>
@@ -157,7 +167,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		msgCallback = new MsgCallback(publishService);
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
@@ -302,7 +312,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
@@ -533,7 +543,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
@@ -611,7 +621,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 	 */
 	@Test
 	public void t95_TwoSubscribersServerGetsDestroyed() throws Exception {
-		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
 		client2.attach();
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client2.newPublishService(TestConstants.pubServiceName1);

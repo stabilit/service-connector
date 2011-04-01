@@ -30,7 +30,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 */
 	@Test
 	public void t_10000_tcp() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		int nr = 10000;
 		int sleep = 0;
 		long start = System.currentTimeMillis();
@@ -56,7 +56,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 */
 	@Test
 	public void t_10000_http() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		int nr = 10000;
 		int sleep = 0;
 		long start = System.currentTimeMillis();
@@ -87,7 +87,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		SCClient[] clients = new SCClient[nr];
 		// create clients
 		for (int i= 0; i < nr; i++) {
-			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		}
 		//attach
 		long start = System.currentTimeMillis();
@@ -119,7 +119,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		SCClient[] clients = new SCClient[nr];
 		// create clients
 		for (int i= 0; i < nr; i++) {
-			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		}
 		//attach
 		long start = System.currentTimeMillis();

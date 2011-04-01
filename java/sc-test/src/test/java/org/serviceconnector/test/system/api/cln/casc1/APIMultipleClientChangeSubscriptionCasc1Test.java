@@ -34,50 +34,30 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-
-		// need two publish server here
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srv1ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 10, 5, TestConstants.pubServerName1);
-		ServerDefinition srv2ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC_TCP, 10, 5,
-				TestConstants.pubServiceName2);
-		srvToSC0Defs.add(srv1ToSC0Def);
-		srvToSC0Defs.add(srv2ToSC0Def);
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
-
-		// need two publish server here
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
-		ServerDefinition srv2ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_CASC_TCP, 10, 5,
-				TestConstants.pubServiceName2);
-		srvToSC0CascDefs.add(srv1ToSC0CascDef);
-		srvToSC0CascDefs.add(srv2ToSC0CascDef);
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
+	}
 
+	public static void setUpServer() {
 		// need two publish server here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
+				TestConstants.PORT_SC0_TCP, 10, 5, TestConstants.pubServerName1);
 		ServerDefinition srv2ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_CASC_TCP, 10, 5,
+				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_TCP, 10, 5,
 				TestConstants.pubServiceName2);
 		srvToSC0CascDefs.add(srv1ToSC0CascDef);
 		srvToSC0CascDefs.add(srv2ToSC0CascDef);
-
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
@@ -91,12 +71,12 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
-				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+				TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 				"f_subscribeReceive10000Unsubscribe");
 		clientCtxs[0] = clientCtx3;
 		for (int i = 1; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 					"f_subscribeReceive500ChangeSubscriptionUnsubscribe");
 			clientCtxs[i] = clientCtx;
 		}
@@ -115,12 +95,12 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
-				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+				TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 				"f_subscribeReceive10000Unsubscribe");
 		clientCtxs[0] = clientCtx3;
 		for (int i = 1; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 					"f_10000ChangeSubscription");
 			clientCtxs[i] = clientCtx;
 		}

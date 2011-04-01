@@ -17,6 +17,7 @@ package org.serviceconnector.test.system.api.cln.casc1;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
@@ -24,13 +25,24 @@ import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APICreateDeleteSessionCasc1Test() {
-		APICreateDeleteSessionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		if (casc1Test == true) {
+			this.setUpClientToSC1();
+			client.attach();
+		}
+		messageReceived = false;
 	}
 
 	/**
@@ -198,7 +210,7 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 	@Test(expected = SCMPValidatorException.class)
 	public void t83_disabledService() throws Exception {
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
@@ -275,7 +287,7 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 		Assert.assertNotNull("the session ID is null", sessionService1.getSessionId());
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();

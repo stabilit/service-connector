@@ -56,7 +56,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SCMPClnSubscribeTest.srvDefs = srvToSC0Defs;
 	}
@@ -67,7 +67,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SCMPClnSubscribeCasc1Test.srvDefs = srvToSC0CascDefs;
 	}
@@ -78,7 +78,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
@@ -87,7 +87,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
 	}
 
