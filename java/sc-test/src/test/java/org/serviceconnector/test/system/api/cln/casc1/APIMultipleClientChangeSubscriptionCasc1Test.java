@@ -18,6 +18,7 @@ package org.serviceconnector.test.system.api.cln.casc1;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -47,6 +48,13 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
 	}
 
+	@Override
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		TestUtil.deleteLogDir(TestConstants.log4jClnProperties);
+	}
+	
 	public static void setUpServer() {
 		// need two publish server here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();

@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.test.system.api.cln.casc1;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -26,6 +27,13 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
 	public APIStressExecutionCasc1Test() {
 		APIStressExecutionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+	}
+	
+	@Override
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		TestUtil.deleteLogDir(TestConstants.log4jClnProperties);
 	}
 
 	/**
