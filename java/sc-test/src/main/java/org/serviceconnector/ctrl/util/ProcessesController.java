@@ -213,8 +213,8 @@ public class ProcessesController {
 		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
 		for (ServerDefinition srvDef : serverDefs) {
 			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLog4jproperty(), srvDef.getServerName(),
-					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(), srvDef
-							.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
+					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(),
+					srvDef.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
 			proccessContexts.put(srvDef.getServerName(), srvProcess);
 		}
 		return proccessContexts;
@@ -324,9 +324,9 @@ public class ProcessesController {
 			// empty timezoneParam
 			timezoneParam = "";
 		}
-		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar " + srvRunablFullName
-				+ " " + serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " "
-				+ maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
+		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar "
+				+ srvRunablFullName + " " + serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions
+				+ " " + maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
 		int timeout = 15;
@@ -348,8 +348,8 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess
-						.getConnectionType());
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(),
+						srvProcess.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
@@ -533,6 +533,7 @@ public class ProcessesController {
 	public void waitForClientTermination(ProcessCtx clientCtx) {
 		try {
 			clientCtx.getProcess().waitFor();
+			FileUtility.deleteFile(clientCtx.getPidFileName());
 			testLogger.error("Client " + clientCtx.getProcessName() + " stopped.");
 		} catch (InterruptedException e) {
 			testLogger.error("Waiting for Client " + clientCtx.getProcessName() + "termination failed.");

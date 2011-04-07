@@ -1,9 +1,7 @@
 package org.serviceconnector.cln;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.channels.FileLock;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -13,6 +11,7 @@ import org.serviceconnector.api.cln.SCService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
 
 public class TestAbstractClient extends Thread {
@@ -38,9 +37,9 @@ public class TestAbstractClient extends Thread {
 	public void run() {
 		try {
 			try {
-				FileLock pidLock = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.clientName + ".pid");
+				FileCtx fileChannel = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.clientName + ".pid");
 				// add exit handler
-				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid", pidLock);
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid", fileChannel);
 			} catch (SCMPValidatorException e1) {
 				LOGGER.fatal("unable to get path to pid file", e1);
 			} catch (Exception e) {
@@ -124,8 +123,8 @@ public class TestAbstractClient extends Thread {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	private void addExitHandler(String pidFileNameFull, FileLock pidLock) {
-		TestClientExitHandler exitHandler = new TestClientExitHandler(pidFileNameFull, pidLock);
+	private void addExitHandler(String pidFileNameFull, FileCtx fileChannel) {
+		TestClientExitHandler exitHandler = new TestClientExitHandler(pidFileNameFull, fileChannel);
 		Runtime.getRuntime().addShutdownHook(exitHandler);
 	}
 
@@ -134,22 +133,26 @@ public class TestAbstractClient extends Thread {
 	 */
 	private static class TestClientExitHandler extends Thread {
 		private String pidFileNameFull = null;
-		private FileLock pidLock = null;
+		private FileCtx fileCtx = null;
 
-		public TestClientExitHandler(String pidFileNameFull, FileLock pidLock) {
+		public TestClientExitHandler(String pidFileNameFull, FileCtx fileCtx) {
 			this.pidFileNameFull = pidFileNameFull;
-			this.pidLock = pidLock;
+			this.fileCtx = fileCtx;
 		}
 
 		@Override
 		public void run() {
-			File pidFile = new File(this.pidFileNameFull);
+			try {
+				this.fileCtx.releaseFileLockAndCloseChannel();
+			} catch (Exception e) {
+				LOGGER.log(Level.OFF, "Releasing file lock failed");
+			}
+			File pidFile = this.fileCtx.getFile();
 			if (pidFile.exists()) {
-				try {
-					this.pidLock.release();
-				} catch (IOException e) {
+				boolean success = pidFile.delete();
+				if (success == false) {
+					LOGGER.error("Delete PID-file failed: " + this.pidFileNameFull);
 				}
-				pidFile.delete();
 				LOGGER.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
 			}
 			LOGGER.log(Level.OFF, "TestClient exiting");

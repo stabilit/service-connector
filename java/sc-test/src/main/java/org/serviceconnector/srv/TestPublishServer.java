@@ -21,7 +21,7 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
-import java.nio.channels.FileLock;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +39,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.log.SubscriptionLogger;
+import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
 
 @SuppressWarnings("unused")
@@ -109,10 +110,10 @@ public class TestPublishServer extends TestStatefulServer {
 					server.deregister();
 				}
 			}
-			FileLock pidLock = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.serverName + ".pid");
+			FileCtx fileCtx = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.serverName + ".pid");
 			// add exit handler
 			try {
-				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", pidLock);
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", fileCtx);
 			} catch (SCMPValidatorException e1) {
 				LOGGER.fatal("unable to get path to pid file", e1);
 			}

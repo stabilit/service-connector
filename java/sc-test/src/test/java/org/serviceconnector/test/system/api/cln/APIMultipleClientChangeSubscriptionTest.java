@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -27,7 +28,14 @@ public class APIMultipleClientChangeSubscriptionTest extends APIMultipleClientCh
 	public APIMultipleClientChangeSubscriptionTest() {
 		APIMultipleClientChangeSubscriptionCasc1Test.setUpServiceConnectorAndServer();
 	}
-	
+
+	@Override
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		TestUtil.deleteLogDir(TestConstants.log4jClnProperties);
+	}
+
 	/**
 	 * Description: 3 clients Subscribe, 1 receives 10000, 2 receives 500 message and unsubscribe<br>
 	 * Expectation: passes

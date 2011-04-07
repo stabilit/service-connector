@@ -16,7 +16,6 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
-import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
 
 public class TestSessionServer extends TestStatefulServer {
@@ -95,10 +95,10 @@ public class TestSessionServer extends TestStatefulServer {
 					server.deregister();
 				}
 			}
-			FileLock pidLock = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.serverName + ".pid");
+			FileCtx fileCtx = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.serverName + ".pid");
 			// add exit handler
 			try {
-				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", pidLock);
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", fileCtx);
 			} catch (SCMPValidatorException e1) {
 				LOGGER.fatal("unable to get path to pid file", e1);
 			}

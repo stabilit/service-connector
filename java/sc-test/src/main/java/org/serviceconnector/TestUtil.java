@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import junit.framework.Assert;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
@@ -93,7 +94,6 @@ public class TestUtil {
 	}
 
 	public static void checkLogFile(String log4jProperties, String logFileToCheck) throws Exception {
-
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
 		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
@@ -115,6 +115,18 @@ public class TestUtil {
 				throw new Exception("ERROR found in " + logFileToCheck + "\n" + strLine);
 			}
 		}
+	}
+
+	public static void deleteLogDir(String log4jProperties) throws ConfigurationException {
+		CompositeConfiguration compositeConfig = new CompositeConfiguration();
+		compositeConfig.addConfiguration(new EnvironmentConfiguration());
+		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		compositeConfig.addConfiguration(new SystemConfiguration());
+		// Read & parse properties file.
+		String logDirPath = userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
+
+		File dirToDelete = new File(logDirPath);
+		TestUtil.deleteDir(dirToDelete);
 	}
 
 	public static boolean deleteDir(File dir) {
