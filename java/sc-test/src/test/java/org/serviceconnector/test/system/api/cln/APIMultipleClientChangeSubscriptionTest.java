@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
