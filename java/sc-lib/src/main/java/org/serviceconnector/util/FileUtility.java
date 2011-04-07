@@ -266,11 +266,11 @@ public final class FileUtility {
 	 * 
 	 * @param fileNameFull
 	 *            the file name full
-	 * @return the lock
+	 * @return the file ctx
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static FileLock createPIDfileAndLock(String fileNameFull) throws Exception {
+	public static FileCtx createPIDfileAndLock(String fileNameFull) throws Exception {
 		FileWriter fw = null;
 		try {
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
@@ -289,9 +289,9 @@ public final class FileUtility {
 				fw.close();
 			}
 			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel();
-			FileLock lock = channel.lock();
 			LOGGER.info("Create PID-file=" + fileNameFull + " PID=" + pid);
-			return lock;
+			FileLock lock = channel.lock();
+			return new FileCtx(lock, channel, pidFile);
 		} finally {
 			if (fw != null) {
 				fw.close();
