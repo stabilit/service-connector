@@ -17,7 +17,6 @@
 package org.serviceconnector;
 
 import java.lang.management.ManagementFactory;
-import java.nio.channels.FileLock;
 import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -38,6 +37,7 @@ import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
+import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -137,9 +137,9 @@ public final class SC {
 		// Write PID file
 		if (AppContext.getBasicConfiguration().isWritePID()) {
 			String fs = System.getProperty("file.separator");
-			FileLock pidLock = FileUtility.createPIDfileAndLock(AppContext.getBasicConfiguration().getPidPath() + fs
+			FileCtx fileCtx = FileUtility.createPIDfileAndLock(AppContext.getBasicConfiguration().getPidPath() + fs
 					+ Constants.PID_FILE_NAME);
-			SC.addExitHandler(pidLock);
+			SC.addExitHandler(fileCtx);
 		}
 		LOGGER.log(Level.OFF, "Service Connector is running ...");
 	}
@@ -203,8 +203,8 @@ public final class SC {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	private static void addExitHandler(FileLock pidLock) {
-		Runtime.getRuntime().addShutdownHook(new SCExitHandler(pidLock));
+	private static void addExitHandler(FileCtx fileCtx) {
+		Runtime.getRuntime().addShutdownHook(new SCExitHandler(fileCtx));
 	}
 
 	/**
@@ -212,10 +212,10 @@ public final class SC {
 	 */
 	private static class SCExitHandler extends Thread {
 
-		private FileLock pidLock;
+		private FileCtx fileCtx;
 
-		public SCExitHandler(FileLock pidLock) {
-			this.pidLock = pidLock;
+		public SCExitHandler(FileCtx fileCtx) {
+			this.fileCtx = fileCtx;
 		}
 
 		/** {@inheritDoc} */
@@ -224,13 +224,13 @@ public final class SC {
 			String fs = System.getProperty("file.separator");
 			AppContext.getCacheManager().destroy();
 			try {
-				if (this.pidLock != null) {
+				if (this.fileCtx != null) {
 					// release the file lock
-					this.pidLock.release();
+					this.fileCtx.releaseFileLockAndCloseChannel();
 				}
 				if (AppContext.getBasicConfiguration() != null) {
 					String pidFileNameFull = AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME;
-					FileUtility.deleteFile(pidFileNameFull);
+					fileCtx.getFile().delete();
 					LOGGER.info("Delete PID-file=" + pidFileNameFull);
 				}
 			} catch (Exception e) {
