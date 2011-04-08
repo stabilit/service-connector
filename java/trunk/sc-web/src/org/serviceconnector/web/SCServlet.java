@@ -1,6 +1,7 @@
 package org.serviceconnector.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -36,9 +37,9 @@ public class SCServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			if (registered == false) {
+			if (SCServlet.registered == false) {
 				this.registerTomcatOnSC(config);
-				registered = true;
+				SCServlet.registered = true;
 			}
 		} catch (SCServiceException e) {
 			throw new ServletException("Registering tomcat on SC failed", e);
@@ -81,16 +82,20 @@ public class SCServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletContext ctx = this.getServletContext();
-		String value = ctx.getInitParameter("tst");
-		response.getOutputStream().write("Hello".getBytes());
+		InputStream in = request.getInputStream();
+		byte[] buffer = new byte[1024];
+		in.read(buffer);
+		System.out.println(new String(buffer));
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		InputStream in = request.getInputStream();
+		byte[] buffer = new byte[1024];
+		in.read(buffer);
+		System.out.println(new String(buffer));
 	}
 
 	/**
