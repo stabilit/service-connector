@@ -4,20 +4,24 @@ Service Connector - open source messaging middleware
  Kit structure:
  --------------
  sc-bin_V9.9-999.zip - kit containing only binaries 
- --/bin					(binaries a scripts to manage sc)
+ --/bin				(binaries a scripts to manage sc)
    /bin/unix		(script to run sc as deamon on unix/linux. see the readme.txt)
    /bin/win32		(script and runables to run sc as Windows service on win32 platform)
-   /bin/win64  	(script and runables to run sc as Windows service on win64 platform)
-   /conf				(sc configuration files)
-   /cache				(sc writes temporary cache-files here. See also sc property cache.diskPath)
-   /logs				(sc writes all log and dump files here. See log4j properties)
+   /bin/win64  	    (script and runables to run sc as Windows service on win64 platform)
+   /conf			(sc configuration files)
+   /doc				(sc operation guide)
+   /cache			(sc writes temporary cache-files here. See also sc property cache.diskPath)
+   /logs			(sc writes all log and dump files here. See log4j properties)
    
  sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
- --/doc					(sc documentation and java docs)
+ --/doc				(scmp documentation and java docs)
    /examples		(additional scripts examples and file service configurations)
    /sources			(sources of sc and the demo application)
  
- For complete source see: http://www.stabilit.ch/svn/repos/sc
+ For complete source see: 
+ 		http://www.stabilit.ch/svn/repos/sc (latest branche, restricted access)
+ 		or
+ 		http://serviceconnecto.svn.sourceforge.net/ (taged versions, public access) 
 
 
  Pre-requisites:
