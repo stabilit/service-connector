@@ -1,2 +1,4 @@
+bin\kitBuild.bat
+bin\mvn*.*
 logs\*.*
 cache\*.*

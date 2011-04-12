@@ -1,14 +1,17 @@
 @echo off
 
-del ..\..\..\sc-bin.zip
-del ..\..\..\sc-src.zip
+del ..\..\..\kit\sc-bin.zip
+del ..\..\..\kit\sc-src.zip
+del ..\bin\*.* /F/Q 
 
 call mvn-all.bat
 
-copy ..\..\..\documents\SC_0_SCMP_E.pdf      	..\..\..\kit\doc\ /y
-copy ..\..\..\documents\SC_4_Operation_E.pdf 	..\..\..\kit\doc\ /y
-copy ..\..\..\documents\Open_Issues.xls			..\..\..\kit\doc\ /y
+copy ..\..\..\documents\SC_0_SCMP_E.pdf      	..\doc\ /y
+copy ..\..\..\documents\SC_4_Operation_E.pdf 	..\doc\ /y
+copy ..\..\..\documents\Open_Issues.xls			..\doc\ /y
 
-cd ..\..\..\kit
-"C:\Program Files\WinZip\wzzip" -ex -rP ..\sc-bin.zip @..\java\kitbuild\scripts\kitIncludeBinList.txt -x@..\java\kitbuild\scripts\kitExcludeBinList.txt
-"C:\Program Files\WinZip\wzzip" -ex -rP ..\sc-src.zip @..\java\kitbuild\scripts\kitIncludeSrcList.txt -x@..\java\kitbuild\scripts\kitExcludeSrcList.txt
+cd ..\
+"C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-bin.zip @scripts\kitIncludeBinList.txt -x@scripts\kitExcludeBinList.txt
+"C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-src.zip @scripts\kitIncludeSrcList.txt -x@scripts\kitExcludeSrcList.txt
+
+rem "*** Kit created ***"
