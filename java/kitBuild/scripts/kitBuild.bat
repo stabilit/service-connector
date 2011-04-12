@@ -13,5 +13,3 @@ copy ..\..\..\documents\Open_Issues.xls			..\doc\ /y
 cd ..\
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-bin.zip @scripts\kitIncludeBinList.txt -x@scripts\kitExcludeBinList.txt
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-src.zip @scripts\kitIncludeSrcList.txt -x@scripts\kitExcludeSrcList.txt
-
-rem "*** Kit created ***"

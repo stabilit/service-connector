@@ -1,5 +1,11 @@
 readme.txt
-bin\
+bin\sc*.jar
+bin\demo*.jar
+bin\start*.*
+bin\stop*.*
+bin\unix\
+bin\win32\
+bin\win64\
 doc\
 conf\
 examples\
