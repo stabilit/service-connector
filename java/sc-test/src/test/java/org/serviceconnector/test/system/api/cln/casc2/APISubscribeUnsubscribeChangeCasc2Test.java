@@ -52,6 +52,7 @@ public class APISubscribeUnsubscribeChangeCasc2Test extends APISubscribeUnsubscr
 
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		@SuppressWarnings("unused")
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
