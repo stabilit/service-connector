@@ -1,10 +1,9 @@
-call mvn-source-test-install-cmd.bat ..\..\service-connector
-call mvn-assembly-cmd.bat ..\..\service-connector
+call mvn-source-test-install-cmd.bat	..\..\service-connector
+call mvn-assembly-cmd.bat 				..\..\service-connector
 copy ..\..\service-connector\target\sc.jar 									..\bin /y
 copy ..\..\service-connector\src\main\resources\sc.properties 				..\conf /y
 copy ..\..\service-connector\src\main\resources\sc-specific.properties 		..\conf /y
 copy ..\..\service-connector\src\main\resources\log4j.properties 			..\conf\log4j-sc.properties /y
-copy ..\..\service-connector\src\main\resources\readme.txt 					..\ /y
 copy ..\..\service-connector\src\main\resources\start*.*	 				..\bin /y
 copy ..\..\service-connector\src\main\resources\stop*.* 					..\bin /y
 xcopy ..\..\service-connector\src\main\resources\unix 						..\bin\unix\ /y /e
