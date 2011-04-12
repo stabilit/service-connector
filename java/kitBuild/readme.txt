@@ -16,10 +16,10 @@ Service Connector - open source messaging middleware
  sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
  --/doc				(scmp documentation and java docs)
    /examples		(additional scripts examples and file service configurations)
-   /sources			(sources of sc and the demo application)
+   /sources			(sources of sc-lib and the demo application)
  
  For complete source see: 
- 		http://www.stabilit.ch/svn/repos/sc (latest branche, restricted access)
+ 		http://www.stabilit.ch/svn/repos/sc (latest branch, restricted access)
  		or
  		http://serviceconnecto.svn.sourceforge.net/ (taged versions, public access) 
 
