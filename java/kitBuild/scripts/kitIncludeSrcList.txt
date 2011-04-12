@@ -1,0 +1,8 @@
+readme.txt
+bin\
+doc\
+conf\
+examples\
+cache\
+logs\
+sources\

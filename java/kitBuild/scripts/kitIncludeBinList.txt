@@ -1,0 +1,6 @@
+readme.txt
+bin\
+doc\SC_4_Operation_E.pdf
+conf\
+cache\
+logs\
