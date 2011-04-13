@@ -1,19 +1,28 @@
 @echo off
 
-del ..\..\..\kit\sc-bin.zip
-del ..\..\..\kit\sc-src.zip
-del ..\bin\*.* /F/Q 
+del ..\..\..\kit\sc-bin.zip /F/Q
+del ..\..\..\kit\sc-src.zip /F/Q
+del ..\kit-tmp\*.* /F/Q
+mkdir ..\kit-tmp\bin
+mkdir ..\kit-tmp\cache
+mkdir ..\kit-tmp\doc
+mkdir ..\kit-tmp\examples
+mkdir ..\kit-tmp\logs
+mkdir ..\kit-tmp\sources
 
 call mvn-all.bat
 
-copy ..\..\..\documents\SC_0_SCMP_E.pdf      	..\doc\ /y
-copy ..\..\..\documents\SC_4_Operation_E.pdf 	..\doc\ /y
-copy ..\..\..\documents\Open_Issues.xls			..\doc\ /y
+copy ..\..\..\documents\SC_0_SCMP_E.pdf      	..\kit-tmp\doc\ /y
+copy ..\..\..\documents\SC_4_Operation_E.pdf 	..\kit-tmp\doc\ /y
+copy ..\..\..\documents\Open_Issues.xls			..\kit-tmp\doc\ /y
+copy ..\..\examples\*.*							..\kit-tmp\examples /y
+copy ..\readme.txt								..\kit-tmp\ /y
 
-cd ..\
+
+cd ..\kit-tmp\
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-bin.zip @scripts\kitIncludeBinList.txt -x@scripts\kitExcludeBinList.txt
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\kit\sc-src.zip @scripts\kitIncludeSrcList.txt -x@scripts\kitExcludeSrcList.txt
-cd scripts\
+cd ..\scripts\
 
 rem "Copy the kit into the proper places"
 rem ..\bin\rename_and_move_kit.bat	(bat-file created / modified by java)
