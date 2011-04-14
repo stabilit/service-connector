@@ -781,4 +781,55 @@ public class SCConsoleTest extends IntegrationSuperTest {
 			Assert.assertEquals(0, e.status);
 		}
 	}
+
+	/**
+	 * Description: start console with "-h localhost -p 9000 scVersion<br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void t100_scVersion_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
+					Constants.CC_CMD_SC_VERSION });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	/**
+	 * Description: start console with "-h localhost -p 9000 serviceConfiguartion?serviceName=session-1<br>
+	 * Expectation:  passes with cascaded=false in console <br>
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void t101_serviceConfiguration_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
+					Constants.CC_CMD_SERVICE_CONF + "?serviceName=" + TestConstants.sesServiceName1 });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+	
+	/**
+	 * Description: start console with "-h localhost -p 9000 serviceConfiguartion?serviceName=session-1-casc<br>
+	 * Expectation: passes with cascaded=true in console <br>
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void t102_serviceConfiguration_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
+					Constants.CC_CMD_SERVICE_CONF + "?serviceName=" + TestConstants.sesServiceName1Casc });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
 }
