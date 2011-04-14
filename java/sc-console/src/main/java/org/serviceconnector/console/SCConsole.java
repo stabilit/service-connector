@@ -42,6 +42,8 @@ public class SCConsole {
 	 *            java -jar sc-console.jar -h localhost -p 7000 clearCache
 	 *            java -jar sc-console.jar -h localhost -p 7000 dump
 	 *            java -jar sc-console.jar -h localhost -p 7000 kill
+	 *            java -jar sc-console.jar -h localhost -p 7000 scVersion
+	 *            java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc
 	 *            system exit status<br />
 	 *            0 = success
 	 *            1 = error parsing arguments
@@ -180,6 +182,24 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SC_VERSION)) {
+				try {
+					String scVersion = client.getSCVersion();
+					System.out.println(scVersion);
+				} catch (SCServiceException e) {
+					System.out.println("Getting version (SC Version) of remote SC failed.");
+					status = 4;
+				}
+				client.detach();
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SERVICE_CONF)) {
+				try {
+					Map<String, String> serviceConf = client.getServiceConfiguration(serviceName);
+					System.out.println(serviceConf);
+				} catch (SCServiceException e) {
+					System.out.println("Getting service [" + serviceName + "] configuration failed.");
+					status = 4;
+				}
+				client.detach();
 			} else {
 				SCConsole.showError("Error - wrong call key in request string.");
 				status = 3;
@@ -194,6 +214,12 @@ public class SCConsole {
 		return status;
 	}
 
+	/**
+	 * Show error.
+	 * 
+	 * @param msg
+	 *            the msg
+	 */
 	private static void showError(String msg) {
 		System.err.println("\nerror: " + msg);
 		System.out
@@ -205,5 +231,7 @@ public class SCConsole {
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 clearCache");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 kill");
+		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 scVersion");
+		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc");
 	}
 }
