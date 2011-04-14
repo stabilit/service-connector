@@ -41,8 +41,6 @@ public abstract class Service {
 	private boolean enabled;
 	/** The name. */
 	private String name;
-	/** The location. */
-	private String location;
 
 	/**
 	 * Instantiates a new service.
@@ -54,7 +52,6 @@ public abstract class Service {
 	 */
 	public Service(String name, ServiceType type) {
 		this.name = name;
-		this.location = null;
 		this.type = type;
 	}
 
@@ -65,25 +62,6 @@ public abstract class Service {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Gets the location.
-	 * 
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
-
-	/**
-	 * Sets the location.
-	 * 
-	 * @param location
-	 *            the new location
-	 */
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	/**
@@ -132,7 +110,6 @@ public abstract class Service {
 		writer.writeStartElement("service");
 		writer.writeAttribute("name", this.name);
 		writer.writeAttribute("type", this.type.getValue());
-		writer.writeAttribute("location", this.location);
 		writer.writeAttribute("enabled", this.enabled);
 		writer.writeEndElement(); // service
 	}

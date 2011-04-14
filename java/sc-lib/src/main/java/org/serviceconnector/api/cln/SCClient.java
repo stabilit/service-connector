@@ -367,7 +367,7 @@ public class SCClient {
 	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeout
-	 *            the operation timeout
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
 	 * @return true, if is service enabled
@@ -428,7 +428,7 @@ public class SCClient {
 	 * Operation only possible if client gets successfully attached before.
 	 * 
 	 * @param operationTimeout
-	 *            the operation timeout
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceNamePattern
 	 *            the service name pattern
 	 * @return map containing serviceName and state enabled/disabled.
@@ -452,6 +452,60 @@ public class SCClient {
 			return urlResponse.getParameterMap();
 		} catch (SCServiceException serviceEx) {
 			return new HashMap<String, String>();
+		} catch (UnsupportedEncodingException e) {
+			throw new SCServiceException(e.toString());
+		}
+	}
+
+	/**
+	 * Gets the configuration of a service with default operation timeout. Use only specific service names - passing regex patterns
+	 * for service name is not allowed.
+	 * 
+	 * @param operationTimeout
+	 *            the allowed time in seconds to complete the operation
+	 * @param serviceName
+	 *            the service name
+	 * @return the service configuration
+	 * @throws SCServiceException
+	 *             client not attached<br />
+	 *             the inspect call failed<br />
+	 *             error message received from SC<br />
+	 *             service not found on SC<br />
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br />
+	 */
+	public Map<String, String> getServiceConfiguration(String serviceName) throws SCServiceException, UnsupportedEncodingException {
+		return this.getServiceConfiguration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+
+	/**
+	 * Gets the configuration of a service. Use only specific service names - passing regex patterns for service name is not
+	 * allowed.
+	 * 
+	 * @param operationTimeout
+	 *            the allowed time in seconds to complete the operation
+	 * @param serviceName
+	 *            the service name
+	 * @return the service configuration
+	 * @throws SCServiceException
+	 *             client not attached<br />
+	 *             the inspect call failed<br />
+	 *             error message received from SC<br />
+	 *             service not found on SC<br />
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br />
+	 */
+	public Map<String, String> getServiceConfiguration(int operationTimeout, String serviceName) throws SCServiceException,
+			UnsupportedEncodingException {
+		if (this.attached == false) {
+			throw new SCServiceException("Client not attached - getServiceConfiguration not possible.");
+		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_SERVICE_CONF, Constants.SERVICE_NAME, serviceName);
+		try {
+			String body = this.inspectCall(operationTimeout, urlString);
+			URLString urlResponse = new URLString();
+			urlResponse.parseResponseURLString(body);
+			return urlResponse.getParameterMap();
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}

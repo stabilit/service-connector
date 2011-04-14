@@ -113,10 +113,23 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
+		if (Constants.CC_CMD_SERVICE_CONF.equalsIgnoreCase(callKey)) {
+			LOGGER.debug("service configuration request for serviceName=" + serviceName);
+			try {
+				scmpReply.setBody(this.getServiceConfigurationString(serviceName));
+			} catch (Exception e) {
+				LOGGER.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+			}
+			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
+			return;
+		}
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String cacheId = urlRequestString.getParamValue("cacheId");
 			LOGGER.debug("cache inspect for serviceName=" + serviceName + ", cacheId=" + cacheId);
-			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
+			String cacheInspectString = this.getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
@@ -132,6 +145,7 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
+
 		LOGGER.error("wrong inspect command body=" + bodyString); // body has bad syntax
 		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
@@ -308,6 +322,40 @@ public class InspectCommand extends CommandAdapter {
 		}
 		if (found == false) {
 			throw new NotFoundException("no service found pattern=" + serviceNameRegex);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Gets the service configuration string. No regex allowed for service name.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the service configuration string
+	 * @throws NotFoundException
+	 *             service name not found
+	 */
+	private String getServiceConfigurationString(String serviceName) throws NotFoundException {
+		StringBuilder sb = new StringBuilder();
+
+		Service service = this.serviceRegistry.getService(serviceName);
+
+		if (service == null) {
+			throw new NotFoundException("no service found serviceName=" + serviceName);
+		}
+		switch (service.getType()) {
+		case CASCADED_SESSION_SERVICE:
+		case CASCADED_PUBLISH_SERVICE:
+		case CASCADED_FILE_SERVICE:
+			sb.append("cascaded=true");
+			break;
+		case FILE_SERVICE:
+		case SESSION_SERVICE:
+		case PUBLISH_SERVICE:
+			sb.append("cascaded=false");
+			break;
+		default:
+			break;
 		}
 		return sb.toString();
 	}
