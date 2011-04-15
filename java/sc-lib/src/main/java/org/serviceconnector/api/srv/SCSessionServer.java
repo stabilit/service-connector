@@ -186,37 +186,34 @@ public class SCSessionServer {
 		int listenerPort = this.scServer.getListenerPort();
 		int keepAliveIntervalSeconds = this.scServer.getKeepAliveIntervalSeconds();
 		boolean immediateConnect = this.scServer.isImmediateConnect();
-		synchronized (this.scServer) {
-			// get lock on scServer - only one server is allowed to communicate over the initial connection
-			synchronized (AppContext.communicatorsLock) {
-				// get communicator lock - avoids interference with other clients or scServers
-				AppContext.init();
-				this.requester.getSCMPMsgSequenceNr().reset();
+		synchronized (AppContext.communicatorsLock) {
+			// get communicator lock - avoids interference with other clients or scServers
+			AppContext.init();
+			this.requester.getSCMPMsgSequenceNr().reset();
 
-				SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, this.serviceName);
+			SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, this.serviceName);
 
-				registerServerCall.setMaxSessions(maxSessions);
-				registerServerCall.setMaxConnections(maxConnections);
-				registerServerCall.setPortNumber(listenerPort);
-				registerServerCall.setImmediateConnect(immediateConnect);
-				registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
-				registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
-				registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
-				SCServerCallback callback = new SCServerCallback(true);
-				try {
-					registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-				} catch (Exception e) {
-					throw new SCServiceException("Register server failed. ", e);
-				}
-				SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-				if (reply.isFault()) {
-					SCServiceException ex = new SCServiceException("Register server failed.");
-					ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-					throw ex;
-				}
-				AppContext.attachedCommunicators.incrementAndGet();
+			registerServerCall.setMaxSessions(maxSessions);
+			registerServerCall.setMaxConnections(maxConnections);
+			registerServerCall.setPortNumber(listenerPort);
+			registerServerCall.setImmediateConnect(immediateConnect);
+			registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
+			registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+			registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
+			SCServerCallback callback = new SCServerCallback(true);
+			try {
+				registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				throw new SCServiceException("Register server failed. ", e);
 			}
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			if (reply.isFault()) {
+				SCServiceException ex = new SCServiceException("Register server failed.");
+				ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				throw ex;
+			}
+			AppContext.attachedCommunicators.incrementAndGet();
 		}
 	}
 
@@ -292,8 +289,8 @@ public class SCSessionServer {
 			// sc server not registered - deregister not necessary
 			return;
 		}
-		synchronized (this.scServer) {
-			// get lock on scServer - only one server is allowed to communicate over the initial connection
+		synchronized (AppContext.communicatorsLock) {
+			// get communicator lock - avoids interference with other clients or scServers
 			try {
 				// remove srvService from registry
 				srvServiceRegistry.removeSrvService(this.serviceName + "_" + this.scServer.getListenerPort());
