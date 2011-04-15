@@ -343,20 +343,7 @@ public class InspectCommand extends CommandAdapter {
 		if (service == null) {
 			throw new NotFoundException("no service found serviceName=" + serviceName);
 		}
-		switch (service.getType()) {
-		case CASCADED_SESSION_SERVICE:
-		case CASCADED_PUBLISH_SERVICE:
-		case CASCADED_FILE_SERVICE:
-			sb.append("cascaded=true");
-			break;
-		case FILE_SERVICE:
-		case SESSION_SERVICE:
-		case PUBLISH_SERVICE:
-			sb.append("cascaded=false");
-			break;
-		default:
-			break;
-		}
+		sb.append("serviceType=" + service.getType());
 		return sb.toString();
 	}
 }
