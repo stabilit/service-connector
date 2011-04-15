@@ -13,7 +13,7 @@ set MAIN_CLASS=org.jboss.Shutdown
 
 set DIRNAME=.\
 if "%OS%" == "Windows_NT" set DIRNAME=%~dp0%
-set PROGNAME=..\start-SC.bat
+set PROGNAME=..\stop-sc.bat
 if "%OS%" == "Windows_NT" set PROGNAME=%~nx0%
 
 rem Find MAIN_JAR, or we can't continue

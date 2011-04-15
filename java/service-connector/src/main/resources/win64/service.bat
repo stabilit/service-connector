@@ -74,7 +74,7 @@ echo Y > .r.lock
 echo Starting %SVCDISP%
 jbosssvc.exe -p 1 "Starting %SVCDISP%" > run.log
 echo Running %SVCDISP%
-call ..\start-SC.bat < .r.lock >> run.log 2>&1
+call ..\start-sc.bat < .r.lock >> run.log 2>&1
 echo Shutdown %SVCDISP%
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
 del .r.lock
@@ -104,7 +104,7 @@ jbosssvc.exe -s 1
 if exist ".r.lock" goto waitRun
 echo Y > .r.lock
 jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> run.log
-call ..\start-SC.bat < .r.lock >> run.log 2>&1
+call ..\start-sc.bat < .r.lock >> run.log 2>&1
 jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
 del .r.lock
 goto cmdEnd
