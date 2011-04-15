@@ -32,7 +32,24 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 
-public class ConnectionTest extends IntegrationSuperTest{
+/**
+ * The Class ConnectionTest. <br />
+ * <br />
+ * Check following keys in windows registry in case of an error: <br/>
+ * <br/>
+ * Browse to the HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters keys.<br />
+ * <br />
+ * MaxUserPort: This parameter controls the maximum port number that is used when a program requests any available user port
+ * from the server. Typically, ephemeral (short-lived) ports are allocated between the values of 1024 and 5000 inclusive.<br />
+ * <br />
+ * TcpNumConnections: This parameter limits the maximum number of connections that TCP can have open at the same time.<br />
+ * <br />
+ * Valid examples: MaxUserPort 60000, TcpNumConnections 60000
+ * More Information: {@link http
+ * ://publib.boulder.ibm.com/infocenter/iisinfsv/v8r1/index.jsp?topic=/com.ibm.swg.im.iis.productization
+ * .iisinfsv.install.doc/topics/wsisinst_config_winregtcpip.html}
+ */
+public class ConnectionTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: connect, send message and disconnect - 50'000 times the same connection<br>
@@ -49,20 +66,20 @@ public class ConnectionTest extends IntegrationSuperTest{
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 		connection.setContext(connectionContext);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-		
+
 		SCMPMessage message = new SCMPMessage();
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-		
+
 		for (int i = 0; i < 50000; i++) {
 			connection.connect();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
 			connection.disconnect();
-			if ((i+1) % 1000 == 0) {
-				testLogger.info("connection nr " + (i+1) + "...");
+			if ((i + 1) % 1000 == 0) {
+				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}
 	}
@@ -77,12 +94,12 @@ public class ConnectionTest extends IntegrationSuperTest{
 		IConnection[] connections = new IConnection[numberOfConnections];
 
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-		
+
 		SCMPMessage message = new SCMPMessage();
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-		
+
 		for (int i = 0; i < numberOfConnections; i++) {
 			ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 			IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
@@ -97,8 +114,8 @@ public class ConnectionTest extends IntegrationSuperTest{
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
-			if ((i+1) % 100 == 0) {
-				testLogger.info("connection nr " + (i+1) + "...");
+			if ((i + 1) % 100 == 0) {
+				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}
 		for (int i = 0; i < numberOfConnections; i++) {

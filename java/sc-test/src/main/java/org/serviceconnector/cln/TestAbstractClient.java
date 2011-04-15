@@ -149,10 +149,7 @@ public class TestAbstractClient extends Thread {
 			}
 			File pidFile = this.fileCtx.getFile();
 			if (pidFile.exists()) {
-				boolean success = pidFile.delete();
-				if (success == false) {
-					LOGGER.error("Delete PID-file failed: " + this.pidFileNameFull);
-				}
+				pidFile.delete();
 				LOGGER.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
 			}
 			LOGGER.log(Level.OFF, "TestClient exiting");
