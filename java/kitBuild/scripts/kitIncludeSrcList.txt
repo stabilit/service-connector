@@ -1,14 +1,8 @@
 readme.txt
-bin\sc*.jar
-bin\demo*.jar
-bin\start*.*
-bin\stop*.*
-bin\unix\
-bin\win32\
-bin\win64\
+bin\
 doc\
 conf\
-examples\
+example\
 cache\
 logs\
 sources\
