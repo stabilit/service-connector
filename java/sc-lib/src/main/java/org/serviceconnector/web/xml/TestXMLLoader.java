@@ -30,13 +30,24 @@ public class TestXMLLoader extends AbstractXMLLoader {
 	/** {@inheritDoc} */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		String page = request.getParameter("page");
+		int iPage = 1;
+		if (page != null) {
+			try {
+				iPage = Integer.parseInt(page);
+			} catch (Exception e) {
+				iPage = 1;
+			}
+		}
 		String testParameter = request.getParameter("test");
 		writer.writeStartElement("test");
 		writer.writeAttribute("size", String.valueOf(1000));
-		writer.writeAttribute("page", String.valueOf(1));
+		writer.writeAttribute("page", String.valueOf(iPage));
 		writer.writeAttribute("last", String.valueOf(1000 / 50));
 		writer.writeAttribute("pageSize", String.valueOf(50));
-		for (int i = 0; i < 50; i++) {
+		int begin = (iPage-1) * 50;
+		int end = (iPage * 50);
+		for (int i = begin; i < end; i++) {
 			writer.writeStartElement("item");
 			writer.writeAttribute("index", String.valueOf(i));
 			writer.writeCharacters(String.valueOf(i));

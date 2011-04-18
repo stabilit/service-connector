@@ -175,10 +175,22 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartDocument();
 		writer.writeStartElement("sc-web");
 		writer.writeStartElement("head");
+		// write url path
+		String url = request.getURL();
+		if (url != null) {
+		   int qPos = url.indexOf("?");
+		   if (qPos >= 0) {
+			   url = url.substring(0, qPos);
+		   }
+		   writer.writeStartElement("meta");
+		   writer.writeAttribute("path", url);
+		   writer.writeEndElement(); // close meta tag
+		}
+		// write query string
 		writer.writeStartElement("meta");
 		writer.writeAttribute("creation", DateTimeUtility.getCurrentTimeZoneMillis());
-		// write sc version
 		writer.writeEndElement(); // close meta tag
+		// write sc version
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
 		writer.writeEndElement(); // close meta tag

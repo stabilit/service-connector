@@ -300,12 +300,12 @@
       <xsl:choose>
         <xsl:when test="$currentPage = $page">
           <td style="background:orange; border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
-            <a href="{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+            <a href="{$head/meta/@path}{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
           </td>
         </xsl:when>
         <xsl:otherwise>
           <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
-            <a href="{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+            <a href="{$head/meta/@path}{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
           </td>
         </xsl:otherwise>
       </xsl:choose>      
