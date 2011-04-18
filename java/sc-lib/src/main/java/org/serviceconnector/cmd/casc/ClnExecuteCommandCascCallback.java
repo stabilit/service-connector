@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
@@ -26,10 +28,15 @@ import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
+import org.serviceconnector.registry.SessionRegistry;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.service.Session;
 
 /**
  * The Class ClnExecuteCommandCascCallback.
@@ -44,6 +51,8 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	private SCMPMessage requestMessage;
 	/** The request oti. */
 	private int requestOTI;
+	/** The session registry. */
+	private SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 
 	/**
 	 * Instantiates a new ClnExecuteCommandCascCallback.
@@ -65,7 +74,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		String serviceName = this.request.getMessage().getServiceName();
+		String serviceName = this.requestMessage.getServiceName();
 		// check for cache id
 		CacheManager cacheManager = null;
 		String cacheId = reply.getCacheId();
@@ -75,7 +84,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
-				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr=" + reply.getMessageSequenceNr() + ", expirationDateTime=" + reply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME));
+				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr="
+						+ reply.getMessageSequenceNr() + ", expirationDateTime="
+						+ reply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME));
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
@@ -97,16 +108,19 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache							
-							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId()) && cacheComposite.isPartLoading() == false) {
+							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache
+							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId())
+									&& cacheComposite.isPartLoading() == false) {
 								scmpCache.removeComposite(this.requestMessage.getSessionId(), cacheId);
 								if (reply.isFault()) {
 									CacheLogger.warn("cache casc: cache composite removed, server did reply with fault, cache ("
-											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState()
+											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessiondId=" + this.requestMessage.getSessionId());
 								} else {
 									CacheLogger.warn("cache casc: cache composite removed, server did reply no cacheId, cache ("
-											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState()
+											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessiondId=" + this.requestMessage.getSessionId());
 								}
 							}
@@ -161,6 +175,61 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		reply.setMessageType(this.msgType);
 		reply.setServiceName(serviceName);
 		this.response.setSCMP(reply);
+		this.responderCallback.responseCallback(request, response);
+	}
+
+	@Override
+	public void receive(Exception ex) {
+		LOGGER.warn(ex);
+		SCMPMessage fault = null;
+		if (ex instanceof IdleTimeoutException) {
+			// operation timeout handling
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
+		} else if (ex instanceof IOException) {
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
+		} else {
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType);
+		}
+		String serviceName = this.requestMessage.getServiceName();
+		String sessionId = this.requestMessage.getSessionId();
+		// forward server reply to client
+		fault.setSessionId(this.request.getMessage().getSessionId());
+		fault.setIsReply(true);
+		fault.setMessageType(this.msgType);
+		fault.setServiceName(serviceName);
+		this.response.setSCMP(fault);
+		// schedule session timeout
+		Session session = this.sessionRegistry.getSession(sessionId);
+		if (session != null) {
+			this.sessionRegistry.scheduleSessionTimeout(session);
+			session.setPendingRequest(false);
+		}
+		// check for cache id
+		CacheManager cacheManager = null;
+		if (this.requestCacheId != null) {
+			// try save reply in cache
+			cacheManager = AppContext.getCacheManager();
+		}
+		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			try {
+				Cache scmpCache = cacheManager.getCache(serviceName);
+				if (scmpCache == null) {
+					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
+				} else {
+					// an exception did occur, remove those composite from cache
+					// remove request cacheId from cache
+					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
+					if (cacheComposite != null) {
+						scmpCache.removeComposite(sessionId, this.requestCacheId);
+						CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + this.requestCacheId
+								+ ")");
+					}
+				}
+			} catch (Exception e) {
+				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
+				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
+			}
+		}
 		this.responderCallback.responseCallback(request, response);
 	}
 }
