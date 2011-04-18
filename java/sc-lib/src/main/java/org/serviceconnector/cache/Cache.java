@@ -340,6 +340,32 @@ public class Cache {
 	}
 
 	/**
+	 * Removes all loading cache composite and all its children for given session id
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	public void removeLoadingComposite(String sessionId) {
+		if (sessionId == null) {
+			return;
+		}
+		Object[] compositeKeys = this.getCompositeKeys();
+		for (int i = 0; i < compositeKeys.length; i++) {
+			Object key = compositeKeys[i];
+			try {
+				CacheComposite cacheComposite = this.getComposite((String) key);
+				if (cacheComposite.isLoading()) {
+					String loadingSessionId = cacheComposite.getLoadingSessionId();
+					if (sessionId.equals(loadingSessionId)) {
+				       this.removeComposite(sessionId, (String) key);
+					}
+				}
+			} catch (CacheException e) {
+			}
+		}
+	}
+
+	/**
 	 * Removes the cache composite and all its children for given cache id.
 	 * 
 	 * @param sessionId

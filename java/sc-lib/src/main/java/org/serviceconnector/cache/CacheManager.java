@@ -112,6 +112,17 @@ public class CacheManager {
 	}
 
 	/**
+	 * Clear loading cache composite for session
+	 */
+	public void clearLoading(String sessionId) {
+		Cache[] cacheArray = this.getAllCaches();
+		for (int i = 0; i < cacheArray.length; i++) {
+			Cache cache = cacheArray[i];
+			cache.removeLoadingComposite(sessionId);
+		}
+	}
+
+	/**
 	 * Destroy all caches controlled by this cache manager.
 	 */
 	public void destroy() {
