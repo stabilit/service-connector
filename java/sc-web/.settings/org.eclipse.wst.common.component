@@ -6,9 +6,6 @@
         <dependent-module archiveName="sc-lib.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sc-lib/sc-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="sc-lib.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sc-lib/sc-lib">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="sc-web"/>
         <property name="java-output-path" value="/sc-web/build/classes"/>
     </wb-module>
