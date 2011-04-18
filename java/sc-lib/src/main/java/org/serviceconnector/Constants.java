@@ -282,8 +282,6 @@ public final class Constants {
 	/** The Constant DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS. */
 	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
 	// for internal use in class Cache
-	/** The Constant DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS. */
-	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
 	/** The Constant CACHE_ENABLED. cache property keys */
 	public static final String CACHE_ENABLED = "cache.enabled";
 	/** The Constant CACHE_DISK_PATH. */

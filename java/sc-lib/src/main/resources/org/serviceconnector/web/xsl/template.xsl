@@ -272,4 +272,50 @@
 	      </xsl:otherwise>
 	    </xsl:choose>	    
 	</xsl:template>
+	<xsl:template name="pageArea">
+	  <xsl:param name="title"/>
+      <xsl:param name="size"/>
+      <xsl:param name="currentPage"/>
+      <xsl:param name="lastPage"/>
+      <center>
+      <table border="0" cellspacing="0" cellpadding="2" style="position:relative; height:20px; top:-3px;">
+        <tr>
+          <td style="padding-right:10px;"><xsl:value-of select="$title"/></td>
+          <xsl:call-template name="pageAreaDetails">
+            <xsl:with-param name="size" select="$size"/>
+            <xsl:with-param name="currentPage" select="$currentPage"/>
+            <xsl:with-param name="page">1</xsl:with-param>
+            <xsl:with-param name="lastPage" select="$lastPage"/>
+          </xsl:call-template>    
+          <td style="border-right:1px solid white;"></td>
+        </tr>
+      </table>	
+      </center>
+	</xsl:template>
+	<xsl:template name="pageAreaDetails">
+      <xsl:param name="size"/>
+      <xsl:param name="page"/>
+      <xsl:param name="currentPage"/>
+      <xsl:param name="lastPage"/>
+      <xsl:choose>
+        <xsl:when test="$currentPage = $page">
+          <td style="background:orange; border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
+            <a href="{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+          </td>
+        </xsl:when>
+        <xsl:otherwise>
+          <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
+            <a href="{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+          </td>
+        </xsl:otherwise>
+      </xsl:choose>      
+      <xsl:if test="$page &lt; $lastPage">
+	       <xsl:call-template name="pageAreaDetails">
+	         <xsl:with-param name="size" select="$size"/>
+	         <xsl:with-param name="currentPage" select="$currentPage"/>
+	         <xsl:with-param name="page" select="$page + 1"/>
+	         <xsl:with-param name="lastPage" select="$lastPage"/>
+	       </xsl:call-template>
+      </xsl:if>           
+    </xsl:template>
 </xsl:stylesheet>

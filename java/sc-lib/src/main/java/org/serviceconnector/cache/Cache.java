@@ -652,43 +652,6 @@ public class Cache {
 	}
 
 	/**
-	 * Checks if this cache composite has loading state.
-	 * If no composite exists in the cache for given cacheId, then false is returned.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @return true, if cache composite is loaded
-	 */
-	public boolean isLoading(String cacheId) {
-		try {
-			CacheComposite cacheComposite = this.getComposite(cacheId);
-			if (cacheComposite == null) {
-				return false;
-			}
-			if (cacheComposite.isLoading()) {
-				// check if loading timeout did expire
-				if (cacheComposite.isLoadingExpired()) {
-					// modification timeout expired, remove this composite from cache
-					this.removeExpiredComposite(new CacheKey(cacheId));
-					CacheLogger.warn("cache has been removed, reason: cache is loading but loading timeout exceeded, cacheId = "
-							+ cacheId);
-				}
-				// check if last modification timeout expired
-				if (cacheComposite.isModificationExpired()) {
-					// modification timeout expired, remove this composite from cache
-					this.removeExpiredComposite(new CacheKey(cacheId));
-					CacheLogger.warn("remove composite while loading cache due timeout expiration, cacheId=" + cacheId);
-				}
-				return true;
-			}
-			return false;
-		} catch (CacheException e) {
-			CacheLogger.error("isLoading", e);
-		}
-		return false;
-	}
-
-	/**
 	 * Checks if this cache composite has loaded state.
 	 * If no composite exists in the cache for given cacheId, then false is returned.
 	 * 

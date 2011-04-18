@@ -419,23 +419,9 @@ public class CacheComposite implements Serializable {
 		}
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
 		long creationMillis = this.getCreationTimestamp(); // creation timestamp
-		if (currentMillis > creationMillis) {
+		if (currentMillis > creationMillis + this.loadingTimeout) {
 			CacheLogger.debug("cache loading is expired, creationTime=" + this.creationTime + ", currentMillis=" + currentMillis
 					+ ", creationMillis=" + creationMillis);
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if is modification expired.
-	 * 
-	 * @return true, if is modification expired
-	 */
-	public boolean isModificationExpired() {
-		long current = System.currentTimeMillis();
-		long lastModifiedExpired = this.lastModifiedTimeMillis + Constants.DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS;
-		if (lastModifiedExpired < current) {
 			return true;
 		}
 		return false;
