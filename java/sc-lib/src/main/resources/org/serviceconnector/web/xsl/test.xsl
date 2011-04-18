@@ -3,11 +3,12 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
+    <xsl:variable name="pageParam" select="$head/query/param/@page"/>
     <xsl:variable name="testParam" select="$head/query/param/@test"/>
     <xsl:variable name="test" select="$body/test"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'test', 'test=<xsl:value-of select="$testParam"/>&amp;service=<xsl:value-of select="$testParam"/>')", 10000);            
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'test', 'test=<xsl:value-of select="$testParam"/>&amp;page=<xsl:value-of select="$pageParam"/>')", 10000);            
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">

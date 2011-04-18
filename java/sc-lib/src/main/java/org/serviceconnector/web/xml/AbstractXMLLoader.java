@@ -182,6 +182,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		   if (qPos >= 0) {
 			   url = url.substring(0, qPos);
 		   }
+		   // check if ajax content call
+		   String id = request.getParameter("id");
+		   if (id != null) {
+			   url = "/" + id;
+		   }
 		   writer.writeStartElement("meta");
 		   writer.writeAttribute("path", url);
 		   writer.writeEndElement(); // close meta tag
