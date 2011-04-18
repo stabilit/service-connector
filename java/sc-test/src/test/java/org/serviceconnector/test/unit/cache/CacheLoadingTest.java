@@ -95,7 +95,7 @@ public class CacheLoadingTest extends CacheSuperUnitTest {
 			scmpCache.putMessage(scmpMessageWrite);
 			if (i < 10) {
 				// check if cache is in loading state
-				Assert.assertEquals(true, scmpCache.isLoading("dummy.cache.id"));
+				Assert.assertEquals(false, scmpCache.isLoaded("dummy.cache.id"));
 			}
 		}
 		// check if cache has been loaded
