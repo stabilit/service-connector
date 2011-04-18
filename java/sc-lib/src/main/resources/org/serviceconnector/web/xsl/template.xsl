@@ -231,11 +231,11 @@
 	    <td class="sc_table_odd">Cached Bytes</td>	  
 	    <td class="sc_table_odd"><xsl:value-of select="cachedBytes"/></td>	  
 	  </tr>
-	   -->
 	  <tr class="sc_table_even">
 	    <td class="sc_table_even">Cached Files</td>	  
 	    <td class="sc_table_even"><xsl:value-of select="cachedFiles"/></td>	  
 	  </tr>
+	   -->
 	</xsl:template>
 	<xsl:template name="fieldValue">
 	  <xsl:param name="value"/>

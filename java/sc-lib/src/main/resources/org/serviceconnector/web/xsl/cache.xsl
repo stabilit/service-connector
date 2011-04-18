@@ -20,10 +20,10 @@
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
             <th class="sc_table">Service Name</th>
-            <th class="sc_table">Composite Size</th>
-            <th class="sc_table">Element Size</th>
-            <th class="sc_table">Memory Store Size</th>
-            <th class="sc_table">Disk Store Size</th>
+            <th class="sc_table">Message Count</th> <!-- Composite Size -->
+            <th class="sc_table">Message Part (MP) Count</th>  <!-- Element Size -->
+            <th class="sc_table">MP in Memory</th> <!-- Memory Store Size -->
+            <th class="sc_table">MP on Disk</th> <!-- Disk Store Size -->
           </tr>          
           <xsl:if test="not($body/caches/cache)">
             <tr class="sc_table_even"><td colspan="7" class="sc_table">no caches</td></tr>
