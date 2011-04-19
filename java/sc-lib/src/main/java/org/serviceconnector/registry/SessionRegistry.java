@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.IServer;
 import org.serviceconnector.service.Session;
@@ -73,8 +74,8 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public void removeSession(Session session) {
 		this.removeSession(session.getId());
-//		// clears message in cache if in loading state
-//		AppContext.getCacheManager().clearLoading(session.getId());
+		// clears message in cache if in loading state
+		AppContext.getCacheManager().clearLoading(session.getId());
 	}
 
 	/**
