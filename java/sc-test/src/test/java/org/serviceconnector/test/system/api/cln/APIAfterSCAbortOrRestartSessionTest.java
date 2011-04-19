@@ -71,7 +71,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		message.setData("cache50MBStringFor1Hour");
 		message.setCacheId("700");
 		sessionService1.send(180,message);
-		// stop test server now, it cannot be stopped without SC later
+		// stop test server now, session on SC gets deleted
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
 		ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
