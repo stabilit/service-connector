@@ -81,14 +81,14 @@
 	  <td colspan="7">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           List of cache composites
+	           List of cached messages <!-- List of cache composites -->
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">ID</th>
+	            <th class="sc_table">cid</th><!-- ID -->
 	            <th class="sc_table">Status</th>
-	            <th class="sc_table">Headers</th>
-	            <th class="sc_table">Messages</th>
+	            <th class="sc_table">Header field count</th><!-- Headers -->
+	            <th class="sc_table">Message Parts</th><!-- Messages -->
 	            <th class="sc_table">Expiration</th>
 	            <th class="sc_table">Loading Timeout (ms)</th>            
 	            <th class="sc_table">Creation</th>            
@@ -169,8 +169,8 @@
          <tr class="sc_table_header">
            <th class="sc_table">Status</th>
            <th class="sc_table">Disk Path</th>
-           <th class="sc_table">maxElementsInMemory</th>
-           <th class="sc_table">maxElementsOnDisk</th>
+           <th class="sc_table">max message part in memory</th><!-- maxElementsInMemory -->
+           <th class="sc_table">max message part on disk</th><!-- maxElementsOnDisk -->
          </tr>          
          <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
            <td class="sc_table_odd">
@@ -190,11 +190,11 @@
 	  <td colspan="8">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           List of cache messages [<xsl:value-of select="$serviceName"/>]
+	           List of cached message parts [<xsl:value-of select="$serviceName"/>]<!-- List of cache messages -->
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">ID</th>
+	            <th class="sc_table">cid/cpn</th><!-- ID -->
 	            <th class="sc_table">Sequence Nr</th>
 	            <th class="sc_table">Message Type</th>
 	            <th class="sc_table">Compression</th>

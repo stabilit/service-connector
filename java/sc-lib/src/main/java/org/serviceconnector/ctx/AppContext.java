@@ -122,8 +122,8 @@ public final class AppContext {
 	private static final SCMPSessionCompositeRegistry SCMP_COMPOSITE_REGISTRY = new SCMPSessionCompositeRegistry();
 	/** The Constant cacheManager. */
 	private static final CacheManager CACHE_MANAGER = new CacheManager();
-	/** The executor to submit runnable objects. */
-	private static ExecutorService executor; // TODO JOT which runnable objects are managed by this executor?
+	/** The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI */
+	private static ExecutorService executor;
 
 	// initialize configurations in every case
 	static {

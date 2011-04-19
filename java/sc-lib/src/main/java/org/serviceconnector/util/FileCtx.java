@@ -60,15 +60,15 @@ public class FileCtx {
 			LOGGER.debug("Releasing file lock failed", e);
 		}
 		try {
+			this.fileChannel.force(true);
+		} catch (IOException e) {
+			LOGGER.debug("Forcing file channel failed", e);
+		}
+		try {
 			this.fileChannel.close();
 			Thread.sleep(300);
 		} catch (Exception e) {
 			LOGGER.debug("Closing file channel failed", e);
-		}
-		try {
-			this.fileChannel.force(true);
-		} catch (IOException e) {
-			LOGGER.debug("Forcing file channel failed", e);
 		}
 	}
 	
