@@ -87,7 +87,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1)); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtxs.get(TestConstants.SC0));
-
+		Thread.sleep(5);
 		sessionService1.send(request);
 	}
 

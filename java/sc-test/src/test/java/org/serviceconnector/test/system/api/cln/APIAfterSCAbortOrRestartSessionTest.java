@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -29,7 +30,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 	public APIAfterSCAbortOrRestartSessionTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: client has session and gets notified after SC was aborted<br>
 	 * Expectation: passes
@@ -51,5 +52,47 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		msgCallback1.waitForMessage(12);
 		Assert.assertTrue("error code is not set", msgCallback1.getScErrorCode() > 0);
 		Assert.assertNotNull("error text the not set", msgCallback1.getScErrorText());
+	}
+
+	/**
+	 * Description: client crashes (server gets stopped, session destroyed) in loading cache process, another client loads same cacheId<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t02_testCacheStateAfterStoppingLoadingClient() throws Exception {
+		SCMessage request = new SCMessage();
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+
+		SCMessage message = new SCMessage();
+		message.setMessageInfo(TestConstants.cacheCmd);
+		message.setData("cache50MBStringFor1Hour");
+		message.setCacheId("700");
+		sessionService1.send(180,message);
+		// stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
+		ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+
+		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService2);
+		sessionService2.createSession(request, msgCallback1);
+		message = new SCMessage();
+		message.setMessageInfo(TestConstants.cacheCmd);
+		message.setData("cache10MBStringFor1Hour");
+		message.setCacheId("700");
+
+		response = null;
+		while (response == null) {
+			try {
+				response = sessionService2.execute(message);
+			} catch (Exception e) {
+				Thread.sleep(5000);
+				continue;
+			}
+		}
+		Assert.assertEquals("Received message has wrong length", 10485762, response.getDataLength());
 	}
 }

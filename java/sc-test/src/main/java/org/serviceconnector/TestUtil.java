@@ -92,6 +92,18 @@ public class TestUtil {
 		}
 		return sb.toString();
 	}
+	
+	public static String get50MBString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < Integer.MAX_VALUE; i++) {
+			if (sb.length() > 52428800) {
+				break;
+			}
+			sb.append(i);
+		}
+		return sb.toString();
+	}
+
 
 	public static void checkLogFile(String log4jProperties, String logFileToCheck) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();

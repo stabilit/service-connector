@@ -277,11 +277,17 @@ public class TestSessionServer extends TestStatefulServer {
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.getLargeString();
 				request.setData(largeMessage);
-			} else if (dataString.startsWith("cache10MBString1Hour")) {
-				LOGGER.info("cache10MBMessageFor1Hour");
+			} else if (dataString.startsWith("cache10MBStringFor1Hour")) {
+				LOGGER.info("cache10MBStringFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.get10MBString();
+				request.setData(largeMessage);
+			} else if (dataString.startsWith("cache50MBStringFor1Hour")) {
+				LOGGER.info("cache50MBStringFor1Hour");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				String largeMessage = TestUtil.get50MBString();
 				request.setData(largeMessage);
 			} else if (dataString.startsWith("cacheExpired1Hour")) {
 				LOGGER.info("cacheExpired1Hour");
