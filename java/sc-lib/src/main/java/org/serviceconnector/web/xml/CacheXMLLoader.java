@@ -28,6 +28,7 @@ import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.CacheManager.CacheLoadingSession;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -56,6 +57,9 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		ICacheConfiguration cacheConfiguration = cacheManager.getCacheConfiguration();
 		this.writeCacheConfiguration(writer, cacheConfiguration);
 		writer.writeEndElement(); // close cache tag
+		writer.writeStartElement("cacheLoading");
+		this.writeCacheLoading(writer, cacheManager);
+		writer.writeEndElement();
 		writer.writeStartElement("caches");
 		Cache[] caches = cacheManager.getAllCaches();
 		this.writeCaches(writer, caches, request);
@@ -131,6 +135,23 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		}
 	}
 
+	private void writeCacheLoading(XMLStreamWriter writer, CacheManager cacheManager) throws XMLStreamException {
+		CacheLoadingSession[] cacheLoadingSessions = cacheManager.getCacheLoadingSessions();
+		for (int i = 0; i < cacheLoadingSessions.length; i++) {
+			CacheLoadingSession cacheLoadingSession = cacheLoadingSessions[i];
+			writer.writeStartElement("session");
+			writer.writeAttribute("sessionId", cacheLoadingSession.getSessionId());
+			String[] cacheIds = cacheLoadingSession.getCacheIds();
+			for (int j = 0; j < cacheIds.length; j++) {
+				String cacheId = cacheIds[i];
+				writer.writeStartElement("cacheId");
+				writer.writeCharacters(cacheId);
+				writer.writeEndElement();
+			}
+			writer.writeEndElement();
+		}		
+	}
+	
 	/**
 	 * Write cache details.
 	 * 

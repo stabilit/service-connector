@@ -31,10 +31,12 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
- * The Class CacheComposite represents the cache head instance for each cache entry.
- * Every message in the cache belongs to a composite instance. Each composite is identified
- * by its unique {@link CacheId} (String). Each message is identified by <CacheId>/<SequenceNr>. The CacheId
- * links to the cache composite instance. A message can't exist without the heading composite instance.
+ * The Class CacheComposite represents the cache head instance for each cache
+ * entry. Every message in the cache belongs to a composite instance. Each
+ * composite is identified by its unique {@link CacheId} (String). Each message
+ * is identified by <CacheId>/<SequenceNr>. The CacheId links to the cache
+ * composite instance. A message can't exist without the heading composite
+ * instance.
  */
 public class CacheComposite implements Serializable {
 
@@ -77,10 +79,16 @@ public class CacheComposite implements Serializable {
 	/** The last modified time (ms), {@link CacheComposite#lastModifiedTime}. */
 	private long lastModifiedTimeMillis;
 
-	/** The expiration date/time string. {@link Constants#SCMP_FORMAT_OF_DATE_TIME} */
+	/**
+	 * The expiration date/time string.
+	 * {@link Constants#SCMP_FORMAT_OF_DATE_TIME}
+	 */
 	private String expiration;
 
-	/** The expiration timestamp, this is the timestamp in milliseconds sind 1.1.1970. */
+	/**
+	 * The expiration timestamp, this is the timestamp in milliseconds sind
+	 * 1.1.1970.
+	 */
 	private long expirationTimestamp;
 
 	/** The cache state. {@link CACHE_STATE} */
@@ -89,10 +97,16 @@ public class CacheComposite implements Serializable {
 	/** The loading session id. */
 	private String loadingSessionId;
 
-	/** The loading timeout (ms). This timeout tells, how long we can wait in the loading state. */
+	/**
+	 * The loading timeout (ms). This timeout tells, how long we can wait in the
+	 * loading state.
+	 */
 	private long loadingTimeout;
 
-	/** The header containing any header attributes of initial (first) scmp message. */
+	/**
+	 * The header containing any header attributes of initial (first) scmp
+	 * message.
+	 */
 	private Map<String, String> header;
 
 	/**
@@ -118,7 +132,8 @@ public class CacheComposite implements Serializable {
 		this.lastModifiedTimeMillis = this.creationTimeMillis;
 		this.loadingSessionId = null;
 		this.loadingTimeout = -1L;
-		this.header = new ConcurrentHashMap<String, String>(); // is Serializable
+		this.header = new ConcurrentHashMap<String, String>(); // is
+																// Serializable
 	}
 
 	/**
@@ -183,8 +198,8 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Sets the expiration date time.
-	 * Inside this method the expiration timestamp will be set.
+	 * Sets the expiration date time. Inside this method the expiration
+	 * timestamp will be set.
 	 * 
 	 * @param expiration
 	 *            the new expiration
@@ -200,7 +215,8 @@ public class CacheComposite implements Serializable {
 			Date expirationDate = DateTimeUtility.parseDateString(expiration);
 			this.expirationTimestamp = expirationDate.getTime();
 		} catch (ParseException e) {
-			CacheLogger.error("invalidate expiration date/time format=" + expiration, e);
+			CacheLogger.error("invalidate expiration date/time format="
+					+ expiration, e);
 		}
 	}
 
@@ -257,7 +273,8 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Checks if is this composite is loaded and is accessible. {@link CACHE_STATE}
+	 * Checks if is this composite is loaded and is accessible.
+	 * {@link CACHE_STATE}
 	 * 
 	 * @return true, if is loaded
 	 */
@@ -339,7 +356,8 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Clear the actual header and puts all header attributes from parameter instance.
+	 * Clear the actual header and puts all header attributes from parameter
+	 * instance.
 	 * 
 	 * @param header
 	 *            the header
@@ -350,12 +368,15 @@ public class CacheComposite implements Serializable {
 		}
 		this.header.clear();
 		synchronized (this.header) {
-			// putAll, but don't use hashMap putAll method, which throws NullPointerException if value is not set
+			// putAll, but don't use hashMap putAll method, which throws
+			// NullPointerException if value is not set
 			for (Entry<String, String> entry : header.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (value == null) {
-					CacheLogger.debug("CacheComposite setHeader value is null for key " + key);
+					CacheLogger
+							.debug("CacheComposite setHeader value is null for key "
+									+ key);
 					value = "";
 				}
 				this.header.put(key, value);
@@ -364,9 +385,9 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Write composite header to scmp message instance (header).
-	 * Note: Do not assign the header instance, assign each attribute, otherwise
-	 * the header instance will be changed by the scmp message
+	 * Write composite header to scmp message instance (header). Note: Do not
+	 * assign the header instance, assign each attribute, otherwise the header
+	 * instance will be changed by the scmp message
 	 * 
 	 * @param message
 	 *            the message
@@ -389,15 +410,20 @@ public class CacheComposite implements Serializable {
 		// Calendar c = Calendar.getInstance();
 		// Date currentTime = c.getTime();
 		// long currentMillis = currentTime.getTime();
-		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
-		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp
+		long currentMillis = System.currentTimeMillis(); // current time in
+															// millis UTC
+		long expirationMillis = this.getExpirationTimestamp(); // expiration
+																// timestamp
 		if (currentMillis > expirationMillis) {
-			CacheLogger.debug("cache is expired, expirationTime=" + this.expiration + ", currentMillis=" + currentMillis
+			CacheLogger.debug("cache is expired, expirationTime="
+					+ this.expiration + ", currentMillis=" + currentMillis
 					+ ", expirationMillis=" + expirationMillis);
 			return true;
 			// } else {
-			// CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " +
-			// expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);
+			// CacheLogger.debug("cache is not expired, expirationTime = " +
+			// this.expiration + ", expirationMillis = " +
+			// expirationMillis + ", currentTime = " + currentTime +
+			// ", currentMillis = " + currentMillis);
 		}
 		return false;
 	}
@@ -417,10 +443,12 @@ public class CacheComposite implements Serializable {
 		if (this.creationTime == null) {
 			return false;
 		}
-		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
+		long currentMillis = System.currentTimeMillis(); // current time in
+															// millis UTC
 		long creationMillis = this.getCreationTimestamp(); // creation timestamp
 		if (currentMillis > creationMillis + this.loadingTimeout) {
-			CacheLogger.debug("cache loading is expired, creationTime=" + this.creationTime + ", currentMillis=" + currentMillis
+			CacheLogger.debug("cache loading is expired, creationTime="
+					+ this.creationTime + ", currentMillis=" + currentMillis
 					+ ", creationMillis=" + creationMillis);
 			return true;
 		}
@@ -436,7 +464,8 @@ public class CacheComposite implements Serializable {
 	 * @throws CacheException
 	 *             the cache exception
 	 */
-	public boolean isLastMessage(CacheMessage cacheMessage) throws CacheException {
+	public boolean isLastMessage(CacheMessage cacheMessage)
+			throws CacheException {
 		if (cacheMessage == null) {
 			throw new CacheException("cacheMessage is null");
 		}
@@ -446,15 +475,16 @@ public class CacheComposite implements Serializable {
 		}
 		String sSequenceNr = cacheId.getSequenceNr();
 		if (sSequenceNr == null) {
-			throw new CacheException("cacheMessage cacheId has illegal sequenceNr (null)");
+			throw new CacheException(
+					"cacheMessage cacheId has illegal sequenceNr (null)");
 		}
 		int sequenceNr = Integer.parseInt(sSequenceNr);
 		return sequenceNr == this.size;
 	}
 
 	/**
-	 * Checks if is valid cache id. This method checks if the cache ids sequence nr is within the valid
-	 * range 1 ... cache composite size.
+	 * Checks if is valid cache id. This method checks if the cache ids sequence
+	 * nr is within the valid range 1 ... cache composite size.
 	 * 
 	 * @param cacheId
 	 *            the cache id

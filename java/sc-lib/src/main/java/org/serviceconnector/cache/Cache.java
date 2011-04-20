@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.cache.impl.ICacheImpl;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -283,6 +284,8 @@ public class Cache {
 				cacheComposite.setLoadingSessionId(message.getSessionId());
 				cacheComposite.setSize(0);
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
+				// save this cache composite in cache manager loading map
+			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
 				this.putRegistry(cacheKey);
 				Statistics.getInstance().incrementCachedMessages(0);				
 				this.cacheImpl.put(cacheKey, cacheComposite);
@@ -296,6 +299,8 @@ public class Cache {
 				CacheLogger.debug("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loadingSessionId="
 						+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
+				// save this cache composite in cache manager loading map
+			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
 			}
 			int newSize = cacheComposite.getSize() + 1;
 			cacheComposite.setSize(newSize); // increment size
@@ -328,6 +333,8 @@ public class Cache {
 			if (message.isPart() == false && message.isPollRequest() == false) {
 				CacheLogger.debug("cache has been loaded, cacheId=" + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
+				// save this cache composite in cache manager loading map
+			    AppContext.getCacheManager().removeCacheLoading(sessionId, cacheId);
 			}
 			this.cacheImpl.put(cacheKey, cacheComposite);
 			CacheLogger.info("Put cacheId=" + scmpCacheId + " expiration=" + cacheExpirationDateTime);
@@ -416,7 +423,7 @@ public class Cache {
 	 * @param cacheComposite
 	 *            the cache composite
 	 */
-	private void removeCompositeImmediate(CacheKey cacheKey, CacheComposite cacheComposite) {
+	protected void removeCompositeImmediate(CacheKey cacheKey, CacheComposite cacheComposite) {
 		if (cacheComposite == null) {
 			return;
 		}
@@ -456,9 +463,11 @@ public class Cache {
 			cacheComposite = (CacheComposite) value;
 		}
 		if (cacheComposite == null) {
+			CacheLogger.debug("Remove expired composite=" + cacheKey + ", no composite found for given key");
 			return;
 		}
 		if (cacheComposite.isExpired() == false && cacheComposite.isLoadingExpired() == false) {
+			CacheLogger.debug("Remove expired composite=" + cacheKey + ", cache composite found but not expired");
 			return;
 		}
 		String cacheId = cacheKey.getCacheId();
@@ -490,6 +499,7 @@ public class Cache {
 	public synchronized void removeExpired() {
 		Object[] keys = this.getCompositeKeys();
 		if (keys == null) {
+			CacheLogger.debug("removeExpired, no cache composite keys found");
 			return;
 		}
 		for (Object key : keys) {
@@ -735,9 +745,13 @@ public class Cache {
 			if (message.isPollRequest() == true || message.isPart() == false) {
 				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.LOADING);
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
+				// save this cache composite in cache manager loading map
+			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
 			} else {
 				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.PART_LOADING);
 				cacheComposite.setCacheState(CACHE_STATE.PART_LOADING);
+				// save this cache composite in cache manager loading map
+			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
 			}
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);

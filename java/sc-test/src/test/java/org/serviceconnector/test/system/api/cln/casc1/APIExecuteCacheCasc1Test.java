@@ -430,7 +430,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 
 		// session service starts storing large message with cacheId 700
 		// request.setData(largeMessage);
-		request.setData("cache10MBString1Hour");
+		request.setData("cache10MBStringFor1Hour");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.send(request);

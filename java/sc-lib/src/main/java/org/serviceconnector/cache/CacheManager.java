@@ -32,20 +32,25 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class CacheManager is the overall cache control class. All cache instance were controlled
- * by this cache manager.
- * The cache manager starts an internal thread controlling any cache entries for expiration or any
- * other state problems.
+ * The Class CacheManager is the overall cache control class. All cache instance
+ * were controlled by this cache manager. The cache manager starts an internal
+ * thread controlling any cache entries for expiration or any other state
+ * problems.
  */
 public class CacheManager {
 
 	/**
-	 * this array is only used to run the generics method version {@link AbstractCollection#toArray(Object[])} inside
-	 * {@link #getAllCaches} method.
+	 * this array is only used to run the generics method version
+	 * {@link AbstractCollection#toArray(Object[])} inside {@link #getAllCaches}
+	 * method.
 	 */
-	private static final Cache[] GENERICS_ARRAY_TEMPLATE = new Cache[0];
+	private static final String[] GENERICS_STRING_ARRAY_TEMPLATE = new String[0];
+	private static final Cache[] GENERICS_CACHE_ARRAY_TEMPLATE = new Cache[0];
+	private static final CacheLoadingSession[] GENERICS_CACHE_LOADING_SESSION_ARRAY_TEMPLATE = new CacheLoadingSession[0];
 	/** The cache map. */
 	private Map<String, Cache> cacheMap;
+	// cache loading session map
+	private Map<String, CacheLoadingSession> cacheLoadingSessionMap;
 	/** The cache configuration. */
 	private CacheConfiguration cacheConfiguration;
 	/** The expiration thread. */
@@ -59,12 +64,14 @@ public class CacheManager {
 	public CacheManager() {
 		// load scmp caches from configuration
 		this.cacheMap = new ConcurrentHashMap<String, Cache>();
+		this.cacheLoadingSessionMap = new ConcurrentHashMap<String, CacheLoadingSession>();
 		this.cacheConfiguration = null;
 		this.expirationTimeoutRun = null;
 	}
 
 	/**
-	 * Initialize (load) the cache manager instance according given cache configuration instance.
+	 * Initialize (load) the cache manager instance according given cache
+	 * configuration instance.
 	 * 
 	 * @param cacheConfiguration
 	 *            the cache configuration
@@ -86,7 +93,8 @@ public class CacheManager {
 			Service service = services[i];
 			String serviceName = service.getName();
 			ServiceType serviceType = service.getType();
-			if (serviceType == ServiceType.SESSION_SERVICE || serviceType == ServiceType.CASCADED_SESSION_SERVICE) {
+			if (serviceType == ServiceType.SESSION_SERVICE
+					|| serviceType == ServiceType.CASCADED_SESSION_SERVICE) {
 				Cache cache = new Cache(this, serviceName);
 				Statistics.getInstance().incrementCachedFiles(1);
 				this.cacheMap.put(serviceName, cache);
@@ -96,10 +104,13 @@ public class CacheManager {
 			return;
 		}
 		if (this.cacheConfiguration.getExpirationCheckIntervalSeconds() > 0) {
-			expirationTimeoutRun = new ExpirationTimeoutRun(this.cacheConfiguration.getExpirationCheckIntervalSeconds());
+			expirationTimeoutRun = new ExpirationTimeoutRun(
+					this.cacheConfiguration.getExpirationCheckIntervalSeconds());
 			this.expirationThread = new Thread(expirationTimeoutRun);
-			CacheLogger.debug("start cache expiration thread using timeout (s) = "
-					+ this.cacheConfiguration.getExpirationCheckIntervalSeconds());
+			CacheLogger
+					.debug("start cache expiration thread using timeout (s) = "
+							+ this.cacheConfiguration
+									.getExpirationCheckIntervalSeconds());
 			expirationThread.start();
 		}
 	}
@@ -116,16 +127,48 @@ public class CacheManager {
 	 */
 	public void clearLoading(String sessionId) {
 		CacheLogger.debug("clearLoading, sessionId = " + sessionId);
-		Cache[] cacheArray = this.getAllCaches();
-		if (cacheArray == null) {
-			//CacheLogger.debug("clearLoading, sessionId = " + sessionId + ", cacheArray is null");
+		CacheLoadingSession cacheLoadingSession = this
+				.getCacheLoadingSession(sessionId);
+		if (cacheLoadingSession == null) {
+			CacheLogger.debug("clearLoading, sessionId = " + sessionId
+					+ ", no entry");
 			return;
 		}
-		//CacheLogger.debug("clearLoading, sessionId = " + sessionId + ", cacheArray.length = " + cacheArray.length);
-		for (int i = 0; i < cacheArray.length; i++) {
-			Cache cache = cacheArray[i];
-			cache.removeLoadingComposite(sessionId);
+		String[] cacheIds = cacheLoadingSession.getCacheIds();
+		if (cacheIds == null) {
+			CacheLogger.debug("clearLoading, sessionId = " + sessionId
+					+ ", cacheIds is null");
+			return;
 		}
+		CacheLogger.debug("clearLoading, sessionId = " + sessionId
+				+ ", cacheIds.length = " + cacheIds.length);
+		for (int i = 0; i < cacheIds.length; i++) {
+			String cacheId = cacheIds[i];
+			Cache cache = cacheLoadingSession.getCache(cacheId);
+			if (cache != null) {
+				CacheComposite cacheComposite;
+				try {
+					cacheComposite = cache.getComposite(cacheId);
+					if (cacheComposite.isLoading()) {
+						CacheLogger.debug("clearLoading, sessionId = "
+								+ sessionId + ", cacheId = " + cacheId
+								+ ", remove loading cache composite immediate");
+						cache.removeCompositeImmediate(new CacheKey(cacheId),
+								cacheComposite);
+						this.removeCacheLoading(sessionId, cacheId);
+					}
+				} catch (CacheException e) {
+					CacheLogger.error(
+							"clearLoading, no composite for cacheId = "
+									+ cacheId, e);
+				}
+			}
+		}
+	}
+
+	public CacheLoadingSession[] getCacheLoadingSessions() {
+		return cacheLoadingSessionMap.values().toArray(
+				GENERICS_CACHE_LOADING_SESSION_ARRAY_TEMPLATE);
 	}
 
 	/**
@@ -137,7 +180,14 @@ public class CacheManager {
 			this.expirationTimeoutRun.setKilled(true);
 			try {
 				CacheLogger.debug("destroy, join expiration thread");
-				this.expirationThread.join(5 * Constants.SEC_TO_MILLISEC_FACTOR); // wait 5 seconds max to join this thread
+				this.expirationThread
+						.join(5 * Constants.SEC_TO_MILLISEC_FACTOR); // wait 5
+																		// seconds
+																		// max
+																		// to
+																		// join
+																		// this
+																		// thread
 				CacheLogger.debug("destroy, join done");
 			} catch (InterruptedException e) {
 				CacheLogger.debug(e.toString());
@@ -168,7 +218,8 @@ public class CacheManager {
 	 * @return the all caches
 	 */
 	public Cache[] getAllCaches() {
-		return (Cache[]) this.cacheMap.values().toArray(CacheManager.GENERICS_ARRAY_TEMPLATE);
+		return (Cache[]) this.cacheMap.values().toArray(
+				CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
 	}
 
 	/**
@@ -217,9 +268,12 @@ public class CacheManager {
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("cache-manager");
 		writer.writeAttribute("enabled", this.isCacheEnabled());
-		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
-		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
-		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
+		writer.writeAttribute("diskPath", this.getCacheConfiguration()
+				.getDiskPath());
+		writer.writeAttribute("maxElementsInMemory", this
+				.getCacheConfiguration().getMaxElementsInMemory());
+		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration()
+				.getMaxElementsOnDisk());
 		writer.writeStartElement("cache-list");
 		Cache[] caches = this.getAllCaches();
 		if (caches == null) {
@@ -234,9 +288,44 @@ public class CacheManager {
 
 	}
 
+	public synchronized void putCacheLoading(String sessionId, String cacheId,
+			Cache cache) {
+		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap
+				.get(sessionId);
+		if (cacheLoadingSession == null) {
+			cacheLoadingSession = new CacheLoadingSession(sessionId);
+			this.cacheLoadingSessionMap.put(sessionId, cacheLoadingSession);
+		}
+		cacheLoadingSession = this.cacheLoadingSessionMap.get(sessionId);
+		if (cacheLoadingSession == null) {
+			return;
+		}
+		CacheLogger.debug("putCacheLoading sessionId = " + sessionId
+				+ ", cache id = " + cacheId);
+		cacheLoadingSession.put(cacheId, cache);
+	}
+
+	public CacheLoadingSession getCacheLoadingSession(String sessionId) {
+		return this.cacheLoadingSessionMap.get(sessionId);
+	}
+
+	public synchronized void removeCacheLoading(String sessionId, String cacheId) {
+		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap
+				.get(sessionId);
+		if (cacheLoadingSession == null) {
+			CacheLogger.debug("removeCacheLoading sessionId = " + sessionId
+					+ ", not existing");
+			return;
+		}
+		CacheLogger.debug("removeCacheLoading sessionId = " + sessionId
+				+ ", cache id = " + cacheId);
+		cacheLoadingSession.remove(cacheId);
+		this.cacheLoadingSessionMap.remove(sessionId);
+	}
+
 	/**
-	 * The Class ExpirationTimeoutThread.
-	 * This class control within a thread any cache instance for expiration or other state failures.
+	 * The Class ExpirationTimeoutThread. This class control within a thread any
+	 * cache instance for expiration or other state failures.
 	 */
 	private class ExpirationTimeoutRun implements Runnable {
 
@@ -272,17 +361,18 @@ public class CacheManager {
 
 		/**
 		 * cache expiration thread run method, checks within given interval if any cache elements were expired and removes them
-		 * from cache.
 		 */
 		@Override
 		public void run() {
 			while (this.killed == false) {
 				try {
 					synchronized (this) {
-						this.wait(this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+						this.wait(this.timeoutSeconds
+								* Constants.SEC_TO_MILLISEC_FACTOR);
 					}
 					if (this.killed) {
-						CacheLogger.debug("terminate expiration thread (killed)");
+						CacheLogger
+								.debug("terminate expiration thread (killed)");
 						return;
 					}
 					CacheManager.this.removeExpiredCaches();
@@ -292,6 +382,50 @@ public class CacheManager {
 			}
 			CacheLogger.debug("terminate expiration thread (killed)");
 			return;
+		}
+	}
+
+	public class CacheLoadingSession {
+		private String sessionId;
+		private Map<String, Cache> loadingCacheMap;
+
+		public CacheLoadingSession(String sessionId) {
+			this.sessionId = sessionId;
+			this.loadingCacheMap = new ConcurrentHashMap<String, Cache>();
+		}
+
+		public String[] getCacheIds() {
+			return (String[]) this.loadingCacheMap.keySet().toArray(
+					CacheManager.GENERICS_STRING_ARRAY_TEMPLATE);
+		}
+
+		public Cache[] getCaches() {
+			return (Cache[]) this.loadingCacheMap.values().toArray(
+					CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
+		}
+
+		public Cache getCache(String cacheId) {
+			return loadingCacheMap.get(cacheId);
+		}
+
+		public String getSessionId() {
+			return sessionId;
+		}
+
+		public Map<String, Cache> getLoadingCacheMap() {
+			return loadingCacheMap;
+		}
+
+		public Cache get(String cacheId) {
+			return loadingCacheMap.get(cacheId);
+		}
+
+		public void put(String cacheId, Cache cache) {
+			this.loadingCacheMap.put(cacheId, cache);
+		}
+
+		public void remove(String cacheId) {
+			this.loadingCacheMap.remove(cacheId);
 		}
 	}
 }
