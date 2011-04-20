@@ -271,7 +271,7 @@ public class CacheManager {
 		}
 
 		/**
-		 * cache expiration thread run method, checks withing given interval if any cache elements were expired and removes them
+		 * cache expiration thread run method, checks within given interval if any cache elements were expired and removes them
 		 * from cache.
 		 */
 		@Override
