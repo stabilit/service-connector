@@ -32,3 +32,5 @@ cd ..\kit-tmp\
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\..\kit\sc-bin.zip @..\scripts\kitIncludeBinList.txt -x@..\scripts\kitExcludeBinList.txt
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\..\kit\sc-src.zip @..\scripts\kitIncludeSrcList.txt -x@..\scripts\kitExcludeSrcList.txt
 cd ..\scripts\
+
+java -cp ..\bin;..\..\sc-test\target\sc-lib-all.jar org.serviceconnector.util.KitUtility copyAndRenameKitToVersion ..\..\..\kit\ ..\..\..\
