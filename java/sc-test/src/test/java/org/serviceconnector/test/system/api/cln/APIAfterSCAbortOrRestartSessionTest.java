@@ -20,7 +20,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -55,7 +57,8 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 	}
 
 	/**
-	 * Description: client crashes (server gets stopped, session destroyed) in loading cache process, another client loads same cacheId<br>
+	 * Description: client crashes (server gets stopped, session destroyed) in loading cache process, another client loads same
+	 * cacheId<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -70,7 +73,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		message.setMessageInfo(TestConstants.cacheCmd);
 		message.setData("cache50MBStringFor1Hour");
 		message.setCacheId("700");
-		sessionService1.send(180,message);
+		sessionService1.send(message);
 		// stop test server now, session on SC gets deleted
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
 		ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
@@ -88,7 +91,10 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		while (response == null) {
 			try {
 				response = sessionService2.execute(message);
-			} catch (Exception e) {
+			} catch (SCServiceException e) {
+				if (e.getSCErrorCode() != SCMPError.CACHE_LOADING.getErrorCode()) {
+					throw e;
+				}
 				Thread.sleep(5000);
 				continue;
 			}
