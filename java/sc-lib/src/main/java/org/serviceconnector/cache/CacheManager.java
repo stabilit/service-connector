@@ -115,7 +115,13 @@ public class CacheManager {
 	 * Clear loading cache composite for session
 	 */
 	public void clearLoading(String sessionId) {
+		CacheLogger.debug("clearLoading, sessionId = " + sessionId);
 		Cache[] cacheArray = this.getAllCaches();
+		if (cacheArray == null) {
+			//CacheLogger.debug("clearLoading, sessionId = " + sessionId + ", cacheArray is null");
+			return;
+		}
+		//CacheLogger.debug("clearLoading, sessionId = " + sessionId + ", cacheArray.length = " + cacheArray.length);
 		for (int i = 0; i < cacheArray.length; i++) {
 			Cache cache = cacheArray[i];
 			cache.removeLoadingComposite(sessionId);

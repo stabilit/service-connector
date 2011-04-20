@@ -350,17 +350,23 @@ public class Cache {
 			return;
 		}
 		Object[] compositeKeys = this.getCompositeKeys();
+		//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", composite keys length = " + compositeKeys.length);
 		for (int i = 0; i < compositeKeys.length; i++) {
 			Object key = compositeKeys[i];
+			CacheKey cacheKey = (CacheKey) key;
+			//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", composite key = " + cacheKey);
 			try {
-				CacheComposite cacheComposite = this.getComposite((String) key);
+				CacheComposite cacheComposite = this.getComposite(cacheKey.getCacheId());
 				if (cacheComposite.isLoading()) {
 					String loadingSessionId = cacheComposite.getLoadingSessionId();
+					//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", is loading, loadingSessionId = " + loadingSessionId);
 					if (sessionId.equals(loadingSessionId)) {
-				       this.removeComposite(sessionId, (String) key);
+					   CacheLogger.debug("removeLoadingComposite, remove cache composite immediate, sessionId = " + sessionId + " and key = " + cacheKey);
+					   this.removeCompositeImmediate(cacheKey, cacheComposite);
 					}
 				}
 			} catch (CacheException e) {
+				CacheLogger.error("removeLoadingComposite", e);
 			}
 		}
 	}
