@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class SCFileService. SCFileService is a remote interface in client API to a file service and provides communication
- * functions.
+ * functions. Creating a file service instance for API users should be done by calling SCClient newFileService().
  */
 public class SCFileService extends SCService {
 
@@ -46,7 +46,8 @@ public class SCFileService extends SCService {
 	private static final Logger LOGGER = Logger.getLogger(SCFileService.class);
 
 	/**
-	 * Instantiates a new sC file service.
+	 * Instantiates a new SC file service. Should only be used by service connector internal classes. Instantiating
+	 * SCFileService should be done by the SCClient method newFileService().
 	 * 
 	 * @param scClient
 	 *            the SC client

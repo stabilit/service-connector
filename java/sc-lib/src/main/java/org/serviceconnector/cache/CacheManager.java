@@ -40,9 +40,8 @@ import org.serviceconnector.util.XMLDumpWriter;
 public class CacheManager {
 
 	/**
-	 * this array is only used to run the generics method version
-	 * {@link AbstractCollection#toArray(Object[])} inside {@link #getAllCaches}
-	 * method.
+	 * this array is only used to run the generics method version {@link AbstractCollection#toArray(Object[])} inside
+	 * {@link #getAllCaches} method.
 	 */
 	private static final String[] GENERICS_STRING_ARRAY_TEMPLATE = new String[0];
 	private static final Cache[] GENERICS_CACHE_ARRAY_TEMPLATE = new Cache[0];
@@ -84,7 +83,7 @@ public class CacheManager {
 			this.cacheConfiguration = new CacheConfiguration();
 		}
 		if (this.cacheConfiguration.isCacheEnabled() == false) {
-			CacheLogger.debug("cache is not enabled");
+			CacheLogger.trace("cache is not enabled");
 			return;
 		}
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
@@ -93,8 +92,7 @@ public class CacheManager {
 			Service service = services[i];
 			String serviceName = service.getName();
 			ServiceType serviceType = service.getType();
-			if (serviceType == ServiceType.SESSION_SERVICE
-					|| serviceType == ServiceType.CASCADED_SESSION_SERVICE) {
+			if (serviceType == ServiceType.SESSION_SERVICE || serviceType == ServiceType.CASCADED_SESSION_SERVICE) {
 				Cache cache = new Cache(this, serviceName);
 				Statistics.getInstance().incrementCachedFiles(1);
 				this.cacheMap.put(serviceName, cache);
@@ -104,13 +102,10 @@ public class CacheManager {
 			return;
 		}
 		if (this.cacheConfiguration.getExpirationCheckIntervalSeconds() > 0) {
-			expirationTimeoutRun = new ExpirationTimeoutRun(
-					this.cacheConfiguration.getExpirationCheckIntervalSeconds());
+			expirationTimeoutRun = new ExpirationTimeoutRun(this.cacheConfiguration.getExpirationCheckIntervalSeconds());
 			this.expirationThread = new Thread(expirationTimeoutRun);
-			CacheLogger
-					.debug("start cache expiration thread using timeout (s) = "
-							+ this.cacheConfiguration
-									.getExpirationCheckIntervalSeconds());
+			CacheLogger.trace("start cache expiration thread using timeout (s) = "
+					+ this.cacheConfiguration.getExpirationCheckIntervalSeconds());
 			expirationThread.start();
 		}
 	}
@@ -126,22 +121,18 @@ public class CacheManager {
 	 * Clear loading cache composite for session
 	 */
 	public void clearLoading(String sessionId) {
-		CacheLogger.debug("clearLoading, sessionId = " + sessionId);
-		CacheLoadingSession cacheLoadingSession = this
-				.getCacheLoadingSession(sessionId);
+		CacheLogger.trace("clearLoading, sessionId = " + sessionId);
+		CacheLoadingSession cacheLoadingSession = this.getCacheLoadingSession(sessionId);
 		if (cacheLoadingSession == null) {
-			CacheLogger.debug("clearLoading, sessionId = " + sessionId
-					+ ", no entry");
+			CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", no entry");
 			return;
 		}
 		String[] cacheIds = cacheLoadingSession.getCacheIds();
 		if (cacheIds == null) {
-			CacheLogger.debug("clearLoading, sessionId = " + sessionId
-					+ ", cacheIds is null");
+			CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheIds is null");
 			return;
 		}
-		CacheLogger.debug("clearLoading, sessionId = " + sessionId
-				+ ", cacheIds.length = " + cacheIds.length);
+		CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheIds.length = " + cacheIds.length);
 		for (int i = 0; i < cacheIds.length; i++) {
 			String cacheId = cacheIds[i];
 			Cache cache = cacheLoadingSession.getCache(cacheId);
@@ -149,48 +140,42 @@ public class CacheManager {
 				CacheComposite cacheComposite;
 				try {
 					cacheComposite = cache.getComposite(cacheId);
-					if (cacheComposite.isLoading()) {
-						CacheLogger.debug("clearLoading, sessionId = "
-								+ sessionId + ", cacheId = " + cacheId
+					if (cacheComposite != null && cacheComposite.isLoading()) {
+						CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheId = " + cacheId
 								+ ", remove loading cache composite immediate");
-						cache.removeCompositeImmediate(new CacheKey(cacheId),
-								cacheComposite);
+						cache.removeCompositeImmediate(new CacheKey(cacheId), cacheComposite);
 						this.removeCacheLoading(sessionId, cacheId);
 					}
 				} catch (CacheException e) {
-					CacheLogger.error(
-							"clearLoading, no composite for cacheId = "
-									+ cacheId, e);
+					CacheLogger.error("clearLoading, no composite for cacheId = " + cacheId, e);
 				}
 			}
 		}
 	}
 
 	public CacheLoadingSession[] getCacheLoadingSessions() {
-		return cacheLoadingSessionMap.values().toArray(
-				GENERICS_CACHE_LOADING_SESSION_ARRAY_TEMPLATE);
+		return cacheLoadingSessionMap.values().toArray(GENERICS_CACHE_LOADING_SESSION_ARRAY_TEMPLATE);
 	}
 
 	/**
 	 * Destroy all caches controlled by this cache manager.
 	 */
 	public void destroy() {
-		CacheLogger.debug("destroy, set expiration thread killed");
+		CacheLogger.trace("destroy, set expiration thread killed");
 		if (this.expirationTimeoutRun != null) {
 			this.expirationTimeoutRun.setKilled(true);
 			try {
-				CacheLogger.debug("destroy, join expiration thread");
-				this.expirationThread
-						.join(5 * Constants.SEC_TO_MILLISEC_FACTOR); // wait 5
-																		// seconds
-																		// max
-																		// to
-																		// join
-																		// this
-																		// thread
-				CacheLogger.debug("destroy, join done");
+				CacheLogger.trace("destroy, join expiration thread");
+				this.expirationThread.join(5 * Constants.SEC_TO_MILLISEC_FACTOR); // wait 5
+																					// seconds
+																					// max
+																					// to
+																					// join
+																					// this
+																					// thread
+				CacheLogger.trace("destroy, join done");
 			} catch (InterruptedException e) {
-				CacheLogger.debug(e.toString());
+				CacheLogger.trace(e.toString());
 			}
 			this.expirationThread = null;
 			this.expirationTimeoutRun = null;
@@ -218,8 +203,7 @@ public class CacheManager {
 	 * @return the all caches
 	 */
 	public Cache[] getAllCaches() {
-		return (Cache[]) this.cacheMap.values().toArray(
-				CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
+		return (Cache[]) this.cacheMap.values().toArray(CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
 	}
 
 	/**
@@ -238,7 +222,7 @@ public class CacheManager {
 	 * Removes the expired caches.
 	 */
 	public void removeExpiredCaches() {
-		CacheLogger.debug("check for expired messages in cache");
+		CacheLogger.trace("check for expired messages in cache");
 		Cache[] caches = this.getAllCaches();
 		if (caches == null) {
 			return;
@@ -268,12 +252,9 @@ public class CacheManager {
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("cache-manager");
 		writer.writeAttribute("enabled", this.isCacheEnabled());
-		writer.writeAttribute("diskPath", this.getCacheConfiguration()
-				.getDiskPath());
-		writer.writeAttribute("maxElementsInMemory", this
-				.getCacheConfiguration().getMaxElementsInMemory());
-		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration()
-				.getMaxElementsOnDisk());
+		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
+		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
+		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
 		writer.writeStartElement("cache-list");
 		Cache[] caches = this.getAllCaches();
 		if (caches == null) {
@@ -288,10 +269,8 @@ public class CacheManager {
 
 	}
 
-	public synchronized void putCacheLoading(String sessionId, String cacheId,
-			Cache cache) {
-		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap
-				.get(sessionId);
+	public synchronized void putCacheLoading(String sessionId, String cacheId, Cache cache) {
+		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap.get(sessionId);
 		if (cacheLoadingSession == null) {
 			cacheLoadingSession = new CacheLoadingSession(sessionId);
 			this.cacheLoadingSessionMap.put(sessionId, cacheLoadingSession);
@@ -300,8 +279,7 @@ public class CacheManager {
 		if (cacheLoadingSession == null) {
 			return;
 		}
-		CacheLogger.debug("putCacheLoading sessionId = " + sessionId
-				+ ", cache id = " + cacheId);
+		CacheLogger.trace("putCacheLoading sessionId = " + sessionId + ", cache id = " + cacheId);
 		cacheLoadingSession.put(cacheId, cache);
 	}
 
@@ -310,15 +288,12 @@ public class CacheManager {
 	}
 
 	public synchronized void removeCacheLoading(String sessionId, String cacheId) {
-		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap
-				.get(sessionId);
+		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap.get(sessionId);
 		if (cacheLoadingSession == null) {
-			CacheLogger.debug("removeCacheLoading sessionId = " + sessionId
-					+ ", not existing");
+			CacheLogger.trace("removeCacheLoading sessionId = " + sessionId + ", not existing");
 			return;
 		}
-		CacheLogger.debug("removeCacheLoading sessionId = " + sessionId
-				+ ", cache id = " + cacheId);
+		CacheLogger.trace("removeCacheLoading sessionId = " + sessionId + ", cache id = " + cacheId);
 		cacheLoadingSession.remove(cacheId);
 		this.cacheLoadingSessionMap.remove(sessionId);
 	}
@@ -352,7 +327,7 @@ public class CacheManager {
 		 *            the new killed
 		 */
 		public void setKilled(boolean killed) {
-			CacheLogger.debug("kill cache expiration thread");
+			CacheLogger.trace("kill cache expiration thread");
 			this.killed = killed;
 			synchronized (this) {
 				this.notifyAll();
@@ -367,20 +342,18 @@ public class CacheManager {
 			while (this.killed == false) {
 				try {
 					synchronized (this) {
-						this.wait(this.timeoutSeconds
-								* Constants.SEC_TO_MILLISEC_FACTOR);
+						this.wait(this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 					}
 					if (this.killed) {
-						CacheLogger
-								.debug("terminate expiration thread (killed)");
+						CacheLogger.trace("terminate expiration thread (killed)");
 						return;
 					}
 					CacheManager.this.removeExpiredCaches();
 				} catch (InterruptedException e) {
-					CacheLogger.debug(e.getMessage());
+					CacheLogger.trace(e.getMessage());
 				}
 			}
-			CacheLogger.debug("terminate expiration thread (killed)");
+			CacheLogger.trace("terminate expiration thread (killed)");
 			return;
 		}
 	}
@@ -395,13 +368,11 @@ public class CacheManager {
 		}
 
 		public String[] getCacheIds() {
-			return (String[]) this.loadingCacheMap.keySet().toArray(
-					CacheManager.GENERICS_STRING_ARRAY_TEMPLATE);
+			return (String[]) this.loadingCacheMap.keySet().toArray(CacheManager.GENERICS_STRING_ARRAY_TEMPLATE);
 		}
 
 		public Cache[] getCaches() {
-			return (Cache[]) this.loadingCacheMap.values().toArray(
-					CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
+			return (Cache[]) this.loadingCacheMap.values().toArray(CacheManager.GENERICS_CACHE_ARRAY_TEMPLATE);
 		}
 
 		public Cache getCache(String cacheId) {

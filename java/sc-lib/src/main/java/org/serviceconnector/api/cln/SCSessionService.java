@@ -40,7 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
- * functions. <br />
+ * functions. Creating a session service instance for API users should be done by calling SCClient newSessionService().<br />
  * <br />
  * State Diagram<br />
  * 
@@ -75,7 +75,8 @@ public class SCSessionService extends SCService {
 	private int echoIntervalSeconds;
 
 	/**
-	 * Instantiates a new session service.
+	 * Instantiates a new session service. Should only be used by service connector internal classes. Instantiating
+	 * SCSessionService should be done by the SCClient method newSessionService().
 	 * 
 	 * @param scClient
 	 *            the SC client

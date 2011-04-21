@@ -49,6 +49,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
+		this.setVersion("1.3-004");
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		super.invoke(scmpCallback, timeoutMillis);
 	}

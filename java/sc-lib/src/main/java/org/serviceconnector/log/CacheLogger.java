@@ -48,9 +48,9 @@ public final class CacheLogger {
 	 * @param message
 	 *            the message
 	 */
-	public static void debug(String message) {
-		if (CACHE_LOGGER.isDebugEnabled()) {
-			CACHE_LOGGER.debug(message);
+	public static void trace(String message) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			CACHE_LOGGER.trace(message);
 		}
 	}
 

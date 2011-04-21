@@ -46,6 +46,15 @@ public final class PerformanceLogger {
 	}
 
 	/**
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
+	 */
+	public static boolean isEnabled() {
+		return PERFORMANCE_LOGGER.isTraceEnabled();
+	}
+
+	/**
 	 * Begin. Makes performance logger active. The method end stops the measuring and logs the result. Be careful its only working
 	 * within the same thread.
 	 */
@@ -74,9 +83,9 @@ public final class PerformanceLogger {
 
 			Formatter format = new Formatter();
 			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
-					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime)
-							/ Constants.SEC_TO_NANOSSEC_FACTOR), String.valueOf((endTime - beginTime)
-							% Constants.SEC_TO_NANOSSEC_FACTOR));
+					Thread.currentThread().getStackTrace()[2].getMethodName(),
+					String.valueOf((endTime - beginTime) / Constants.SEC_TO_NANOSSEC_FACTOR),
+					String.valueOf((endTime - beginTime) % Constants.SEC_TO_NANOSSEC_FACTOR));
 			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -90,8 +99,9 @@ public final class PerformanceLogger {
 	 */
 	public static synchronized void begin() {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			PerformanceLogger.performanceItem = INSTANCE.new PerformanceItem(Thread.currentThread().getStackTrace()[2]
-					.getClassName(), Thread.currentThread().getStackTrace()[2].getMethodName(), System.nanoTime());
+			PerformanceLogger.performanceItem = INSTANCE.new PerformanceItem(
+					Thread.currentThread().getStackTrace()[2].getClassName(),
+					Thread.currentThread().getStackTrace()[2].getMethodName(), System.nanoTime());
 		}
 	}
 
@@ -112,22 +122,13 @@ public final class PerformanceLogger {
 
 			Formatter format = new Formatter();
 			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
-					Thread.currentThread().getStackTrace()[2].getMethodName(), String.valueOf((endTime - beginTime)
-							/ Constants.SEC_TO_NANOSSEC_FACTOR), String.valueOf((endTime - beginTime)
-							% Constants.SEC_TO_NANOSSEC_FACTOR));
+					Thread.currentThread().getStackTrace()[2].getMethodName(),
+					String.valueOf((endTime - beginTime) / Constants.SEC_TO_NANOSSEC_FACTOR),
+					String.valueOf((endTime - beginTime) % Constants.SEC_TO_NANOSSEC_FACTOR));
 			PERFORMANCE_LOGGER.trace(format.toString());
 			format.close();
 		}
 
-	}
-
-	/**
-	 * Checks if is enabled.
-	 * 
-	 * @return true, if is enabled
-	 */
-	public boolean isEnabled() {
-		return PERFORMANCE_LOGGER.isTraceEnabled();
 	}
 
 	/**

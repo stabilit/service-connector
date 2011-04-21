@@ -101,7 +101,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		Subscription subscription = super.get(key);
 		return subscription;
 	}
-	
+
 	/**
 	 * Gets all subscriptions.
 	 * 
@@ -113,7 +113,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			Subscription[] subscriptions = new Subscription[entries.size()];
 			int index = 0;
 			for (Entry<String, Subscription> entry : entries) {
-				//String key = entry.getKey();
+				// String key = entry.getKey();
 				Subscription subscription = entry.getValue();
 				subscriptions[index++] = subscription;
 			}
@@ -140,7 +140,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			List<Subscription> subscriptionList = new ArrayList<Subscription>();
 			Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
 			for (Entry<String, Subscription> entry : entries) {
-				//String key = entry.getKey();
+				// String key = entry.getKey();
 				Subscription subscription = entry.getValue();
 				String subscriptionServiceName = subscription.getService().getName();
 				if (subscriptionServiceName.equals(serviceName)) {
@@ -174,7 +174,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
 				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		LOGGER.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
+		SubscriptionLogger.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
 				+ subscription.getId());
 	}
 
@@ -204,14 +204,14 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			// no subscription timeout has been set up for this subscription
 			return;
 		}
-		LOGGER.trace("cancel subscription timeout " + subscription.getId());
+		SubscriptionLogger.trace("cancel subscription timeout " + subscription.getId());
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			SubscriptionLogger.warn("cancel of subscription timeout failed :" + subscription.getId() + " delay millis: "
+			SubscriptionLogger.error("cancel of subscription timeout failed :" + subscription.getId() + " delay millis: "
 					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			boolean remove = this.subscriptionScheduler.remove(subscription.getTimeouterTask());
 			if (remove == false) {
-				SubscriptionLogger.warn("remove of subscription timeout failed :" + subscription.getId() + " delay millis: "
+				SubscriptionLogger.error("remove of subscription timeout failed :" + subscription.getId() + " delay millis: "
 						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			}
 		}

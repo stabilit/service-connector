@@ -375,7 +375,7 @@ public class CacheComposite implements Serializable {
 				String value = entry.getValue();
 				if (value == null) {
 					CacheLogger
-							.debug("CacheComposite setHeader value is null for key "
+							.trace("CacheComposite setHeader value is null for key "
 									+ key);
 					value = "";
 				}
@@ -415,7 +415,7 @@ public class CacheComposite implements Serializable {
 		long expirationMillis = this.getExpirationTimestamp(); // expiration
 																// timestamp
 		if (currentMillis > expirationMillis) {
-			CacheLogger.debug("cache is expired, expirationTime="
+			CacheLogger.trace("cache is expired, expirationTime="
 					+ this.expiration + ", currentMillis=" + currentMillis
 					+ ", expirationMillis=" + expirationMillis);
 			return true;
@@ -447,7 +447,7 @@ public class CacheComposite implements Serializable {
 															// millis UTC
 		long creationMillis = this.getCreationTimestamp(); // creation timestamp
 		if (currentMillis > creationMillis + this.loadingTimeout) {
-			CacheLogger.debug("cache loading is expired, creationTime="
+			CacheLogger.trace("cache loading is expired, creationTime="
 					+ this.creationTime + ", currentMillis=" + currentMillis
 					+ ", creationMillis=" + creationMillis);
 			return true;

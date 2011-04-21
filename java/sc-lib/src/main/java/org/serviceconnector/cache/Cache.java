@@ -199,7 +199,7 @@ public class Cache {
 		}
 		// check if cache is expired or not
 		if (cacheComposite.isExpired()) {
-			CacheLogger.debug("expired composite=" + compositeCacheKey + " found in cache, expiration time="
+			CacheLogger.trace("expired composite=" + compositeCacheKey + " found in cache, expiration time="
 					+ cacheComposite.getExpiration());
 			return null;
 		}
@@ -258,13 +258,13 @@ public class Cache {
 				}
 				if (cacheComposite.isExpired()) {
 					// we remove this composite from cache
-					CacheLogger.debug("cache composite=" + cacheKey + " is expired!");
+					CacheLogger.trace("cache composite=" + cacheKey + " is expired!");
 					throw new CacheExpiredException("cache composite=" + cacheKey + " is expired!");
 				}
 				// check if cache composite loading session id belongs to message sessionId
 				if (cacheComposite.isLoadingSessionId(sessionId) == false) {
 					// put message with wrong session id
-					CacheLogger.debug("cache composite=" + cacheKey
+					CacheLogger.trace("cache composite=" + cacheKey
 							+ " message put failed, wrong session id, cache loadingSessionId="
 							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
 					throw new CacheExpiredException("cache composite=" + cacheKey
@@ -296,7 +296,7 @@ public class Cache {
 				cacheComposite = (CacheComposite) value;
 			}
 			if (cacheComposite.isPartLoading()) {
-				CacheLogger.debug("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loadingSessionId="
+				CacheLogger.trace("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loadingSessionId="
 						+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				// save this cache composite in cache manager loading map
@@ -331,7 +331,7 @@ public class Cache {
 			// update last modification time
 			cacheComposite.setLastModified();
 			if (message.isPart() == false && message.isPollRequest() == false) {
-				CacheLogger.debug("cache has been loaded, cacheId=" + cacheId);
+				CacheLogger.trace("cache has been loaded, cacheId=" + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 				// save this cache composite in cache manager loading map
 			    AppContext.getCacheManager().removeCacheLoading(sessionId, cacheId);
@@ -368,7 +368,7 @@ public class Cache {
 					String loadingSessionId = cacheComposite.getLoadingSessionId();
 					//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", is loading, loadingSessionId = " + loadingSessionId);
 					if (sessionId.equals(loadingSessionId)) {
-					   CacheLogger.debug("removeLoadingComposite, remove cache composite immediate, sessionId = " + sessionId + " and key = " + cacheKey);
+					   CacheLogger.trace("removeLoadingComposite, remove cache composite immediate, sessionId = " + sessionId + " and key = " + cacheKey);
 					   this.removeCompositeImmediate(cacheKey, cacheComposite);
 					}
 				}
@@ -463,16 +463,16 @@ public class Cache {
 			cacheComposite = (CacheComposite) value;
 		}
 		if (cacheComposite == null) {
-			CacheLogger.debug("Remove expired composite=" + cacheKey + ", no composite found for given key");
+			CacheLogger.trace("Remove expired composite=" + cacheKey + ", no composite found for given key");
 			return;
 		}
 		if (cacheComposite.isExpired() == false && cacheComposite.isLoadingExpired() == false) {
-			CacheLogger.debug("Remove expired composite=" + cacheKey + ", cache composite found but not expired");
+			CacheLogger.trace("Remove expired composite=" + cacheKey + ", cache composite found but not expired");
 			return;
 		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
-		CacheLogger.debug("Remove expired composite=" + cacheKey);
+		CacheLogger.trace("Remove expired composite=" + cacheKey);
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);
 		boolean ret = this.cacheImpl.remove(cacheKey);
@@ -483,7 +483,7 @@ public class Cache {
 		for (int i = 1; i <= size; i++) {
 			scmpCacheId.setSequenceNr(String.valueOf(i));
 			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
-			CacheLogger.debug("Remove expired composite" + cacheKey + " cacheId=" + localCacheKey);
+			CacheLogger.trace("Remove expired composite" + cacheKey + " cacheId=" + localCacheKey);
 			ret = this.cacheImpl.remove(localCacheKey);
 			if (ret == false) {
 				return;
@@ -499,7 +499,7 @@ public class Cache {
 	public synchronized void removeExpired() {
 		Object[] keys = this.getCompositeKeys();
 		if (keys == null) {
-			CacheLogger.debug("removeExpired, no cache composite keys found");
+			CacheLogger.trace("removeExpired, no cache composite keys found");
 			return;
 		}
 		for (Object key : keys) {
@@ -743,12 +743,12 @@ public class Cache {
 			cacheComposite.setSize(0);
 			cacheComposite.setLoadingTimeout(loadingTimeout);
 			if (message.isPollRequest() == true || message.isPart() == false) {
-				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.LOADING);
+				CacheLogger.trace("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.LOADING);
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				// save this cache composite in cache manager loading map
 			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
 			} else {
-				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.PART_LOADING);
+				CacheLogger.trace("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.PART_LOADING);
 				cacheComposite.setCacheState(CACHE_STATE.PART_LOADING);
 				// save this cache composite in cache manager loading map
 			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);

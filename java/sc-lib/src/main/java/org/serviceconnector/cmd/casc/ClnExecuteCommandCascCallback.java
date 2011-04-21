@@ -84,7 +84,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
-				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr="
+				CacheLogger.trace("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr="
 						+ reply.getMessageSequenceNr() + ", expirationDateTime="
 						+ reply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME));
 				Cache scmpCache = cacheManager.getCache(serviceName);
@@ -144,7 +144,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 								}
 							}
 						}
-						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
+						CacheLogger.trace("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
 								+ reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = " + reply.isPollRequest());
 						CacheId messageCacheId = null;
 						try {
@@ -160,13 +160,13 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId()
+						CacheLogger.trace("cache message put done using full cacheId = " + messageCacheId.getCacheId()
 								+ ", cachePartNr=" + messageCacheId.getSequenceNr());
 						reply.setFullCacheId(messageCacheId);
 					}
 				}
 			} catch (Exception e) {
-				CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
+				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
 			}
 		}
@@ -226,7 +226,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 					}
 				}
 			} catch (Exception e) {
-				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
+				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
 			}
 		}

@@ -28,15 +28,15 @@ public final class SubscriptionLogger {
 
 	/** The Constant subscriptionLogger. */
 	private static final Logger SUBSCRIPTION_LOGGER = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-	
+
 	/** The subscribe str. */
 	private static String subscribeStr = "subscription:%s - subscribing to:%s - with mask:%s";
 	/** The change subscribe str. */
-	private static String changeSubscribeStr = "subscription:%s - change subscription to:%s - new mask:%s";	
+	private static String changeSubscribeStr = "subscription:%s - change subscription to:%s - new mask:%s";
 	/** The unsubscribe str. */
-	private static String unsubscribeStr = "subscription:%s - unsubscribing from:%s";	
+	private static String unsubscribeStr = "subscription:%s - unsubscribing from:%s";
 	/** The create subscription str. */
-	private static String createSubscriptionStr = "create subscription:%s timeout=%s";	
+	private static String createSubscriptionStr = "create subscription:%s timeout=%s";
 	/** The delete subscription str. */
 	private static String deleteSubscriptionStr = "delete subscription:%s";
 	/** The abort subscription str. */
@@ -46,6 +46,15 @@ public final class SubscriptionLogger {
 	 * Private constructor for singleton use.
 	 */
 	private SubscriptionLogger() {
+	}
+	
+	/**
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
+	 */
+	public static boolean isEnabled() {
+		return SUBSCRIPTION_LOGGER.isTraceEnabled();
 	}
 
 	/**
@@ -104,15 +113,6 @@ public final class SubscriptionLogger {
 	}
 
 	/**
-	 * Checks if is enabled.
-	 *
-	 * @return true, if is enabled
-	 */
-	public static boolean isEnabled() {
-		return SUBSCRIPTION_LOGGER.isTraceEnabled();
-	}
-
-	/**
 	 * Log create subscription.
 	 * 
 	 * @param id
@@ -160,14 +160,26 @@ public final class SubscriptionLogger {
 	}
 
 	/**
-	 * Warn.
+	 * Trace.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public static void warn(String message) {
-		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.WARN)) {
-			SUBSCRIPTION_LOGGER.warn(message);
+	public static void trace(String message) {
+		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.TRACE)) {
+			SUBSCRIPTION_LOGGER.trace(message);
+		}
+	}
+
+	/**
+	 * Error.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public static void error(String message) {
+		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.ERROR)) {
+			SUBSCRIPTION_LOGGER.error(message);
 		}
 	}
 }

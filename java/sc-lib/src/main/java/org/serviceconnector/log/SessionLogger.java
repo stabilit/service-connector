@@ -47,6 +47,15 @@ public final class SessionLogger {
 	}
 
 	/**
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
+	 */
+	public static boolean isEnabled() {
+		return SESSION_LOGGGER.isTraceEnabled();
+	}
+
+	/**
 	 * Log create session.
 	 * 
 	 * @param sessionId
@@ -124,23 +133,14 @@ public final class SessionLogger {
 	}
 
 	/**
-	 * Checks if is enabled.
-	 * 
-	 * @return true, if is enabled
-	 */
-	public static boolean isEnabled() {
-		return SESSION_LOGGGER.isTraceEnabled();
-	}
-
-	/**
-	 * Warn.
+	 * Trace.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public static void warn(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
-			SESSION_LOGGGER.warn(message);
+	public static void trace(String message) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
+			SESSION_LOGGGER.trace(message);
 		}
 	}
 

@@ -141,7 +141,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
-		LOGGER.debug("schedule session " + session.getId() + " timeout in seconds " + (long) session.getSessionTimeoutSeconds());
+		SessionLogger.trace("schedule session " + session.getId() + " timeout in seconds "
+				+ (long) session.getSessionTimeoutSeconds());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
@@ -166,14 +167,14 @@ public class SessionRegistry extends Registry<String, Session> {
 			// no session timeout has been set up for this session
 			return;
 		}
-		LOGGER.debug("cancel session timeout " + session.getId());
+		SessionLogger.trace("cancel session timeout " + session.getId());
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			SessionLogger.warn("cancel of session timeout failed :" + session.getId() + " delay millis: "
+			SessionLogger.error("cancel of session timeout failed :" + session.getId() + " delay millis: "
 					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				SessionLogger.warn("remove of session timeout failed :" + session.getId() + " delay millis: "
+				SessionLogger.error("remove of session timeout failed :" + session.getId() + " delay millis: "
 						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			}
 		}

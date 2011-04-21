@@ -51,7 +51,7 @@ public class RemoteNodeConfiguration {
 	 * The Constructor.
 	 * 
 	 * @param name
-	 *            the node name
+	 *            the remote node name
 	 */
 	public RemoteNodeConfiguration(String name) {
 		this(ServerType.UNDEFINED, name, null, 0, null, Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE,

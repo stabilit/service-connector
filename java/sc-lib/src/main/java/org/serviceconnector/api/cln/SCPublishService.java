@@ -34,7 +34,7 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
- * functions. <br />
+ * functions. Creating a publish service instance for API users should be done by calling SCClient newPublishService().<br />
  * <br />
  * State Diagram<br />
  * 
@@ -49,7 +49,7 @@ import org.serviceconnector.util.ValidatorUtility;
  *        \/
  * </pre>
  * 
- * After subscribing the service a unsubscribe must follow in every case at the end of communication.
+ * After subscribing the service an unsubscribe must follow in every case at the end of communication.
  * 
  * @author JTraber
  */
@@ -65,7 +65,8 @@ public class SCPublishService extends SCService {
 	private int noDataIntervalSeconds;
 
 	/**
-	 * Instantiates a new SC publish service.
+	 * Instantiates a new SC publish service. Should only be used by service connector internal classes. Instantiating
+	 * SCPublishService should be done by the SCClient method newPublishService().
 	 * 
 	 * @param scClient
 	 *            the SC client
