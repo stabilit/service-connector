@@ -52,6 +52,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+		scmpMessageWrite.setSessionId("e8bdebfe-1fa7-4926-980e-4863c682695e");
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
@@ -60,6 +61,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
+		scmpMessageRead.setSessionId("e8bdebfe-1fa7-4926-980e-4863c682695e");
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
 		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
@@ -174,6 +176,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+		scmpMessageWrite.setSessionId("e8bdebfe-1fa7-4926-980e-4863c682695e");
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
