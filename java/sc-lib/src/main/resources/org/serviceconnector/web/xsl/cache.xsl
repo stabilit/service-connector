@@ -169,8 +169,9 @@
          <tr class="sc_table_header">
            <th class="sc_table">Status</th>
            <th class="sc_table">Disk Path</th>
-           <th class="sc_table">max message part in memory</th><!-- maxElementsInMemory -->
-           <th class="sc_table">max message part on disk</th><!-- maxElementsOnDisk -->
+           <th class="sc_table">Max message part in memory</th><!-- maxElementsInMemory -->
+           <th class="sc_table">Max message part on disk</th><!-- maxElementsOnDisk -->
+           <th class="sc_table">Loading (Sessions/MP)</th>            
          </tr>          
          <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
            <td class="sc_table_odd">
@@ -180,6 +181,7 @@
            <td class="sc_table_odd"><xsl:value-of select="$config/diskPath"/></td>           
            <td class="sc_table_odd"><xsl:value-of select="$config/maxElementsInMemory"/></td>           
            <td class="sc_table_odd"><xsl:value-of select="$config/maxElementsOnDisk"/></td>           
+           <td class="sc_table_odd"><xsl:value-of select="count($body/cacheLoading/session)"/>/<xsl:value-of select="count($body/cacheLoading/session/cacheId)"/></td>           
          </tr>
       </table>	
 	  <div class="sc_separator"/>
