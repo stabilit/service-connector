@@ -50,6 +50,8 @@ public class SCMPMessage {
 	private SCMPInternalStatus internalStatus; // internal usage only
 	/** The message body. */
 	private Object body;
+	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
+	private String httpUrlFileQualifier = Constants.HTTP_FILE_QUALIFIER;
 
 	/**
 	 * Instantiates a new SCMP.
@@ -734,5 +736,20 @@ public class SCMPMessage {
 	 */
 	public void setPartSize(int partSize) {
 		this.partSize = partSize;
+	}
+
+	/**
+	 * @return the HTTP URL qualifier.
+	 */
+	public String getHttpUrlFileQualifier() {
+		return httpUrlFileQualifier;
+	}
+
+	/**
+	 * @param httpUrlFileQualifier
+	 *            the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server.
+	 */
+	public void setHttpUrlFileQualifier(String httpUrlFileQualifier) {
+		this.httpUrlFileQualifier = httpUrlFileQualifier;
 	}
 }

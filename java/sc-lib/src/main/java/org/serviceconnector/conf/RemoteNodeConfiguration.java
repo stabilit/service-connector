@@ -46,6 +46,8 @@ public class RemoteNodeConfiguration {
 	private int keepAliveIntervalSeconds;
 	/** The maxSessions (for file servers). */
 	private int maxSessions;
+	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
+	private String httpUrlFileQualifier = Constants.HTTP_FILE_QUALIFIER;
 
 	/**
 	 * The Constructor.
@@ -55,7 +57,7 @@ public class RemoteNodeConfiguration {
 	 */
 	public RemoteNodeConfiguration(String name) {
 		this(ServerType.UNDEFINED, name, null, 0, null, Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE,
-				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, 0);
+				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, 0, Constants.HTTP_FILE_QUALIFIER);
 	}
 
 	/**
@@ -79,7 +81,7 @@ public class RemoteNodeConfiguration {
 	 *            the max sessions
 	 */
 	public RemoteNodeConfiguration(ServerType serverType, String name, String host, int port, String connectionType,
-			int keepAliveIntervalSeconds, int maxConnections, int maxSessions) {
+			int keepAliveIntervalSeconds, int maxConnections, int maxSessions, String httpUrlFileQualifier) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
@@ -88,6 +90,7 @@ public class RemoteNodeConfiguration {
 		this.maxPoolSize = maxConnections;
 		this.maxSessions = maxSessions;
 		this.serverType = serverType;
+		this.httpUrlFileQualifier = httpUrlFileQualifier;
 	}
 
 	/**
@@ -108,7 +111,8 @@ public class RemoteNodeConfiguration {
 	 */
 	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalSeconds,
 			int maxConnections) {
-		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0);
+		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0,
+				Constants.HTTP_FILE_QUALIFIER);
 	}
 
 	/**
@@ -213,7 +217,7 @@ public class RemoteNodeConfiguration {
 		writer.writeElement("serverType", this.serverType.getValue());
 		writer.writeEndElement(); // end of remote-node
 	}
-	
+
 	/**
 	 * Gets the name.
 	 * 
@@ -263,6 +267,13 @@ public class RemoteNodeConfiguration {
 	 */
 	public ServerType getServerType() {
 		return this.serverType;
+	}
+
+	/**
+	 * @return the HTTP URL qualifier.
+	 */
+	public String getHttpUrlFileQualifier() {
+		return httpUrlFileQualifier;
 	}
 
 	/**

@@ -21,7 +21,7 @@ import org.serviceconnector.api.SCMessage;
 /**
  * The Class SCSessionServerCallback. Abstract class provides basic functions for a session server callback.
  */
-public abstract class SCSessionServerCallback {
+public abstract class SCSessionServerCallback implements ISCSessionServerCallback {
 
 	/** The SC session server. */
 	protected SCSessionServer scSessionServer = null;
@@ -36,49 +36,31 @@ public abstract class SCSessionServerCallback {
 		this.scSessionServer = scSessionServer;
 	}
 
-	/**
-	 * Creates the session.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
-	 * @return the sC message
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#createSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
-	/**
-	 * Delete session.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#deleteSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/**
-	 * Abort session.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#abortSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/**
-	 * Execute.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
-	 * @return the sC message
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#execute(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public abstract SCMessage execute(SCMessage message, int operationTimeoutMillis);
 }

@@ -124,4 +124,11 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		}
 	}
+
+	public void setUrlPath(String urlPath) {
+		if (urlPath == null) {
+			return;
+		}
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.URL_PATH, urlPath);
+	}
 }

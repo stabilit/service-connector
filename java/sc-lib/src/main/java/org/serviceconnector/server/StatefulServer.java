@@ -88,10 +88,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.service = null;
-		// set up separate remote node configuration for SRV_SBORT_SESSION request in case of busy connection pool
+		// set up separate remote node configuration for SRV_ABORT_SESSION request in case of busy connection pool
 		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
 				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
-				0, 1, 1);
+				0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
 	}
 
 	/**
@@ -173,6 +173,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		msgToForward.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvCreateSessionCall createSessionCall = new SCMPSrvCreateSessionCall(requester, msgToForward);
 		try {
 			createSessionCall.invoke(callback, timeoutMillis);
@@ -198,8 +200,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvDeleteSessionCall deleteSessionCall = new SCMPSrvDeleteSessionCall(requester, message);
-
 		try {
 			deleteSessionCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
@@ -224,6 +227,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		msgToForward.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvSubscribeCall subscribeCall = new SCMPSrvSubscribeCall(requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback, timeoutMillis);
@@ -249,6 +254,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvUnsubscribeCall unsubscribeCall = new SCMPSrvUnsubscribeCall(this.requester, message);
 
 		try {
@@ -275,6 +282,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = new SCMPSrvChangeSubscriptionCall(this.requester, message);
 
 		try {
@@ -300,6 +309,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *             the connection pool busy exception
 	 */
 	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvExecuteCall srvExecuteCall = new SCMPSrvExecuteCall(this.requester, message);
 		try {
 			srvExecuteCall.invoke(callback, timeoutMillis);
@@ -344,6 +355,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvAbortSessionCall srvAbortSessionCall = new SCMPSrvAbortSessionCall(this.requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback, timeoutMillis);
@@ -387,6 +400,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	void serverAbortSubscriptionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
+		// setting the http url file qualifier which is necessary to communicate with the server.
+		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvAbortSubscriptionCall srvAbortSubscriptionCall = new SCMPSrvAbortSubscriptionCall(this.requester, message);
 		try {
 			srvAbortSubscriptionCall.invoke(callback, timeoutMillis);
@@ -626,7 +641,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	public String toString() {
 		return super.getServerKey() + ":" + this.remoteNodeConfiguration.getPort() + " : " + maxSessions;
 	}
-	
+
 	/**
 	 * Dump the server into the xml writer.
 	 * 
@@ -637,11 +652,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("stateful-server");
-		writer.writeAttribute("key",this.serverKey);
-		writer.writeAttribute("serviceName",this.serviceName);
-		writer.writeAttribute("maxSessions",this.maxSessions);
-		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
-		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
+		writer.writeAttribute("key", this.serverKey);
+		writer.writeAttribute("serviceName", this.serviceName);
+		writer.writeAttribute("maxSessions", this.maxSessions);
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
 		writer.writeStartElement("sessions");
 		List<AbstractSession> sessionList = this.sessions;

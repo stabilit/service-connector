@@ -117,6 +117,7 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
+		server.removeSession(session);
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC create session");

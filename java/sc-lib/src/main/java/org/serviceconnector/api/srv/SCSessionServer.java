@@ -172,7 +172,7 @@ public class SCSessionServer {
 	 *             listener not started yet<br />
 	 *             server already registered for service<br />
 	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
+	 *             error message received from SC<br />
 	 */
 	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
 			throws SCServiceException {

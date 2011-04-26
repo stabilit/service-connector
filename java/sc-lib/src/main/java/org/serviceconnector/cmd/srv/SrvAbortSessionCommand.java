@@ -18,7 +18,7 @@ package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.api.srv.SrvSessionService;
@@ -79,14 +79,13 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		}
 
 		// create scMessage
-		SCSubscribeMessage scMessage = new SCSubscribeMessage();
+		SCMessage scMessage = new SCMessage();
 		scMessage.setData(reqMessage.getBody());
 		scMessage.setDataLength(reqMessage.getBodyLength());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(sessionId);
 		scMessage.setServiceName(reqMessage.getServiceName());
-		scMessage.setMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK));
 
 		int oti = Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT));
 
