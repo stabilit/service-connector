@@ -14,25 +14,25 @@
 	</welcome-file-list>
 	<servlet>
 		<description></description>
-		<display-name>SCServlet</display-name>
-		<servlet-name>SCServlet</servlet-name>
-		<servlet-class>org.serviceconnector.web.SCServlet</servlet-class>
+		<display-name>SCSessionServletExample</display-name>
+		<servlet-name>SCSessionServletExample</servlet-name>
+		<servlet-class>org.serviceconnector.web.example.SCSessionServletExample</servlet-class>
 		<init-param>
-            <param-name>serviceName</param-name>
-            <param-value>session-1</param-value>
-        </init-param>
-        <init-param>
-            <param-name>maxConnections</param-name>
-            <param-value>100</param-value>
-        </init-param>
-        <init-param>
-            <param-name>maxSessions</param-name>
-            <param-value>100</param-value>
-        </init-param>	
+			<param-name>serviceName</param-name>
+			<param-value>session-1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxConnections</param-name>
+			<param-value>100</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxSessions</param-name>
+			<param-value>100</param-value>
+		</init-param>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>SCServlet</servlet-name>
-		<url-pattern>/SCServlet</url-pattern>
+		<servlet-name>SCSessionServletExample</servlet-name>
+		<url-pattern>/SCSessionServletExample</url-pattern>
 	</servlet-mapping>
 </web-app>
