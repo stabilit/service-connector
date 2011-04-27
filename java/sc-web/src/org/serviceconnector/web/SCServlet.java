@@ -73,7 +73,7 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 
 	private void registerServletOnSC(ServletConfig config) throws SCServiceException {
 
-		this.serviceName = config.getInitParameter("serviceName");
+		this.serviceName = config.getInitParameter(WebConstants.PROPERTY_SERVICE_NAME);
 		int maxConnections = Integer.parseInt(config.getInitParameter("maxConnections"));
 		int maxSessions = Integer.parseInt(config.getInitParameter("maxSessions"));
 		this.requester = new SCRequester(new RemoteNodeConfiguration(this.listenerPort + "server", "localhost", 7000,
