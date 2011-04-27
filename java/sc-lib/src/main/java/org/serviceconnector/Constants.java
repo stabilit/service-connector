@@ -280,7 +280,7 @@ public final class Constants {
 	/** The Constant DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK. */
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
 	/** The Constant DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS. */
-	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
+	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 30;
 	// for internal use in class Cache
 	/** The Constant CACHE_ENABLED. cache property keys */
 	public static final String CACHE_ENABLED = "cache.enabled";

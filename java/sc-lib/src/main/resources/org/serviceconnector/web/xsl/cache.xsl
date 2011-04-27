@@ -236,7 +236,7 @@
 	  <td colspan="8">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           Composite headers [<xsl:value-of select="$serviceName"/>]
+	           Message headers [<xsl:value-of select="$serviceName"/>]<!-- composite headers -->
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">

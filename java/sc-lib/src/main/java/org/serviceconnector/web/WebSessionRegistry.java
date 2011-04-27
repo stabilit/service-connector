@@ -20,8 +20,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -30,9 +30,6 @@ import org.serviceconnector.util.TimeoutWrapper;
  * The Class WebSessionRegistry.
  */
 public final class WebSessionRegistry extends Registry<String, WebSession> {
-
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
 
@@ -96,7 +93,7 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 			// no scheduling of session timeout
 			return;
 		}
-		LOGGER.debug("schedule session using timeout(sec)=" + session.getSessionTimeoutSeconds());
+		SessionLogger.trace("schedule web session using timeout(sec)=" + session.getSessionTimeoutSeconds());
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
 		// sets up session timeout
@@ -123,14 +120,14 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 			// no session timeout has been set up for this session
 			return;
 		}
-		LOGGER.debug("cancel session timeout " + session.getId());
+		SessionLogger.trace("cancel web session timeout " + session.getId());
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			LOGGER.warn("cancel of session timeout failed :" + session.getId() + " delay millis: "
+			SessionLogger.error("cancel of web session timeout failed :" + session.getId() + " delay millis: "
 					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				LOGGER.warn("remove of session timeout failed :" + session.getId() + " delay millis: "
+				SessionLogger.error("remove of web session timeout failed :" + session.getId() + " delay millis: "
 						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
 			}
 		}
@@ -174,8 +171,8 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 		 */
 		@Override
 		public void timeout() {
-			LOGGER.debug("web session timed out sid=" + session.getId() + " timeout(millis)=" + this.getTimeoutMillis());
 			WebSessionRegistry.this.removeSession(session);
+			SessionLogger.logTimeoutSession(session.getId());
 		}
 
 		/** {@inheritDoc} */
