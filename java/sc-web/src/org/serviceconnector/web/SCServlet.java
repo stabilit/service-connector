@@ -2,15 +2,16 @@ package org.serviceconnector.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -24,8 +25,10 @@ import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.SCRequester;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
@@ -35,11 +38,14 @@ import org.serviceconnector.util.SynchronousCallback;
  * Servlet implementation class SCServlet
  */
 public abstract class SCServlet extends HttpServlet implements ISCSessionServerCallback {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(SCServlet.class);
+
 	private static final long serialVersionUID = 1L;
 	private boolean registered;
 	private SCRequester requester;
 	private String serviceName;
-	private int listenerPort;
 	private String urlPath;
 
 	static {
@@ -54,7 +60,6 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 		this.registered = false;
 		this.requester = null;
 		this.serviceName = null;
-		this.listenerPort = 8080;
 		this.urlPath = urlPath;
 	}
 
@@ -66,18 +71,26 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 				this.registerServletOnSC(config);
 				this.registered = true;
 			}
-		} catch (SCServiceException e) {
+		} catch (Exception e) {
 			throw new ServletException("Registering tomcat on SC failed", e);
 		}
 	}
 
 	private void registerServletOnSC(ServletConfig config) throws SCServiceException {
-
 		this.serviceName = config.getInitParameter(WebConstants.PROPERTY_SERVICE_NAME);
-		int maxConnections = Integer.parseInt(config.getInitParameter("maxConnections"));
-		int maxSessions = Integer.parseInt(config.getInitParameter("maxSessions"));
-		this.requester = new SCRequester(new RemoteNodeConfiguration(this.listenerPort + "server", "localhost", 7000,
-				ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+		int maxConnections = Integer.parseInt(config.getInitParameter(WebConstants.PROPERTY_MAX_CONNECTIONS));
+		int maxSessions = Integer.parseInt(config.getInitParameter(WebConstants.PROPERTY_MAX_SESSIONS));
+		int keepAliveFromSC = Integer.parseInt(config.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_FROMSC));
+
+		// prepare requester to register servlet on SC
+		ServletContext context = config.getServletContext();
+		int tomcatPort = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_TOMCAT_PORT));
+		String remotNodeName = tomcatPort + this.getServletName();
+		String scHost = context.getInitParameter(WebConstants.PROPERTY_SC_HOST);
+		int scPort = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_SC_PORT));
+		int keepAliveToSC = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_TOSC));
+		this.requester = new SCRequester(new RemoteNodeConfiguration(remotNodeName, scHost, scPort,
+				ConnectionType.NETTY_HTTP.getValue(), keepAliveToSC, 1));
 
 		// get lock on scServer - only one server is allowed to communicate over the initial connection
 		synchronized (AppContext.communicatorsLock) {
@@ -89,19 +102,19 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 
 			registerServerCall.setMaxSessions(maxSessions);
 			registerServerCall.setMaxConnections(maxConnections);
-			registerServerCall.setPortNumber(8080);
+			registerServerCall.setPortNumber(tomcatPort);
 			registerServerCall.setImmediateConnect(false);
-			registerServerCall.setKeepAliveInterval(0);
+			registerServerCall.setKeepAliveInterval(keepAliveFromSC);
 			registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 			registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			registerServerCall.setUrlPath(this.urlPath);
 			SCServerCallback callback = new SCServerCallback(true);
 			try {
-				registerServerCall.invoke(callback, 60000);
+				registerServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 			} catch (Exception e) {
 				throw new SCServiceException("Register server failed. ", e);
 			}
-			SCMPMessage reply = callback.getMessageSync(60000);
+			SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("Register server failed.");
 				ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -114,7 +127,7 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 
 	private void deregisterServletFromSC() throws SCServiceException {
 		if (this.registered == false) {
-			// sc server not registered - deregister not necessary
+			// SC server not registered - deregister not necessary
 			return;
 		}
 		synchronized (AppContext.communicatorsLock) {
@@ -157,16 +170,16 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		InputStream in = request.getInputStream();
-		byte[] buffer = new byte[1024];
-		in.read(buffer);
-		System.out.println(new String(buffer));
+		// SC is never doing a GET. Process would be like doPost.
+		this.doPost(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IEncoderDecoder encoderDecoder = null;
+		SCMPMessage scReply = null;
 		try {
 			byte[] buffer = new byte[request.getContentLength()];
 			request.getInputStream().read(buffer);
@@ -177,12 +190,10 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 						buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+			encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			SCMPMessage reqMessage = (SCMPMessage) encoderDecoder.decode(bais);
 			String messageTypeString = reqMessage.getMessageType();
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-
-			SCMPMessage scReply = null;
 
 			switch (SCMPMsgType.getMsgType(messageTypeString)) {
 			case SRV_CREATE_SESSION:
@@ -198,19 +209,21 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 				scReply = this.baseExecute(reqMessage, oti);
 				break;
 			default:
-				// TODO JOT fault
+				scReply = new SCMPMessageFault(SCMPError.BAD_REQUEST, "Unknown message type received.");
 				break;
 			}
 
-			// write reply to servlet output stream
-			OutputStream serlvetOutStream = response.getOutputStream();
-			encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scReply);
-			encoderDecoder.encode(serlvetOutStream, scReply);
-			response.flushBuffer();
-
 		} catch (Throwable th) {
 			// LOGGER.error("receive message", th);
-			// TODO JOT write a scmpfault to the
+		}
+		// write reply to servlet output stream
+		OutputStream serlvetOutStream = response.getOutputStream();
+		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scReply);
+		try {
+			encoderDecoder.encode(serlvetOutStream, scReply);
+			response.flushBuffer();
+		} catch (Exception e) {
+			// LOGGER.error("receive message", th);
 		}
 	}
 
@@ -230,8 +243,8 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
-		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
+		// long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
+		// reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 
 		if (scReply != null) {
 			reply.setBody(scReply.getData());
@@ -318,8 +331,8 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
-		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
+		// long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
+		// reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 		reply.setMessageType(reqMessage.getMessageType());
 		if (scReply != null) {
 			reply.setBody(scReply.getData());

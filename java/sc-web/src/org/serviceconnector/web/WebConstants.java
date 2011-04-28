@@ -31,4 +31,11 @@ public final class WebConstants {
 	}
 
 	public static final String PROPERTY_SERVICE_NAME = "serviceName";
+	public static final String PROPERTY_MAX_SESSIONS = "maxSessions";
+	public static final String PROPERTY_MAX_CONNECTIONS = "maxConnections";
+	public static final String PROPERTY_SC_HOST = "scHost";
+	public static final String PROPERTY_SC_PORT = "scPort";
+	public static final String PROPERTY_KEEPALIVE_TOSC = "toSCKeepAlive";
+	public static final String PROPERTY_KEEPALIVE_FROMSC = "fromSCKeepAlive";
+	public static final String PROPERTY_TOMCAT_PORT = "tomcatPort";
 }

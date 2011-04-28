@@ -12,6 +12,22 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+	<context-param>
+		<param-name>scPort</param-name>
+		<param-value>7000</param-value>
+	</context-param>
+	<context-param>
+		<param-name>scHost</param-name>
+		<param-value>localhost</param-value>
+	</context-param>
+	<context-param>
+		<param-name>toSCKeepAlive</param-name>
+		<param-value>0</param-value>
+	</context-param>
+	<context-param>
+		<param-name>tomcatPort</param-name>
+		<param-value>8080</param-value>
+	</context-param>
 	<servlet>
 		<description></description>
 		<display-name>SCSessionServletExample</display-name>
@@ -28,6 +44,10 @@
 		<init-param>
 			<param-name>maxSessions</param-name>
 			<param-value>100</param-value>
+		</init-param>
+		<init-param>
+			<param-name>fromSCKeepAlive</param-name>
+			<param-value>0</param-value>
 		</init-param>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
