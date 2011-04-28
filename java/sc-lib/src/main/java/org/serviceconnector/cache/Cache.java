@@ -474,6 +474,8 @@ public class Cache {
 		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
+		// remove cache loading from cache manager internal registry if any
+	    AppContext.getCacheManager().removeCacheLoading(cacheComposite.getLoadingSessionId(), cacheId);
 		CacheLogger.trace("Remove expired composite=" + cacheKey);
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);

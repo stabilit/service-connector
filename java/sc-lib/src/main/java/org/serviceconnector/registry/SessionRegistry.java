@@ -74,8 +74,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public void removeSession(Session session) {
 		this.removeSession(session.getId());
-		// clears message in cache if in loading state
-		AppContext.getCacheManager().clearLoading(session.getId());
 	}
 
 	/**
@@ -89,6 +87,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		if (session == null) {
 			return;
 		}
+		// clears message in cache if in loading state
+		AppContext.getCacheManager().clearLoading(session.getId());
 		this.cancelSessionTimeout(session);
 		super.remove(key);
 		SessionLogger.logDeleteSession(session.getId());
