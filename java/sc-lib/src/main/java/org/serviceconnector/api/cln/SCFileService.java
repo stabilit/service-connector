@@ -56,7 +56,7 @@ public class SCFileService extends SCService {
 	 * @param requester
 	 *            the requester
 	 */
-	public SCFileService(SCClient scClient, String serviceName, SCRequester requester) {
+	SCFileService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 	}
 

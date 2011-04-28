@@ -461,7 +461,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		CircularByteBuffer cbb = new CircularByteBuffer();
 		String remotePath = this.getUploadLogFileRemotePath(service, serviceName);
 		UploadRunnable uploadRunnable = new UploadRunnable(client, remotePath, serviceName, cbb);
-		Future<Integer> submit = AppContext.getExecutor().submit(uploadRunnable);
+		Future<Integer> submit = AppContext.getThreadPool().submit(uploadRunnable);
 		uploadRunnable.future = submit;
 		@SuppressWarnings("unused")
 		Integer ret;

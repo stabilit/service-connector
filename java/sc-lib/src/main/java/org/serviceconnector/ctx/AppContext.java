@@ -122,8 +122,10 @@ public final class AppContext {
 	private static final SCMPSessionCompositeRegistry SCMP_COMPOSITE_REGISTRY = new SCMPSessionCompositeRegistry();
 	/** The Constant cacheManager. */
 	private static final CacheManager CACHE_MANAGER = new CacheManager();
-	/** The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI */
-	private static ExecutorService executor;
+	/**
+	 * The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI.
+	 */
+	private static ExecutorService threadPool;
 
 	// initialize configurations in every case
 	static {
@@ -374,12 +376,12 @@ public final class AppContext {
 	}
 
 	/**
-	 * Gets the executor.
+	 * Gets the thread pool.
 	 * 
-	 * @return the executor
+	 * @return the thread pool
 	 */
-	public static ExecutorService getExecutor() {
-		return AppContext.executor;
+	public static ExecutorService getThreadPool() {
+		return AppContext.threadPool;
 	}
 
 	/**
@@ -394,8 +396,8 @@ public final class AppContext {
 			if (AppContext.eciScheduler == null) {
 				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1);
 			}
-			if (AppContext.executor == null) {
-				AppContext.executor = Executors.newCachedThreadPool();
+			if (AppContext.threadPool == null) {
+				AppContext.threadPool = Executors.newCachedThreadPool();
 			}
 		}
 	}
@@ -422,9 +424,9 @@ public final class AppContext {
 					AppContext.eciScheduler.shutdownNow();
 					AppContext.eciScheduler = null;
 				}
-				if (AppContext.executor != null) {
-					AppContext.executor.shutdownNow();
-					AppContext.executor = null;
+				if (AppContext.threadPool != null) {
+					AppContext.threadPool.shutdownNow();
+					AppContext.threadPool = null;
 				}
 			} else {
 				LOGGER.debug("resources can not be released - pending communicators active");

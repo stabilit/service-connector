@@ -24,7 +24,7 @@ import org.serviceconnector.api.SCSubscribeMessage;
  * 
  * @author JTraber
  */
-public abstract class SCPublishServerCallback {
+public abstract class SCPublishServerCallback implements ISCPublishServerCallback {
 
 	/** The SC publish server. */
 	protected SCPublishServer scPublishServer = null;
@@ -39,51 +39,33 @@ public abstract class SCPublishServerCallback {
 		this.scPublishServer = scPublishServer;
 	}
 
-	/**
-	 * Subscribe.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
-	 * @return the sC message
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#subscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
-	/**
-	 * Change subscription.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
-	 * @return the sC message
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#changeSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
-	/**
-	 * Unsubscribe.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#unsubscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 	}
 
-	/**
-	 * Abort subscription.
-	 * 
-	 * @param scMessage
-	 *            the sc message
-	 * @param operationTimeoutMillis
-	 *            the allowed time in milliseconds to complete the operation, observed by SC
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#abortSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {
 	}
 }

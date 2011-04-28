@@ -75,7 +75,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			// set up responderRequestHandlerTask to take care of the request
 			NettyHttpRequesterResponseHandlerTask responseHandlerTask = new NettyHttpRequesterResponseHandlerTask((HttpResponse) e
 					.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
-			AppContext.getExecutor().submit(responseHandlerTask);
+			AppContext.getThreadPool().submit(responseHandlerTask);
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -90,7 +90,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
 				NettyHttpRequesterErrorHandlerTask errorHandler = new NettyHttpRequesterErrorHandlerTask(ex);
-				AppContext.getExecutor().submit(errorHandler);
+				AppContext.getThreadPool().submit(errorHandler);
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {

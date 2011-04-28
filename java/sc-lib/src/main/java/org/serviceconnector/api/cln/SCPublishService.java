@@ -75,7 +75,7 @@ public class SCPublishService extends SCService {
 	 * @param requester
 	 *            the requester
 	 */
-	public SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
+	SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 		this.noDataIntervalSeconds = 0;
 		this.messageCallback = null;

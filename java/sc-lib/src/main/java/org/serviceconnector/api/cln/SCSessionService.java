@@ -85,7 +85,7 @@ public class SCSessionService extends SCService {
 	 * @param requester
 	 *            the requester
 	 */
-	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
+	SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 		this.sessionTimeout = null;
 		this.echoTimeoutSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
