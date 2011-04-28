@@ -185,7 +185,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
-				if (scmpCache != null && cacheComposite != null) {
+				if (scmpCache != null) {
 					scmpCache.removeComposite(this.sessionId, cacheId);					
 					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}
