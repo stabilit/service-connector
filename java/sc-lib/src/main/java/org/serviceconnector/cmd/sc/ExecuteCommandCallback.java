@@ -102,8 +102,10 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			Cache scmpCache = null;
+			CacheComposite cacheComposite = null;
 			try {
-				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
+				scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
 					ExecuteCommandCallback.LOGGER.error("cache write failed, no cache, service name = " + this.requestServiceName);
 				} else {
@@ -121,7 +123,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 							// }
 						}
 						// remove cacheId from cache
-						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
+						cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
 							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache
 							if (cacheComposite.isLoadingSessionId(sessionId) && cacheComposite.isPartLoading() == false) {
@@ -149,9 +151,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 							if (replyCacheId.equalsCacheId(requestCacheIdLocal) == false) {
 								// remove clients cache id from cache
 								// remove cacheId from cache
-								CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
-								if (cacheComposite != null) {
-									if (cacheComposite.isLoadingSessionId(sessionId)) {
+								CacheComposite localCacheComposite = scmpCache.getComposite(this.requestCacheId);
+								if (localCacheComposite != null) {
+									if (localCacheComposite.isLoadingSessionId(sessionId)) {
 										scmpCache.removeComposite(sessionId, this.requestCacheId);
 										CacheLogger.warn("cache composite (" + this.requestCacheId
 												+ ") removed, server did reply different cache id, cache (" + cacheId + ")");
@@ -183,6 +185,10 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
+				if (scmpCache != null && cacheComposite != null) {
+					scmpCache.removeComposite(this.sessionId, cacheId);					
+					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+				}
 			}
 		}
 		// forward server reply to client

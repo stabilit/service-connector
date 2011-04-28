@@ -429,6 +429,8 @@ public class Cache {
 		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
+		// remove cache loading from cache manager internal registry if any
+	    AppContext.getCacheManager().removeCacheLoading(cacheComposite.getLoadingSessionId(), cacheId);
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);
 		Statistics.getInstance().decrementCachedMessages(0);
