@@ -13,12 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
-import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
@@ -35,28 +32,22 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
- * Servlet implementation class SCServlet
+ * Servlet implementation class SCBaseServlet. Base servlet for SC servlet implementation.
  */
-public abstract class SCServlet extends HttpServlet implements ISCSessionServerCallback {
+public abstract class SCBaseServlet extends HttpServlet {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCServlet.class);
-
+	private static final Logger LOGGER = Logger.getLogger(SCBaseServlet.class);
 	private static final long serialVersionUID = 1L;
-	private boolean registered;
-	private SCRequester requester;
-	private String serviceName;
+	protected boolean registered;
+	protected SCRequester requester;
+	protected String serviceName;
 	private String urlPath;
-
-	static {
-		// Initialize server command factory one time
-		AppContext.initCommands(new ServerCommandFactory());
-	}
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public SCServlet(String urlPath) {
+	protected SCBaseServlet(String urlPath) {
 		this.registered = false;
 		this.requester = null;
 		this.serviceName = null;
@@ -72,6 +63,7 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 				this.registered = true;
 			}
 		} catch (Exception e) {
+			LOGGER.error("Registering tomcat on SC failed", e);
 			throw new ServletException("Registering tomcat on SC failed", e);
 		}
 	}
@@ -156,16 +148,6 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 		}
 	}
 
-	@Override
-	public void destroy() {
-		super.destroy();
-		try {
-			this.deregisterServletFromSC();
-		} catch (SCServiceException e) {
-			// TODO Logging JOT ???
-		}
-	}
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -180,195 +162,86 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		IEncoderDecoder encoderDecoder = null;
 		SCMPMessage scReply = null;
+		// write reply to servlet output stream
+		OutputStream serlvetOutStream = response.getOutputStream();
 		try {
 			byte[] buffer = new byte[request.getContentLength()];
 			request.getInputStream().read(buffer);
 			Statistics.getInstance().incrementTotalMessages(buffer.length);
 			if (ConnectionLogger.isEnabledFull()) {
-
 				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), request.getServerName(), request.getServerPort(),
 						buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			SCMPMessage reqMessage = (SCMPMessage) encoderDecoder.decode(bais);
+
+			if (reqMessage.isKeepAlive() == true) {
+				// keep alive received, just reply nothing more to do.
+				reqMessage.setIsReply(true);
+				// write reply to servlet output stream
+				encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(reqMessage);
+				encoderDecoder.encode(serlvetOutStream, reqMessage);
+				response.flushBuffer();
+				return;
+			}
+
+			if (reqMessage.isFault()) {
+				// fault received nothing to to return - delete largeRequest/largeResponse
+				SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType="
+						+ reqMessage.getMessageType());
+				scmpFault.setMessageType(reqMessage.getMessageType());
+				scmpFault.setLocalDateTime();
+				// write reply to servlet output stream
+				encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmpFault);
+				encoderDecoder.encode(serlvetOutStream, scmpFault);
+				response.flushBuffer();
+				return;
+			}
+
 			String messageTypeString = reqMessage.getMessageType();
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 			switch (SCMPMsgType.getMsgType(messageTypeString)) {
 			case SRV_CREATE_SESSION:
-				scReply = this.baseCreateSession(reqMessage, oti);
+				scReply = ((SCBaseSessionServlet) this).baseCreateSession(reqMessage, oti);
 				break;
 			case SRV_DELETE_SESSION:
-				scReply = this.baseDeleteSession(reqMessage, oti);
+				scReply = ((SCBaseSessionServlet) this).baseDeleteSession(reqMessage, oti);
 				break;
 			case SRV_ABORT_SESSION:
-				scReply = this.baseAbortSession(reqMessage, oti);
+				scReply = ((SCBaseSessionServlet) this).baseAbortSession(reqMessage, oti);
 				break;
 			case SRV_EXECUTE:
-				scReply = this.baseExecute(reqMessage, oti);
+				scReply = ((SCBaseSessionServlet) this).baseExecute(reqMessage, oti);
+				break;
+			case SRV_SUBSCRIBE:
+				scReply = ((SCBasePublishServlet) this).baseSubscribe(reqMessage, oti);
+				break;
+			case SRV_CHANGE_SUBSCRIPTION:
+				scReply = ((SCBasePublishServlet) this).baseChangeSubscription(reqMessage, oti);
+				break;
+			case SRV_UNSUBSCRIBE:
+				scReply = ((SCBasePublishServlet) this).baseUnsubscribe(reqMessage, oti);
+				break;
+			case SRV_ABORT_SUBSCRIPTION:
+				scReply = ((SCBasePublishServlet) this).baseAbortSubscription(reqMessage, oti);
 				break;
 			default:
 				scReply = new SCMPMessageFault(SCMPError.BAD_REQUEST, "Unknown message type received.");
 				break;
 			}
-
-		} catch (Throwable th) {
-			// LOGGER.error("receive message", th);
+		} catch (Exception e) {
+			LOGGER.error("Processing message failed.", e);
 		}
-		// write reply to servlet output stream
-		OutputStream serlvetOutStream = response.getOutputStream();
-		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scReply);
 		try {
+			encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scReply);
 			encoderDecoder.encode(serlvetOutStream, scReply);
 			response.flushBuffer();
 		} catch (Exception e) {
-			// LOGGER.error("receive message", th);
+			LOGGER.error("Encoding message and replying to SC failed.", e);
 		}
 	}
-
-	private SCMPMessage baseCreateSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
-		// create scMessage
-		SCMessage scMessage = new SCMessage();
-		scMessage.setData(reqMessage.getBody());
-		scMessage.setDataLength(reqMessage.getBodyLength());
-		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(reqMessage.getSessionId());
-		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		scMessage.setServiceName(reqMessage.getServiceName());
-
-		// call TOMCAT SC server API interface
-		SCMessage scReply = this.createSession(scMessage, operationTimeoutMillis);
-
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		// long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		// reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
-
-		if (scReply != null) {
-			reply.setBody(scReply.getData());
-			if (scReply.isCompressed()) {
-				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-			}
-			if (scReply.getAppErrorCode() != Constants.EMPTY_APP_ERROR_CODE) {
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scReply.getAppErrorCode());
-			}
-			if (scReply.getAppErrorText() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
-			}
-			if (scReply.isReject()) {
-				// session rejected
-				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			}
-			if (scReply.getSessionInfo() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, scReply.getSessionInfo());
-			}
-		}
-		reply.setSessionId(reqMessage.getSessionId());
-		reply.setServiceName(serviceName);
-		reply.setMessageType(reqMessage.getMessageType());
-		return reply;
-	}
-
-	private SCMPMessage baseDeleteSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
-		// create scMessage
-		SCMessage scMessage = new SCMessage();
-		scMessage.setData(reqMessage.getBody());
-		scMessage.setDataLength(reqMessage.getBodyLength());
-		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(reqMessage.getSessionId());
-		scMessage.setServiceName(reqMessage.getServiceName());
-		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-
-		this.deleteSession(scMessage, operationTimeoutMillis);
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		reply.setServiceName(serviceName);
-		reply.setSessionId(reqMessage.getSessionId());
-		reply.setMessageType(reqMessage.getMessageType());
-		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
-		return reply;
-	}
-
-	private SCMPMessage baseAbortSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
-		// create scMessage
-		SCMessage scMessage = new SCMessage();
-		scMessage.setData(reqMessage.getBody());
-		scMessage.setDataLength(reqMessage.getBodyLength());
-		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(reqMessage.getSessionId());
-		scMessage.setServiceName(reqMessage.getServiceName());
-
-		this.abortSession(scMessage, operationTimeoutMillis);
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		reply.setServiceName(serviceName);
-		reply.setSessionId(reqMessage.getSessionId());
-		reply.setMessageType(reqMessage.getMessageType());
-		return reply;
-	}
-
-	private SCMPMessage baseExecute(SCMPMessage reqMessage, int operationTimeoutMillis) {
-		// create scMessage
-		SCMessage scMessage = new SCMessage();
-		scMessage.setData(reqMessage.getBody());
-		scMessage.setDataLength(reqMessage.getBodyLength());
-		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setCacheId(reqMessage.getCacheId());
-		scMessage.setCachePartNr(reqMessage.getCachePartNr());
-		scMessage.setServiceName(reqMessage.getServiceName());
-		scMessage.setSessionId(reqMessage.getSessionId());
-
-		SCMessage scReply = this.execute(scMessage, operationTimeoutMillis);
-
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		reply.setIsReply(true);
-		reply.setServiceName(serviceName);
-		reply.setSessionId(reqMessage.getSessionId());
-		// long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		// reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
-		reply.setMessageType(reqMessage.getMessageType());
-		if (scReply != null) {
-			reply.setBody(scReply.getData());
-			if (scReply.getCacheExpirationDateTime() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-						DateTimeUtility.getDateTimeAsString(scReply.getCacheExpirationDateTime()));
-			}
-			reply.setCacheId(scReply.getCacheId());
-			if (scReply.getMessageInfo() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
-			}
-			if (scReply.isCompressed()) {
-				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-			}
-			if (scReply.getAppErrorCode() != Constants.EMPTY_APP_ERROR_CODE) {
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scReply.getAppErrorCode());
-			}
-			if (scReply.getAppErrorText() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
-			}
-			reply.setPartSize(scReply.getPartSize());
-		}
-		return reply;
-	}
-
-	@Override
-	public abstract SCMessage createSession(SCMessage message, int operationTimeoutMillis);
-
-	@Override
-	public abstract void deleteSession(SCMessage message, int operationTimeoutMillis);
-
-	@Override
-	public abstract void abortSession(SCMessage message, int operationTimeoutMillis);
-
-	@Override
-	public abstract SCMessage execute(SCMessage message, int operationTimeoutMillis);
 
 	/**
 	 * The Class SCServerCallback.
@@ -385,5 +258,17 @@ public abstract class SCServlet extends HttpServlet implements ISCSessionServerC
 			this.synchronous = synchronous;
 		}
 		// nothing to implement in this case - everything is done by super-class
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		try {
+			this.deregisterServletFromSC();
+			this.requester.destroy();
+			AppContext.destroy();
+		} catch (Exception e) {
+			LOGGER.warn("Deregistering tomcat from SC failed", e);
+		}
 	}
 }

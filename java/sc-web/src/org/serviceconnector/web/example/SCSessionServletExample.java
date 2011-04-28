@@ -1,15 +1,15 @@
 package org.serviceconnector.web.example;
 
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.web.SCServlet;
+import org.serviceconnector.web.SCBaseSessionServlet;
 
-public class SCSessionServletExample extends SCServlet {
+public class SCSessionServletExample extends SCBaseSessionServlet {
+
+	private static final long serialVersionUID = 1L;
 
 	public SCSessionServletExample() {
 		super("/sc-web/SCSessionServletExample");
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
