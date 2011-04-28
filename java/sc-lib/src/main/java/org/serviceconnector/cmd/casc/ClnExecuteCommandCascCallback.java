@@ -83,11 +83,12 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			Cache scmpCache = null;
 			try {
 				CacheLogger.trace("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr="
 						+ reply.getMessageSequenceNr() + ", expirationDateTime="
 						+ reply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME));
-				Cache scmpCache = cacheManager.getCache(serviceName);
+				scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
@@ -168,6 +169,10 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
+				if (scmpCache != null) {
+					scmpCache.removeComposite(this.requestMessage.getSessionId(), this.requestCacheId);					
+					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+				}
 			}
 		}
 		// forward server reply to client
@@ -211,8 +216,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			Cache scmpCache = null;
 			try {
-				Cache scmpCache = cacheManager.getCache(serviceName);
+				scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
@@ -228,6 +234,10 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
+				if (scmpCache != null) {
+					scmpCache.removeComposite(sessionId, this.requestCacheId);					
+					CacheLogger.warn("cache composite removed because an exception did occure, cache (" + this.requestCacheId + ")");
+				}
 			}
 		}
 		this.responderCallback.responseCallback(request, response);

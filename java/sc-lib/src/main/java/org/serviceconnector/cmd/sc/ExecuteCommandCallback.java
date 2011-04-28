@@ -237,8 +237,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			Cache scmpCache = null;
 			try {
-				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
+				scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
 					ExecuteCommandCallback.LOGGER.error("cache write failed, no cache, service name = " + this.requestServiceName);
 				} else {
@@ -254,6 +255,10 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
+				if (scmpCache != null) {
+					scmpCache.removeComposite(this.sessionId, this.requestCacheId);					
+					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+				}
 			}
 		}
 		this.responderCallback.responseCallback(request, response);
