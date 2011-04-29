@@ -11,7 +11,7 @@
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
-           List of listeners
+           List of Listeners
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">

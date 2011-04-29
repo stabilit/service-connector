@@ -11,11 +11,11 @@
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
           <div class="sc_table_title">
-           Cache manager configuration
+           Cache Manager Configuration
           </div>
         <xsl:call-template name="cache_config"/>
         <div class="sc_table_title">
-           List of caches
+           List of Caches
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
@@ -81,13 +81,13 @@
 	  <td colspan="7">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           List of cached messages <!-- List of cache composites -->
+	           List of Cached Messages <!-- List of cache composites -->
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
 	            <th class="sc_table">cid</th><!-- ID -->
 	            <th class="sc_table">Status</th>
-	            <th class="sc_table">Header field count</th><!-- Headers -->
+	            <th class="sc_table">Header Field Count</th><!-- Headers -->
 	            <th class="sc_table">Message Parts</th><!-- Messages -->
 	            <th class="sc_table">Expiration</th>
 	            <th class="sc_table">Loading Timeout (ms)</th>            
@@ -169,8 +169,8 @@
          <tr class="sc_table_header">
            <th class="sc_table">Status</th>
            <th class="sc_table">Disk Path</th>
-           <th class="sc_table">Max message part in memory</th><!-- maxElementsInMemory -->
-           <th class="sc_table">Max message part on disk</th><!-- maxElementsOnDisk -->
+           <th class="sc_table">Max Message Parts in Memory</th><!-- maxElementsInMemory -->
+           <th class="sc_table">Max Message Parts on Disk</th><!-- maxElementsOnDisk -->
            <th class="sc_table">Loading (Sessions/MP)</th>            
          </tr>          
          <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -192,7 +192,7 @@
 	  <td colspan="8">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           List of cached message parts [<xsl:value-of select="$serviceName"/>]<!-- List of cache messages -->
+	           List of Cached Message Parts [<xsl:value-of select="$serviceName"/>]<!-- List of cache messages -->
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
