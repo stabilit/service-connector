@@ -11,3 +11,6 @@ copy ..\..\demo-server\src\main\resources\*.php ..\..\sc-test\up-download /y
 
 rem create sc-test
 call mvn-assembly-cmd.bat ..\..\sc-test
+
+rem create sc-web.jar
+call mvn-assembly-cmd.bat ..\..\sc-web
