@@ -20,6 +20,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.net.ConnectionType;
 
 /**
  * The Class SCLargeMessageSessionClientExample.
@@ -42,7 +43,7 @@ public class SCLargeMessageSessionClientExample {
 	public static void runExample() {
 		SCClient sc = null;
 		try {
-			sc = new SCClient("localhost", 7000);
+			sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
@@ -58,14 +59,15 @@ public class SCLargeMessageSessionClientExample {
 
 			SCMessage requestMsg = new SCMessage();
 			// set up large buffer
-			byte[] buffer = new byte[100000];
+			byte[] buffer = new byte[10000000];
 			for (int i = 0; i < buffer.length; i++) {
 				buffer[i] = (byte) i;
 			}
-			requestMsg.setData(buffer);
-			requestMsg.setPartSize(1 << 16); // 64KB
+			requestMsg.setData(get10MBString().getBytes());
+			requestMsg.setPartSize(65536); // 64KB
 			requestMsg.setCompressed(false);
-			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			System.out.println(buffer.length);
+			SCMessage responseMsg = sessionServiceA.execute(300,requestMsg);
 
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
@@ -81,6 +83,17 @@ public class SCLargeMessageSessionClientExample {
 				sc = null;
 			}
 		}
+	}
+	
+	public static String get10MBString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < Integer.MAX_VALUE; i++) {
+			if (sb.length() > 10485760) {
+				break;
+			}
+			sb.append(i);
+		}
+		return sb.toString();
 	}
 
 	/**
