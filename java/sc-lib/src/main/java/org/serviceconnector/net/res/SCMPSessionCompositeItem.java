@@ -16,10 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.util.concurrent.ScheduledFuture;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SCMPSessionCompositeItem. Item represents a value in SCMPSessionCompositeRegistry. Gives access to composite
@@ -39,26 +42,26 @@ public class SCMPSessionCompositeItem {
 	private SCMPCompositeSender largeResponse;
 	/** The msgSequenceNr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
-
-	/**
-	 * Instantiates a new SCMP session composite item.
-	 */
-	public SCMPSessionCompositeItem() {
-		this(null, null);
-	}
-
+	/** The large message timeout. Time observed to abort a large request communication. */
+	private int largeMessageTimeout;
+	/** The session id. */
+	private String sessionId;
+	/** The large message timeout. */
+	private ScheduledFuture<TimeoutWrapper> timeout;
+	
 	/**
 	 * Instantiates a new SCMP session composite item.
 	 * 
-	 * @param largeRequest
-	 *            the large response
-	 * @param largeResponse
-	 *            the large request
+	 * @param sessionId
+	 *            the session id
+	 * @param largeMessageTimeout
+	 *            the large message timeout
 	 */
-	public SCMPSessionCompositeItem(SCMPCompositeReceiver largeRequest, SCMPCompositeSender largeResponse) {
-		this.largeRequest = largeRequest;
-		this.largeResponse = largeResponse;
+	public SCMPSessionCompositeItem(String sessionId, int largeMessageTimeout) {
+		this.largeRequest = null;
+		this.largeResponse = null;
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
+		this.sessionId = sessionId;
 	}
 
 	/**
@@ -106,5 +109,42 @@ public class SCMPSessionCompositeItem {
 	 */
 	public void setSCMPLargeResponse(SCMPCompositeSender largeResponse) {
 		this.largeResponse = largeResponse;
+	}
+
+	/**
+	 * Gets the large message timeout.
+	 * 
+	 * @return the large message timeout
+	 */
+	public int getLargeMessageTimeoutMillis() {
+		return largeMessageTimeout;
+	}
+
+	/**
+	 * Gets the session id.
+	 * 
+	 * @return the session id
+	 */
+	public String getSessionId() {
+		return sessionId;
+	}
+	
+	/**
+	 * Gets the session timeout.
+	 * 
+	 * @return the session timeout
+	 */
+	public ScheduledFuture<TimeoutWrapper> getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * Sets the session timeout.
+	 * 
+	 * @param timeout
+	 *            the new session timeout
+	 */
+	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
+		this.timeout = timeout;
 	}
 }

@@ -40,7 +40,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SrvSubscribeCommand.class);
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -66,10 +66,10 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 		scMessage.setMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK));
 		scMessage.setServiceName(reqMessage.getServiceName());
+		int oti = Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT));
 
 		// inform callback with scMessages
-		SCMessage scReply = srvService.getCallback().subscribe(scMessage,
-				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		SCMessage scReply = srvService.getCallback().subscribe(scMessage, oti);
 
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
@@ -90,7 +90,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			} else {
 				// create session in SCMPSessionCompositeRegistry
-				SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
+				SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId, oti);
 				// handling msgSequenceNr
 				SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());

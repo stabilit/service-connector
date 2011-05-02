@@ -16,11 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SCMPSessionCompositeRegistry. Stores composite components (large response/requests) of a communication to resume at the
@@ -31,8 +38,13 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSessionCompositeItem> {
 
 	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPSessionCompositeRegistry.class);
+	/** The timer. Timer instance is responsible to observe large message timeouts. */
+	private ScheduledThreadPoolExecutor largeMessageScheduler;
+
+	public SCMPSessionCompositeRegistry() {
+		this.largeMessageScheduler = new ScheduledThreadPoolExecutor(1);
+	}
 
 	/**
 	 * Adds the session.
@@ -40,8 +52,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 * @param key
 	 *            the key
 	 */
-	public void addSession(String key) {
-		this.put(key, new SCMPSessionCompositeItem());
+	public void addSession(String key, int largeMessageTimeout) {
+		this.put(key, new SCMPSessionCompositeItem(key, largeMessageTimeout));
 	}
 
 	/**
@@ -51,6 +63,11 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 *            the key
 	 */
 	public void removeSession(String key) {
+		SCMPSessionCompositeItem item = this.get(key);
+		if (item == null) {
+			return;
+		}
+		this.cancelLargeMessageTimeout(item);
 		super.remove(key);
 	}
 
@@ -67,6 +84,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		if (item == null) {
 			return;
 		}
+		this.resetLargeMessageTimeout(item);
 		item.setSCMPLargeRequest(largeRequest);
 	}
 
@@ -96,6 +114,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		if (item == null) {
 			return;
 		}
+		this.cancelLargeMessageTimeout(item);
 		item.setSCMPLargeRequest(null);
 	}
 
@@ -112,6 +131,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		if (item == null) {
 			return;
 		}
+		this.resetLargeMessageTimeout(item);
 		item.setSCMPLargeResponse(largeResponse);
 	}
 
@@ -141,7 +161,47 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		if (item == null) {
 			return;
 		}
+		this.cancelLargeMessageTimeout(item);
 		item.setSCMPLargeResponse(null);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void scheduleLargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
+		if (sessionComposite == null || sessionComposite.getLargeMessageTimeoutMillis() == 0) {
+			// no scheduling of session timeout
+			return;
+		}
+		// always cancel old timeouter before setting up a new one
+		this.cancelLargeMessageTimeout(sessionComposite);
+		LOGGER.trace("schedule large message " + sessionComposite.getSessionId() + " timeout in millis "
+				+ (long) sessionComposite.getLargeMessageTimeoutMillis());
+		// sets up session timeout
+		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new LargeMessageTimeout(sessionComposite));
+		// schedule sessionTimeouter in registry timer
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.largeMessageScheduler.schedule(
+				sessionTimeouter, (long) sessionComposite.getLargeMessageTimeoutMillis(), TimeUnit.MILLISECONDS);
+		sessionComposite.setTimeout(timeout);
+	}
+
+	private void cancelLargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
+		if (sessionComposite == null) {
+			return;
+		}
+		ScheduledFuture<TimeoutWrapper> sessionTimeout = sessionComposite.getTimeout();
+		if (sessionTimeout == null) {
+			// no session timeout has been set up for this session
+			return;
+		}
+		LOGGER.trace("cancel large message timeout " + sessionComposite.getSessionId());
+		sessionTimeout.cancel(false);
+		this.largeMessageScheduler.purge();
+		// important to set timeouter null - rescheduling of same instance not possible
+		sessionComposite.setTimeout(null);
+	}
+
+	private void resetLargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
+		this.cancelLargeMessageTimeout(sessionComposite);
+		this.scheduleLargeMessageTimeout(sessionComposite);
 	}
 
 	/**
@@ -157,5 +217,29 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 			return null;
 		}
 		return item.getMsgSequenceNr();
+	}
+
+	private class LargeMessageTimeout implements ITimeout {
+
+		private SCMPSessionCompositeItem sessionComposite;
+
+		public LargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
+			this.sessionComposite = sessionComposite;
+		}
+
+		@Override
+		public void timeout() {
+			String sessionId = sessionComposite.getSessionId();
+			LOGGER.trace("Large message process times out sid=" + sessionId);
+			SCMPSessionCompositeRegistry.this.removeSCMPLargeRequest(sessionId);
+			SCMPSessionCompositeRegistry.this.removeSCMPLargeResponse(sessionId);
+			SessionLogger.logTimeoutSession(sessionId);
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getTimeoutMillis() {
+			return sessionComposite.getLargeMessageTimeoutMillis();
+		}
 	}
 }

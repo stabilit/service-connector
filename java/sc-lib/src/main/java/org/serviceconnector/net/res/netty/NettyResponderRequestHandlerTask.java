@@ -122,12 +122,10 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 					if (largeResponse.hasNext()) {
 						// there are still parts to send to complete request
 						SCMPMessage nextSCMP = largeResponse.getNext();
-						response.setSCMP(nextSCMP);
 						// handling msgSequenceNr
-						if (SCMPMessageSequenceNr.necessaryToWrite(nextSCMP.getMessageType())) {
-							msgSequenceNr.incrementAndGetMsgSequenceNr();
-							nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-						}
+						msgSequenceNr.incrementAndGetMsgSequenceNr();
+						nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+						response.setSCMP(nextSCMP);
 						response.write();
 						return;
 					}
@@ -138,12 +136,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 
 				if (largeRequest != null && largeRequest.isComplete() == false) {
 					// request is not complete yet
-					SCMPMessage message = response.getSCMP();
-					// handling msgSequenceNr
-					if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
-						msgSequenceNr.incrementAndGetMsgSequenceNr();
-						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-					}
 					response.write();
 					return;
 				}
@@ -204,26 +196,30 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 				// request not chunk
 				return largeRequest;
 			}
-			// first part of a large request received - create large response
+			// first part of a large request received - create large request
 			largeRequest = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
 			// add largeResponse to the registry
 			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeRequest(sessionId, largeRequest);
 		} else {
-			// next part of a large request received - add to large response
+			// next part of a large request received - add to large request
 			largeRequest.add(scmpReq);
 		}
+
+		SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPMsgSequenceNr(sessionId);
 
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
 			largeRequest.incomplete();
-			// set up poll request
+			// set up poll response
 			SCMPMessage scmpReply = new SCMPPart(true);
+			scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.incrementAndGetMsgSequenceNr());
 			scmpReply.setIsReply(true);
 			scmpReply.setMessageType(scmpReq.getMessageType());
 			response.setSCMP(scmpReply);
 		} else {
 			// last message of a chunk message received - request complete now
 			largeRequest.complete();
+			largeRequest.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.incrementAndGetMsgSequenceNr());
 			request.setMessage(largeRequest);
 		}
 		return largeRequest;
