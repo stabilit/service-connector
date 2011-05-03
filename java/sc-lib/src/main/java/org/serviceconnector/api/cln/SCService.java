@@ -20,7 +20,9 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.SCRequester;
 
 /**
- * The Class Service. Provides basic stuff for every kind of remote service interfaces.
+ * The Class Service. Provides basic stuff for every kind of remote service interfaces.<br />
+ * <br />
+ * More informations available in subclasses.
  */
 public abstract class SCService {
 
