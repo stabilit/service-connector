@@ -52,8 +52,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 * @param key
 	 *            the key
 	 */
-	public void addSession(String key, int largeMessageTimeout) {
-		this.put(key, new SCMPSessionCompositeItem(key, largeMessageTimeout));
+	public void addSession(String key) {
+		this.put(key, new SCMPSessionCompositeItem(key));
 	}
 
 	/**
@@ -79,13 +79,14 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 * @param largeRequest
 	 *            the large request
 	 */
-	public void addSCMPLargeRequest(String key, SCMPCompositeReceiver largeRequest) {
+	public void addSCMPLargeRequest(String key, SCMPCompositeReceiver largeRequest, int largeMessageTimeoutMillis) {
 		SCMPSessionCompositeItem item = this.get(key);
 		if (item == null) {
 			return;
 		}
-		this.resetLargeMessageTimeout(item);
 		item.setSCMPLargeRequest(largeRequest);
+		item.setLargeMessageTimeoutMillis(largeMessageTimeoutMillis);
+		this.resetLargeMessageTimeout(item);
 	}
 
 	/**
@@ -126,13 +127,14 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 * @param largeResponse
 	 *            the large response
 	 */
-	public void addSCMPLargeResponse(String key, SCMPCompositeSender largeResponse) {
+	public void addSCMPLargeResponse(String key, SCMPCompositeSender largeResponse, int largeMessageTimeoutMillis) {
 		SCMPSessionCompositeItem item = this.get(key);
 		if (item == null) {
 			return;
 		}
-		this.resetLargeMessageTimeout(item);
 		item.setSCMPLargeResponse(largeResponse);
+		item.setLargeMessageTimeoutMillis(largeMessageTimeoutMillis);
+		this.resetLargeMessageTimeout(item);
 	}
 
 	/**

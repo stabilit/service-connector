@@ -198,8 +198,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			}
 			// first part of a large request received - create large request
 			largeRequest = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
+			int oti = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			// add largeResponse to the registry
-			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeRequest(sessionId, largeRequest);
+			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeRequest(sessionId, largeRequest, oti);
 		} else {
 			// next part of a large request received - add to large request
 			largeRequest.add(scmpReq);
@@ -241,8 +242,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 				// no incrementation necessary - already done inside commands
 				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
+			int oti = scmpRequest.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			// adding compositeReceiver to the composite registry
-			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse);
+			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse, oti);
 		}
 		try {
 			// reply to client

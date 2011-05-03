@@ -43,21 +43,19 @@ public class SCMPSessionCompositeItem {
 	/** The msgSequenceNr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
 	/** The large message timeout. Time observed to abort a large request communication. */
-	private int largeMessageTimeout;
+	private int largeMessageTimeoutMillis;
 	/** The session id. */
 	private String sessionId;
 	/** The large message timeout. */
 	private ScheduledFuture<TimeoutWrapper> timeout;
-	
+
 	/**
 	 * Instantiates a new SCMP session composite item.
 	 * 
 	 * @param sessionId
 	 *            the session id
-	 * @param largeMessageTimeout
-	 *            the large message timeout
 	 */
-	public SCMPSessionCompositeItem(String sessionId, int largeMessageTimeout) {
+	public SCMPSessionCompositeItem(String sessionId) {
 		this.largeRequest = null;
 		this.largeResponse = null;
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
@@ -112,12 +110,22 @@ public class SCMPSessionCompositeItem {
 	}
 
 	/**
+	 * Sets the large message timeout millis.
+	 * 
+	 * @param largeMessageTimeoutMillis
+	 *            the new large message timeout millis
+	 */
+	public void setLargeMessageTimeoutMillis(int largeMessageTimeoutMillis) {
+		this.largeMessageTimeoutMillis = largeMessageTimeoutMillis;
+	}
+
+	/**
 	 * Gets the large message timeout.
 	 * 
 	 * @return the large message timeout
 	 */
 	public int getLargeMessageTimeoutMillis() {
-		return largeMessageTimeout;
+		return largeMessageTimeoutMillis;
 	}
 
 	/**
@@ -128,7 +136,7 @@ public class SCMPSessionCompositeItem {
 	public String getSessionId() {
 		return sessionId;
 	}
-	
+
 	/**
 	 * Gets the session timeout.
 	 * 

@@ -91,7 +91,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			} else {
 				// create session in SCMPSessionCompositeRegistry
-				SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId, oti);
+				SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
 				// handling msgSequenceNr
 				SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
