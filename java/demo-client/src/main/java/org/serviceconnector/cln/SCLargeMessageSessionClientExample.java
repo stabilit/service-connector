@@ -68,14 +68,9 @@ public class SCLargeMessageSessionClientExample {
 			requestMsg.setCompressed(false);
 			System.out.println(buffer.length);
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
-			System.out.println(((byte[]) requestMsg.getData()).length);
-			if (buffer.equals(requestMsg.getData())) {
-				System.out.println("go home immediate!");
-			}
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
 			sessionServiceA.deleteSession();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
