@@ -59,7 +59,7 @@ public class SCLargeMessageSessionClientExample {
 
 			SCMessage requestMsg = new SCMessage();
 			// set up large buffer
-			byte[] buffer = new byte[1000000];
+			byte[] buffer = new byte[9000000];
 			for (int i = 0; i < buffer.length; i++) {
 				buffer[i] = (byte) i;
 			}
@@ -68,7 +68,10 @@ public class SCLargeMessageSessionClientExample {
 			requestMsg.setCompressed(false);
 			System.out.println(buffer.length);
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
-
+			System.out.println(((byte[]) requestMsg.getData()).length);
+			if (buffer.equals(requestMsg.getData())) {
+				System.out.println("go home immediate!");
+			}
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
 			sessionServiceA.deleteSession();
