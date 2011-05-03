@@ -59,15 +59,15 @@ public class SCLargeMessageSessionClientExample {
 
 			SCMessage requestMsg = new SCMessage();
 			// set up large buffer
-			byte[] buffer = new byte[10000000];
+			byte[] buffer = new byte[1000000];
 			for (int i = 0; i < buffer.length; i++) {
 				buffer[i] = (byte) i;
 			}
-			requestMsg.setData(get10MBString().getBytes());
+			requestMsg.setData(buffer);
 			requestMsg.setPartSize(65536); // 64KB
 			requestMsg.setCompressed(false);
 			System.out.println(buffer.length);
-			SCMessage responseMsg = sessionServiceA.execute(300,requestMsg);
+			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
 			System.out.println(responseMsg.getData().toString());
 			// deletes the session
@@ -83,17 +83,6 @@ public class SCLargeMessageSessionClientExample {
 				sc = null;
 			}
 		}
-	}
-	
-	public static String get10MBString() {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Integer.MAX_VALUE; i++) {
-			if (sb.length() > 10485760) {
-				break;
-			}
-			sb.append(i);
-		}
-		return sb.toString();
 	}
 
 	/**
