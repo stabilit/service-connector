@@ -194,7 +194,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			// no compositeReceiver used before
 			if (scmpReq.isPart() == false) {
 				// request not chunk
-				return largeRequest;
+				return null;
 			}
 			// first part of a large request received - create large request
 			largeRequest = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
