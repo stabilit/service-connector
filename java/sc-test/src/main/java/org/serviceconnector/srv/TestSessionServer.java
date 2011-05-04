@@ -138,6 +138,15 @@ public class TestSessionServer extends TestStatefulServer {
 					response.setReject(true);
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
+				} else if (sessionInfo.equals(TestConstants.sleepCmd)) {
+					String dataString = (String) request.getData();
+					int millis = Integer.parseInt(dataString);
+					try {
+						LOGGER.info("Sleeping " + millis + "ms");
+						Thread.sleep(millis);
+					} catch (Exception e) {
+						LOGGER.error("sleep error", e);
+					}
 				}
 			}
 			SessionLogger.logCreateSession(request.getSessionId(), -1);

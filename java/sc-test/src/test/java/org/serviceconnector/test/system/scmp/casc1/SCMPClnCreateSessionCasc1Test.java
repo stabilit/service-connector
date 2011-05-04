@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp.casc1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -28,6 +31,7 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
@@ -46,13 +50,20 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 
 	public SCMPClnCreateSessionCasc1Test() {
 		SCMPClnCreateSessionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+		// server definitions needs to be different
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
+		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 3));
 		AppContext.init();
 	}
 
@@ -129,5 +140,43 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 		clnExecuteCall.invoke(cbk, 2000);
 		SCMPMessage msg = cbk.getMessageSync(3000);
 		TestUtil.verifyError(msg, SCMPError.SESSION_NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
+	}
+
+	/**
+	 * Description: create session - waits 2 seconds - another create session times out when
+	 * waiting for free connection<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t35_WaitsForConnectionTimeout() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo(TestConstants.sleepCmd);
+		createSessionCall.setEchoIntervalSeconds(10);
+		createSessionCall.setRequestBody("3000");
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 10000);
+
+		createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo(TestConstants.sleepCmd);
+		createSessionCall.setEchoIntervalSeconds(10);
+		createSessionCall.setRequestBody("3000");
+		TestCallback cbk1 = new TestCallback();
+		createSessionCall.invoke(cbk1, 10000);
+
+		// to assure second create is not faster
+		Thread.sleep(200);
+		createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
+		createSessionCall.setEchoIntervalSeconds(10);
+		TestCallback cbk2 = new TestCallback();
+		createSessionCall.invoke(cbk2, 2000);
+
+		SCMPMessage reply = cbk.getMessageSync(4000);
+		SCMPMessage reply1 = cbk1.getMessageSync(4000);
+		SCMPMessage reply2 = cbk2.getMessageSync(4000);
+
+		TestUtil.checkReply(reply);
+		TestUtil.checkReply(reply1);
+		Assert.assertTrue(reply2.isFault());
+		TestUtil.verifyError(reply2, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 }
