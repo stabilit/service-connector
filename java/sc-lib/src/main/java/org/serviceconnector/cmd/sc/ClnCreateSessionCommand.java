@@ -130,7 +130,6 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// tries allocating a server for this session
 		CreateSessionCommandCallback callback = null;
-
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
@@ -138,6 +137,8 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		do {
 			callback = new CreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
+				// reset ipList, might have been modified in creates session try
+				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

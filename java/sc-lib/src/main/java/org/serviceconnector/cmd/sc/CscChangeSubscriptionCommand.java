@@ -93,6 +93,8 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response,
 					responderCallback, cascSubscription, cascadedSCMask);
 			try {
+				// reset ipList, might have been modified in creates session try
+				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

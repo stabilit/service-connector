@@ -55,7 +55,8 @@ import org.serviceconnector.util.ValidatorUtility;
  *        \/
  * </pre>
  * 
- * After creating a session a delete session must be done in every case at the end of communication.
+ * After creating a session a delete session must be done in every case at the end of communication. A delete session may be called
+ * multiple times. Nothing happens if the session turns inactive in meantime.
  * 
  * @author JTraber
  */
@@ -394,6 +395,7 @@ public class SCSessionService extends SCService {
 
 	/**
 	 * Delete session on SC with default operation timeout.
+	 * A delete session may be called multiple times. Nothing happens if the session turns inactive in meantime.
 	 * 
 	 * @throws SCServiceException
 	 *             pending request, no second request allowed<br />
@@ -406,6 +408,7 @@ public class SCSessionService extends SCService {
 
 	/**
 	 * Delete session on SC.
+	 * A delete session may be called multiple times. Nothing happens if the session turns inactive in meantime.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            allowed time to complete operation
@@ -420,6 +423,7 @@ public class SCSessionService extends SCService {
 
 	/**
 	 * Delete session on SC with default operation timeout.
+	 * A delete session may be called multiple times. Nothing happens if the session turns inactive in meantime.
 	 * 
 	 * @param scMessage
 	 *            the SC message
@@ -434,11 +438,12 @@ public class SCSessionService extends SCService {
 
 	/**
 	 * Delete session on SC.
+	 * A delete session may be called multiple times. Nothing happens if the session turns inactive in meantime.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @param scMessage
-	 *            the sc message
+	 *            the SC message
 	 * @throws SCServiceException
 	 *             pending request, no second request allowed<br />
 	 *             delete session on SC failed<br />

@@ -112,6 +112,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
 			try {
+				// reset ipList, might have been modified in creates session try
+				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				// service is local - normal client is subscribing
 				SubscribeCommandCallback callback = new SubscribeCommandCallback(request, response, responderCallback,
 						tmpSubscription);

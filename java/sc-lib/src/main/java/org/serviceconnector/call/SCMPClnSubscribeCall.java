@@ -50,7 +50,9 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipList += "/" + localHost.getHostAddress();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 

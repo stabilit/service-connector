@@ -96,6 +96,8 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback(request, response,
 					responderCallback, subscription);
 			try {
+				// reset ipList, might have been modified in creates session try
+				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

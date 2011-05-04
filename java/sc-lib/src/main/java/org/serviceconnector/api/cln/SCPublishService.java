@@ -49,7 +49,8 @@ import org.serviceconnector.util.ValidatorUtility;
  *        \/
  * </pre>
  * 
- * After subscribing the service an unsubscribe must follow in every case at the end of communication.
+ * After subscribing the service an unsubscribe must follow in every case at the end of communication. Unsubscribe may be called
+ * multiple times. Nothing happens if the subscription turns inactive in meantime.
  * 
  * @author JTraber
  */
@@ -297,6 +298,7 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Unsubscribe from SC with default operation timeout.
+	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
 	 * 
 	 * @throws SCServiceException
 	 *             unsubscribe from SC failed<br />
@@ -308,6 +310,7 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Unsubscribe from SC.
+	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
 	 * 
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
@@ -321,6 +324,7 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Unsubscribe from SC.
+	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -334,11 +338,12 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Unsubscribe from SC.
+	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
+	 *            the SC subscribe message
 	 * @throws SCServiceException
 	 *             unsubscribe from SC failed<br />
 	 *             error message received from SC <br />
