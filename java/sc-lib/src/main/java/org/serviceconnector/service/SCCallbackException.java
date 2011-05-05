@@ -17,7 +17,7 @@
 package org.serviceconnector.service;
 
 /**
- * The Class SCCallbackException.
+ * The Class SCCallbackException. Exceptions which occurs in a callback.
  */
 public class SCCallbackException extends Exception {
 	
