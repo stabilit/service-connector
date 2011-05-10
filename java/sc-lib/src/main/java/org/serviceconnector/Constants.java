@@ -300,6 +300,10 @@ public final class Constants {
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;	
 	/** The Constant DEFAULT_WEB_COLOR_SCHEME. */
 	public static final String DEFAULT_WEB_COLOR_SCHEME = "classic";
+	/** The Constant DEFAULT_WEB_PAGE_SIZE, the default visible element per page */
+	public static final int DEFAULT_WEB_PAGE_SIZE = 25;	
+	/** The Constant DEFAULT_WEB_SITE_SIZE, the default visible site size in paging area */
+	public static final int DEFAULT_WEB_SITE_SIZE = 20;	
 	/**
 	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS.
 	 * default session inactivity control schedule timeout (3 minutes)

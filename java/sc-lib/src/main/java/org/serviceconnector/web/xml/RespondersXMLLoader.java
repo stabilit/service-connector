@@ -38,7 +38,21 @@ public class RespondersXMLLoader extends AbstractXMLLoader {
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		writer.writeStartElement("responders");
 		IResponder[] responders = responderRegistry.getResponders();
-		for (IResponder responder : responders) {
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0 && responders.length > 0) {
+			IResponder[] sim = new IResponder[simulation + responders.length];
+			System.arraycopy(responders, 0, sim, 0, responders.length);
+			for (int i = responders.length; i < simulation; i++) {
+				sim[i] = responders[0];
+			}
+			responders = sim;
+		}
+		Paging paging = this.writePagingAttributes(writer, request, responders.length, "");
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			IResponder responder = responders[i];
 			writer.writeStartElement("responder");
 			writer.writeStartElement("responderConfig");
 			this.writeBean(writer, responder.getListenerConfig());

@@ -60,7 +60,21 @@ public class SessionsXMLLoader extends AbstractXMLLoader {
 		SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 		writer.writeStartElement("sessions");
 		Session[] sessions = sessionRegistry.getSessions();
-		for (Session session : sessions) {
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0) {
+			Session[] sim = new Session[simulation + sessions.length];
+			System.arraycopy(sessions, 0, sim, 0, sessions.length);
+			for (int i = sessions.length; i < simulation; i++) {
+				sim[i] = new Session("sim " + i, null);
+			}
+			sessions = sim;
+		}
+		Paging paging = this.writePagingAttributes(writer, request, sessions.length, "");
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Session session = sessions[i];
 			writer.writeStartElement("session");
 			this.writeBean(writer, session);
 			writer.writeEndElement();

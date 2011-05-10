@@ -31,7 +31,9 @@ public class TestXMLLoader extends AbstractXMLLoader {
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String page = request.getParameter("page");
+		String site = request.getParameter("site");
 		int iPage = 1;
+		int iSite = 1;
 		if (page != null) {
 			try {
 				iPage = Integer.parseInt(page);
@@ -39,14 +41,24 @@ public class TestXMLLoader extends AbstractXMLLoader {
 				iPage = 1;
 			}
 		}
+		if (site != null) {
+			try {
+				iSite = Integer.parseInt(site);
+			} catch (Exception e) {
+				iSite = 1;
+			}
+		}
 		String testParameter = request.getParameter("test");
 		writer.writeStartElement("test");
 		writer.writeAttribute("size", String.valueOf(1000));
+		writer.writeAttribute("site", String.valueOf(iSite));
 		writer.writeAttribute("page", String.valueOf(iPage));
-		writer.writeAttribute("last", String.valueOf(1000 / 50));
-		writer.writeAttribute("pageSize", String.valueOf(50));
-		int begin = (iPage-1) * 50;
-		int end = (iPage * 50);
+		writer.writeAttribute("lastPage", String.valueOf(1000 / 25));
+		writer.writeAttribute("lastSite", String.valueOf(1000 / 25 / 20));
+		writer.writeAttribute("pageSize", String.valueOf(25));
+		writer.writeAttribute("siteSize", String.valueOf(20));
+		int begin = (iPage-1) * 25;
+		int end = (iPage * 25);
 		for (int i = begin; i < end; i++) {
 			writer.writeStartElement("item");
 			writer.writeAttribute("index", String.valueOf(i));

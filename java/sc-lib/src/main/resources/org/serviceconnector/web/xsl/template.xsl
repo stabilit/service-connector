@@ -5,6 +5,9 @@
 	<xsl:variable name="body" select="/sc-web/body"/>
 	<xsl:variable name="userid" select="/sc-web/head/meta/@userid"/>
 	<xsl:variable name="urlencoded" select="/sc-web/head/meta/@urlencoded"/>
+	<xsl:variable name="sim" select="/sc-web/head/query/param/@sim"/>
+	<xsl:variable name="page" select="/sc-web/head/query/param/@page"/>
+	<xsl:variable name="site" select="/sc-web/head/query/param/@site"/>
 	<xsl:output
 			method="html"
 			doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
@@ -274,48 +277,113 @@
 	</xsl:template>
 	<xsl:template name="pageArea">
 	  <xsl:param name="title"/>
+	  <xsl:param name="prefix"/>
+	  <xsl:param name="query"/>
       <xsl:param name="size"/>
+      <xsl:param name="currentSite"/>
       <xsl:param name="currentPage"/>
       <xsl:param name="lastPage"/>
+      <xsl:param name="lastSite"/>
+      <xsl:param name="pageSize"/>
+      <xsl:param name="siteSize"/>
       <center>
       <table border="0" cellspacing="0" cellpadding="2" style="position:relative; height:20px; top:-3px;">
         <tr>
           <td style="padding-right:10px;"><xsl:value-of select="$title"/></td>
+          <xsl:if test="$siteSize &gt; 1 and $currentSite &gt; 1">
+            <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
+              <xsl:choose>
+	            <xsl:when test="$sim">
+                  <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$currentPage}&amp;{$prefix}site={($currentSite - 1)}&amp;sim={$sim}" style="color:white;">&lt;&lt;</a>
+	            </xsl:when>
+	            <xsl:otherwise>
+                  <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$currentPage}&amp;{$prefix}site={($currentSite - 1)}" style="color:white;">&lt;&lt;</a>
+	            </xsl:otherwise>
+	          </xsl:choose>                         
+            </td>
+          </xsl:if>          
           <xsl:call-template name="pageAreaDetails">
+            <xsl:with-param name="index">1</xsl:with-param>
+            <xsl:with-param name="prefix" select="$prefix"/>
+            <xsl:with-param name="query" select="$query"/>
             <xsl:with-param name="size" select="$size"/>
+            <xsl:with-param name="currentSite" select="$currentSite"/>
             <xsl:with-param name="currentPage" select="$currentPage"/>
-            <xsl:with-param name="page">1</xsl:with-param>
+            <xsl:with-param name="page" select="$currentSite * $siteSize - ($siteSize - 1)"/>            
             <xsl:with-param name="lastPage" select="$lastPage"/>
+            <xsl:with-param name="lastSite" select="$lastSite"/>
+            <xsl:with-param name="pageSize" select="$pageSize"/>
+            <xsl:with-param name="siteSize" select="$siteSize"/>
           </xsl:call-template>    
+          <xsl:if test="$siteSize &gt; 1 and $currentSite &lt; $lastSite">
+            <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">
+	            <xsl:choose>
+	              <xsl:when test="$sim">
+	                <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$currentPage}&amp;{$prefix}site={($currentSite + 1)}&amp;sim={$sim}" style="color:white;">&gt;&gt;</a>
+	              </xsl:when>
+	              <xsl:otherwise>
+	                <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$currentPage}&amp;{$prefix}site={($currentSite + 1)}" style="color:white;">&gt;&gt;</a>
+	              </xsl:otherwise>
+	            </xsl:choose>                         
+            </td>
+          </xsl:if>          
           <td style="border-right:1px solid white;"></td>
         </tr>
       </table>	
       </center>
 	</xsl:template>
 	<xsl:template name="pageAreaDetails">
+      <xsl:param name="index"/>
+      <xsl:param name="prefix"/>
+      <xsl:param name="query"/>
       <xsl:param name="size"/>
       <xsl:param name="page"/>
+      <xsl:param name="currentSite"/>
       <xsl:param name="currentPage"/>
       <xsl:param name="lastPage"/>
+      <xsl:param name="pageSize"/>
+      <xsl:param name="siteSize"/>
       <xsl:choose>
         <xsl:when test="$currentPage = $page">
           <td style="background:orange; border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
-            <a href="{$head/meta/@path}{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+            <xsl:choose>
+              <xsl:when test="$sim">
+                <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$page}&amp;{$prefix}site={$currentSite}&amp;sim={$sim}" style="color:white;"><xsl:value-of select="$page"/></a>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$page}&amp;{$prefix}site={$currentSite}" style="color:white;"><xsl:value-of select="$page"/></a>
+              </xsl:otherwise>
+            </xsl:choose>      
           </td>
         </xsl:when>
         <xsl:otherwise>
-          <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
-            <a href="{$head/meta/@path}{$urlencoded}?page={$page}" style="color:white;"><xsl:value-of select="$page"/></a>
+          <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">  
+            <xsl:choose>
+              <xsl:when test="$sim">
+                 <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$page}&amp;{$prefix}site={$currentSite}&amp;sim={$sim}" style="color:white;"><xsl:value-of select="$page"/></a>
+              </xsl:when>
+              <xsl:otherwise>
+                 <a href="{$head/meta/@path}{$urlencoded}?{$query}{$prefix}page={$page}&amp;{$prefix}site={$currentSite}" style="color:white;"><xsl:value-of select="$page"/></a>
+              </xsl:otherwise>
+            </xsl:choose>      
           </td>
         </xsl:otherwise>
       </xsl:choose>      
       <xsl:if test="$page &lt; $lastPage">
-	       <xsl:call-template name="pageAreaDetails">
-	         <xsl:with-param name="size" select="$size"/>
-	         <xsl:with-param name="currentPage" select="$currentPage"/>
-	         <xsl:with-param name="page" select="$page + 1"/>
-	         <xsl:with-param name="lastPage" select="$lastPage"/>
-	       </xsl:call-template>
+           <xsl:if test="$index &lt; $siteSize">
+		       <xsl:call-template name="pageAreaDetails">
+		         <xsl:with-param name="index" select="$index + 1"/>
+		         <xsl:with-param name="prefix" select="$prefix"/>
+                 <xsl:with-param name="query" select="$query"/>
+		         <xsl:with-param name="size" select="$size"/>
+		         <xsl:with-param name="currentSite" select="$currentSite"/>
+		         <xsl:with-param name="currentPage" select="$currentPage"/>
+		         <xsl:with-param name="page" select="$page + 1"/>
+		         <xsl:with-param name="lastPage" select="$lastPage"/>
+		         <xsl:with-param name="pageSize" select="$pageSize"/>
+		         <xsl:with-param name="siteSize" select="$siteSize"/>
+		       </xsl:call-template>
+	       </xsl:if>
       </xsl:if>           
     </xsl:template>
 </xsl:stylesheet>

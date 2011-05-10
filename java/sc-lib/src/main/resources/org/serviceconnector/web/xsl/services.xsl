@@ -6,14 +6,24 @@
     <xsl:variable name="serviceParam" select="$head/query/param/@service"/>
     <xsl:variable name="subscriptionParam" select="$head/query/param/@subscription"/>
     <xsl:variable name="showSessionsParam" select="$head/query/param/@showsessions"/>
+    <xsl:variable name="services" select="$body/services"/>    
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>&amp;showsessions=<xsl:value-of select="$head/query/param/@showsessions"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>&amp;showsessions=<xsl:value-of select="$head/query/param/@showsessions"/>&amp;page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
-           List of Services
+           <xsl:call-template name="pageArea">
+             <xsl:with-param name="title">List of Services</xsl:with-param>
+             <xsl:with-param name="size" select="$services/@size"/>
+             <xsl:with-param name="currentSite" select="$services/@site"/>
+             <xsl:with-param name="currentPage" select="$services/@page"/>
+             <xsl:with-param name="lastPage" select="$services/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$services/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$services/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$services/@pageSize"/>
+           </xsl:call-template>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">

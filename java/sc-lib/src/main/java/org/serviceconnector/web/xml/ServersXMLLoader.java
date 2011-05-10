@@ -1,4 +1,5 @@
 /*
+
  * Copyright © 2010 STABILIT Informatik AG, Switzerland *
  * *
  * Licensed under the Apache License, Version 2.0 (the "License"); *
@@ -36,7 +37,21 @@ public class ServersXMLLoader extends AbstractXMLLoader {
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		writer.writeStartElement("servers");
 		Server[] servers = serverRegistry.getServers();
-		for (Server server : servers) {
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0 && servers.length > 0) {
+			Server[] sim = new Server[simulation + servers.length];
+			System.arraycopy(servers, 0, sim, 0, servers.length);
+			for (int i = servers.length; i < simulation + servers.length; i++) {
+				sim[i] = servers[0];
+			}
+			servers = sim;
+ 		}
+		Paging paging = this.writePagingAttributes(writer, request, servers.length, ""); // no prefix
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Server server = servers[i];
 			writer.writeStartElement("server");
 			this.writeBean(writer, server);
 			writer.writeEndElement();

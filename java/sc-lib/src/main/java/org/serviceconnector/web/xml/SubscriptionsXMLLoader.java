@@ -30,6 +30,7 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
+import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.web.IWebRequest;
 
 /**
@@ -70,7 +71,21 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 		SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 		writer.writeStartElement("subscriptions");
 		Subscription[] subscriptions = subscriptionRegistry.getSubscriptions();
-		for (Subscription subscription : subscriptions) {
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0) {
+			Subscription[] sim = new Subscription[simulation + subscriptions.length];
+			System.arraycopy(subscriptions, 0, sim, 0, subscriptions.length);
+			for (int i = subscriptions.length; i < simulation; i++) {
+				sim[i] = new Subscription(null, "sim " + i, null, 0, 0.0, false);
+		     }
+			subscriptions = sim;
+ 		}
+		Paging paging = this.writePagingAttributes(writer, request, subscriptions.length, "");
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Subscription subscription = subscriptions[i];
 			writer.writeStartElement("subscription");
 			this.writeBean(writer, subscription);
 			writer.writeEndElement();

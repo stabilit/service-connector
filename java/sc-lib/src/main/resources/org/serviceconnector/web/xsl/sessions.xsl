@@ -7,14 +7,24 @@
     <xsl:variable name="serviceParam" select="$head/query/param/@service"/>
     <xsl:variable name="server" select="$body/server"/>
     <xsl:variable name="service" select="$body/service"/>
+    <xsl:variable name="sessions" select="$body/sessions"/>    
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'sessions', 'server=<xsl:value-of select="$serverParam"/>&amp;service=<xsl:value-of select="$serviceParam"/>')", 10000);            
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'sessions', 'server=<xsl:value-of select="$serverParam"/>&amp;service=<xsl:value-of select="$serviceParam"/>&amp;page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);            
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
-           List of Sessions
+           <xsl:call-template name="pageArea">
+             <xsl:with-param name="title">List of Sessions</xsl:with-param>
+             <xsl:with-param name="size" select="$sessions/@size"/>
+             <xsl:with-param name="currentSite" select="$sessions/@site"/>
+             <xsl:with-param name="currentPage" select="$sessions/@page"/>
+             <xsl:with-param name="lastPage" select="$sessions/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$sessions/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$sessions/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$sessions/@pageSize"/>
+           </xsl:call-template>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">

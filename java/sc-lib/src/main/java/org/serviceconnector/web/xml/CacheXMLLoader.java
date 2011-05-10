@@ -32,8 +32,10 @@ import org.serviceconnector.cache.CacheManager.CacheLoadingSession;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.server.Server;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
+import org.serviceconnector.web.xml.AbstractXMLLoader.Paging;
 
 /**
  * The Class CacheXMLLoader.
@@ -62,6 +64,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement();
 		writer.writeStartElement("caches");
 		Cache[] caches = cacheManager.getAllCaches();
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0 && caches.length > 0) {
+			Cache[] sim = new Cache[simulation + caches.length];
+			System.arraycopy(caches, 0, sim, 0, caches.length);
+			for (int i = caches.length; i < simulation + caches.length; i++) {
+				sim[i] = caches[0];
+			}
+			caches = sim;
+		}
 		this.writeCaches(writer, caches, request);
 		writer.writeEndElement(); // close caches tag
 	}
@@ -105,9 +116,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCaches(XMLStreamWriter writer, Object[] caches, IWebRequest request) throws XMLStreamException {
+	private void writeCaches(XMLStreamWriter writer, Object[] caches, IWebRequest request) throws Exception {
 		String cacheParam = request.getParameter("cache");
-		for (Object obj : caches) {
+		int simulation = this.getParameterInt(request, "sim", 0);
+		Paging paging = this.writePagingAttributes(writer, request, caches.length, ""); // no prefix
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Object obj = caches[i];
 			if (obj instanceof Cache == false) {
 				continue;
 			}
@@ -117,7 +134,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			writer.writeCharacters(cache.getServiceName());
 			writer.writeEndElement(); // close serviceName tag
 			writer.writeStartElement("compositeSize");
-			writer.writeCharacters(String.valueOf(cache.getCompositeSize()));
+			writer.writeCharacters(String.valueOf(cache.getCompositeSize() + simulation));
 			writer.writeEndElement(); // close compositeSize tag
 			writer.writeStartElement("elementSize");
 			writer.writeCharacters(String.valueOf(cache.getElementSize()));
@@ -149,9 +166,9 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 				writer.writeEndElement();
 			}
 			writer.writeEndElement();
-		}		
+		}
 	}
-	
+
 	/**
 	 * Write cache details.
 	 * 
@@ -164,17 +181,38 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheDetails(XMLStreamWriter writer, Cache cache, IWebRequest request) throws XMLStreamException {
+	private void writeCacheDetails(XMLStreamWriter writer, Cache cache, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
 		Object[] compositeKeys = cache.getCompositeKeys();
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0) {
+			if (compositeKeys == null) {
+				compositeKeys = new Object[0];
+			}
+			Object[] sim = new Object[simulation + compositeKeys.length];
+			System.arraycopy(compositeKeys, 0, sim, 0, compositeKeys.length);
+			for (int i = compositeKeys.length; i < simulation + compositeKeys.length; i++) {
+				sim[i] = new CacheKey("sim " + i);
+			}
+			compositeKeys = sim;
+		}
 		if (compositeKeys == null) {
+			writer.writeAttribute("size", "0");
 			writer.writeEndElement();
 			return;
 		}
-		for (Object obj : compositeKeys) {
+		Paging paging = this.writePagingAttributes(writer, request, compositeKeys.length, "comp_"); // no prefix
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Object obj = compositeKeys[i];
 			CacheKey cacheKey = (CacheKey) obj;
 			try {
 				CacheComposite cacheComposite = cache.getComposite(cacheKey.getCacheId());
+				if (cacheComposite == null && simulation > 0) {
+					cacheComposite = new CacheComposite();
+				}
 				if (cacheComposite != null) {
 					writeCacheComposite(writer, cache, cacheKey, cacheComposite, request);
 				}
@@ -200,9 +238,10 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite,
-			IWebRequest request) throws XMLStreamException {
+	private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite, IWebRequest request)
+			throws Exception {
 		String compositeParam = request.getParameter("composite");
+		int simulation = this.getParameterInt(request, "sim", 0);
 		writer.writeStartElement("composite");
 		writer.writeStartElement("key");
 		writer.writeCharacters(cacheKey.getCacheId());
@@ -211,7 +250,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeCharacters(cacheComposite.getCacheState().toString());
 		writer.writeEndElement(); // end of state
 		writer.writeStartElement("size");
-		writer.writeCharacters(String.valueOf(cacheComposite.getSize()));
+		writer.writeCharacters(String.valueOf(cacheComposite.getSize() + simulation));
 		writer.writeEndElement(); // end of size
 		writer.writeStartElement("loadingTimeout");
 		writer.writeCharacters(String.valueOf(cacheComposite.getLoadingTimeout()));
@@ -234,19 +273,40 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		Map<String, String> compositeHeaderHeader = cacheComposite.getHeader();
 		this.writeHeaderMap(writer, compositeHeaderHeader);
 		writer.writeEndElement(); // end of header
-		if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
-			// get all messages
-			CacheId cacheId = new CacheId(cacheKey.getCacheId());
-			for (int i = 0; i < cacheComposite.getSize(); i++) {
-				cacheId.setSequenceNr(String.valueOf(i + 1));
+		if (simulation > 0 && compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
+			writer.writeStartElement("messages");
+			Paging paging = this.writePagingAttributes(writer, request, simulation, "msg_"); // use msg prefix
+			// String showSessionsParameter = request.getParameter("showsessions");
+			int startIndex = paging.getStartIndex();
+			int endIndex = paging.getEndIndex();
+			for (int i = startIndex; i < endIndex; i++) {
 				writer.writeStartElement("message");
-				try {
-					CacheMessage cacheMessage = cache.getMessage(cacheId.getFullCacheId());
-					writeCacheMessage(writer, cacheMessage);
-				} catch (CacheException e) {
-				}
+				CacheMessage cacheMessage = new CacheMessage("sim " + i, null);
+				cacheMessage.setCacheId("sim " + i);
+				writeCacheMessage(writer, cacheMessage);
 				writer.writeEndElement();
-
+			}
+			writer.writeEndElement(); // end of messages
+		} else {
+			if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
+				writer.writeStartElement("messages");
+				Paging paging = this.writePagingAttributes(writer, request, cacheComposite.getSize(), "msg_"); // use msg prefix
+				// String showSessionsParameter = request.getParameter("showsessions");
+				int startIndex = paging.getStartIndex();
+				int endIndex = paging.getEndIndex();
+				// get all messages
+				CacheId cacheId = new CacheId(cacheKey.getCacheId());
+				for (int i = startIndex; i < endIndex; i++) {
+					cacheId.setSequenceNr(String.valueOf(i + 1));
+					writer.writeStartElement("message");
+					try {
+						CacheMessage cacheMessage = cache.getMessage(cacheId.getFullCacheId());
+						writeCacheMessage(writer, cacheMessage);
+					} catch (CacheException e) {
+					}
+					writer.writeEndElement();
+				}
+				writer.writeEndElement(); // end of messages
 			}
 		}
 		writer.writeEndElement(); // end of composite

@@ -16,8 +16,12 @@
            <xsl:call-template name="pageArea">
              <xsl:with-param name="title">List of test data</xsl:with-param>
              <xsl:with-param name="size" select="$test/@size"/>
+             <xsl:with-param name="currentSite" select="$test/@site"/>
              <xsl:with-param name="currentPage" select="$test/@page"/>
-             <xsl:with-param name="lastPage" select="$test/@last"/>
+             <xsl:with-param name="lastPage" select="$test/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$test/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$test/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$test/@pageSize"/>
            </xsl:call-template>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">

@@ -4,14 +4,24 @@
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
     <xsl:variable name="remoteNode" select="$head/query/param/@remoteNode"/>
+    <xsl:variable name="responders" select="$body/responders"/>    
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>&amp;page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
-           List of Listeners
+           <xsl:call-template name="pageArea">
+             <xsl:with-param name="title">List of Listeners</xsl:with-param>
+             <xsl:with-param name="size" select="$responders/@size"/>
+             <xsl:with-param name="currentSite" select="$responders/@site"/>
+             <xsl:with-param name="currentPage" select="$responders/@page"/>
+             <xsl:with-param name="lastPage" select="$responders/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$responders/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$responders/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$responders/@pageSize"/>
+           </xsl:call-template>        
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">

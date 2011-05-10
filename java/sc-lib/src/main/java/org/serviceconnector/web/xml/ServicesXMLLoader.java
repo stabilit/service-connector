@@ -31,6 +31,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SessionService;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.web.IWebRequest;
 
@@ -44,10 +45,23 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		writer.writeStartElement("services");
-		String serviceParameter = request.getParameter("service");
-		// String showSessionsParameter = request.getParameter("showsessions");
 		Service[] services = serviceRegistry.getServices();
-		for (Service service : services) {
+		String serviceParameter = request.getParameter("service");
+		int simulation = this.getParameterInt(request, "sim", 0);
+		if (simulation > 0) {
+			Service[] sim = new Service[simulation + services.length];
+			System.arraycopy(services, 0, sim, 0, services.length);
+			for (int i = services.length; i < simulation; i++) {
+				sim[i] = new SessionService("sim " + i);
+			}
+			services = sim;
+		}
+		Paging paging = this.writePagingAttributes(writer, request, services.length, "");
+		// String showSessionsParameter = request.getParameter("showsessions");
+		int startIndex = paging.getStartIndex();
+		int endIndex = paging.getEndIndex();
+		for (int i = startIndex; i < endIndex; i++) {
+			Service service = services[i];
 			writer.writeStartElement("service");
 			this.writeBean(writer, service);
 			if (service instanceof IPublishService) {

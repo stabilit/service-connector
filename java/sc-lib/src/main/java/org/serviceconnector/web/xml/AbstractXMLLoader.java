@@ -36,6 +36,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.conf.ListenerConfiguration;
@@ -65,6 +66,7 @@ import org.serviceconnector.web.WebSession;
 import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractXMLLoader.
  */
@@ -178,18 +180,18 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		// write url path
 		String url = request.getURL();
 		if (url != null) {
-		   int qPos = url.indexOf("?");
-		   if (qPos >= 0) {
-			   url = url.substring(0, qPos);
-		   }
-		   // check if ajax content call
-		   String id = request.getParameter("id");
-		   if (id != null) {
-			   url = "/" + id;
-		   }
-		   writer.writeStartElement("meta");
-		   writer.writeAttribute("path", url);
-		   writer.writeEndElement(); // close meta tag
+			int qPos = url.indexOf("?");
+			if (qPos >= 0) {
+				url = url.substring(0, qPos);
+			}
+			// check if ajax content call
+			String id = request.getParameter("id");
+			if (id != null) {
+				url = "/" + id;
+			}
+			writer.writeStartElement("meta");
+			writer.writeAttribute("path", url);
+			writer.writeEndElement(); // close meta tag
 		}
 		// write query string
 		writer.writeStartElement("meta");
@@ -606,15 +608,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	}
 
 	/**
-	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint
-	 * if no netty tcp endpoint is available
+	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint if no netty tcp endpoint is available
 	 * 
 	 * @param service
 	 *            the service
-	 * @param responder
-	 *            the responder
 	 * @return the sC mgmt client
 	 * @throws WebCommandException
+	 *             the web command exception
 	 */
 	protected SCClient connectClientToService(Service service) throws WebCommandException {
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
@@ -649,8 +649,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
-						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port
-								+ " failed", e);
+						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
 					}
 				}
 			}
@@ -671,5 +670,269 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the parameter int.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param name
+	 *            the name
+	 * @param defaultValue
+	 *            the default value
+	 * @return the parameter int
+	 */
+	protected int getParameterInt(IWebRequest request, String name, int defaultValue) {
+		int value = defaultValue;
+		try {
+			value = Integer.parseInt(request.getParameter(name));
+		} catch (Exception e) {
+		}
+		return value;
+	}
+
+	/**
+	 * Write paging attributes.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @param size
+	 *            the size
+	 * @return the paging
+	 * @throws Exception
+	 *             the exception
+	 */
+	protected Paging writePagingAttributes(XMLStreamWriter writer, IWebRequest request, int size, String prefix) throws Exception {
+		Paging paging = new Paging(size);
+		int page = this.getParameterInt(request, prefix + "page", 1);
+		int site = this.getParameterInt(request, prefix + "site", 1);
+		int lastPage = size / Constants.DEFAULT_WEB_PAGE_SIZE;
+		if (size % Constants.DEFAULT_WEB_PAGE_SIZE > 0) {
+			lastPage += 1;
+		}
+		int lastSite = lastPage / Constants.DEFAULT_WEB_SITE_SIZE;
+		if (lastPage % Constants.DEFAULT_WEB_SITE_SIZE > 0) {
+			lastSite += 1;
+		}
+		int pageSize = Constants.DEFAULT_WEB_PAGE_SIZE;
+		int siteSize = Constants.DEFAULT_WEB_SITE_SIZE;
+		// check if paging data is correct for given size, check range
+		if (lastPage < page || lastSite < site) {
+			page = 1;
+			site = 1;
+			lastPage = size / Constants.DEFAULT_WEB_PAGE_SIZE;
+			if (size % Constants.DEFAULT_WEB_PAGE_SIZE > 0) {
+				lastPage += 1;
+			}
+			lastSite = lastPage / Constants.DEFAULT_WEB_SITE_SIZE;
+			if (lastPage % Constants.DEFAULT_WEB_SITE_SIZE > 0) {
+				lastSite += 1;
+			}
+			pageSize = Constants.DEFAULT_WEB_PAGE_SIZE;
+			siteSize = Constants.DEFAULT_WEB_SITE_SIZE;
+		}
+		paging.setPage(page);
+		paging.setSite(site);
+		paging.setLastPage(lastPage);
+		paging.setLastSite(lastSite);
+		paging.setPageSize(pageSize);
+		paging.setSiteSize(siteSize);
+		writer.writeAttribute("size", String.valueOf(size));
+		writer.writeAttribute("site", String.valueOf(site));
+		writer.writeAttribute("page", String.valueOf(page));
+		writer.writeAttribute("lastPage", String.valueOf(lastPage));
+		writer.writeAttribute("lastSite", String.valueOf(lastSite));
+		writer.writeAttribute("pageSize", String.valueOf(pageSize));
+		writer.writeAttribute("siteSize", String.valueOf(siteSize));
+		return paging;
+	}
+
+	/**
+	 * The Class Paging for internal use only, holds paging data.
+	 */
+	protected class Paging {
+
+		/** The size. */
+		private int size;
+
+		/** The page. */
+		private int page;
+
+		/** The site. */
+		private int site;
+
+		/** The last page. */
+		private int lastPage;
+
+		/** The last site. */
+		private int lastSite;
+
+		/** The page size. */
+		private int pageSize;
+
+		/** The site size. */
+		private int siteSize;
+
+		/**
+		 * Instantiates a new paging.
+		 */
+		public Paging(int size) {
+			this.size = size;
+			this.page = 0;
+			this.site = 0;
+			this.lastPage = 0;
+			this.lastSite = 0;
+			this.pageSize = 0;
+			this.siteSize = 0;
+		}
+
+		public int getStartIndex() {
+			return (this.page - 1) * Constants.DEFAULT_WEB_PAGE_SIZE;
+		}
+
+		public int getEndIndex() {
+			int endIndex = this.getStartIndex() + Constants.DEFAULT_WEB_PAGE_SIZE;
+			if (endIndex > size) {
+				endIndex = size;
+			}
+			return endIndex;
+		}
+
+		/**
+		 * Gets the size.
+		 * 
+		 * @return the size
+		 */
+		public int getSize() {
+			return size;
+		}
+
+		/**
+		 * Sets the size.
+		 * 
+		 * @param size
+		 *            the new size
+		 */
+		public void setSize(int size) {
+			this.size = size;
+		}
+
+		/**
+		 * Gets the page.
+		 * 
+		 * @return the page
+		 */
+		public int getPage() {
+			return page;
+		}
+
+		/**
+		 * Sets the page.
+		 * 
+		 * @param page
+		 *            the new page
+		 */
+		public void setPage(int page) {
+			this.page = page;
+		}
+
+		/**
+		 * Gets the site.
+		 * 
+		 * @return the site
+		 */
+		public int getSite() {
+			return site;
+		}
+
+		/**
+		 * Sets the site.
+		 * 
+		 * @param site
+		 *            the new site
+		 */
+		public void setSite(int site) {
+			this.site = site;
+		}
+
+		/**
+		 * Gets the last page.
+		 * 
+		 * @return the last page
+		 */
+		public int getLastPage() {
+			return lastPage;
+		}
+
+		/**
+		 * Sets the last page.
+		 * 
+		 * @param lastPage
+		 *            the new last page
+		 */
+		public void setLastPage(int lastPage) {
+			this.lastPage = lastPage;
+		}
+
+		/**
+		 * Gets the last site.
+		 * 
+		 * @return the last site
+		 */
+		public int getLastSite() {
+			return lastSite;
+		}
+
+		/**
+		 * Sets the last site.
+		 * 
+		 * @param lastSite
+		 *            the new last site
+		 */
+		public void setLastSite(int lastSite) {
+			this.lastSite = lastSite;
+		}
+
+		/**
+		 * Gets the page size.
+		 * 
+		 * @return the page size
+		 */
+		public int getPageSize() {
+			return pageSize;
+		}
+
+		/**
+		 * Sets the page size.
+		 * 
+		 * @param pageSize
+		 *            the new page size
+		 */
+		public void setPageSize(int pageSize) {
+			this.pageSize = pageSize;
+		}
+
+		/**
+		 * Gets the site size.
+		 * 
+		 * @return the site size
+		 */
+		public int getSiteSize() {
+			return siteSize;
+		}
+
+		/**
+		 * Sets the site size.
+		 * 
+		 * @param siteSize
+		 *            the new site size
+		 */
+		public void setSiteSize(int siteSize) {
+			this.siteSize = siteSize;
+		}
+
 	}
 }

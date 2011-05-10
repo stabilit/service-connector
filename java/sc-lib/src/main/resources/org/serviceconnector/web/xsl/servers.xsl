@@ -5,14 +5,24 @@
     <xsl:variable name="head" select="/sc-web/head"/>
     <xsl:variable name="paramHost" select="/sc-web/head/query/param/@host"/>
     <xsl:variable name="paramPort" select="/sc-web/head/query/param/@port"/>
+    <xsl:variable name="servers" select="$body/servers"/>    
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'servers', 'host=<xsl:value-of select="$paramHost"/>&amp;port=<xsl:value-of select="$paramPort"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'servers', 'host=<xsl:value-of select="$paramHost"/>&amp;port=<xsl:value-of select="$paramPort"/>&amp;page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
-           List of Servers
+           <xsl:call-template name="pageArea">
+             <xsl:with-param name="title">List of Servers</xsl:with-param>
+             <xsl:with-param name="size" select="$servers/@size"/>
+             <xsl:with-param name="currentSite" select="$servers/@site"/>
+             <xsl:with-param name="currentPage" select="$servers/@page"/>
+             <xsl:with-param name="lastPage" select="$servers/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$servers/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$servers/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$servers/@pageSize"/>
+           </xsl:call-template>        
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
