@@ -33,7 +33,6 @@ import org.serviceconnector.web.xml.ServersXMLLoader;
 import org.serviceconnector.web.xml.ServicesXMLLoader;
 import org.serviceconnector.web.xml.SessionsXMLLoader;
 import org.serviceconnector.web.xml.SubscriptionsXMLLoader;
-import org.serviceconnector.web.xml.TestXMLLoader;
 import org.serviceconnector.web.xml.TimerXMLLoader;
 
 /**
@@ -80,8 +79,6 @@ public class XMLLoaderFactory {
 			return new MaintenanceXMLLoader();
 		} else if (url.equals("/dump")) {
 			return new DumpXMLLoader();
-		} else if (url.equals("/test")) {
-			return new TestXMLLoader();
 		} else if (url.equals("/ajax/resource")) {
 			return new AjaxResourceXMLLoader();
 		} else if (url.equals("/ajax/timer")) {
@@ -92,9 +89,7 @@ public class XMLLoaderFactory {
 			return new AjaxContentXMLLoader();
 		} else if (url.equals("/ajax/maintenance")) {
 			return new AjaxMaintenanceXMLLoader();
-		} else if (url.equals("/ajax/test")) {
-			return new TestXMLLoader();
-		} else {
+	} else {
 			return new DefaultXMLLoader();
 		}
 	}
