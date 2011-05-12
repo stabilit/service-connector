@@ -179,7 +179,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 					SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE,
 					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);

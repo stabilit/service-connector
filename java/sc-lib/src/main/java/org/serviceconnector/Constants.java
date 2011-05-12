@@ -380,6 +380,8 @@ public final class Constants {
 	public static final int MAX_PORT_VALUE = 65535; // 0xFFFF
 	/** The Constant MIN_OTI_VALUE. */
 	public static final int MIN_OTI_VALUE_CLN = 1000;
+	/** The Constant MIN_OTI_VALUE. */
+	public static final int MIN_OTI_VALUE_CSC = 300;
 	/** The Constant MIN_OTI_VALUE_SRV. */
 	public static final int MIN_OTI_VALUE_SRV = NUMBER_100;
 	/** The Constant MAX_OTI_VALUE. */
