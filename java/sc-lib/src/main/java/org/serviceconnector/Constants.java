@@ -97,8 +97,6 @@ public final class Constants {
 	public static final String LOGS_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
 	/** The SC logs file extension. */
 	public static final String LOGS_FILE_EXTENSION = ".zip";
-	/** The Constant IPV6_LOOPBACK_NIC. */
-	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 	/** FILE_LIST_DELIMITER, separates file names in file list SCFileService. */
 	public static final String FILE_LIST_DELIMITER = "\\|";
 	/** The Constant LINE_BREAK_SIGN. */

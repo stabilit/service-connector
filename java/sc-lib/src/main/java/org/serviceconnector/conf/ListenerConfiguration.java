@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
@@ -99,8 +100,8 @@ public class ListenerConfiguration {
 				for (NetworkInterface netint : Collections.list(nets)) {
 					Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 					for (InetAddress inetAddress : Collections.list(inetAdresses)) {
-						if (inetAddress.getHostAddress().equals(Constants.IPV6_LOOPBACK_NIC)) {
-							// ignore IPV6_LOOPBACK_NIC, bind not possible on this NIC
+						if (inetAddress instanceof Inet6Address) {
+							// ignore IPV6 addresses, bind not possible on this NIC
 							continue;
 						}
 						networkInterfaces.add(inetAddress.getHostAddress());
@@ -197,11 +198,14 @@ public class ListenerConfiguration {
 		writer.writeAttribute("name", this.name);
 		writer.writeAttribute("type", this.connectionType);
 		writer.writeElement("interfaces", this.networkInterfaces.toString());
-		if (username != null) writer.writeElement("username", this.username);
-		if (password != null) writer.writeElement("password", this.password);
-		if (remoteNodeConfiguration != null) this.remoteNodeConfiguration.dump(writer);
+		if (username != null)
+			writer.writeElement("username", this.username);
+		if (password != null)
+			writer.writeElement("password", this.password);
+		if (remoteNodeConfiguration != null)
+			this.remoteNodeConfiguration.dump(writer);
 	}
-	
+
 	/**
 	 * Gets the communicator name.
 	 * 
