@@ -13,8 +13,6 @@
 		<skipTests>true</skipTests>
 	</properties>
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>www.stabilit.ch/bugzilla</url>
 	</issueManagement>
 	<organization>
 		<name>STABILIT Informatik AG</name>

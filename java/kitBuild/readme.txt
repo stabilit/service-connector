@@ -29,6 +29,7 @@ Service Connector - open source messaging middleware
   Java 1.6.18 or later
   Apache 2.0 or later (on node running file services)
   PHP 4.0 or later (on node running file services)
+  Tomcat 6.0 or later (for services running as servlet)
 
 
  Installation and verification:
