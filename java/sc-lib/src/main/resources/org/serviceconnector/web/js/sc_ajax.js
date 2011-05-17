@@ -123,7 +123,7 @@ function resetTranslet(sid) {
 
 function changeLogLevel(sid, log, obj) {
 	var selIndex = obj.selectedIndex;
-	var level = obj.options[selIndex].value;
+	var level = obj.options[selIndex].text;
 	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=changeLogLevel&log=' + log + '&level=' + level);	
 }
 

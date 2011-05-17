@@ -45,8 +45,8 @@ import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.xml.IXMLLoader;
 
 /**
- * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
- * model and the view is built using xsl transformation.
+ * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based model and the view is built using
+ * xsl transformation.
  * 
  * @author JTraber
  */
@@ -70,6 +70,7 @@ public class WebCommand {
 			if (is == null) {
 				throw new NotFoundException(url);
 			}
+			response.setContentType(getResourceType(url));
 			dumpStream(is, responseOutputStream);
 			return;
 		}
@@ -215,6 +216,35 @@ public class WebCommand {
 		}
 		if (isScript(url)) {
 			return path + "/js" + url;
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the resource type
+	 * 
+	 * @param url
+	 *            the url
+	 * @return the resource type
+	 */
+	public String getResourceType(String url) {
+		if (isCSS(url)) {
+			return "text/css";
+		}
+		if (isImage(url)) {
+			if (url.endsWith(".png")) {
+				return "image/png";
+			}
+			if (url.endsWith(".jpg")) {
+				return "image/jpg";
+			}
+			if (url.endsWith(".gif")) {
+				return "image/gif";
+			}
+			return "image/*";
+		}
+		if (isScript(url)) {
+			return "text/javascript";
 		}
 		return null;
 	}
