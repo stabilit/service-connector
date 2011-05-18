@@ -3,8 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-web</artifactId>
+	<name>sc-web</name>
 	<version>all</version>
-	<description>sc-web</description>
+	<description>Additioal SC library for integration with Apache Tomcat</description>
 	<url>http://www.stabilit.ch</url>
 	<dependencies>
 		<dependency>

@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>service-connector</name>
+	<description>Service Connector runnable</description>
 	<url>http://maven.apache.org</url>
 
 	<reporting>
@@ -20,8 +21,6 @@
 		<skipTests>true</skipTests>
 	</properties>
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>www.stabilit.ch/bugzilla</url>
 	</issueManagement>
 	<organization>
 		<name>STABILIT Informatik AG</name>

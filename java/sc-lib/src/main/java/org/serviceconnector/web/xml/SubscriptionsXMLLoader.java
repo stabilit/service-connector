@@ -30,7 +30,6 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
-import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.web.IWebRequest;
 
 /**

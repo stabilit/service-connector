@@ -5,12 +5,17 @@
 	<artifactId>demo-client</artifactId>
 	<version>0.0.1</version>
 	<name>demo-client</name>
-	<description>sc demo client for verification of the installation</description>
+	<description>SC demo client for verification of the installation</description>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 		<skipTests>true</skipTests>
 	</properties>
+	<url>http://maven.apache.org</url>
+	<organization>
+		<name>STABILIT Informatik AG</name>
+		<url>www.stabilit.ch</url>
+	</organization>
 	<build>
 		<plugins>
 			<plugin>

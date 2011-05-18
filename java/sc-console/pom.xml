@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>sc-console</name>
+	<description>Management console to control SC from the command line</description>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -17,8 +18,6 @@
 	</properties>
 
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>www.stabilit.ch/bugzilla</url>
 	</issueManagement>
 	<organization>
 		<name>STABILIT Informatik AG</name>

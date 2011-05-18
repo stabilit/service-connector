@@ -5,18 +5,18 @@ Service Connector - open source messaging middleware
  --------------
  sc-bin_V9.9-999.zip - kit containing only binaries 
  --/bin				(binaries a scripts to manage sc)
-   /bin/unix		(script to run sc as deamon on unix/linux. see the readme.txt)
-   /bin/win32		(script and runables to run sc as Windows service on win32 platform)
-   /bin/win64  	    (script and runables to run sc as Windows service on win64 platform)
+   /bin/unix	(script to run sc as deamon on unix/linux. see the readme.txt)
+   /bin/win32	(script and runables to run sc as Windows service on win32 platform)
+   /bin/win64 (script and runables to run sc as Windows service on win64 platform)
    /conf			(sc configuration files)
    /doc				(sc operation guide)
-   /cache			(sc writes temporary cache-files here. See also sc property cache.diskPath)
+   /cache			(sc writes temporary cache-files here. See property cache.diskPath)
    /logs			(sc writes all log and dump files here. See log4j properties)
    
  sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
  --/doc				(scmp documentation and java docs)
-   /examples		(additional scripts examples and file service configurations)
-   /sources			(sources of sc-lib and the demo application)
+   /examples	(additional scripts examples and file service configurations)
+   /sources		(sources of sc-lib and the demo application)
  
  For complete source see: 
  		http://www.stabilit.ch/svn/repos/sc (latest branch, restricted access)
@@ -53,7 +53,7 @@ Service Connector - open source messaging middleware
  If you made changes to the SC configurations, then preserve these files before upgrade. 
  The upgrade is simply done by extracting the kit file into a directory of the 
  previous installation. 
- For compatibility issues see SC_0_SCMP_E.PDF Chapter 9.30 (scVersion)
+ For compatibility rules see SC_0_SCMP_E.PDF Chapter 9.30 (scVersion) included in sc-src_V9.9-999.zip
 
  Software removal
  ----------------
@@ -69,8 +69,6 @@ Service Connector - open source messaging middleware
  Release notes:
  --------------
 	See doc/Open_Issues.xls
-	(later www.stabilit.ch/bugzilla will contain release notes)
-
 
  Special configurations:
  -----------------------

@@ -18,7 +18,12 @@
 			<type>jar</type>
 		</dependency>
 	</dependencies>
-	<description>sc demo server for verification of the installation</description>
+	<description>SC demo server for verification of the installation</description>
+	<url>http://maven.apache.org</url>
+	<organization>
+		<name>STABILIT Informatik AG</name>
+		<url>www.stabilit.ch</url>
+	</organization>
 	<build>
 		<plugins>
 			<plugin>

@@ -5,7 +5,7 @@
 	<artifactId>sc-lib</artifactId>
 	<name>sc-lib</name>
 	<version>all</version>
-	<description>sc-lib</description>
+	<description>SC library</description>
 	<url>http://www.stabilit.ch</url>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>

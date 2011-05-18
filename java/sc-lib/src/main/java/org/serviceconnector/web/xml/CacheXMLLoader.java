@@ -32,10 +32,8 @@ import org.serviceconnector.cache.CacheManager.CacheLoadingSession;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.server.Server;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
-import org.serviceconnector.web.xml.AbstractXMLLoader.Paging;
 
 /**
  * The Class CacheXMLLoader.

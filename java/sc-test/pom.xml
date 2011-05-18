@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>sc-test</name>
+	<description>Test project for SC</description>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -16,6 +17,10 @@
 		<skipTests>true</skipTests>
 	</properties>
 
+	<organization>
+		<name>STABILIT Informatik AG</name>
+		<url>www.stabilit.ch</url>
+	</organization>
 	<build>
 		<plugins>
 			<plugin>
