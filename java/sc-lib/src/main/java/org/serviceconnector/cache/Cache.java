@@ -75,13 +75,15 @@ public class Cache {
 	 * 
 	 * @return the composite keys
 	 */
-	public synchronized Object[] getCompositeKeys() {
+	public Object[] getCompositeKeys() {
 		CacheCompositeRegistry compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
 		if (compositeRegistry == null) {
 			return null;
 		}
-		Object[] keys = compositeRegistry.keySet().toArray();
-		return keys;
+		synchronized (compositeRegistry) {
+		    Object[] keys = compositeRegistry.keySet().toArray();
+		    return keys;
+		}
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class Cache {
 	 * 
 	 * @return the composite size
 	 */
-	public synchronized int getCompositeSize() {
+	public int getCompositeSize() {
 		CacheCompositeRegistry compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
 		if (compositeRegistry == null) {
 			return 0;
@@ -124,7 +126,7 @@ public class Cache {
 	 * @throws CacheException
 	 *             the cache exception
 	 */
-	public synchronized CacheComposite getComposite(CacheId cacheId) throws CacheException {
+	public CacheComposite getComposite(CacheId cacheId) throws CacheException {
 		if (cacheId == null) {
 			throw new CacheException("no cacheId");
 		}
@@ -140,6 +142,31 @@ public class Cache {
 		if (value != null && value instanceof CacheComposite) {
 			return (CacheComposite) value;
 		}
+		return null;
+	}
+
+	/**
+	 * Gets the composite or starts loading if the composite does not exist, see {@link Cache#getComposite(String)}.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @return the composite instance of null
+	 * @throws CacheException
+	 *             the cache exception
+	 */
+	public synchronized CacheComposite getCompositeOrStartLoading(CacheId cacheId, SCMPMessage message) throws CacheException {
+		if (cacheId == null) {
+			throw new CacheException("no cacheId");
+		}
+		CacheComposite cacheComposite = this.getComposite(cacheId);
+		if (cacheComposite != null) {
+			return cacheComposite;
+		}
+		CacheLogger.trace("cache does not exist, start loading from server, request sessionId=" + message.getSessionId());
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		// cache does not exist, this is the first request for it
+		this.startLoading(message, oti);
+		CacheLogger.trace("cache does not exist, start loading done, request sessionId=" + message.getSessionId());
 		return null;
 	}
 
