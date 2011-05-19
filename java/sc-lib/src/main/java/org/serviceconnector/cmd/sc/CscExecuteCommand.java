@@ -316,6 +316,13 @@ public class CscExecuteCommand extends CommandAdapter {
 					scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 					// scmpReply.setBody(message.getBody());
 					response.setSCMP(scmpReply);
+					// schedule session timeout
+					if (cascaded == false) {
+						String sessionId = message.getSessionId();
+						Session session = this.sessionRegistry.getSession(sessionId);
+						this.sessionRegistry.scheduleSessionTimeout(session);
+						session.setPendingRequest(false);
+					}				
 					responderCallback.responseCallback(request, response);
 					return true;
 				}
