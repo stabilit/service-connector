@@ -84,7 +84,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
-			SessionLogger.error("session " + sessionId + "has pending request");
+			SessionLogger.error("session " + sessionId + " has pending request");
 		}
 		session.setPendingRequest(true);
 		// cancel session timeout
@@ -122,6 +122,7 @@ public class CscExecuteCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of csc execute, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					session.setPendingRequest(false);
 					// only one loop outstanding - don't continue throw current exception

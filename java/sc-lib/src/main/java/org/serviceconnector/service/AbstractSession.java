@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
@@ -42,6 +44,8 @@ public abstract class AbstractSession {
 	private TimeoutWrapper timeouterTask;
 	/** The service. */
 	private Service service;
+
+	private Date creationTime;
 
 	/** The cascaded, indicates if session has been created by a cascaded client or a real client. */
 	private boolean cascaded;
@@ -76,6 +80,7 @@ public abstract class AbstractSession {
 		this.ipAddressList = ipAddressList;
 		this.sessionInfo = sessionInfo;
 		this.cascaded = cascaded;
+		this.creationTime = Calendar.getInstance().getTime();
 	}
 
 	/**
@@ -182,6 +187,15 @@ public abstract class AbstractSession {
 	}
 
 	/**
+	 * Gets the creation time.
+	 * 
+	 * @return the creation time
+	 */
+	public Date getCreationTime() {
+		return this.creationTime;
+	}
+
+	/**
 	 * Checks if is cascaded session. Indicates if session has been created by a cascaded client or a real client.
 	 * 
 	 * @return true, if is cascaded
@@ -199,7 +213,7 @@ public abstract class AbstractSession {
 	public String toString() {
 		return id + ":" + server;
 	}
-	
+
 	/**
 	 * Dump the session into the xml writer.
 	 * 

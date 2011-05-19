@@ -19,9 +19,11 @@ package org.serviceconnector.service;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -120,7 +122,10 @@ public class FileSession extends Session {
 		writer.writeAttribute("isCascaded", this.isCascaded());
 		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
 		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
-		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));;
+		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
+		if (timeouter != null) {
+			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
+		}
 		writer.writeAttribute("isStreaming", this.isStreaming());
 		writer.writeAttribute("path", this.getPath());
 		writer.writeAttribute("uploadScript", this.uploadScript);

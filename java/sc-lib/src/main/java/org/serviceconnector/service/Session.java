@@ -16,10 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -97,7 +99,7 @@ public class Session extends AbstractSession {
 	public boolean hasPendingRequest() {
 		return this.pendingRequest;
 	}
-	
+
 	/**
 	 * Dump the session into the xml writer.
 	 * 
@@ -113,7 +115,10 @@ public class Session extends AbstractSession {
 		writer.writeAttribute("isCascaded", this.isCascaded());
 		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
 		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
-		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));
+		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
+		if (timeouter != null) {
+			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
+		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
 		this.getService().dump(writer);
 		writer.writeEndElement(); // session

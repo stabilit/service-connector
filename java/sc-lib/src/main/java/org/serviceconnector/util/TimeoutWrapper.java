@@ -16,12 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class TimeoutWrapper. Wraps various Timeouts. An instance of TimeoutWrapper might be hand over to a Executer which runs the
  * Wrapper at the timeout.
  */
 public class TimeoutWrapper implements Runnable {
-
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(TimeoutWrapper.class);
 	/** The target. */
 	private ITimeout target;
 
@@ -38,7 +41,11 @@ public class TimeoutWrapper implements Runnable {
 	/** Time run out, call target. */
 	@Override
 	public void run() {
-		// call target
-		this.target.timeout();
+//		try {
+			// call target
+			this.target.timeout();
+//		} catch (Exception e) {
+//			LOGGER.error("running timeout procedure failed", e);
+//		}
 	}
 }

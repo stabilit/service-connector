@@ -122,13 +122,13 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
-				LOGGER.debug("NoFreeServerException caught in wait mec of subscribe");
+				LOGGER.debug("NoFreeServerException caught in wait mec of subscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
 			} catch (ConnectionPoolBusyException ex) {
-				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of subscribe");
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of subscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));

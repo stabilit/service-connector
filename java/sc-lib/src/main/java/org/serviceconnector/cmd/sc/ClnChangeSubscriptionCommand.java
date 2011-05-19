@@ -103,6 +103,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of change subscription, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));

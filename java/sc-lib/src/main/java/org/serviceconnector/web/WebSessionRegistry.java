@@ -93,7 +93,6 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 			// no scheduling of session timeout
 			return;
 		}
-		SessionLogger.trace("schedule web session using timeout(sec)=" + session.getSessionTimeoutSeconds());
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
 		// sets up session timeout
@@ -120,7 +119,6 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 			// no session timeout has been set up for this session
 			return;
 		}
-		SessionLogger.trace("cancel web session timeout " + session.getId());
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
 			SessionLogger.error("cancel of web session timeout failed :" + session.getId() + " delay millis: "
@@ -172,7 +170,6 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 		@Override
 		public void timeout() {
 			WebSessionRegistry.this.removeSession(session);
-			SessionLogger.logTimeoutSession(session.getId());
 		}
 
 		/** {@inheritDoc} */

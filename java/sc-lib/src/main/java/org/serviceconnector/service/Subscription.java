@@ -16,9 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.serviceconnector.server.IStatefulServer;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -120,7 +122,10 @@ public class Subscription extends AbstractSession {
 		writer.writeAttribute("mask", this.getMask().getValue());
 		writer.writeAttribute("noDataInterval", this.noDataInterval);
 		writer.writeAttribute("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
-		writer.writeAttribute("timeout", this.getTimeout().getDelay(TimeUnit.SECONDS));
+		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
+		if (timeouter != null) {
+			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
+		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
 		this.getService().dump(writer);
 		writer.writeEndElement(); // subscription

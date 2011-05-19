@@ -147,6 +147,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of csc unsubscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
@@ -155,12 +156,6 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-			} catch (Exception e) {
-				if (cascadedSCMask == null) {
-					// free server from subscription if cascaded SC unsubscribes himself
-					server.removeSession(cascSubscription);
-				}
-				throw e;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);

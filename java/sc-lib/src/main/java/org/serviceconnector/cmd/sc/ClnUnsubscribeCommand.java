@@ -103,6 +103,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of unsubscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					server.abortSession(subscription, "unsubscribe subscription failed, busy connection pool to server");
@@ -112,10 +113,6 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-			} catch (Exception e) {
-				// free server from subscription
-				server.removeSession(subscription);
-				throw e;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);

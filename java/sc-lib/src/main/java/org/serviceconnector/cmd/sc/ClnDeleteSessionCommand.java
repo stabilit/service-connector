@@ -127,6 +127,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of delete session, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");

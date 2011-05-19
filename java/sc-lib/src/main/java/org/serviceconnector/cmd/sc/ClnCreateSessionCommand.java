@@ -77,6 +77,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+		
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -144,13 +145,13 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
-				LOGGER.debug("NoFreeServerException caught in wait mec of create session");
+				LOGGER.debug("NoFreeServerException caught in wait mec of create session, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
 			} catch (ConnectionPoolBusyException ex) {
-				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of create session");
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of create session, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));

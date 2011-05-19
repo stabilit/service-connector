@@ -58,6 +58,11 @@ public class EchoCommand extends CommandAdapter {
 		// check service is present
 		Service abstractService = this.getService(serviceName);
 
+		// enhance ipAddressList
+		String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+		
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
