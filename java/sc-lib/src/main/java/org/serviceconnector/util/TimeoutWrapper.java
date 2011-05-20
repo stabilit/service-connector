@@ -41,11 +41,11 @@ public class TimeoutWrapper implements Runnable {
 	/** Time run out, call target. */
 	@Override
 	public void run() {
-//		try {
+		try {
 			// call target
 			this.target.timeout();
-//		} catch (Exception e) {
-//			LOGGER.error("running timeout procedure failed", e);
-//		}
+		} catch (Exception e) {
+			LOGGER.error("running timeout procedure failed", e);
+		}
 	}
 }
