@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -480,7 +481,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						continue;
 					}
 					writer.writeStartElement(name);
-					writer.writeCData(value.toString());
+					if (value instanceof Date) {
+					    writer.writeCData(DateTimeUtility.getDateTimeAsString((Date) value));
+					} else {
+					    writer.writeCData(value.toString());					
+					}
 					writer.writeEndElement();
 				} else {
 					writer.writeStartElement(name);

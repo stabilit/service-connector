@@ -33,6 +33,7 @@
             <th class="sc_table">IP Adresslist</th>
             <th class="sc_table">Session Timeout (s)</th>
             <th class="sc_table">Server</th>
+            <th class="sc_table">Creation Time</th>
           </tr>
           <xsl:if test="not($body/sessions/session)">
             <tr class="sc_table_even"><td colspan="4" class="sc_table">no sessions</td></tr>
@@ -86,6 +87,7 @@
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>
 	    <td class="{$class}"><xsl:value-of select="sessionTimeoutSeconds"/></td>
         <td class="{$class}"><a class="sc_table" href="sessions{$urlencoded}?server={server/serverKey}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
+	    <td class="{$class}"><xsl:value-of select="creationTime"/></td>
 	</xsl:template>
 	<xsl:template name="session_details">
 	  <td colspan="7">
