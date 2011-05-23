@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.console.SCConsole;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.IntegrationSuperTest;
@@ -475,7 +476,6 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 * Description: start console with "-h localhost -p 7000 state?serviceName=something" parameters<br>
 	 * (HTTP port)<br>
 	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
-	 * .
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -781,6 +781,39 @@ public class SCConsoleTest extends IntegrationSuperTest {
 			Assert.assertEquals(0, e.status);
 		}
 	}
+	
+	/**
+	 * Description: start console with "-config sc0.properties kill<br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 * Post-condition: SC will be killed!.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void t100_kill_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-config", TestConstants.SC01Properties, Constants.CC_CMD_KILL });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+	
+	/**
+	 * Description: start console with "-config abc kill<br>
+	 * Expectation: Fails with invalid configuration file exception
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test(expected=SCMPValidatorException.class)
+	public void t101_kill_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-config", "abc", Constants.CC_CMD_KILL });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+	
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 scVersion<br>
@@ -790,7 +823,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 *             the exception
 	 */
 	@Test
-	public void t100_scVersion_command() throws Exception {
+	public void t103_scVersion_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SC_VERSION });
@@ -807,7 +840,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 *             the exception
 	 */
 	@Test
-	public void t101_serviceConfiguration_command() throws Exception {
+	public void t104_serviceConfiguration_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SERVICE_CONF + "?serviceName=" + TestConstants.sesServiceName1 });
@@ -824,7 +857,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 *             the exception
 	 */
 	@Test
-	public void t102_serviceConfiguration_command() throws Exception {
+	public void t105_serviceConfiguration_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC0_TCP),
 					Constants.CC_CMD_SERVICE_CONF + "?serviceName=" + TestConstants.sesServiceName1Casc });
