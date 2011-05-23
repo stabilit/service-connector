@@ -167,4 +167,16 @@ public final class SessionLogger {
 			SESSION_LOGGGER.error(message);
 		}
 	}
+	
+	/**
+	 * Warn.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public static void warn(String message) {
+		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
+			SESSION_LOGGGER.warn(message);
+		}
+	}
 }
