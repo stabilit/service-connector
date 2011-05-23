@@ -155,7 +155,9 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The CACHE_LOADING. */
 	CACHE_LOADING(609, "Cache Loading. Retry later"),
 	/** The CACHE_MANAGER_ERROR. */
-	CACHE_MANAGER_ERROR(610, "Cache Manager error.");
+	CACHE_MANAGER_ERROR(610, "Cache Manager error."),
+	/** The CACHE_MANAGER_ERROR. */
+	PARALLEL_REQUEST(611, "Parallel client request rejected.");
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
