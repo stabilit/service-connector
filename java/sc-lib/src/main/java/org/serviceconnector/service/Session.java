@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +40,8 @@ public class Session extends AbstractSession {
 	private double sessionTimeoutSeconds;
 	/** The pending request. */
 	private boolean pendingRequest;
+	/** The last execute. */
+	private Date lastExecuteTime;
 
 	/**
 	 * Instantiates a new session.
@@ -101,6 +105,22 @@ public class Session extends AbstractSession {
 	}
 
 	/**
+	 * Gets the last execute time.
+	 * 
+	 * @return the last execute time
+	 */
+	public Date getLastExecuteTime() {
+		return this.lastExecuteTime;
+	}
+	
+	/**
+	 * Reset execute time.
+	 */
+	public void resetExecuteTime() {
+		this.lastExecuteTime = Calendar.getInstance().getTime();
+	}
+
+	/**
 	 * Dump the session into the xml writer.
 	 * 
 	 * @param writer
@@ -120,6 +140,10 @@ public class Session extends AbstractSession {
 			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
 		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
+		writer.writeElement("creationTime", this.getCreationTime().toString());
+		if(this.lastExecuteTime != null) {
+			writer.writeElement("lastExecuteTime", this.getLastExecuteTime().toString());
+		}		
 		this.getService().dump(writer);
 		writer.writeEndElement(); // session
 	}

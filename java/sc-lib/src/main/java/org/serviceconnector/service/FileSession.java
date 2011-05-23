@@ -32,23 +32,17 @@ import org.serviceconnector.util.XMLDumpWriter;
 public class FileSession extends Session {
 
 	/** The streaming. */
-	private boolean streaming;
-	
+	private boolean streaming;	
 	/** The path. */
-	private String path;
-	
+	private String path;	
 	/** The http url connection. */
-	private HttpURLConnection httpURLConnection;
-	
+	private HttpURLConnection httpURLConnection;	
 	/** The is. */
-	private InputStream is;
-	
+	private InputStream is;	
 	/** The out. */
-	private OutputStream out;
-	
+	private OutputStream out;	
 	/** The upload script. */
-	private String uploadScript;
-	
+	private String uploadScript;	
 	/** The get file list script. */
 	private String getFileListScript;
 
@@ -131,6 +125,7 @@ public class FileSession extends Session {
 		writer.writeAttribute("uploadScript", this.uploadScript);
 		writer.writeAttribute("getFileListScript", this.getFileListScript);
 		writer.writeElement("ipAddressList", this.getIpAddressList());
+		writer.writeElement("creationTime", this.getCreationTime().toString());
 		this.getService().dump(writer);
 		writer.writeEndElement(); // file-session
 	}

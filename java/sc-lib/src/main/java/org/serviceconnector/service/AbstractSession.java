@@ -44,7 +44,7 @@ public abstract class AbstractSession {
 	private TimeoutWrapper timeouterTask;
 	/** The service. */
 	private Service service;
-
+	/** The creation time. */
 	private Date creationTime;
 
 	/** The cascaded, indicates if session has been created by a cascaded client or a real client. */

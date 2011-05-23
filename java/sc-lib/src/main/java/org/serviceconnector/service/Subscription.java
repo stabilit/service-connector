@@ -127,6 +127,7 @@ public class Subscription extends AbstractSession {
 			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
 		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
+		writer.writeElement("creationTime", this.getCreationTime().toString());
 		this.getService().dump(writer);
 		writer.writeEndElement(); // subscription
 	}
