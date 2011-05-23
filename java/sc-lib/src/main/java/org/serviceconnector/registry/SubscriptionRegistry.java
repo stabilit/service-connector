@@ -174,8 +174,9 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
 				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		SubscriptionLogger.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
-				+ subscription.getId());
+		SubscriptionLogger.trace("schedule subscription " + subscription.getId() + " timeout in milliseconds "
+				+ (long) subscription.getSubscriptionTimeoutMillis() + " delay time in seconds "
+				+ timeout.getDelay(TimeUnit.SECONDS));
 	}
 
 	/**

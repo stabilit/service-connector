@@ -147,7 +147,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
 				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
 		SessionLogger.trace("schedule session " + session.getId() + " timeout in seconds "
-				+ (long) session.getSessionTimeoutSeconds() + " delay time in seconds" + timeout.getDelay(TimeUnit.SECONDS));
+				+ (long) session.getSessionTimeoutSeconds() + " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
 	}
@@ -181,6 +181,10 @@ public class SessionRegistry extends Registry<String, Session> {
 		this.sessionScheduler.purge();
 		// important to set timeouter null - rescheduling of same instance not possible
 		session.setTimeout(null);
+	}
+	
+	public void resetSessionTimeout(Session session, int newTimeoutInSeconds) {
+		this.cancelSessionTimeout(session);
 	}
 
 	/**

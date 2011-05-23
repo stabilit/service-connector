@@ -36,9 +36,9 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	SERVICE_NOT_FOUND(401, "Service not found."),
 	/** The SESSION_NOT_FOUND. */
 	SESSION_NOT_FOUND(402, "Session not found."),
-	/** The SESSION_NOT_FOUND. */
+	/** The SUBCRIPTION_NOT_FOUND. */
 	SUBSCRIPTION_NOT_FOUND(403, "Subscription not found."),
-	/** The SESSION_NOT_FOUND. */
+	/** The SERVER_NOT_FOUND. */
 	SERVER_NOT_FOUND(404, "Server not found."),
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT(405, "The SC did not timely respond to the request."),

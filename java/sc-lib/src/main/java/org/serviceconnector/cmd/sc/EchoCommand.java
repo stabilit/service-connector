@@ -18,8 +18,10 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
@@ -62,7 +64,7 @@ public class EchoCommand extends CommandAdapter {
 		String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		message.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
-		
+
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -76,6 +78,14 @@ public class EchoCommand extends CommandAdapter {
 		}
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
+
+		if (session.hasPendingRequest() == true) {
+			SessionLogger.error("session " + sessionId + " has pending request");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service="
+					+ message.getServiceName() + " sid=" + sessionId);
+			scmpCommandException.setMessageType(this.getKey());
+			throw scmpCommandException;
+		}
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 		message.setIsReply(true);
