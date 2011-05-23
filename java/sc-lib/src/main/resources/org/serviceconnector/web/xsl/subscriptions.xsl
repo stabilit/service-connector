@@ -35,6 +35,7 @@
             <th class="sc_table">Subscription Timeout (ms)</th>
             <th class="sc_table">No Data Interval (s)</th>
             <th class="sc_table">Server</th>
+            <th class="sc_table">Creation Time</th>
           </tr>
           <xsl:if test="not($body/subscriptions/subscription)">
             <tr class="sc_table_even"><td colspan="5" class="sc_table">no subscriptions</td></tr>
@@ -90,6 +91,7 @@
 	    <td class="{$class}"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
 	    <td class="{$class}"><xsl:value-of select="noDataInterval"/></td>
         <td class="{$class}"><a class="sc_table" href="subscriptions{$urlencoded}?server={server/serverKey}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
+	    <td class="{$class}"><xsl:value-of select="substring(creationTime,0,20)"/></td>
 	</xsl:template>
 	<xsl:template name="subscription_details">
 	  <td colspan="7">
