@@ -2,7 +2,7 @@ readme.txt
 bin\
 doc\
 conf\
-example\
+examples\
 cache\
 logs\
 sources\
