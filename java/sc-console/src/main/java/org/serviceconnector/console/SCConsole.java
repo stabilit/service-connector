@@ -47,7 +47,7 @@ public class SCConsole {
 	 *            java -jar sc-console.jar -h localhost -p 7000 dump
 	 *            java -jar sc-console.jar -h localhost -p 7000 kill
 	 *            java -jar sc-console.jar -h localhost -p 7000 scVersion
-	 *            java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc
+	 *            java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration?serviceName=abc
 	 *            java -jar sc-console.jar -config sc.properties kill
 	 *            system exit status<br />
 	 *            0 = success
@@ -276,7 +276,7 @@ public class SCConsole {
 			}
 		}
 		if (status == 5) {
-			SCConsole.showError("No tcp responder configured in config file, connect impossible.");
+			SCConsole.showError("No tcp listener is defined in the configuration file");
 		}
 		return status;
 	}
@@ -299,7 +299,7 @@ public class SCConsole {
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 kill");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 scVersion");
-		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc");
+		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -config sc.properties kill");
 	}
 }
