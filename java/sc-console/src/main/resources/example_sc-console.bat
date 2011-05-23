@@ -1,5 +1,5 @@
 rem
-rem for available commands invoke sc-console without parameters and see output like:
+rem for available commands invoke sc-console without command and see the output:
 rem java -Dlog4j.configuration=file:..\conf\log4j-console.properties -jar sc-console.jar
 rem
 rem show state of service "session-1"
