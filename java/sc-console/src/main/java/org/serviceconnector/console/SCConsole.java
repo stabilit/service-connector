@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.console;
 
 import java.io.UnsupportedEncodingException;
@@ -23,6 +24,9 @@ import java.util.Set;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.conf.ListenerConfiguration;
+import org.serviceconnector.conf.ListenerListConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
@@ -44,6 +48,7 @@ public class SCConsole {
 	 *            java -jar sc-console.jar -h localhost -p 7000 kill
 	 *            java -jar sc-console.jar -h localhost -p 7000 scVersion
 	 *            java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc
+	 *            java -jar sc-console.jar -config sc.properties kill
 	 *            system exit status<br />
 	 *            0 = success
 	 *            1 = error parsing arguments
@@ -58,12 +63,31 @@ public class SCConsole {
 		if (args == null || args.length <= 0) {
 			showError("no argumments");
 			System.exit(1);
-		} else if (args.length < 5) {
+		} else if (args.length < 3) {
 			showError("not enough argumments");
 			System.exit(1);
 		} else if (args.length > 5) {
 			showError("too many argumments");
 			System.exit(1);
+		}
+
+		// check config
+		String configFileName = CommandLineUtil.getArg(args, ConsoleConstants.CLI_CONFIG_ARG);
+		if (configFileName != null) {
+			// get command from args[2]
+			String bodyString = args[2];
+			if (bodyString == null) {
+				showError("Command is missing");
+				System.exit(1);
+			}
+			int status = SCConsole.run(configFileName, bodyString);
+			System.exit(status);
+		} 
+		
+		if(args.length < 5) {
+			// configFileName is null and number of arguments lower than 3
+			showError("Config file name argument is missing");
+			System.exit(1);			
 		}
 
 		// get command from args[4]
@@ -88,17 +112,24 @@ public class SCConsole {
 		} else {
 			ValidatorUtility.validateInt(1, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
-		int status = SCConsole.run(host, port, bodyString);
+		int status = SCConsole.run(host, Integer.parseInt(port), bodyString);
 		System.exit(status);
 	}
 
 	/**
-	 * Run SCConsole command
+	 * Run SCConsole command.
 	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param bodyString
+	 *            the body string
+	 * @return the int - return status
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static int run(String arg0, String arg1, String bodyString) throws Exception {
+	private static int run(String host, int port, String bodyString) throws Exception {
 
 		int status = 0;
 		try {
@@ -107,7 +138,7 @@ public class SCConsole {
 			String callKey = urlRequestString.getCallKey();
 			String serviceName = urlRequestString.getParamValue("serviceName");
 
-			SCMgmtClient client = new SCMgmtClient(arg0, Integer.parseInt(arg1), ConnectionType.NETTY_TCP);
+			SCMgmtClient client = new SCMgmtClient(host, port, ConnectionType.NETTY_TCP);
 			client.attach();
 
 			if (callKey.equalsIgnoreCase(Constants.CC_CMD_KILL)) {
@@ -215,6 +246,42 @@ public class SCConsole {
 	}
 
 	/**
+	 * Run.
+	 * 
+	 * @param configFileName
+	 *            the config file name
+	 * @return the int - return status
+	 * @throws Exception
+	 *             the exception
+	 */
+	private static int run(String configFileName, String bodyString) throws Exception {
+		int status = 5;
+
+		AppContext.initConfiguration(configFileName);
+		AppContext.getBasicConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
+		ListenerListConfiguration responderConfiguration = AppContext.getResponderConfiguration();
+		responderConfiguration.load(AppContext.getApacheCompositeConfig(), AppContext.getRequesterConfiguration());
+
+		for (ListenerConfiguration listenerConfiguration : responderConfiguration.getListenerConfigurations().values()) {
+			String connectionTypeString = listenerConfiguration.getConnectionType();
+			ConnectionType connectionType = ConnectionType.getType(connectionTypeString);
+
+			switch (connectionType) {
+			case DEFAULT_SERVER_CONNECTION_TYPE:
+			case NETTY_TCP:
+				return run(listenerConfiguration.getNetworkInterfaces().get(0), listenerConfiguration.getPort(), bodyString);
+			default:
+				continue;
+			}
+		}
+		if (status == 5) {
+			SCConsole.showError("No tcp responder configured in config file, connect impossible.");
+		}
+		return status;
+	}
+
+	/**
 	 * Show error.
 	 * 
 	 * @param msg
@@ -233,5 +300,6 @@ public class SCConsole {
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 kill");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 scVersion");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration=abc");
+		System.out.println("         java -jar sc-console.jar -config sc.properties kill");
 	}
 }
