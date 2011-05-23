@@ -206,7 +206,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		// schedule session timeout
 		Session session = this.sessionRegistry.getSession(sessionId);
 		if (session != null) {
-			this.sessionRegistry.scheduleSessionTimeout(session);
+			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 			session.setPendingRequest(false);
 		}
 		// check for cache id

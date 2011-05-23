@@ -40,7 +40,7 @@ public class Session extends AbstractSession {
 	private double sessionTimeoutSeconds;
 	/** The pending request. */
 	private boolean pendingRequest;
-	/** The last execute. */
+	/** The last execute time, timestamp of last execution for this session. */
 	private Date lastExecuteTime;
 
 	/**

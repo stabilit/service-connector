@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.PublishTimeout;
+import org.serviceconnector.service.ReceivePublicationTimeout;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.LinkedNode;
@@ -217,8 +217,8 @@ public class PublishMessageQueue<E> {
 	private synchronized void listen(String sessionId, IRequest request, IResponse response) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		// stores request/response in timer run - to answer client correctly at timeout
-		dataPointer.publishTimeout.setRequest(request);
-		dataPointer.publishTimeout.setResponse(response);
+		dataPointer.crpTimeout.setRequest(request);
+		dataPointer.crpTimeout.setResponse(response);
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
@@ -232,12 +232,12 @@ public class PublishMessageQueue<E> {
 	 *            the session id
 	 * @param mask
 	 *            the filter mask
-	 * @param publishTimeout
+	 * @param crpTimeout
 	 *            the timer run
 	 */
-	public synchronized void subscribe(String sessionId, SubscriptionMask mask, PublishTimeout publishTimeout) {
+	public synchronized void subscribe(String sessionId, SubscriptionMask mask, ReceivePublicationTimeout crpTimeout) {
 		LOGGER.trace("subscribe");
-		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, publishTimeout);
+		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, crpTimeout);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
 	}
@@ -270,7 +270,7 @@ public class PublishMessageQueue<E> {
 		if (dataPointer != null && dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
 			dataPointer.cancel();
-			dataPointer.publishTimeout.timeout();
+			dataPointer.crpTimeout.timeout();
 			dataPointer.stopListen();
 		}
 		this.pointerMap.remove(sessionId);
@@ -287,7 +287,7 @@ public class PublishMessageQueue<E> {
 		/** The current node in queue. */
 		private LinkedNode<E> node;
 		/** The publishTimeout. */
-		private PublishTimeout publishTimeout;
+		private ReceivePublicationTimeout crpTimeout;
 		/** The subscription mask. */
 		private SubscriptionMask mask;
 		/** The listen state. */
@@ -300,11 +300,11 @@ public class PublishMessageQueue<E> {
 		 * 
 		 * @param mask
 		 *            the filter mask
-		 * @param publishTimeout
+		 * @param crpTimeout
 		 *            the publish timeout
 		 */
-		public TimeAwareDataPointer(SubscriptionMask mask, PublishTimeout publishTimeout) {
-			this.publishTimeout = publishTimeout;
+		public TimeAwareDataPointer(SubscriptionMask mask, ReceivePublicationTimeout crpTimeout) {
+			this.crpTimeout = crpTimeout;
 			this.listening = false;
 			this.mask = mask;
 		}
@@ -416,7 +416,7 @@ public class PublishMessageQueue<E> {
 		 * Schedule. Activate timeout for no data message.
 		 */
 		public synchronized void schedule() {
-			this.schedule(this.publishTimeout.getTimeoutMillis());
+			this.schedule(this.crpTimeout.getTimeoutMillis());
 		}
 
 		/**
@@ -429,7 +429,7 @@ public class PublishMessageQueue<E> {
 		public synchronized void schedule(double timeoutMillis) {
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
-			PublishTimeoutWrapper timeoutWrapper = new PublishTimeoutWrapper(this, this.publishTimeout);
+			PublishTimeoutWrapper timeoutWrapper = new PublishTimeoutWrapper(this, this.crpTimeout);
 			// schedules timeoutTask on subscription queue executer
 			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis,
 					TimeUnit.MILLISECONDS);
@@ -448,10 +448,10 @@ public class PublishMessageQueue<E> {
 			if (this.listening) {
 				// necessary for responding CRP to client! Very important!
 				this.listening = false;
-				this.publishTimeout.timeout();
+				this.crpTimeout.timeout();
 			}
 			this.node = null;
-			this.publishTimeout = null;
+			this.crpTimeout = null;
 			this.mask = null;
 		}
 

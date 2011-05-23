@@ -105,16 +105,15 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Gets the publishMessageQueue by id.
+	 * Gets the publish message queue by id.
 	 * 
-	 * @param subscriptionId
-	 *            the subscription id
-	 * @return the subscription queue by id
+	 * @param subscription
+	 *            the subscription
+	 * @return the publish message queue by id
 	 * @throws Exception
 	 *             the exception
 	 */
-	protected PublishMessageQueue<SCMPMessage> getPublishMessageQueueById(String subscriptionId) throws Exception {
-		Subscription subscription = this.getSubscriptionById(subscriptionId);
+	protected PublishMessageQueue<SCMPMessage> getPublishMessageQueueById(Subscription subscription) throws Exception {
 		return ((IPublishService) subscription.getService()).getMessageQueue();
 	}
 

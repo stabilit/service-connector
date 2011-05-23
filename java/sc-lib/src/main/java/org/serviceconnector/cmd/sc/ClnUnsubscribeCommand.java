@@ -67,7 +67,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// lookup session and checks properness
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		// looks up publish message queue and stops publish mechanism
-		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscriptionId);
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscription);
 		// first remove subscription than unsubscribe
 		this.subscriptionRegistry.removeSubscription(subscription);
 		publishMessageQueue.unsubscribe(subscriptionId);

@@ -36,7 +36,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.InvalidMaskLengthException;
-import org.serviceconnector.service.PublishTimeout;
+import org.serviceconnector.service.ReceivePublicationTimeout;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
@@ -87,7 +87,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	@Override
 	public void receive(SCMPMessage reply) {
 		String serviceName = this.reqMessage.getServiceName();
-		int noDataIntervalSeconds = this.tempSubscription.getNoDataInterval();
+		int noDataIntervalSeconds = this.tempSubscription.getNoDataIntervalMillis();
 
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -95,10 +95,10 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 				// subscription has not been rejected, add server to subscription
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService())
 						.getMessageQueue();
-				PublishTimeout publishTimeout = new PublishTimeout(publishMessageQueue, noDataIntervalSeconds
+				ReceivePublicationTimeout crpTimeout = new ReceivePublicationTimeout(publishMessageQueue, noDataIntervalSeconds
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 				SubscriptionMask subscriptionMask = tempSubscription.getMask();
-				publishMessageQueue.subscribe(tempSubscription.getId(), subscriptionMask, publishTimeout);
+				publishMessageQueue.subscribe(tempSubscription.getId(), subscriptionMask, crpTimeout);
 				// finally add subscription to the registry & schedule subscription timeout internal
 				this.subscriptionRegistry.addSubscription(tempSubscription.getId(), tempSubscription);
 				SubscriptionLogger.logSubscribe(serviceName, tempSubscription.getId(), subscriptionMask.getValue());

@@ -91,11 +91,13 @@ public class ClnExecuteCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		// sets the time of last execution
 		session.resetExecuteTime();
 		session.setPendingRequest(true);
-		// cancel session timeout
-		this.sessionRegistry.cancelSessionTimeout(session);
+		// reset session timeout to OTI+ECI - during wait for server reply
+		double otiOnSCSeconds = (otiOnSCMillis / Constants.SEC_TO_MILLISEC_FACTOR);
+		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutSeconds()));
 
 		CacheManager cacheManager = null;
 		if (reqMessage.getCacheId() != null) {
@@ -113,13 +115,13 @@ public class ClnExecuteCommand extends CommandAdapter {
 				}
 			} catch (Exception e) {
 				session.setPendingRequest(false);
-				this.sessionRegistry.scheduleSessionTimeout(session);
+				// reset session timeout to ECI
+				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 				throw e;
 			}
 		}
 		ExecuteCommandCallback callback = null;
 		StatefulServer server = session.getStatefulServer();
-		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
@@ -134,8 +136,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 				if (i >= (tries - 1)) {
 					session.setPendingRequest(false);
 					// only one loop outstanding - don't continue throw current exception
-					// schedule session timeout
-					this.sessionRegistry.scheduleSessionTimeout(session);
+					// reset session timeout to ECI
+					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
@@ -339,7 +341,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					if (cascaded == false) {
 						String sessionId = message.getSessionId();
 						Session session = this.sessionRegistry.getSession(sessionId);
-						this.sessionRegistry.scheduleSessionTimeout(session);
+						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 						session.setPendingRequest(false);
 					}
 					responderCallback.responseCallback(request, response);
@@ -415,7 +417,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 				if (cascaded == false) {
 					String sessionId = message.getSessionId();
 					Session session = this.sessionRegistry.getSession(sessionId);
-					this.sessionRegistry.scheduleSessionTimeout(session);
+					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 					session.setPendingRequest(false);
 				}
 				responderCallback.responseCallback(request, response);

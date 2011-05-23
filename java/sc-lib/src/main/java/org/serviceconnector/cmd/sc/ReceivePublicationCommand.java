@@ -29,6 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -54,11 +55,13 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String subscriptionId = reqMessage.getSessionId();
 		SCMPMessage message = null;
+		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		// looks up subscription queue
-		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscriptionId);
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscription);
 		synchronized (publishMessageQueue) {
-			// cancel subscription timeout
-			this.subscriptionRegistry.cancelSubscriptionTimeout(subscriptionId);
+			// reset subscription timeout to NOI+ECI
+			this.subscriptionRegistry.resetSubscriptionTimeout(subscription,
+					subscription.getNoDataIntervalMillis() + subscription.getSubscriptionTimeoutMillis());
 			// tries polling message
 			message = publishMessageQueue.getMessageOrListen(subscriptionId, request, response);
 			if (message == null) {
@@ -85,8 +88,8 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		}
 		reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
 		response.setSCMP(reply);
-		// set up subscription timeout again
-		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
+		// reset subscription timeout to ECI
+		this.subscriptionRegistry.resetSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());
 		// message already gotten from queue no asynchronous process necessary call callback right away
 		responderCallback.responseCallback(request, response);
 	}
@@ -101,7 +104,8 @@ public class ReceivePublicationCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);

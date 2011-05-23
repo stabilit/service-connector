@@ -31,15 +31,15 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.ITimeout;
 
 /**
- * The Class PublishTimeout. PublishTimeout defines action to get in place when subscription times out.
+ * The Class ReceivePublicationTimeout. ReceivePublicationTimeout defines action to get in place when receive publication times out
+ * or a new publish message arrives.
  */
-public class PublishTimeout implements ITimeout {
+public class ReceivePublicationTimeout implements ITimeout {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(PublishTimeout.class);
+	private static final Logger LOGGER = Logger.getLogger(ReceivePublicationTimeout.class);
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
-
 	/** The noDataIntervalMillis. */
 	private int noDataIntervalMillis;
 	/** The subscription queue. */
@@ -57,7 +57,7 @@ public class PublishTimeout implements ITimeout {
 	 * @param noDataIntervalMillis
 	 *            the timeout
 	 */
-	public PublishTimeout(PublishMessageQueue<SCMPMessage> publishMessageQueue, int noDataIntervalMillis) {
+	public ReceivePublicationTimeout(PublishMessageQueue<SCMPMessage> publishMessageQueue, int noDataIntervalMillis) {
 		this.request = null;
 		this.response = null;
 		this.noDataIntervalMillis = noDataIntervalMillis;
@@ -93,16 +93,17 @@ public class PublishTimeout implements ITimeout {
 	/** {@inheritDoc} */
 	@Override
 	public void timeout() {
-		LOGGER.trace("timeout publishTimer");
+		LOGGER.trace("timeout receivePublicationTimeout");
 		String subscriptionId = null;
+		Subscription subscription = null;
 		try {
 			// extracting subscriptionId from request message
 			SCMPMessage reqMsg = request.getMessage();
 			// set up subscription timeout
 			subscriptionId = reqMsg.getSessionId();
 
-			LOGGER.trace("timeout publishTimer datapointer subscriptionId " + subscriptionId);
-			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
+			LOGGER.trace("timeout receive publication timer datapointer subscriptionId " + subscriptionId);
+			subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
 				LOGGER.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
@@ -154,7 +155,10 @@ public class PublishTimeout implements ITimeout {
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		} finally {
-			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
+			if (subscription != null) {
+				// reset subscription timeout to ECI
+				subscriptionRegistry.resetSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());
+			}
 			// send message back to client
 			try {
 				this.response.write();

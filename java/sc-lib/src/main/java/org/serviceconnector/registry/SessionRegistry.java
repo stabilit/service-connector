@@ -63,7 +63,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	public void addSession(String key, Session session) {
 		SessionLogger.logCreateSession(session.getId(), session.getSessionTimeoutSeconds());
 		this.put(key, session);
-		this.scheduleSessionTimeout(session);
+		this.scheduleSessionTimeout(session, session.getSessionTimeoutSeconds());
 	}
 
 	/**
@@ -134,20 +134,20 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	@SuppressWarnings("unchecked")
-	public void scheduleSessionTimeout(Session session) {
-		if (session == null || session.getSessionTimeoutSeconds() == 0) {
+	private void scheduleSessionTimeout(Session session, double newTimeoutSeconds) {
+		if (session == null || newTimeoutSeconds == 0) {
 			// no scheduling of session timeout
 			return;
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
 		// sets up session timeout
-		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
+		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session, session.getSessionTimeoutSeconds()));
 		// schedule sessionTimeouter in registry timer
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
-				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
-		SessionLogger.trace("schedule session " + session.getId() + " timeout in seconds "
-				+ (long) session.getSessionTimeoutSeconds() + " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
+				sessionTimeouter, (long) newTimeoutSeconds, TimeUnit.SECONDS);
+		SessionLogger.trace("schedule session " + session.getId() + " timeout in seconds " + newTimeoutSeconds
+				+ " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
 	}
@@ -158,7 +158,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * @param session
 	 *            the session
 	 */
-	public void cancelSessionTimeout(Session session) {
+	private void cancelSessionTimeout(Session session) {
 		if (session == null) {
 			return;
 		}
@@ -182,9 +182,10 @@ public class SessionRegistry extends Registry<String, Session> {
 		// important to set timeouter null - rescheduling of same instance not possible
 		session.setTimeout(null);
 	}
-	
-	public void resetSessionTimeout(Session session, int newTimeoutInSeconds) {
+
+	public void resetSessionTimeout(Session session, double newTimeoutInSeconds) {
 		this.cancelSessionTimeout(session);
+		this.scheduleSessionTimeout(session, newTimeoutInSeconds);
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		 * @param session
 		 *            the session
 		 */
-		public SessionTimeout(Session session) {
+		public SessionTimeout(Session session, double timeoutSeconds) {
 			this.session = session;
 			this.timeoutSeconds = session.getSessionTimeoutSeconds();
 		}

@@ -31,7 +31,7 @@ public class Subscription extends AbstractSession {
 	/** The mask in bytes. */
 	private SubscriptionMask mask;
 	/** The no data interval. */
-	private int noDataInterval = 0;
+	private int noDataIntervalMillis = 0;
 	/** The subscription timeout seconds. */
 	private double subscriptionTimeoutMillis;
 
@@ -55,7 +55,7 @@ public class Subscription extends AbstractSession {
 			double subscriptionTimeoutMillis, boolean cascaded) {
 		super(sessionInfo, ipAddressList, cascaded);
 		this.mask = mask;
-		this.noDataInterval = noDataInterval;
+		this.noDataIntervalMillis = noDataInterval;
 		this.subscriptionTimeoutMillis = subscriptionTimeoutMillis;
 	}
 
@@ -102,8 +102,8 @@ public class Subscription extends AbstractSession {
 	 * 
 	 * @return the no data interval
 	 */
-	public int getNoDataInterval() {
-		return noDataInterval;
+	public int getNoDataIntervalMillis() {
+		return noDataIntervalMillis;
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class Subscription extends AbstractSession {
 		writer.writeAttribute("sessionInfo", this.getSessionInfo());
 		writer.writeAttribute("isCascaded", this.isCascaded());
 		writer.writeAttribute("mask", this.getMask().getValue());
-		writer.writeAttribute("noDataInterval", this.noDataInterval);
+		writer.writeAttribute("noDataIntervalMillis", this.noDataIntervalMillis);
 		writer.writeAttribute("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
 		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
 		if (timeouter != null) {

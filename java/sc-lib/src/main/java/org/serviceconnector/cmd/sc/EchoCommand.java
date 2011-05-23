@@ -86,12 +86,10 @@ public class EchoCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
-		// cancel session timeout
-		this.sessionRegistry.cancelSessionTimeout(session);
 		message.setIsReply(true);
 		response.setSCMP(message);
-		// schedule session timeout
-		this.sessionRegistry.scheduleSessionTimeout(session);
+		// reset session timeout to ECI
+		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
 		responderCallback.responseCallback(request, response);
 	}
 

@@ -19,14 +19,12 @@ package org.serviceconnector.cmd.sc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.PublishMessageQueue;
-import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -53,8 +51,6 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	private IResponse response;
 	/** The subscription. */
 	private Subscription subscription;
-	/** The subscription registry. */
-	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
 	/**
 	 * Instantiates a new cln change subscription command callback.
@@ -127,8 +123,6 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 		fault.setMessageType(SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 		fault.setSessionId(subscriptionId);
 		response.setSCMP(fault);
-		// schedule subscription timeout
-		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscription);
 		this.responderCallback.responseCallback(request, response);
 	}
 

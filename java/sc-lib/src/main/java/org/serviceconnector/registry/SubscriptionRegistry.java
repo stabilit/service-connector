@@ -62,7 +62,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	public void addSubscription(String key, Subscription subscription) {
 		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis());
 		this.put(key, subscription);
-		this.scheduleSubscriptionTimeout(subscription);
+		this.scheduleSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());
 	}
 
 	/**
@@ -72,7 +72,12 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void removeSubscription(Subscription subscription) {
-		this.removeSubscription(subscription.getId());
+		if (subscription == null) {
+			return;
+		}
+		this.cancelSubscriptionTimeout(subscription);
+		super.remove(subscription.getId());
+		SubscriptionLogger.logDeleteSubscription(subscription.getId());
 	}
 
 	/**
@@ -85,9 +90,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		if (key == null) {
 			return;
 		}
-		this.cancelSubscriptionTimeout(key);
-		super.remove(key);
-		SubscriptionLogger.logDeleteSubscription(key);
+		Subscription subscription = this.getSubscription(key);
+		this.removeSubscription(subscription);
 	}
 
 	/**
@@ -161,7 +165,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	@SuppressWarnings("unchecked")
-	public void scheduleSubscriptionTimeout(Subscription subscription) {
+	private void scheduleSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		if (subscription == null) {
 			// no scheduling of Subscription timeout
 			return;
@@ -172,22 +176,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		TimeoutWrapper subscriptionTimeouter = new TimeoutWrapper(new SubscriptionTimeout(subscription));
 		// schedule sessionTimeouter in registry timer
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
-				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
+				subscriptionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		SubscriptionLogger.trace("schedule subscription " + subscription.getId() + " timeout in milliseconds "
-				+ (long) subscription.getSubscriptionTimeoutMillis() + " delay time in seconds "
-				+ timeout.getDelay(TimeUnit.SECONDS));
-	}
-
-	/**
-	 * Schedule subscription timeout.
-	 * 
-	 * @param key
-	 *            the key
-	 */
-	public void scheduleSubscriptionTimeout(String key) {
-		Subscription subscription = this.get(key);
-		this.scheduleSubscriptionTimeout(subscription);
+		SubscriptionLogger.trace("schedule subscription " + subscription.getId() + " timeout in milliseconds " + newTimeoutMillis
+				+ " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
 	}
 
 	/**
@@ -196,7 +188,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * @param subscription
 	 *            the session
 	 */
-	public void cancelSubscriptionTimeout(Subscription subscription) {
+	private void cancelSubscriptionTimeout(Subscription subscription) {
 		if (subscription == null) {
 			return;
 		}
@@ -229,9 +221,9 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * @param key
 	 *            the key
 	 */
-	public void cancelSubscriptionTimeout(String key) {
-		Subscription subscription = this.get(key);
+	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		this.cancelSubscriptionTimeout(subscription);
+		this.scheduleSubscriptionTimeout(subscription, newTimeoutMillis);
 	}
 
 	/**
