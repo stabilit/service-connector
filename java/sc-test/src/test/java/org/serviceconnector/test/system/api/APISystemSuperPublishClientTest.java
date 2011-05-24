@@ -24,8 +24,8 @@ import org.junit.Before;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
-import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.net.ConnectionType;
@@ -35,7 +35,7 @@ import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1
 
 public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
-	protected SCClient client;
+	protected SCMgmtClient client;
 	protected SCPublishService publishService = null;
 	protected MsgCallback msgCallback = null;
 
@@ -43,34 +43,19 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 	
-	public void setUpClientToSC0() {
-		if (client != null) {
-			try {
-				client.detach();
-			} catch (Exception e) {
+	public void setUpClientToSC() throws Exception {
+		if (client == null) {	// client may be already created and attached because the of the class hierarchy
+			if (cascadingLevel == 0) {
+				client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+				client.attach();
+			} else if (cascadingLevel == 1) {
+				client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+				client.attach();
+			} else if (cascadingLevel == 2) {
+				client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
+				client.attach();
 			}
 		}
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
-	}
-
-	public void setUpClientToSC1() {
-		if (client != null) {
-			try {
-				client.detach();
-			} catch (Exception e) {
-			}
-		}
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
-	}
-
-	public void setUpClientToSC2() {
-		if (client != null) {
-			try {
-				client.detach();
-			} catch (Exception e) {
-			}
-		}
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
 	}
 	
 	public static void setUpServiceConnectorAndServer() {
@@ -139,8 +124,6 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
-		client.attach();
 	}
 
 	@After

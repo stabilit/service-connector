@@ -35,13 +35,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 	public APISubscribeUnsubscribeChangeTest() {
 		APIReceivePublicationCasc1Test.setUpServiceConnectorAndServer();
 	}
-	
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC0();
-		client.attach();
-	}
 
 	/**
 	 * Description: create publish service with name = "service = gaga"<br>

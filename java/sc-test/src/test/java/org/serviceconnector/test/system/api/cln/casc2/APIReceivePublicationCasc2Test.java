@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
-import org.junit.Before;
 import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 
 public class APIReceivePublicationCasc2Test extends APIReceivePublicationCasc1Test {
@@ -24,10 +23,4 @@ public class APIReceivePublicationCasc2Test extends APIReceivePublicationCasc1Te
 		APIReceivePublicationCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
 
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC2();
-		client.attach();
-	}
 }

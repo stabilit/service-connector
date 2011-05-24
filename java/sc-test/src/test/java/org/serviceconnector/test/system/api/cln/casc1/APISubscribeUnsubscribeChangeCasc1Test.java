@@ -42,10 +42,7 @@ public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublis
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		if (casc1Test == true) {
-			this.setUpClientToSC1();
-			client.attach();
-		}
+		this.setUpClientToSC();
 	}
 	
 //	public static void setUpServiceConnectorAndServer() {

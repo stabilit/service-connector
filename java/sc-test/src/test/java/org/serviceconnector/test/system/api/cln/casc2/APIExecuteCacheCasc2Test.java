@@ -15,10 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
-import org.junit.Before;
-import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
 public class APIExecuteCacheCasc2Test extends APIExecuteCacheCasc1Test {
@@ -27,13 +23,4 @@ public class APIExecuteCacheCasc2Test extends APIExecuteCacheCasc1Test {
 		APIExecuteCacheCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
 	
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC2();
-		client.attach();
-		messageReceived = false;
-		mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
-		mgmtClient.attach();
-	}
 }

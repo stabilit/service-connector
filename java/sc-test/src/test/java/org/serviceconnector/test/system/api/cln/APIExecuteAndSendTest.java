@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import org.junit.Before;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
 
@@ -25,11 +24,4 @@ public class APIExecuteAndSendTest extends APIExecuteAndSendCasc1Test {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 	
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC0();
-		client.attach();
-		messageReceived = false;
-	}
 }

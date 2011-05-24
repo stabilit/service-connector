@@ -50,7 +50,8 @@ Service Connector - open source messaging middleware
        SC_4_Operation_E.pdf (SC operation and administration guide)
    /cache       (sc writes temporary cache-files here. See property cache.diskPath)
    /logs        (sc writes all log and dump files here. See log4j properties)
-   
+  
+
  sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
  --/doc         (documentation)
        Open_Issues.xls     (release notes)

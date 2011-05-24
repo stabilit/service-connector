@@ -21,22 +21,17 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.FileUtility;
 
 public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
-
-	protected SCMgmtClient client;
 
 	public APIFileServiceCasc1() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
@@ -45,25 +40,7 @@ public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		if (casc1Test == true) {
-			this.setUpClientToSC1();
-			client.attach();
-		}
-		messageReceived = false;
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
-		client.attach();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			if (client != null) {
-				client.detach();
-			}
-		} catch (Exception e) {
-		}
-		client = null;
-		super.afterOneTest();
+		this.setUpClientToSC();
 	}
 
 	/**

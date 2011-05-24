@@ -80,7 +80,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 				this.connectionType.getValue(), 0, 1));
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback = new TestCallback();
-		attachCall.invoke(callback, 1000);
+		attachCall.invoke(callback, 2000);
 		SCMPMessage result = callback.getMessageSync(3000);
 		TestUtil.checkReply(result);
 
@@ -90,7 +90,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		ValidatorUtility.validateDateTime(result.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 
 		SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
-		detachCall.invoke(callback, 1000);
+		detachCall.invoke(callback, 2000);
 		result = callback.getMessageSync(3000);
 		TestUtil.checkReply(result);
 		Assert.assertNull(result.getBody());

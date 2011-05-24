@@ -42,7 +42,7 @@ public class SystemSuperTest {
 	protected static Map<String, ProcessCtx> scCtxs;
 	protected int threadCount = 0;
 	protected static List<ServiceConnectorDefinition> scDefs;
-	protected static boolean casc1Test = false;
+	protected static int cascadingLevel = 0;
 
 	protected static List<ServerDefinition> srvDefs;
 	protected static Map<String, ProcessCtx> srvCtxs;
@@ -103,7 +103,7 @@ public class SystemSuperTest {
 
 		SystemSuperTest.scDefs = sc0Defs;
 		SystemSuperTest.srvDefs = srvToSC0Defs;
-		casc1Test = false;
+		cascadingLevel = 0;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
@@ -124,7 +124,7 @@ public class SystemSuperTest {
 
 		SystemSuperTest.scDefs = scDefs;
 		SystemSuperTest.srvDefs = srvToSC0Defs;
-		casc1Test = true;
+		cascadingLevel = 1;
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
@@ -148,6 +148,6 @@ public class SystemSuperTest {
 
 		SystemSuperTest.scDefs = scDefs;
 		SystemSuperTest.srvDefs = srvToSC0Defs;
-		casc1Test = false;
+		cascadingLevel = 2;
 	}
 }

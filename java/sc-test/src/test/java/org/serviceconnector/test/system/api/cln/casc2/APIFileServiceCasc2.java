@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
-import org.junit.Before;
 import org.serviceconnector.test.system.api.cln.casc1.APIFileServiceCasc1;
 
 public class APIFileServiceCasc2 extends APIFileServiceCasc1 {
@@ -24,10 +23,4 @@ public class APIFileServiceCasc2 extends APIFileServiceCasc1 {
 		APIFileServiceCasc2.setUp2CascadedServiceConnectorAndServer();
 	}
 
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC2();
-		client.attach();
-	}
 }

@@ -33,14 +33,6 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC0();
-		client.attach();
-		messageReceived = false;
-	}
-
 	/**
 	 * Description: create session service with service name = "service = gaga"<br>
 	 * Expectation: throws SCMPValidatorException (contains "=")

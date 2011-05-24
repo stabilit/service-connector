@@ -23,8 +23,9 @@ header("Content-Type: text/plain");
 #			see sc.properties for details
 # 3) Configure the web server (apache) alias corresponding to the path to 
 #    get files from the right directory see also httpd-sc.conf
-# 4) check the php.ini configuration eventually increase memory_limit
-#		see also: http://www.radinks.com/upload/config.php
+# 4) check all parameters in the php.ini acording to 
+#		http://www.radinks.com/upload/config.php
+#	 especially: memory_limit, upload_max_filesize, max_execution_time, max_input_time 
 #
 # This script will be invoked from SC via the url:
 # 	 http://host:port/path/scupload.php?filename=remoteFileName&servicename=file-1

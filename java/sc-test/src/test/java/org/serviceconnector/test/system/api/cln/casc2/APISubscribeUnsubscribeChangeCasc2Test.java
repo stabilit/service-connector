@@ -16,7 +16,6 @@
 package org.serviceconnector.test.system.api.cln.casc2;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -30,13 +29,6 @@ public class APISubscribeUnsubscribeChangeCasc2Test extends APISubscribeUnsubscr
 
 	public APISubscribeUnsubscribeChangeCasc2Test() {
 		APISubscribeUnsubscribeChangeCasc2Test.setUp2CascadedServiceConnectorAndServer();
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC2();
-		client.attach();
 	}
 	
 	/**

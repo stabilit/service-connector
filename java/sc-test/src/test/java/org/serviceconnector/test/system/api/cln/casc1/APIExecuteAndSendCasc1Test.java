@@ -38,11 +38,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		if (casc1Test == true) {
-			this.setUpClientToSC1();
-			client.attach();
-		}
-		messageReceived = false;
+		this.setUpClientToSC();
 	}
 
 	/**

@@ -15,10 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import org.junit.Before;
-import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
@@ -28,13 +24,4 @@ public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 	
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		this.setUpClientToSC0();
-		client.attach();
-		messageReceived = false;
-		mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
-		mgmtClient.attach();
-	}
 }
