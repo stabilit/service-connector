@@ -89,7 +89,7 @@
 	    <td class="{$class}"><xsl:value-of select="subscriptionMask"/></td>
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>
 	    <td class="{$class}"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
-	    <td class="{$class}"><xsl:value-of select="noDataInterval"/></td>
+	    <td class="{$class}"><xsl:value-of select="noDataIntervalMillis"/></td>
         <td class="{$class}"><a class="sc_table" href="subscriptions{$urlencoded}?server={server/serverKey}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
 	    <td class="{$class}"><xsl:value-of select="substring(creationTime,0,20)"/></td>
 	</xsl:template>
