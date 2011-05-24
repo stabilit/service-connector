@@ -128,9 +128,9 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The OPERATION_TIMEOUT_EXPIRED. */
 	OPERATION_TIMEOUT(504, "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
-	UPLOAD_FILE_FAILED(505, "Upload file failed."),
+	FILE_UPLOAD_FAILED(505, "File upload failed."),
 	/** The DOWNLOAD_FILE_FAILED. */
-	DOWNLOAD_FILE_FAILED(506, "Download file failed."),
+	FILE_DOWNLOAD_FAILED(506, "File download failed."),
 	/** The GET_FILE_LIST. */
 	GET_FILE_LIST_FAILED(507, "Get file list failed."),
 

@@ -84,7 +84,7 @@ public class FileDownloadCommand extends CommandAdapter {
 			reply = fileServer.serverDownloadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
 			reply = new SCMPMessage();
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.DOWNLOAD_FILE_FAILED,
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.FILE_DOWNLOAD_FAILED,
 					"Error occured in file server on SC.");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;

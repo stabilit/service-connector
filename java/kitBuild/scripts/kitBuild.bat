@@ -34,3 +34,4 @@ cd ..\kit-tmp\
 cd ..\scripts\
 
 java -cp ..\bin;..\..\sc-test\target\sc-lib-all.jar org.serviceconnector.util.KitUtility copyAndRenameKitToVersion ..\..\..\kit\ ..\..\..\
+java -cp ..\bin;..\..\sc-test\target\sc-lib-all.jar org.serviceconnector.util.KitUtility generateHashFile ..\..\..\

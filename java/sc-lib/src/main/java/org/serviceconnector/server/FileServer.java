@@ -123,7 +123,7 @@ public class FileServer extends Server {
 			httpCon = session.getHttpURLConnection();
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.FILE_UPLOAD_FAILED, httpCon.getResponseMessage());
 				LOGGER.warn("Upload file failed " + httpCon.getResponseMessage());
 				return fault;
 			}
