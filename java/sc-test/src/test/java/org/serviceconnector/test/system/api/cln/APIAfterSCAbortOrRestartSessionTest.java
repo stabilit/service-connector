@@ -17,6 +17,7 @@ package org.serviceconnector.test.system.api.cln;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
@@ -33,6 +34,12 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC();
+	}
+	
 	/**
 	 * Description: client has session and gets notified after SC was aborted<br>
 	 * Expectation: passes

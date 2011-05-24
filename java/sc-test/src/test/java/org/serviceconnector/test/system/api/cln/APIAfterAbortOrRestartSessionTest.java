@@ -16,6 +16,7 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
@@ -30,6 +31,12 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	public APIAfterAbortOrRestartSessionTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		this.setUpClientToSC();
 	}
 	
 	/**
