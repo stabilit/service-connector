@@ -80,9 +80,10 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noiInSecs = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noiInMillis = noiInSecs * Constants.SEC_TO_MILLISEC_FACTOR;
 		// create temporary subscription
-		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi, AppContext
+		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noiInMillis, AppContext
 				.getBasicConfiguration().getSubscriptionTimeoutMillis(), false);
 		tmpSubscription.setService(abstractService);
 		reqMessage.setSessionId(tmpSubscription.getId());

@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
@@ -87,7 +86,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	@Override
 	public void receive(SCMPMessage reply) {
 		String serviceName = this.reqMessage.getServiceName();
-		int noDataIntervalSeconds = this.tempSubscription.getNoDataIntervalMillis();
+		int noDataIntervalMillis = this.tempSubscription.getNoDataIntervalMillis();
 
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -95,8 +94,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 				// subscription has not been rejected, add server to subscription
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService())
 						.getMessageQueue();
-				ReceivePublicationTimeout crpTimeout = new ReceivePublicationTimeout(publishMessageQueue, noDataIntervalSeconds
-						* Constants.SEC_TO_MILLISEC_FACTOR);
+				ReceivePublicationTimeout crpTimeout = new ReceivePublicationTimeout(publishMessageQueue, noDataIntervalMillis);
 				SubscriptionMask subscriptionMask = tempSubscription.getMask();
 				publishMessageQueue.subscribe(tempSubscription.getId(), subscriptionMask, crpTimeout);
 				// finally add subscription to the registry & schedule subscription timeout internal

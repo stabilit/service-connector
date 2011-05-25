@@ -33,7 +33,7 @@
             <th class="sc_table">Subscription Mask</th>
             <th class="sc_table">IP Addresslist</th>
             <th class="sc_table">Subscription Timeout (ms)</th>
-            <th class="sc_table">No Data Interval (s)</th>
+            <th class="sc_table">No Data Interval (ms)</th>
             <th class="sc_table">Server</th>
             <th class="sc_table">Creation Time</th>
           </tr>
