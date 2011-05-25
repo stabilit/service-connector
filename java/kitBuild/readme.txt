@@ -58,6 +58,7 @@ Service Connector - open source messaging middleware
        SC_0_SCMP_E.pdf     (SCMP documentation)
    /doc/javadoc (java doc) 
    /examples    (additional script examples)
+	   demo-web-server.war (demo web application servers implemented as servlets with sc-web-all.jar)
        example_sc-console.bat (script for sc-console - example)
        httpd-conf.sc       (Apache configuration for sc file services - example)
        jconsole.bat        (start script for jconsole - example)
@@ -68,6 +69,7 @@ Service Connector - open source messaging middleware
    /sources     (sources of sc-lib and the demo application)
        demo-client-0-0-1-sources.jar  (source code of the demo client)
        demo-server-0-0-1-sources.jar  (source code of the demo server)
+       demo-web-server-sources.jar	  (source code of the demo web application)
        sc-lib-all-sources.jar         (source code of the SC library)
        sc-web-sources.jar             (source code of the SC web library)
  

@@ -261,7 +261,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			SubscriptionRegistry.this.removeSubscription(subscription);
 			IStatefulServer server = subscription.getServer();
 			server.abortSession(subscription, "subscription timed out in registry");
-			SubscriptionLogger.logAbortSubscription(subscription.getId());
+			SubscriptionLogger.logTimeoutSubscription(subscription.getId());
 		}
 
 		/** {@inheritDoc} */

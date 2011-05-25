@@ -30,24 +30,26 @@ public final class SubscriptionLogger {
 	private static final Logger SUBSCRIPTION_LOGGER = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 
 	/** The subscribe str. */
-	private static String subscribeStr = "subscription:%s - subscribing to:%s - with mask:%s";
+	private static String subscribeStr = "subscription=%s - subscribing to=%s - with mask=%s";
 	/** The change subscribe str. */
-	private static String changeSubscribeStr = "subscription:%s - change subscription to:%s - new mask:%s";
+	private static String changeSubscribeStr = "subscription=%s - change subscription to=%s - new mask=%s";
 	/** The unsubscribe str. */
-	private static String unsubscribeStr = "subscription:%s - unsubscribing from:%s";
+	private static String unsubscribeStr = "subscription=%s - unsubscribing from=%s";
 	/** The create subscription str. */
-	private static String createSubscriptionStr = "create subscription:%s timeout=%s";
+	private static String createSubscriptionStr = "create subscription=%s timeout=%s";
 	/** The delete subscription str. */
-	private static String deleteSubscriptionStr = "delete subscription:%s";
+	private static String deleteSubscriptionStr = "delete subscription=%s";
 	/** The abort subscription str. */
-	private static String abortSubscriptionStr = "abort subscription:%s";
+	private static String abortSubscriptionStr = "abort subscription=%s";
+	/** The timeout subscription string. */
+	private static String timeoutSubscriptionStr = "timeout subscription sid=%s";
 
 	/**
 	 * Private constructor for singleton use.
 	 */
 	private SubscriptionLogger() {
 	}
-	
+
 	/**
 	 * Checks if is enabled.
 	 * 
@@ -62,15 +64,15 @@ public final class SubscriptionLogger {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 * @param subscriptionId
+	 *            the subscription Id
 	 * @param mask
 	 *            the mask
 	 */
-	public static synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
+	public static synchronized void logSubscribe(String serviceName, String subscriptionId, String mask) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(subscribeStr, sessionId, serviceName, mask);
+			format.format(subscribeStr, subscriptionId, serviceName, mask);
 			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -81,15 +83,15 @@ public final class SubscriptionLogger {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 * @param subscriptionId
+	 *            the subscription Id
 	 * @param mask
 	 *            the mask
 	 */
-	public static synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
+	public static synchronized void logChangeSubscribe(String serviceName, String subscriptionId, String mask) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(changeSubscribeStr, sessionId, serviceName, mask);
+			format.format(changeSubscribeStr, subscriptionId, serviceName, mask);
 			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -100,13 +102,13 @@ public final class SubscriptionLogger {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 * @param subscriptionId
+	 *            the subscription Id
 	 */
-	public static synchronized void logUnsubscribe(String serviceName, String sessionId) {
+	public static synchronized void logUnsubscribe(String serviceName, String subscriptionId) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(unsubscribeStr, sessionId, serviceName);
+			format.format(unsubscribeStr, subscriptionId, serviceName);
 			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -180,6 +182,21 @@ public final class SubscriptionLogger {
 	public static void error(String message) {
 		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.ERROR)) {
 			SUBSCRIPTION_LOGGER.error(message);
+		}
+	}
+
+	/**
+	 * Log timeout subscription.
+	 * 
+	 * @param subscriptionId
+	 *            the subscription Id
+	 */
+	public static synchronized void logTimeoutSubscription(String subscriptionId) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(timeoutSubscriptionStr, subscriptionId);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 }
