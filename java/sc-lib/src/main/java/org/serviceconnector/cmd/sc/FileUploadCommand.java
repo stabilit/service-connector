@@ -74,7 +74,7 @@ public class FileUploadCommand extends CommandAdapter {
 		// reset session timeout to OTI+ECI - during wait for server reply
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		double otiOnSCSeconds = (otiOnSCMillis / Constants.SEC_TO_MILLISEC_FACTOR);
-		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutSeconds()));
+		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutMillis()));
 		SCMPMessage reply = null;
 		try {
 			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
@@ -90,7 +90,7 @@ public class FileUploadCommand extends CommandAdapter {
 		reply.setMessageType(getKey());
 		response.setSCMP(reply);
 		// reset session timeout to ECI
-		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 		responderCallback.responseCallback(request, response);
 	}
 

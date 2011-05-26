@@ -200,7 +200,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		Session session = this.sessionRegistry.getSession(this.sessionId);
 		if (session != null) {
 			// reset session timeout to ECI
-			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 			session.setPendingRequest(false);
 		}
 		this.responderCallback.responseCallback(request, response);
@@ -229,7 +229,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		Session session = this.sessionRegistry.getSession(this.sessionId);
 		if (session != null) {
 			// reset session timeout to ECI
-			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 			session.setPendingRequest(false);
 		}
 		// check for cache id

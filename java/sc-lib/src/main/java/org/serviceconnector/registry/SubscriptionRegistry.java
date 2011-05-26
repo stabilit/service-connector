@@ -60,7 +60,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis());
+		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis(),
+				subscription.getNoDataIntervalMillis());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());
 	}
@@ -178,8 +179,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
 				subscriptionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		SubscriptionLogger.trace("schedule subscription " + subscription.getId() + " timeout in milliseconds " + newTimeoutMillis
-				+ " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
+		SubscriptionLogger.trace("schedule subscription timeout " + subscription.getId() + " " + newTimeoutMillis
+				+ "ms, delay time " + timeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
 	}
 
 	/**

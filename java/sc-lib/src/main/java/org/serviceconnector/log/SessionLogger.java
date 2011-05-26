@@ -30,7 +30,7 @@ public final class SessionLogger {
 	private static final Logger SESSION_LOGGGER = Logger.getLogger(Loggers.SESSION.getValue());
 
 	/** The create session string. */
-	private static String createSessionStr = "create session sid=%s eci=%s";
+	private static String createSessionStr = "create session sid=%s eci=%sms";
 	/** The delete session string. */
 	private static String deleteSessionStr = "delete session sid=%s";
 	/** The abort session string. */

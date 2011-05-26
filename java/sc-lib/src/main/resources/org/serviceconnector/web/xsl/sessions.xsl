@@ -31,7 +31,7 @@
             <th class="sc_table">Service</th>
             <th class="sc_table">Session ID</th>
             <th class="sc_table">IP Adresslist</th>
-            <th class="sc_table">Session Timeout (s)</th>
+            <th class="sc_table">Session Timeout (ms)</th>
             <th class="sc_table">Server</th>
             <th class="sc_table">Creation Time</th>
             <th class="sc_table">Last Execute Time</th>
@@ -86,7 +86,7 @@
         <td class="{$class}"><a class="sc_table" href="sessions{$urlencoded}?service={server/serviceName}"><xsl:value-of select="server/serviceName"/></a></td>
 	    <td class="{$class}"><xsl:value-of select="id"/></td>
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>
-	    <td class="{$class}"><xsl:value-of select="sessionTimeoutSeconds"/></td>
+	    <td class="{$class}"><xsl:value-of select="sessionTimeoutMillis"/></td>
         <td class="{$class}"><a class="sc_table" href="sessions{$urlencoded}?server={server/serverKey}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
 	    <td class="{$class}"><xsl:value-of select="substring(creationTime, 0, 20)"/></td>
 	    <td class="{$class}"><xsl:value-of select="substring(lastExecuteTime, 0, 20)"/></td>

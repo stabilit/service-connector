@@ -79,7 +79,8 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+		int eciInSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+		int eciInMillis = eciInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
@@ -105,7 +106,7 @@ public class CscCreateSessionCommand extends CommandAdapter {
 			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
 			// add server to session
 			fileSession.setServer(fileServer);
-			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
+			fileSession.setSessionTimeoutMillis(eciInMillis * basicConf.getEchoIntervalMultiplier());
 			// finally add file session to the registry
 			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
 			// reply to client
@@ -124,7 +125,7 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		// create session
 		Session session = new Session(sessionInfo, ipAddressList);
 		session.setService(abstractService);
-		session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
+		session.setSessionTimeoutMillis(eciInMillis * basicConf.getEchoIntervalMultiplier());
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);

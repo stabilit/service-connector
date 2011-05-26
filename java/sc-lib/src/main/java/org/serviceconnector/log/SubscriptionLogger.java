@@ -36,7 +36,7 @@ public final class SubscriptionLogger {
 	/** The unsubscribe str. */
 	private static String unsubscribeStr = "subscription=%s - unsubscribing from=%s";
 	/** The create subscription str. */
-	private static String createSubscriptionStr = "create subscription=%s timeout=%s";
+	private static String createSubscriptionStr = "create subscription=%s timeout=%sms noi=%sms";
 	/** The delete subscription str. */
 	private static String deleteSubscriptionStr = "delete subscription=%s";
 	/** The abort subscription str. */
@@ -119,13 +119,13 @@ public final class SubscriptionLogger {
 	 * 
 	 * @param id
 	 *            the id
-	 * @param timeout
+	 * @param timeoutMillis
 	 *            the timeout
 	 */
-	public static void logCreateSubscription(String id, double timeout) {
+	public static void logCreateSubscription(String id, double timeoutMillis, double noiMillis) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(createSubscriptionStr, id, timeout);
+			format.format(createSubscriptionStr, id, timeoutMillis, noiMillis);
 			SUBSCRIPTION_LOGGER.trace(format.toString());
 			format.close();
 		}

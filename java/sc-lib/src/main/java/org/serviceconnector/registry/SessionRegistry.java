@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.IServer;
@@ -61,9 +60,9 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		SessionLogger.logCreateSession(session.getId(), session.getSessionTimeoutSeconds());
+		SessionLogger.logCreateSession(session.getId(), session.getSessionTimeoutMillis());
 		this.put(key, session);
-		this.scheduleSessionTimeout(session, session.getSessionTimeoutSeconds());
+		this.scheduleSessionTimeout(session, session.getSessionTimeoutMillis());
 	}
 
 	/**
@@ -134,20 +133,20 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	@SuppressWarnings("unchecked")
-	private void scheduleSessionTimeout(Session session, double newTimeoutSeconds) {
-		if (session == null || newTimeoutSeconds == 0) {
+	private void scheduleSessionTimeout(Session session, double newTimeoutMillis) {
+		if (session == null || newTimeoutMillis == 0) {
 			// no scheduling of session timeout
 			return;
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
 		// sets up session timeout
-		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session, session.getSessionTimeoutSeconds()));
+		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session, session.getSessionTimeoutMillis()));
 		// schedule sessionTimeouter in registry timer
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
-				sessionTimeouter, (long) newTimeoutSeconds, TimeUnit.SECONDS);
-		SessionLogger.trace("schedule session " + session.getId() + " timeout in seconds " + newTimeoutSeconds
-				+ " delay time in seconds " + timeout.getDelay(TimeUnit.SECONDS));
+				sessionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
+		SessionLogger.trace("schedule session timeout " + session.getId() + " " + newTimeoutMillis + "ms, delay time "
+				+ timeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
 	}
@@ -195,7 +194,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		/** The session. */
 		private Session session;
 		/** The timeout. */
-		private double timeoutSeconds;
+		private double timeoutMillis;
 
 		/**
 		 * Instantiates a new session timer run.
@@ -203,9 +202,9 @@ public class SessionRegistry extends Registry<String, Session> {
 		 * @param session
 		 *            the session
 		 */
-		public SessionTimeout(Session session, double timeoutSeconds) {
+		public SessionTimeout(Session session, double timeoutMillis) {
 			this.session = session;
-			this.timeoutSeconds = session.getSessionTimeoutSeconds();
+			this.timeoutMillis = session.getSessionTimeoutMillis();
 		}
 
 		/**
@@ -228,7 +227,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return (int) (this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			return (int) this.timeoutMillis;
 		}
 	}
 }

@@ -96,8 +96,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		session.resetExecuteTime();
 		session.setPendingRequest(true);
 		// reset session timeout to OTI+ECI - during wait for server reply
-		double otiOnSCSeconds = (otiOnSCMillis / Constants.SEC_TO_MILLISEC_FACTOR);
-		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutSeconds()));
+		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCMillis + session.getSessionTimeoutMillis()));
 
 		CacheManager cacheManager = null;
 		if (reqMessage.getCacheId() != null) {
@@ -116,7 +115,7 @@ public class CscExecuteCommand extends CommandAdapter {
 			} catch (Exception e) {
 				session.setPendingRequest(false);
 				// reset session timeout to ECI
-				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 				throw e;
 			}
 		}
@@ -137,7 +136,7 @@ public class CscExecuteCommand extends CommandAdapter {
 					session.setPendingRequest(false);
 					// only one loop outstanding - don't continue throw current exception
 					// reset session timeout to ECI
-					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
@@ -345,7 +344,7 @@ public class CscExecuteCommand extends CommandAdapter {
 					if (cascaded == false) {
 						String sessionId = message.getSessionId();
 						Session session = this.sessionRegistry.getSession(sessionId);
-						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 						session.setPendingRequest(false);
 					}
 					responderCallback.responseCallback(request, response);
@@ -421,7 +420,7 @@ public class CscExecuteCommand extends CommandAdapter {
 				if (cascaded == false) {
 					String sessionId = message.getSessionId();
 					Session session = this.sessionRegistry.getSession(sessionId);
-					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 					session.setPendingRequest(false);
 				}
 				responderCallback.responseCallback(request, response);

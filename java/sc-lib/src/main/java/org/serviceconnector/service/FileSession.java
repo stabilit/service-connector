@@ -114,11 +114,11 @@ public class FileSession extends Session {
 		writer.writeAttribute("id", this.getId());
 		writer.writeAttribute("sessionInfo", this.getSessionInfo());
 		writer.writeAttribute("isCascaded", this.isCascaded());
-		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
+		writer.writeAttribute("sessionTimeoutMillis", this.getSessionTimeoutMillis());
 		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
 		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
 		if (timeouter != null) {
-			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
+			writer.writeAttribute("timeoutSecs", timeouter.getDelay(TimeUnit.SECONDS));
 		}
 		writer.writeAttribute("isStreaming", this.isStreaming());
 		writer.writeAttribute("path", this.getPath());

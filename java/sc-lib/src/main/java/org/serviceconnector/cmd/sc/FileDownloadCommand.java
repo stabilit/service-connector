@@ -74,7 +74,7 @@ public class FileDownloadCommand extends CommandAdapter {
 		// reset session timeout to OTI+ECI - during wait for server reply
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		double otiOnSCSeconds = (otiOnSCMillis / Constants.SEC_TO_MILLISEC_FACTOR);
-		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutSeconds()));
+		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCSeconds + session.getSessionTimeoutMillis()));
 
 		SCMPMessage reply = null;
 		try {
@@ -93,7 +93,7 @@ public class FileDownloadCommand extends CommandAdapter {
 		reply.setMessageType(getKey());
 		response.setSCMP(reply);
 		// reset session timeout to ECI
-		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 		responderCallback.responseCallback(request, response);
 	}
 

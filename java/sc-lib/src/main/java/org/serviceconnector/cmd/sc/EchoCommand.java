@@ -89,7 +89,7 @@ public class EchoCommand extends CommandAdapter {
 		message.setIsReply(true);
 		response.setSCMP(message);
 		// reset session timeout to ECI
-		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutSeconds());
+		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 		responderCallback.responseCallback(request, response);
 	}
 

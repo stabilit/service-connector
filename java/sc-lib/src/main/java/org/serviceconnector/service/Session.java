@@ -36,8 +36,8 @@ public class Session extends AbstractSession {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Session.class);
 
-	/** The session timeout seconds. */
-	private double sessionTimeoutSeconds;
+	/** The session timeout millis. */
+	private double sessionTimeoutMillis;
 	/** The pending request. */
 	private boolean pendingRequest;
 	/** The last execute time, timestamp of last execution for this session. */
@@ -53,18 +53,18 @@ public class Session extends AbstractSession {
 	 */
 	public Session(String sessionInfo, String ipAdressList) {
 		super(sessionInfo, ipAdressList);
-		this.sessionTimeoutSeconds = 0;
+		this.sessionTimeoutMillis = 0;
 		this.pendingRequest = false;
 	}
 
 	/**
 	 * Sets the session timeout seconds.
 	 * 
-	 * @param sessionTimeoutSeconds
+	 * @param sessionTimeoutMillis
 	 *            the new session timeout seconds
 	 */
-	public void setSessionTimeoutSeconds(double sessionTimeoutSeconds) {
-		this.sessionTimeoutSeconds = sessionTimeoutSeconds;
+	public void setSessionTimeoutMillis(double sessionTimeoutMillis) {
+		this.sessionTimeoutMillis = sessionTimeoutMillis;
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class Session extends AbstractSession {
 	 * 
 	 * @return the session timeout seconds
 	 */
-	public double getSessionTimeoutSeconds() {
-		return sessionTimeoutSeconds;
+	public double getSessionTimeoutMillis() {
+		return sessionTimeoutMillis;
 	}
 
 	/**
@@ -133,11 +133,11 @@ public class Session extends AbstractSession {
 		writer.writeAttribute("id", this.getId());
 		writer.writeAttribute("sessionInfo", this.getSessionInfo());
 		writer.writeAttribute("isCascaded", this.isCascaded());
-		writer.writeAttribute("sessionTimeoutSeconds", this.getSessionTimeoutSeconds());
+		writer.writeAttribute("sessionTimeoutMillis", this.getSessionTimeoutMillis());
 		writer.writeAttribute("hasPendingRequest", this.hasPendingRequest());
 		ScheduledFuture<TimeoutWrapper> timeouter = this.getTimeout();
 		if (timeouter != null) {
-			writer.writeAttribute("timeout", timeouter.getDelay(TimeUnit.SECONDS));
+			writer.writeAttribute("timeoutSecs", timeouter.getDelay(TimeUnit.SECONDS));
 		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
 		writer.writeElement("creationTime", this.getCreationTime().toString());
