@@ -213,4 +213,29 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 		service2.unsubscribe(4);
 		Assert.assertNull("the session ID is not null)", service2.getSessionId());
 	}
+
+	/**
+	 * Description: two message receives - waitTime on server is longer than subscriptionTimeout, it verifies timer are scheduled
+	 * correctly<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t11_receive() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		msgCallback = new MsgCallback(publishService);
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
+		int nrMessages = 2;
+		String waitMillis = "124000";
+		subMsgRequest.setData(nrMessages + "|" + waitMillis);
+		subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
+		subMsgRequest.setNoDataIntervalSeconds(63);
+		msgCallback.setExpectedMessages(nrMessages);
+		publishService.subscribe(subMsgRequest, msgCallback);
+		msgCallback.waitForMessage(124000);
+		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
+		msgCallback.getMessage();
+		publishService.unsubscribe();
+	}
 }
