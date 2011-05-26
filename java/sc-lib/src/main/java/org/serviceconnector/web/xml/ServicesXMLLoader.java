@@ -27,6 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.IPublishService;
@@ -51,7 +52,7 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 		if (simulation > 0) {
 			Service[] sim = new Service[simulation + services.length];
 			System.arraycopy(services, 0, sim, 0, services.length);
-			for (int i = services.length; i < simulation; i++) {
+			for (int i = services.length; i < simulation + services.length; i++) {
 				sim[i] = new SessionService("sim " + i);
 			}
 			services = sim;
@@ -68,7 +69,7 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 				IPublishService publishService = (IPublishService) service;
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 				writer.writeStartElement("publishMessageQueueSize");
-				writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
+				writer.writeCData(String.valueOf(publishMessageQueue.getSize() + simulation));
 				writer.writeEndElement(); // end of publishMessageQueueSize
 			}
 			if (service.getName().equals(serviceParameter)) {
@@ -91,6 +92,24 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 					Iterator<SCMPMessage> sqIter = publishMessageQueue.iterator();
 					while (sqIter.hasNext()) {
 						SCMPMessage scmpMessage = sqIter.next();
+						writer.writeStartElement("scmpMessage");
+						writer.writeStartElement("header");
+						Map<String, String> header = scmpMessage.getHeader();
+						for (Entry<?, ?> headerEntry : header.entrySet()) {
+							writer.writeStartElement((String) headerEntry.getKey());
+							Object value = headerEntry.getValue();
+							if (value != null) {
+								writer.writeCData(value.toString());
+							}
+							writer.writeEndElement();
+						}
+						writer.writeEndElement(); // end of header
+						writer.writeEndElement(); // end of scmpMessage
+					}
+					for (int j = 0; j < simulation; j++) {
+						SCMPMessage scmpMessage = new SCMPMessage();
+						scmpMessage.setHeader(SCMPHeaderAttributeKey.MASK, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+						scmpMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, j);
 						writer.writeStartElement("scmpMessage");
 						writer.writeStartElement("header");
 						Map<String, String> header = scmpMessage.getHeader();

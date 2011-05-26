@@ -231,19 +231,24 @@
 	<xsl:template match="scmpMessage">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="message_row"/>
+	        <xsl:call-template name="message_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="message_row"/>
+	        <xsl:call-template name="message_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>	        
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
 	<xsl:template name="message_row">
-	    <td class="sc_table"><xsl:value-of select="header/msk"/></td>
-	    <td class="sc_table"><xsl:value-of select="header/msn"/></td>
-	</xsl:template>$
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="header/msk"/></td>
+	    <td class="{$class}"><xsl:value-of select="header/msn"/></td>
+	</xsl:template>
 	<xsl:template name="subscription_details">
 	  <td colspan="7">
 	    <div class="sc_table_details">
