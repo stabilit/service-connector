@@ -16,4 +16,4 @@ rem  -Xmx1024M  allow 1GB memory
 rem  -server    enables server JVM
 rem
 rem# start sc
-java -Xmx1024M  -Dlog4j.configuration=file:%~dp0../conf/log4j-sc.properties -jar %~dp0sc.jar -config %~dp0../conf/sc.properties
+java -Xmx1024M  -Dlog4j.configuration=file:"%~dp0../conf/log4j-sc.properties" -jar "%~dp0sc.jar" -config "%~dp0../conf/sc.properties"
