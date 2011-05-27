@@ -483,7 +483,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t14_2ClientsLargeMessage() throws Exception {
-		String largeMessage = TestUtil.getLargeString();
+		String largeMessage = TestUtil.get10MBString();
 		SCMessage request = new SCMessage();
 		request.setPartSize(1 << 16); // 64KB
 		request.setCompressed(false);
@@ -492,12 +492,12 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
-		request.setData("cacheLargeMessageFor1Hour");
+		request.setData("cache10MBStringFor1Hour");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.send(request);
 
-		Thread.sleep(1000);
+		Thread.sleep(10000);
 
 		// session service2 starts getting large message from cache with cacheId 700
 		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
