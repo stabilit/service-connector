@@ -23,5 +23,4 @@ public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
 	public APIExecuteCacheTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
-	
 }
