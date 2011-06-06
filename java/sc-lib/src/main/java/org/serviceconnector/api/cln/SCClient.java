@@ -723,7 +723,7 @@ public class SCClient {
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
 	 * @throws SCMPValidatorException
-	 *             maxConnections smaller one<br />
+	 *             maxConnections smaller two<br />
 	 * @throws SCServiceException
 	 *             called method after attach
 	 */
@@ -731,7 +731,8 @@ public class SCClient {
 		if (this.attached) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}
-		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
+		// maxConnections must be at least 2 - echo call and execute/send might be parallel
+		ValidatorUtility.validateInt(2, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		this.maxConnections = maxConnections;
 	}
 

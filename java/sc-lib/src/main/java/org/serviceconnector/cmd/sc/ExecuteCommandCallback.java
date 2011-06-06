@@ -186,8 +186,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(this.sessionId, cacheId);					
-					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+					scmpCache.removeComposite(this.sessionId, cacheId);
+					CacheLogger
+							.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}
 			}
 		}
@@ -201,7 +202,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		if (session != null) {
 			// reset session timeout to ECI
 			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-			session.setPendingRequest(false);
+			session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 		}
 		this.responderCallback.responseCallback(request, response);
 	}
@@ -213,11 +214,14 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
+					+ requestMessage.getSessionId());
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid="
+					+ requestMessage.getSessionId());
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType);
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid="
+					+ requestMessage.getSessionId());
 		}
 		// forward server reply to client
 		fault.setSessionId(sessionId);
@@ -230,7 +234,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		if (session != null) {
 			// reset session timeout to ECI
 			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-			session.setPendingRequest(false);
+			session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 		}
 		// check for cache id
 		CacheManager cacheManager = null;
@@ -258,8 +262,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(this.sessionId, this.requestCacheId);					
-					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+					scmpCache.removeComposite(this.sessionId, this.requestCacheId);
+					CacheLogger
+							.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}
 			}
 		}

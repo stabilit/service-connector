@@ -79,18 +79,20 @@ public class CommandCascCallback implements ISCMPMessageCallback {
 	public void receive(Exception ex) {
 		LOGGER.warn(ex);
 		SCMPMessage fault = null;
+		SCMPMessage reqMessage = request.getMessage();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC " + this.msgType);
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC " + this.msgType);
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC sid=" + reqMessage.getSessionId());
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + reqMessage.getSessionId());
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing " + this.msgType + " failed");
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing " + this.msgType + " failed sid="
+					+ reqMessage.getSessionId());
 		}
 		fault.setSessionId(this.request.getMessage().getSessionId());
-		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
 		fault.setIsReply(true);

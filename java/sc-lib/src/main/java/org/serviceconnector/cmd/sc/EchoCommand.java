@@ -18,10 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
@@ -78,18 +76,16 @@ public class EchoCommand extends CommandAdapter {
 		}
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
-
-		if (session.hasPendingRequest() == true) {
-			SessionLogger.error("session " + sessionId + " has pending request");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service="
-					+ message.getServiceName() + " sid=" + sessionId);
-			scmpCommandException.setMessageType(this.getKey());
-			throw scmpCommandException;
-		}
 		message.setIsReply(true);
 		response.setSCMP(message);
-		// reset session timeout to ECI
-		this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+
+		synchronized (session) {
+			// needs to be in sync because of setting pending request & reseting timer
+			if (session.hasPendingRequest() == false) {
+				// reset session timeout to ECI - only if no pending request on session
+				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+			}
+		}
 		responderCallback.responseCallback(request, response);
 	}
 

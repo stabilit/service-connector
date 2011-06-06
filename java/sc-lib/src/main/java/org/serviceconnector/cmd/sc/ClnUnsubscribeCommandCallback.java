@@ -92,18 +92,20 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		LOGGER.warn(ex);
 		// free server from subscription
 		this.subscription.getServer().removeSession(subscription);
+		SCMPMessage reqMessage = request.getMessage();
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln unsubscribe");
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln unsubscribe sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln unsubscribe");
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln unsubscribe sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + "sid=" + reqMessage.getSessionId());
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed");
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed sid=" + reqMessage.getSessionId());
 		}
-		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
 		fault.setIsReply(true);

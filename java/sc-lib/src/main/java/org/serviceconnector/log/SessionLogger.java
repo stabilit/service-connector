@@ -47,12 +47,21 @@ public final class SessionLogger {
 	}
 
 	/**
-	 * Checks if is enabled.
+	 * Checks if is trace enabled.
 	 * 
-	 * @return true, if is enabled
+	 * @return true, if is trace enabled
 	 */
-	public static boolean isEnabled() {
+	public static boolean isTraceEnabled() {
 		return SESSION_LOGGGER.isTraceEnabled();
+	}
+
+	/**
+	 * Checks if is debug enabled.
+	 * 
+	 * @return true, if is debug enabled
+	 */
+	public static boolean isDebugEnabled() {
+		return SESSION_LOGGGER.isDebugEnabled();
 	}
 
 	/**
@@ -64,10 +73,10 @@ public final class SessionLogger {
 	 *            the eci
 	 */
 	public static synchronized void logCreateSession(String sessionId, double eci) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(createSessionStr, sessionId, eci);
-			SESSION_LOGGGER.trace(format.toString());
+			SESSION_LOGGGER.debug(format.toString());
 			format.close();
 		}
 	}
@@ -79,10 +88,10 @@ public final class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logDeleteSession(String sessionId) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(deleteSessionStr, sessionId);
-			SESSION_LOGGGER.trace(format.toString());
+			SESSION_LOGGGER.debug(format.toString());
 			format.close();
 		}
 	}
@@ -94,10 +103,10 @@ public final class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logTimeoutSession(String sessionId) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(timeoutSessionStr, sessionId);
-			SESSION_LOGGGER.trace(format.toString());
+			SESSION_LOGGGER.debug(format.toString());
 			format.close();
 		}
 	}
@@ -109,10 +118,10 @@ public final class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logAbortSession(String sessionId) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(abortSessionStr, sessionId);
-			SESSION_LOGGGER.trace(format.toString());
+			SESSION_LOGGGER.debug(format.toString());
 			format.close();
 		}
 	}
@@ -124,23 +133,35 @@ public final class SessionLogger {
 	 *            the session id
 	 */
 	public static synchronized void logRejectSession(String sessionId) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
+		if (SESSION_LOGGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(rejectSessionStr, sessionId);
-			SESSION_LOGGGER.trace(format.toString());
+			SESSION_LOGGGER.debug(format.toString());
 			format.close();
 		}
 	}
 
 	/**
-	 * Trace.
+	 * Warn.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public static void trace(String message) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
-			SESSION_LOGGGER.trace(message);
+	public static void warn(String message) {
+		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
+			SESSION_LOGGGER.warn(message);
+		}
+	}
+
+	/**
+	 * Error.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public static void error(String message) {
+		if (SESSION_LOGGGER.isEnabledFor(Level.ERROR)) {
+			SESSION_LOGGGER.error(message);
 		}
 	}
 
@@ -157,26 +178,26 @@ public final class SessionLogger {
 	}
 
 	/**
-	 * Error.
+	 * Debug.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public static void error(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.ERROR)) {
-			SESSION_LOGGGER.error(message);
+	public static void debug(String message) {
+		if (SESSION_LOGGGER.isEnabledFor(Level.DEBUG)) {
+			SESSION_LOGGGER.debug(message);
 		}
 	}
-	
+
 	/**
-	 * Warn.
+	 * Trace.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public static void warn(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
-			SESSION_LOGGGER.warn(message);
+	public static void trace(String message) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
+			SESSION_LOGGGER.trace(message);
 		}
 	}
 }

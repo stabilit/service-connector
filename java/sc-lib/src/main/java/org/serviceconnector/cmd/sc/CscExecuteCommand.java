@@ -94,7 +94,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		}
 		// sets the time of last execution
 		session.resetExecuteTime();
-		session.setPendingRequest(true);
+		session.setPendingRequest(true); // IMPORTANT - set true before reset timeout - because of parallel echo call
 		// reset session timeout to OTI+ECI - during wait for server reply
 		this.sessionRegistry.resetSessionTimeout(session, (otiOnSCMillis + session.getSessionTimeoutMillis()));
 
@@ -113,9 +113,9 @@ public class CscExecuteCommand extends CommandAdapter {
 					return;
 				}
 			} catch (Exception e) {
-				session.setPendingRequest(false);
 				// reset session timeout to ECI
 				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+				session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 				throw e;
 			}
 		}
@@ -133,10 +133,10 @@ public class CscExecuteCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of csc execute, tries left=" + tries);
 				if (i >= (tries - 1)) {
-					session.setPendingRequest(false);
 					// only one loop outstanding - don't continue throw current exception
 					// reset session timeout to ECI
 					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+					session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
@@ -345,7 +345,7 @@ public class CscExecuteCommand extends CommandAdapter {
 						String sessionId = message.getSessionId();
 						Session session = this.sessionRegistry.getSession(sessionId);
 						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-						session.setPendingRequest(false);
+						session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 					}
 					responderCallback.responseCallback(request, response);
 					return true;
@@ -421,7 +421,7 @@ public class CscExecuteCommand extends CommandAdapter {
 					String sessionId = message.getSessionId();
 					Session session = this.sessionRegistry.getSession(sessionId);
 					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-					session.setPendingRequest(false);
+					session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 				}
 				responderCallback.responseCallback(request, response);
 				CacheLogger.trace("Sent a cache message to the client cacheId=" + cacheId + ", messageSequenceNr="

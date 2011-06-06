@@ -91,7 +91,7 @@ public class Session extends AbstractSession {
 	 * @param pendingRequest
 	 *            the new pending request
 	 */
-	public void setPendingRequest(boolean pendingRequest) {
+	public synchronized void setPendingRequest(boolean pendingRequest) {
 		this.pendingRequest = pendingRequest;
 	}
 
@@ -100,7 +100,7 @@ public class Session extends AbstractSession {
 	 * 
 	 * @return the pending request
 	 */
-	public boolean hasPendingRequest() {
+	public synchronized boolean hasPendingRequest() {
 		return this.pendingRequest;
 	}
 

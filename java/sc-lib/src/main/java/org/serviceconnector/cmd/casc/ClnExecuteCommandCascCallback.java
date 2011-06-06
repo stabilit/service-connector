@@ -170,8 +170,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(this.requestMessage.getSessionId(), this.requestCacheId);					
-					CacheLogger.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
+					scmpCache.removeComposite(this.requestMessage.getSessionId(), this.requestCacheId);
+					CacheLogger
+							.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}
 			}
 		}
@@ -189,11 +190,14 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
+					+ requestMessage.getSessionId());
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid="
+					+ requestMessage.getSessionId());
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType);
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid="
+					+ requestMessage.getSessionId());
 		}
 		String serviceName = this.requestMessage.getServiceName();
 		String sessionId = this.requestMessage.getSessionId();
@@ -203,12 +207,6 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 		fault.setMessageType(this.msgType);
 		fault.setServiceName(serviceName);
 		this.response.setSCMP(fault);
-		// schedule session timeout
-		Session session = this.sessionRegistry.getSession(sessionId);
-		if (session != null) {
-			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-			session.setPendingRequest(false);
-		}
 		// check for cache id
 		CacheManager cacheManager = null;
 		if (this.requestCacheId != null) {
@@ -235,8 +233,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(sessionId, this.requestCacheId);					
-					CacheLogger.warn("cache composite removed because an exception did occure, cache (" + this.requestCacheId + ")");
+					scmpCache.removeComposite(sessionId, this.requestCacheId);
+					CacheLogger
+							.warn("cache composite removed because an exception did occure, cache (" + this.requestCacheId + ")");
 				}
 			}
 		}

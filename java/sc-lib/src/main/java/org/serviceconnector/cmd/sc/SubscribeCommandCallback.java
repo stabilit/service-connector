@@ -131,15 +131,18 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 		String serviceName = this.reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe");
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe");
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof InterruptedException) {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted");
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid="
+					+ reqMessage.getSessionId());
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + reqMessage.getSessionId());
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed");
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed sid=" + reqMessage.getSessionId());
 		}
 		// forward reply to client
 		fault.setIsReply(true);

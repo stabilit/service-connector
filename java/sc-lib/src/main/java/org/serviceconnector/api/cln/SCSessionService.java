@@ -174,10 +174,10 @@ public class SCSessionService extends SCService {
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
 		}
-		// 4. post process, reply to client
-		this.triggerSessionTimeout();
 		this.sessionId = reply.getSessionId();
 		this.sessionActive = true;
+		// 4. post process, reply to client
+		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setDataLength(reply.getBodyLength());
@@ -237,8 +237,6 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new SCMPValidatorException("Message (scMessage) must be set.");
 		}
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
@@ -252,13 +250,11 @@ public class SCSessionService extends SCService {
 			PerformanceLogger.begin();
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.triggerSessionTimeout();
 			PerformanceLogger.end();
 			throw new SCServiceException("Execute request failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.triggerSessionTimeout();
 		PerformanceLogger.end();
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("Execute failed.");
@@ -324,8 +320,6 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new SCMPValidatorException("Message (scMessage) must be set.");
 		}
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// important to set pendingRequest true in case of asynchronous communication
 		this.pendingRequest = true;
@@ -341,7 +335,6 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			this.triggerSessionTimeout();
 			throw new SCServiceException("Send request failed. ", e);
 		}
 	}
@@ -349,13 +342,9 @@ public class SCSessionService extends SCService {
 	/**
 	 * Echo. Refreshes the session on SC. Avoids session timeout.
 	 */
-	private synchronized void echo() {
+	private void echo() {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
-			return;
-		}
-		if (this.pendingRequest) {
-			// an operation is running no echo allowed
 			return;
 		}
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
@@ -490,14 +479,6 @@ public class SCSessionService extends SCService {
 			this.sessionId = null;
 			this.sessionActive = false;
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	synchronized void setRequestComplete() {
-		super.setRequestComplete();
-		// trigger session timeout
-		this.triggerSessionTimeout();
 	}
 
 	/**
