@@ -15,5 +15,7 @@ rem Adapt this script to optimize JVM parameters for SC
 rem  -Xmx1024M  allow 1GB memory
 rem  -server    enables server JVM
 rem
+rem set default directory
+cd "%~dp0"
 rem# start sc
-java -Xmx1024M  -Dlog4j.configuration=file:"%~dp0../conf/log4j-sc.properties" -jar "%~dp0sc.jar" -config "%~dp0../conf/sc.properties"
+java -Xmx1024M  -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
