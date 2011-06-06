@@ -42,7 +42,7 @@ public final class MessageLogger {
 	}
 
 	/**
-	 * Log input message.
+	 * produce the log for an input message.
 	 * 
 	 * @param headlineKey
 	 *            the headline key
@@ -77,7 +77,7 @@ public final class MessageLogger {
 	}
 
 	/**
-	 * Log output message.
+	 * produce the log for an output message.
 	 *
 	 * @param headlineKey the headline key
 	 * @param message the message
@@ -110,10 +110,10 @@ public final class MessageLogger {
 	}
 
 	/**
-	 * Format attribute.
+	 * Format header attribute for output in the log.
 	 * 
 	 * @param key
-	 *            e.g. MTY
+	 *            the header attribute key e.g. MTY
 	 * @param message
 	 *            SCMP message
 	 * @return the string
@@ -129,7 +129,7 @@ public final class MessageLogger {
 	}
 
 	/**
-	 * Checks if is enabled.
+	 * Checks if is log enabled.
 	 * 
 	 * @return true, if is enabled
 	 */
