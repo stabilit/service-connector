@@ -1,1 +1,1 @@
-net stop ServiceConnector
+net stop "Service Connector"

@@ -3,13 +3,13 @@ Run Service Connector as deamon on unix
 
 1) install sc files to the directory of your choice usually /home/sc/
 	The required files are:
-	sc.jar
-	sc-lib-final.jar
-	start-SC.sh
-	stop-SC.sh
+	bin\sc.jar
+	bin\sc-lib-final.jar
+	bin\start-sc.sh
+	bin\stop-sc.sh
 
 2) adapt the daemon script serviceconnector.sh as follows: 
-	change variale DAEMON=/home/sc/start-SC.sh
+	change variale DAEMON=/home/sc/start-sc.sh
 	to the value where sc files have been installed
 
 3) move the daemon script in /etc/init.d/serviceconnector.sh

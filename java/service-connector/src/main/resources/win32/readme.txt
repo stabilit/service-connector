@@ -3,27 +3,27 @@ Run Service Connector as Windows service on Win32
 
 1) install sc files to the directory of your choice usually C:\Program Files\sc\
 	The required files are:
-	sc.jar
-	sc-lib-all.jar
-	start-sc.bat
-	stop-sc.bat
-	win32\jbosssvc.exe
-	win32\service.bat
-	win32\shutdown.bat
-	win32\shutdown.jar
-	win32\start.bat
-	win32\stop.bat
+	bin\sc.jar
+	bin\sc-lib-all.jar
+	bin\start-sc.bat
+	bin\stop-sc.bat
+	bin\win32\jbosssvc.exe
+	bin\win32\service.bat
+	bin\win32\shutdown.bat
+	bin\win32\shutdown.jar
+	bin\win32\start.bat
+	bin\win32\stop.bat
 
 2) install SC as service by invoking the service.bat as follows
 		service install
 
 3) you can now start the service with the dos-command 
-		net start ServiceConnector
+		net start "Service Connector"
 	or by invoking  
 		start.bat
 
 4) In order to stop the service use the dos-command 
-		net stop ServiceConnector
+		net stop "Service Connector"
 	or 
 		stop.bat
 

@@ -19,7 +19,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="ServiceConnector"
 NAME=serviceconnector
-DAEMON=/home/sc/start-SC.sh
+DAEMON=/home/sc/bin/start-sc.sh
 DAEMON_ARGS="--options args"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
