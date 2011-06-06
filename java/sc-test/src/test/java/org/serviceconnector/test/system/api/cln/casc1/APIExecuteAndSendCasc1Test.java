@@ -25,6 +25,7 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -44,8 +45,9 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	/**
 	 * Description: exchange one uncompressed message<br>
 	 * Expectation: passes.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void t001_executeUncompressed() throws Exception {
@@ -936,5 +938,34 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		System.out.println("Sent string " + sb.length() + " bytes long in " + (System.currentTimeMillis() - startTime) + " millis");
 		response = msgCallback1.getResponse();
 		sessionService1.deleteSession();
+	}
+
+	/**
+	 * Description: exchange one 10MB uncompressed message, part size 64KB<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t158_executeLargeUncompressedLongerThanECI() throws Exception {
+		// load message to cache
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		sessionService1.setEchoIntervalSeconds(10);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setMessageInfo(TestConstants.cacheCmd);
+		request.setData(TestUtil.get10MBString());
+		request.setCacheId("700");
+		response = sessionService1.execute(request);
+
+		// get message from cache - needs more time than eci 10 sec - sleep 9950 just before echo gets sent
+		Thread.sleep(9850);
+		response = sessionService1.execute(request);
+		try {
+			sessionService1.deleteSession();
+		} catch (SCServiceException e) {
+			Assert.assertEquals(SCMPError.SESSION_NOT_FOUND.getErrorCode(), e.getSCErrorCode());
+			Assert.fail("delete session should not fail");
+		}
 	}
 }
