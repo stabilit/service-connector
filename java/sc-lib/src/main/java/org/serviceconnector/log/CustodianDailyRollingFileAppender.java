@@ -16,31 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
-/**
- * CustodianDailyRollingFileAppender.java
- * Adapted from the Apache Log4j DailyRollingFileAppender to extend the functionality
- * of the existing class so that the user can limit the number of log backups
- * and compress the backups to conserve disk space.
- * 
- * @author Ryan Kimber
- *         Licensed to the Apache Software Foundation (ASF) under one or more
- *         contributor license agreements. See the NOTICE file distributed with
- *         this work for additional information regarding copyright ownership.
- *         The ASF licenses this file to You under the Apache License, Version 2.0
- *         (the "License"); you may not use this file except in compliance with
- *         the License. You may obtain a copy of the License at
- *         http://www.apache.org/licenses/LICENSE-2.0
- *         Unless required by applicable law or agreed to in writing, software
- *         distributed under the License is distributed on an "AS IS" BASIS,
- *         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *         See the License for the specific language governing permissions and
- *         limitations under the License.
- */
-
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,8 +25,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
@@ -58,16 +33,27 @@ import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * CustodianDailyRollingFileAppender is based on {@link org.apache.log4j.appender.DailyRollingFileAppender} so most of the
- * configuration options can be taken from the documentation on that class.
+ * configuration options can be taken from the documentation on that class. Adapted from the Apache Log4j DailyRollingFileAppender
+ * to extend the functionality of the existing class so that the user can
+ * limit the number of log backups on disk. Base coding done by Ryan Kimber.
+ * 
+ * @author Joël Traber
  */
 public class CustodianDailyRollingFileAppender extends FileAppender {
 	// The code assumes that the following constants are in a increasing sequence.
+	/** The Constant TOP_OF_TROUBLE. */
 	static final int TOP_OF_TROUBLE = -1;
+	/** The Constant TOP_OF_MINUTE. */
 	static final int TOP_OF_MINUTE = 0;
+	/** The Constant TOP_OF_HOUR. */
 	static final int TOP_OF_HOUR = 1;
+	/** The Constant HALF_DAY. */
 	static final int HALF_DAY = 2;
+	/** The Constant TOP_OF_DAY. */
 	static final int TOP_OF_DAY = 3;
+	/** The Constant TOP_OF_WEEK. */
 	static final int TOP_OF_WEEK = 4;
+	/** The Constant TOP_OF_MONTH. */
 	static final int TOP_OF_MONTH = 5;
 
 	/**
@@ -75,35 +61,26 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 	 * meaning daily rollover.
 	 */
 	private String datePattern = "'.'yyyy-MM-dd";
-	/** The compress backups, default = false means no compression. */
-	private String compressBackups = "false";
 	/** The max number of days, default = 0 means deactive file deletion. */
-	private String maxNumberOfDays = "0";
-
+	private int maxNumberOfDays = 0;
 	/**
-	 * The log file will be renamed to the value of the scheduledFilename
-	 * variable when the next interval is entered. For example, if the rollover
-	 * period is one hour, the log file will be renamed to the value of
-	 * "scheduledFilename" at the beginning of the next hour.
-	 * The precise time when a rollover occurs depends on logging activity.
+	 * The log file will be renamed to the value of the scheduledFilename variable when the next interval is entered. For example,
+	 * if the rollover period is one hour, the log file will be renamed to the value of "scheduledFilename" at the beginning of the
+	 * next hour. The precise time when a rollover occurs depends on logging activity.
 	 */
 	private String scheduledFilename;
-
 	/**
 	 * The next time we estimate a rollover should occur.
 	 */
 	private long nextCheck = System.currentTimeMillis() - 1;
-
-	Date now = new Date();
-
-	SimpleDateFormat sdf;
-
-	RollingCalendar rc = new RollingCalendar();
-
-	int checkPeriod = TOP_OF_TROUBLE;
-
-	// The gmtTimeZone is used only in computeCheckPeriod() method.
-	static final TimeZone gmtTimeZone = TimeZone.getTimeZone("GMT");
+	/** now. */
+	private Date now = new Date();
+	/** The sdf. */
+	private SimpleDateFormat sdf;
+	/** The rc. */
+	private RollingCalendar rc = new RollingCalendar();
+	/** The Constant gmtTimeZone. */
+	private static final TimeZone gmtTimeZone = TimeZone.getTimeZone("GMT");
 
 	/**
 	 * The default constructor does nothing.
@@ -112,29 +89,49 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 	}
 
 	/**
-	 * Instantiate a CustodianDailyRollingFileAppender and open the file
-	 * designated by filename. The opened filename will become the ouput
-	 * destination for this appender.
+	 * Instantiate a CustodianDailyRollingFileAppender and open the file designated by filename. The opened filename will become the
+	 * ouput destination for this appender.
+	 * 
+	 * @param layout
+	 *            the layout
+	 * @param filename
+	 *            the filename
+	 * @param datePattern
+	 *            the date pattern
+	 * @param maxNumberOfDays
+	 *            the max number of days
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public CustodianDailyRollingFileAppender(Layout layout, String filename, String datePattern) throws IOException {
+	public CustodianDailyRollingFileAppender(Layout layout, String filename, String datePattern, int maxNumberOfDays)
+			throws IOException {
 		super(layout, filename, true);
 		this.datePattern = datePattern;
+		this.maxNumberOfDays = maxNumberOfDays;
 		activateOptions();
 	}
 
 	/**
 	 * The DatePattern takes a string in the same format as expected by {@link SimpleDateFormat}. This options determines the
 	 * rollover schedule.
+	 * 
+	 * @param pattern
+	 *            the new date pattern
 	 */
 	public void setDatePattern(String pattern) {
 		datePattern = pattern;
 	}
 
-	/** Returns the value of the DatePattern option. */
+	/**
+	 * Returns the value of the DatePattern option.
+	 * 
+	 * @return the date pattern
+	 */
 	public String getDatePattern() {
 		return datePattern;
 	}
 
+	@Override
 	public void activateOptions() {
 		super.activateOptions();
 		if (datePattern != null && fileName != null) {
@@ -151,6 +148,12 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 		}
 	}
 
+	/**
+	 * Prints the periodicity.
+	 * 
+	 * @param type
+	 *            the type
+	 */
 	void printPeriodicity(int type) {
 		switch (type) {
 		case TOP_OF_MINUTE:
@@ -176,16 +179,16 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 		}
 	}
 
-	// This method computes the roll over period by looping over the
-	// periods, starting with the shortest, and stopping when the r0 is
-	// different from from r1, where r0 is the epoch formatted according
-	// the datePattern (supplied by the user) and r1 is the
-	// epoch+nextMillis(i) formatted according to datePattern. All date
-	// formatting is done in GMT and not local format because the test
-	// logic is based on comparisons relative to 1970-01-01 00:00:00
-	// GMT (the epoch).
-
-	int computeCheckPeriod() {
+	/**
+	 * Compute check period.
+	 * This method computes the roll over period by looping over the periods, starting with the shortest, and stopping when the r0
+	 * is different from from r1, where r0 is the epoch formatted according the datePattern (supplied by the user) and r1 is the
+	 * epoch+nextMillis(i) formatted according to datePattern. All date formatting is done in GMT and not local format because the
+	 * test logic is based on comparisons relative to 1970-01-01 00:00:00 GMT (the epoch).
+	 * 
+	 * @return the int
+	 */
+	private int computeCheckPeriod() {
 		RollingCalendar rollingCalendar = new RollingCalendar(gmtTimeZone, Locale.ENGLISH);
 		// set sate to 1970-01-01 00:00:00 GMT
 		Date epoch = new Date(0);
@@ -198,7 +201,6 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 				rollingCalendar.setType(i);
 				Date next = new Date(rollingCalendar.getNextCheckMillis(epoch));
 				String r1 = simpleDateFormat.format(next);
-				// System.out.println("Type = "+i+", r0 = "+r0+", r1 = "+r1);
 				if (r0 != null && r1 != null && !r0.equals(r1)) {
 					return i;
 				}
@@ -209,6 +211,9 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 
 	/**
 	 * Rollover the current file to a new file.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	void rollOver() throws IOException {
 
@@ -219,8 +224,7 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 		}
 
 		String datedFilename = fileName + sdf.format(now);
-		// It is too early to roll over because we are still within the
-		// bounds of the current interval. Rollover will occur once the
+		// It is too early to roll over because we are still within the bounds of the current interval. Rollover will occur once the
 		// next interval is reached.
 		if (scheduledFilename.equals(datedFilename)) {
 			return;
@@ -243,8 +247,7 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 		}
 
 		try {
-			// This will also close the file. This is OK since multiple
-			// close operations are safe.
+			// This will also close the file. This is OK since multiple close operations are safe.
 			this.setFile(fileName, false, this.bufferedIO, this.bufferSize);
 		} catch (IOException e) {
 			errorHandler.error("setFile(" + fileName + ", false) call failed.");
@@ -254,9 +257,11 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 
 	/**
 	 * This method differentiates DailyRollingFileAppender from its super class.
-	 * Before actually logging, this method will check whether it is time to do
-	 * a rollover. If it is, it will schedule the next rollover time and then
-	 * rollover.
+	 * Before actually logging, this method will check whether it is time to do a rollover. If it is, it will schedule the next
+	 * rollover time and then rollover.
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	protected void subAppend(LoggingEvent event) {
 		long n = System.currentTimeMillis();
@@ -272,44 +277,43 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 		super.subAppend(event);
 	}
 
-	public String getCompressBackups() {
-		return compressBackups;
-	}
-
-	public void setCompressBackups(String compressBackups) {
-		this.compressBackups = compressBackups;
-	}
-
-	public String getMaxNumberOfDays() {
+	/**
+	 * Gets the max number of days.
+	 * 
+	 * @return the max number of days
+	 */
+	public int getMaxNumberOfDays() {
 		return maxNumberOfDays;
 	}
 
-	public void setMaxNumberOfDays(String maxNumberOfDays) {
+	/**
+	 * Sets the max number of days.
+	 * 
+	 * @param maxNumberOfDays
+	 *            the new max number of days
+	 */
+	public void setMaxNumberOfDays(int maxNumberOfDays) {
 		this.maxNumberOfDays = maxNumberOfDays;
 	}
 
-	/*
-	 * This method checks to see if we're exceeding the number of log backups
-	 * that we are supposed to keep, and if so, deletes the offending files. It
-	 * then delegates to the rollover method to rollover to a new file if
-	 * required.
+	/**
+	 * Cleanup and roll over.
+	 * This method checks to see if we're exceeding the number of log backups that we are supposed to keep, and if so, deletes the
+	 * offending files. It then delegates to the rollover method to rollover to a new file if required.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	protected void cleanupAndRollOver() throws IOException {
 		// Check to see if there are already 5 files
 		File file = new File(fileName);
 		Calendar cal = Calendar.getInstance();
-		int maxDays = 7;
-		try {
-			maxDays = Integer.parseInt(getMaxNumberOfDays());
-		} catch (Exception e) {
-			// just leave it at 7.
-		}
-		if (maxDays == 0) {
+		if (this.maxNumberOfDays == 0) {
 			// ignore file deletion when maxDays == 0
-			rollOver();
+			this.rollOver();
 			return;
 		}
-		cal.add(Calendar.DATE, -maxDays);
+		cal.add(Calendar.DATE, -this.maxNumberOfDays);
 		Date cutoffDate = cal.getTime();
 		if (file.getParentFile().exists()) {
 			File[] files = file.getParentFile().listFiles(new StartsWithFileFilter(file.getName(), false));
@@ -322,68 +326,38 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 					if (date.before(cutoffDate)) {
 						files[i].delete();
 					}
-					// If we're supposed to zip files and this isn't already a zip
-					else if (getCompressBackups().equalsIgnoreCase("YES") || getCompressBackups().equalsIgnoreCase("TRUE")) {
-						zipAndDelete(files[i]);
-					}
 				} catch (Exception pe) {
 					// This isn't a file we should touch (it isn't named correctly)
 				}
 			}
 		}
-		rollOver();
+		this.rollOver();
 	}
 
 	/**
-	 * Compresses the passed file to a .zip file, stores the .zip in the
-	 * same directory as the passed file, and then deletes the original,
-	 * leaving only the .zipped archive.
-	 * 
-	 * @param file
+	 * The Class StartsWithFileFilter.
 	 */
-	private void zipAndDelete(File file) throws IOException {
-		if (!file.getName().endsWith(".zip")) {
-			File zipFile = new File(file.getParent(), file.getName() + ".zip");
-			FileInputStream fis = new FileInputStream(file);
-			FileOutputStream fos = new FileOutputStream(zipFile);
-			ZipOutputStream zos = new ZipOutputStream(fos);
-			ZipEntry zipEntry = new ZipEntry(file.getName());
-			zos.putNextEntry(zipEntry);
+	private class StartsWithFileFilter implements FileFilter {
 
-			byte[] buffer = new byte[4096];
-			while (true) {
-				int bytesRead = fis.read(buffer);
-				if (bytesRead == -1)
-					break;
-				else {
-					zos.write(buffer, 0, bytesRead);
-				}
-			}
-			zos.closeEntry();
-			fis.close();
-			zos.close();
-			file.delete();
-		}
-	}
-
-	class StartsWithFileFilter implements FileFilter {
+		/** The starts with. */
 		private String startsWith;
+		/** The include directories. */
 		private boolean inclDirs = false;
 
 		/**
-	     * 
-	     */
+		 * Instantiates a new starts with file filter.
+		 * 
+		 * @param startsWith
+		 *            the starts with
+		 * @param includeDirectories
+		 *            the include directories
+		 */
 		public StartsWithFileFilter(String startsWith, boolean includeDirectories) {
-			super();
 			this.startsWith = startsWith.toUpperCase();
 			inclDirs = includeDirectories;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.io.FileFilter#accept(java.io.File)
-		 */
+		@Override
 		public boolean accept(File pathname) {
 			if (!inclDirs && pathname.isDirectory()) {
 				return false;
@@ -391,87 +365,120 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 				return pathname.getName().toUpperCase().startsWith(startsWith);
 		}
 	}
-}
 
-/**
- * RollingCalendar is a helper class to DailyRollingFileAppender. Given a
- * periodicity type and the current time, it computes the start of the next
- * interval.
- */
-class RollingCalendar extends GregorianCalendar {
-	private static final long serialVersionUID = -3560331770601814177L;
+	/**
+	 * RollingCalendar is a helper class to DailyRollingFileAppender. Given a
+	 * periodicity type and the current time, it computes the start of the next
+	 * interval.
+	 */
+	private class RollingCalendar extends GregorianCalendar {
 
-	int type = CustodianDailyRollingFileAppender.TOP_OF_TROUBLE;
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = -3560331770601814177L;
+		/** The type. */
+		private int type = CustodianDailyRollingFileAppender.TOP_OF_TROUBLE;
 
-	RollingCalendar() {
-		super();
-	}
-
-	RollingCalendar(TimeZone tz, Locale locale) {
-		super(tz, locale);
-	}
-
-	void setType(int type) {
-		this.type = type;
-	}
-
-	public long getNextCheckMillis(Date now) {
-		return getNextCheckDate(now).getTime();
-	}
-
-	public Date getNextCheckDate(Date now) {
-		this.setTime(now);
-
-		switch (type) {
-		case CustodianDailyRollingFileAppender.TOP_OF_MINUTE:
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			this.add(Calendar.MINUTE, 1);
-			break;
-		case CustodianDailyRollingFileAppender.TOP_OF_HOUR:
-			this.set(Calendar.MINUTE, 0);
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			this.add(Calendar.HOUR_OF_DAY, 1);
-			break;
-		case CustodianDailyRollingFileAppender.HALF_DAY:
-			this.set(Calendar.MINUTE, 0);
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			int hour = get(Calendar.HOUR_OF_DAY);
-			if (hour < 12) {
-				this.set(Calendar.HOUR_OF_DAY, 12);
-			} else {
-				this.set(Calendar.HOUR_OF_DAY, 0);
-				this.add(Calendar.DAY_OF_MONTH, 1);
-			}
-			break;
-		case CustodianDailyRollingFileAppender.TOP_OF_DAY:
-			this.set(Calendar.HOUR_OF_DAY, 0);
-			this.set(Calendar.MINUTE, 0);
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			this.add(Calendar.DATE, 1);
-			break;
-		case CustodianDailyRollingFileAppender.TOP_OF_WEEK:
-			this.set(Calendar.DAY_OF_WEEK, getFirstDayOfWeek());
-			this.set(Calendar.HOUR_OF_DAY, 0);
-			this.set(Calendar.MINUTE, 0);
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			this.add(Calendar.WEEK_OF_YEAR, 1);
-			break;
-		case CustodianDailyRollingFileAppender.TOP_OF_MONTH:
-			this.set(Calendar.DATE, 1);
-			this.set(Calendar.HOUR_OF_DAY, 0);
-			this.set(Calendar.MINUTE, 0);
-			this.set(Calendar.SECOND, 0);
-			this.set(Calendar.MILLISECOND, 0);
-			this.add(Calendar.MONTH, 1);
-			break;
-		default:
-			throw new IllegalStateException("Unknown periodicity type.");
+		/**
+		 * Instantiates a new rolling calendar.
+		 */
+		public RollingCalendar() {
+			super();
 		}
-		return getTime();
+
+		/**
+		 * Instantiates a new rolling calendar.
+		 * 
+		 * @param tz
+		 *            the tz
+		 * @param locale
+		 *            the locale
+		 */
+		public RollingCalendar(TimeZone tz, Locale locale) {
+			super(tz, locale);
+		}
+
+		/**
+		 * Sets the type.
+		 * 
+		 * @param type
+		 *            the new type
+		 */
+		public void setType(int type) {
+			this.type = type;
+		}
+
+		/**
+		 * Gets the next check millis.
+		 * 
+		 * @param now
+		 *            the now
+		 * @return the next check millis
+		 */
+		public long getNextCheckMillis(Date now) {
+			return getNextCheckDate(now).getTime();
+		}
+
+		/**
+		 * Gets the next check date.
+		 * 
+		 * @param now
+		 *            the now
+		 * @return the next check date
+		 */
+		public Date getNextCheckDate(Date now) {
+			this.setTime(now);
+
+			switch (type) {
+			case CustodianDailyRollingFileAppender.TOP_OF_MINUTE:
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				this.add(Calendar.MINUTE, 1);
+				break;
+			case CustodianDailyRollingFileAppender.TOP_OF_HOUR:
+				this.set(Calendar.MINUTE, 0);
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				this.add(Calendar.HOUR_OF_DAY, 1);
+				break;
+			case CustodianDailyRollingFileAppender.HALF_DAY:
+				this.set(Calendar.MINUTE, 0);
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				int hour = get(Calendar.HOUR_OF_DAY);
+				if (hour < 12) {
+					this.set(Calendar.HOUR_OF_DAY, 12);
+				} else {
+					this.set(Calendar.HOUR_OF_DAY, 0);
+					this.add(Calendar.DAY_OF_MONTH, 1);
+				}
+				break;
+			case CustodianDailyRollingFileAppender.TOP_OF_DAY:
+				this.set(Calendar.HOUR_OF_DAY, 0);
+				this.set(Calendar.MINUTE, 0);
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				this.add(Calendar.DATE, 1);
+				break;
+			case CustodianDailyRollingFileAppender.TOP_OF_WEEK:
+				this.set(Calendar.DAY_OF_WEEK, getFirstDayOfWeek());
+				this.set(Calendar.HOUR_OF_DAY, 0);
+				this.set(Calendar.MINUTE, 0);
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				this.add(Calendar.WEEK_OF_YEAR, 1);
+				break;
+			case CustodianDailyRollingFileAppender.TOP_OF_MONTH:
+				this.set(Calendar.DATE, 1);
+				this.set(Calendar.HOUR_OF_DAY, 0);
+				this.set(Calendar.MINUTE, 0);
+				this.set(Calendar.SECOND, 0);
+				this.set(Calendar.MILLISECOND, 0);
+				this.add(Calendar.MONTH, 1);
+				break;
+			default:
+				throw new IllegalStateException("Unknown periodicity type.");
+			}
+			return getTime();
+		}
 	}
 }
