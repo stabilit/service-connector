@@ -31,7 +31,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback.
  * This class is designed to be extended by various callback's. It provides synchronous flag to to save state if somebody is waiting
  * for a message. Synchronous flag might be useful in subclasses. It only gets access to the newest message - it only queues one
- * item. Queuing an arrived message happens only if someone is expecting (synchronous = true) a reply. This restriction prevents race
+ * item. Queuing an arrived message happens only if someone is expecting (synchronous = true) a reply. This restriction prevents
+ * race
  * conditions - late messages are ignored.
  * 
  * @author JTraber
@@ -113,7 +114,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 				// time runs out before message got received
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_WAIT_ABORT, "");
 				fault.setMessageType(SCMPMsgType.UNDEFINED);
-				LOGGER.error("Operation did not complete in time, aborting");
+				LOGGER.error("Operation did not complete in time, aborting callback=" + this.getClass().getName());
 				return fault;
 			}
 		}
