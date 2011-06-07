@@ -227,7 +227,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
-				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
+				LOGGER.error(e.toString());
 				if (scmpCache != null) {
 					scmpCache.removeComposite(sessionId, this.requestCacheId);
 					CacheLogger
