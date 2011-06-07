@@ -79,12 +79,13 @@ public class CscSubscribeCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// create temporary Subscription for cascaded SC
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noiSecs = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noiInMillis = noiSecs * Constants.SEC_TO_MILLISEC_FACTOR;
 		String cscSCMaskString = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		Subscription cscSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 		SubscriptionMask cscMask = new SubscriptionMask(cscSCMaskString);
-		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noi, AppContext
+		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noiInMillis, AppContext
 				.getBasicConfiguration().getSubscriptionTimeoutMillis(), true);
 		tmpCascSCSubscription.setService(abstractService);
 

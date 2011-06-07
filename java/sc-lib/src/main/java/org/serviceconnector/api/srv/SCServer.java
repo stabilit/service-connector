@@ -307,7 +307,9 @@ public class SCServer {
 	 * Deregister servers and stop listener before calling destroy.
 	 */
 	public synchronized void destroy() {
-		this.requester.destroy();
+		if (this.requester != null) {
+			this.requester.destroy();
+		}
 		AppContext.destroy();
 	}
 
