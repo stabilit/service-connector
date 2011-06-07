@@ -146,8 +146,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
 				sessionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
 		if (SessionLogger.isTraceEnabled()) {
-			SessionLogger.trace("schedule session timeout " + session.getId() + " " + newTimeoutMillis + "ms, delay time "
-					+ timeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
+			SessionLogger.logScheduleTimeout(session.getId(),newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
 		}
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
@@ -169,16 +168,16 @@ public class SessionRegistry extends Registry<String, Session> {
 			return;
 		}
 		if (SessionLogger.isTraceEnabled()) {
-			SessionLogger.trace("cancel session timeout " + session.getId());
+			SessionLogger.logCancelTimeout(session.getId());
 		}
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			SessionLogger.error("cancel of session timeout failed :" + session.getId() + " delay millis: "
-					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			LOGGER.error("cancel of session timeout failed sid=" + session.getId() + " delay="
+					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				SessionLogger.error("remove of session timeout failed :" + session.getId() + " delay millis: "
-						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+				LOGGER.error("remove of session timeout failed sid=" + session.getId() + " delay="
+						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
 			}
 		}
 		this.sessionScheduler.purge();

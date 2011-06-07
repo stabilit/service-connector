@@ -18,7 +18,6 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -43,7 +42,11 @@ public final class SubscriptionLogger {
 	private static String abortSubscriptionStr = "abort subscription=%s";
 	/** The timeout subscription string. */
 	private static String timeoutSubscriptionStr = "timeout subscription sid=%s";
-
+	/** The schedule timeout string. */
+	private static String scheduleTimeoutStr = "schedule subscription sid=%s, timeout=%sms, delay=%sms";
+	/** The cancel timeout string. */
+	private static String cancelTimeoutStr = "cancel subscription session sid=%s";
+	
 	/**
 	 * Private constructor for singleton use.
 	 */
@@ -186,38 +189,32 @@ public final class SubscriptionLogger {
 	}
 
 	/**
-	 * Trace.
+	 * Log start timeout scheduling.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param sessionId
+	 *            the session id
 	 */
-	public static void trace(String message) {
-		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.TRACE)) {
-			SUBSCRIPTION_LOGGER.trace(message);
+	public static synchronized void logScheduleTimeout(String sessionId, double timeout, long delay) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(scheduleTimeoutStr, sessionId, timeout, delay);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 
 	/**
-	 * Debug.
+	 * Log cancel timeout.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param sessionId
+	 *            the session id
 	 */
-	public static void debug(String message) {
-		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.DEBUG)) {
-			SUBSCRIPTION_LOGGER.debug(message);
-		}
-	}
-
-	/**
-	 * Error.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void error(String message) {
-		if (SUBSCRIPTION_LOGGER.isEnabledFor(Level.ERROR)) {
-			SUBSCRIPTION_LOGGER.error(message);
+	public static synchronized void logCancelTimeout(String sessionId) {
+		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(cancelTimeoutStr, sessionId);
+			SUBSCRIPTION_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 }

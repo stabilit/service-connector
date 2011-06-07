@@ -20,8 +20,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -30,6 +30,10 @@ import org.serviceconnector.util.TimeoutWrapper;
  * The Class WebSessionRegistry.
  */
 public final class WebSessionRegistry extends Registry<String, WebSession> {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
+	
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
 
@@ -121,12 +125,12 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 		}
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			SessionLogger.error("cancel of web session timeout failed :" + session.getId() + " delay millis: "
-					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			LOGGER.error("cancel web session timeout failed sid=" + session.getId() + " delay="
+					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				SessionLogger.error("remove of web session timeout failed :" + session.getId() + " delay millis: "
-						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+				LOGGER.error("remove web session timeout failed sid=" + session.getId() + " delay="
+						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
 			}
 		}
 		this.sessionScheduler.purge();

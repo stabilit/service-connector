@@ -18,7 +18,6 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -35,9 +34,13 @@ public final class SessionLogger {
 	private static String deleteSessionStr = "delete session sid=%s";
 	/** The abort session string. */
 	private static String abortSessionStr = "abort session sid=%s";
+	/** The schedule timeout string. */
+	private static String scheduleTimeoutStr = "schedule session sid=%s, timeout=%sms, delay=%sms";
+	/** The cancel timeout string. */
+	private static String cancelTimeoutStr = "cancel timeout session sid=%s";
 	/** The timeout session string. */
 	private static String timeoutSessionStr = "timeout session sid=%s";
-	/** The timeout reject session string. */
+	/** The reject session string. */
 	private static String rejectSessionStr = "reject session sid=%s";
 
 	/**
@@ -97,6 +100,36 @@ public final class SessionLogger {
 	}
 
 	/**
+	 * Log start timeout scheduling.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	public static synchronized void logScheduleTimeout(String sessionId, double timeout, long delay) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(scheduleTimeoutStr, sessionId, timeout, delay);
+			SESSION_LOGGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Log cancel timeout.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 */
+	public static synchronized void logCancelTimeout(String sessionId) {
+		if (SESSION_LOGGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(cancelTimeoutStr, sessionId);
+			SESSION_LOGGGER.trace(format.toString());
+			format.close();
+		}
+	}
+	
+	/**
 	 * Log timeout session.
 	 * 
 	 * @param sessionId
@@ -111,6 +144,7 @@ public final class SessionLogger {
 		}
 	}
 
+	
 	/**
 	 * Log abort session.
 	 * 
@@ -138,66 +172,6 @@ public final class SessionLogger {
 			format.format(rejectSessionStr, sessionId);
 			SESSION_LOGGGER.debug(format.toString());
 			format.close();
-		}
-	}
-
-	/**
-	 * Warn.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void warn(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.WARN)) {
-			SESSION_LOGGGER.warn(message);
-		}
-	}
-
-	/**
-	 * Error.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void error(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.ERROR)) {
-			SESSION_LOGGGER.error(message);
-		}
-	}
-
-	/**
-	 * Fatal.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void fatal(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.FATAL)) {
-			SESSION_LOGGGER.fatal(message);
-		}
-	}
-
-	/**
-	 * Debug.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void debug(String message) {
-		if (SESSION_LOGGGER.isEnabledFor(Level.DEBUG)) {
-			SESSION_LOGGGER.debug(message);
-		}
-	}
-
-	/**
-	 * Trace.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public static void trace(String message) {
-		if (SESSION_LOGGGER.isTraceEnabled()) {
-			SESSION_LOGGGER.trace(message);
 		}
 	}
 }

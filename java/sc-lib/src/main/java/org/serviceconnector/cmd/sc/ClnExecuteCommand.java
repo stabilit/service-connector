@@ -28,7 +28,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.ClnExecuteCommandCascCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -86,7 +85,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
-			SessionLogger.warn("session " + sessionId + " has pending request");
+			LOGGER.warn("session " + sessionId + " has pending request");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service="
 					+ reqMessage.getServiceName() + " sid=" + sessionId);
 			scmpCommandException.setMessageType(this.getKey());

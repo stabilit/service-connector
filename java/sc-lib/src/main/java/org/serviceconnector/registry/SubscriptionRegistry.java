@@ -180,9 +180,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 				subscriptionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
 		if (SubscriptionLogger.isTraceEnabled()) {
-			SubscriptionLogger.trace("schedule subscription timeout " + subscription.getId() + " " + newTimeoutMillis
-					+ "ms, delay time " + timeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
-
+			SubscriptionLogger.logScheduleTimeout(subscription.getId(), newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
 		}
 	}
 
@@ -202,16 +200,16 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			return;
 		}
 		if (SubscriptionLogger.isTraceEnabled()) {
-			SubscriptionLogger.trace("cancel subscription timeout " + subscription.getId());
+			SubscriptionLogger.logCancelTimeout(subscription.getId());
 		}
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			SubscriptionLogger.error("cancel of subscription timeout failed :" + subscription.getId() + " delay millis: "
-					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			LOGGER.error("cancel of subscription timeout failed sid=" + subscription.getId() + " delay="
+					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS)+"ms");
 			boolean remove = this.subscriptionScheduler.remove(subscription.getTimeouterTask());
 			if (remove == false) {
-				SubscriptionLogger.error("remove of subscription timeout failed :" + subscription.getId() + " delay millis: "
-						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
+				LOGGER.error("remove of subscription timeout failed sid=" + subscription.getId() + " delay="
+						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
 			}
 		}
 
