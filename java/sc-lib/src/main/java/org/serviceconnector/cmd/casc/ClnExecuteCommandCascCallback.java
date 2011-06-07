@@ -31,12 +31,10 @@ import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
-import org.serviceconnector.service.Session;
 
 /**
  * The Class ClnExecuteCommandCascCallback.
@@ -51,8 +49,6 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	private SCMPMessage requestMessage;
 	/** The request oti. */
 	private int requestOTI;
-	/** The session registry. */
-	private SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 
 	/**
 	 * Instantiates a new ClnExecuteCommandCascCallback.
