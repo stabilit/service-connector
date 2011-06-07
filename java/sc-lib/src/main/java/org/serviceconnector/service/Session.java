@@ -86,21 +86,21 @@ public class Session extends AbstractSession {
 	}
 
 	/**
-	 * Sets the pending request.
+	 * Sets the pending request. Careful in use - take care of synchronization.
 	 * 
 	 * @param pendingRequest
 	 *            the new pending request
 	 */
-	public synchronized void setPendingRequest(boolean pendingRequest) {
+	public void setPendingRequest(boolean pendingRequest) {
 		this.pendingRequest = pendingRequest;
 	}
 
 	/**
-	 * Gets the pending request.
+	 * Gets the pending request. Careful in use - take care of synchronization. setPendingRequest
 	 * 
 	 * @return the pending request
 	 */
-	public synchronized boolean hasPendingRequest() {
+	public boolean hasPendingRequest() {
 		return this.pendingRequest;
 	}
 
@@ -112,7 +112,7 @@ public class Session extends AbstractSession {
 	public Date getLastExecuteTime() {
 		return this.lastExecuteTime;
 	}
-	
+
 	/**
 	 * Reset execute time.
 	 */
@@ -141,9 +141,9 @@ public class Session extends AbstractSession {
 		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
 		writer.writeElement("creationTime", this.getCreationTime().toString());
-		if(this.lastExecuteTime != null) {
+		if (this.lastExecuteTime != null) {
 			writer.writeElement("lastExecuteTime", this.getLastExecuteTime().toString());
-		}		
+		}
 		this.getService().dump(writer);
 		writer.writeEndElement(); // session
 	}

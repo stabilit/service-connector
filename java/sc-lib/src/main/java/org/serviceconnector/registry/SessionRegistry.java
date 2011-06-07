@@ -186,6 +186,14 @@ public class SessionRegistry extends Registry<String, Session> {
 		session.setTimeout(null);
 	}
 
+	/**
+	 * Reset session timeout. Careful in use - take care of synchronization when parallel request possible.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param newTimeoutInSeconds
+	 *            the new timeout in seconds
+	 */
 	public void resetSessionTimeout(Session session, double newTimeoutInSeconds) {
 		this.cancelSessionTimeout(session);
 		this.scheduleSessionTimeout(session, newTimeoutInSeconds);

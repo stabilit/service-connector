@@ -200,9 +200,11 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		// schedule session timeout
 		Session session = this.sessionRegistry.getSession(this.sessionId);
 		if (session != null) {
-			// reset session timeout to ECI
-			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-			session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
+			synchronized (session) {
+				// reset session timeout to ECI
+				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+				session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
+			}
 		}
 		this.responderCallback.responseCallback(request, response);
 	}
@@ -232,9 +234,11 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		// schedule session timeout
 		Session session = this.sessionRegistry.getSession(this.sessionId);
 		if (session != null) {
-			// reset session timeout to ECI
-			this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-			session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
+			synchronized (session) {
+				// reset session timeout to ECI
+				this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+				session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
+			}
 		}
 		// check for cache id
 		CacheManager cacheManager = null;
