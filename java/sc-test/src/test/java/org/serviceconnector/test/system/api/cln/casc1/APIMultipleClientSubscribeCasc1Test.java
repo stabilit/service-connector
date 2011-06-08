@@ -86,7 +86,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		}
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx2);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx2);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		clientCtxs[9] = clientCtx10;
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -179,6 +179,6 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		}
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 }
