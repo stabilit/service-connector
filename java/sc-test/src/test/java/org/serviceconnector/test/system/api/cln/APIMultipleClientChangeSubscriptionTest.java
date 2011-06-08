@@ -49,7 +49,7 @@ public class APIMultipleClientChangeSubscriptionTest extends APIMultipleClientCh
 		}
 		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -73,6 +73,6 @@ public class APIMultipleClientChangeSubscriptionTest extends APIMultipleClientCh
 		}
 		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 }

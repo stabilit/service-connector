@@ -53,7 +53,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 		}
 		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 		}
 		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 	
 
@@ -88,7 +88,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 				"f_execute10MBMessageAndExit");
 
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
 	}
 }

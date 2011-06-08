@@ -27,7 +27,7 @@ public class APIMultipleClientChangeSubscriptionCasc2Test extends APIMultipleCli
 	public APIMultipleClientChangeSubscriptionCasc2Test() {
 		APIMultipleClientChangeSubscriptionCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: 3 clients Subscribe, 1 receives 10000, 2 receives 500 message and unsubscribe<br>
 	 * Expectation: passes
@@ -49,7 +49,7 @@ public class APIMultipleClientChangeSubscriptionCasc2Test extends APIMultipleCli
 		}
 		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 
 	/**
@@ -73,6 +73,6 @@ public class APIMultipleClientChangeSubscriptionCasc2Test extends APIMultipleCli
 		}
 		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 }
