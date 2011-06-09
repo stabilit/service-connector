@@ -78,6 +78,10 @@ class SCPublishServiceCallback extends SCServiceCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		if (this.service.isActive() == false) {
+			// client is not subscribed anymore - stop continuing
+			return;
+		}
 		this.service.sessionActive = false;
 		super.receive(ex);
 	}
