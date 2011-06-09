@@ -18,6 +18,7 @@ package org.serviceconnector.api.cln;
 
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -41,6 +42,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
+		PerformanceLogger.end(this.service.sessionId);
 		// 3. receiving reply and error handling
 		if (this.service.isActive() == false) {
 			// client is not subscribed anymore - stop continuing
@@ -78,6 +80,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		PerformanceLogger.end(this.service.sessionId);
 		if (this.service.isActive() == false) {
 			// client is not subscribed anymore - stop continuing
 			return;

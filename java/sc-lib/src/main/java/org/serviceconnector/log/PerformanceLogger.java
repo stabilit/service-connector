@@ -17,6 +17,8 @@
 package org.serviceconnector.log;
 
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -33,16 +35,16 @@ public final class PerformanceLogger {
 	private static final PerformanceLogger INSTANCE = new PerformanceLogger();
 	/** The thread local is needed to save time in running thread. */
 	private static ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
-	/** The performance item. */
-	private static PerformanceItem performanceItem;
-
+	/** The performance items. */
+	private static Map<String, PerformanceItem> performanceItems;
 	/** The performance string. */
-	private static String perfStr = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
+	private static String perfStr = "key:%s begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
 
 	/**
 	 * Private constructor for singleton use.
 	 */
 	private PerformanceLogger() {
+		PerformanceLogger.performanceItems = new HashMap<String, PerformanceLogger.PerformanceItem>();
 	}
 
 	/**
@@ -69,8 +71,11 @@ public final class PerformanceLogger {
 	/**
 	 * End. Stops current active performance logger and logs the result. Be careful its only working
 	 * within the same thread.
+	 * 
+	 * @param key
+	 *            the key
 	 */
-	public static synchronized void endThreadBound() {
+	public static synchronized void endThreadBound(String key) {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
 			long endTime = System.nanoTime();
 			PerformanceItem beginItem = PerformanceLogger.threadLocal.get();
@@ -82,7 +87,7 @@ public final class PerformanceLogger {
 			long beginTime = beginItem.getTime();
 
 			Formatter format = new Formatter();
-			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
+			format.format(perfStr, key, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
 					Thread.currentThread().getStackTrace()[2].getMethodName(),
 					String.valueOf((endTime - beginTime) / Constants.SEC_TO_NANOSSEC_FACTOR),
 					String.valueOf((endTime - beginTime) % Constants.SEC_TO_NANOSSEC_FACTOR));
@@ -94,25 +99,32 @@ public final class PerformanceLogger {
 
 	/**
 	 * Begin. Makes performance logger active. The method end stops the measuring and logs the result. Be careful begin/end is not
-	 * thread
-	 * safe. Coordinating begin and end must be done by the user of the PerformanceLogger.
+	 * thread safe. Coordinating begin and end must be done by the user of the PerformanceLogger. Use key to identify
+	 * performanceItem.
+	 * 
+	 * @param key
+	 *            the key
 	 */
-	public static synchronized void begin() {
+	public static synchronized void begin(String key) {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
-			PerformanceLogger.performanceItem = INSTANCE.new PerformanceItem(
+			PerformanceItem performanceItem = INSTANCE.new PerformanceItem(
 					Thread.currentThread().getStackTrace()[2].getClassName(),
 					Thread.currentThread().getStackTrace()[2].getMethodName(), System.nanoTime());
+			PerformanceLogger.performanceItems.put(key, performanceItem);
 		}
 	}
 
 	/**
 	 * End. Stops current active performance logger and logs the result. Be careful begin/end is not thread
-	 * safe. Coordinating begin and end must be done by the user of the PerformanceLogger.
+	 * safe. Coordinating begin and end must be done by the user of the PerformanceLogger. Use key to identify performanceItem.
+	 * 
+	 * @param key
+	 *            the key
 	 */
-	public static synchronized void end() {
+	public static synchronized void end(String key) {
 		if (PERFORMANCE_LOGGER.isTraceEnabled()) {
 			long endTime = System.nanoTime();
-			PerformanceItem beginItem = PerformanceLogger.performanceItem;
+			PerformanceItem beginItem = PerformanceLogger.performanceItems.remove(key);
 			if (beginItem == null) {
 				return;
 			}
@@ -121,7 +133,7 @@ public final class PerformanceLogger {
 			long beginTime = beginItem.getTime();
 
 			Formatter format = new Formatter();
-			format.format(perfStr, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
+			format.format(perfStr, key, beginClassName, beginMethodName, Thread.currentThread().getStackTrace()[2].getClassName(),
 					Thread.currentThread().getStackTrace()[2].getMethodName(),
 					String.valueOf((endTime - beginTime) / Constants.SEC_TO_NANOSSEC_FACTOR),
 					String.valueOf((endTime - beginTime) % Constants.SEC_TO_NANOSSEC_FACTOR));

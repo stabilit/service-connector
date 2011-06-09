@@ -279,11 +279,11 @@ public class SCPublishService extends SCService {
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
 				this.sessionId);
 		try {
-			PerformanceLogger.begin();
+			PerformanceLogger.begin(this.sessionId);
 			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 					* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataIntervalSeconds));
 		} catch (Exception e) {
-			PerformanceLogger.end();
+			PerformanceLogger.end(this.sessionId);
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Receive publication failed.");
@@ -293,7 +293,6 @@ public class SCPublishService extends SCService {
 			this.messageCallback.receive(ex);
 			return;
 		}
-		PerformanceLogger.end();
 	}
 
 	/**

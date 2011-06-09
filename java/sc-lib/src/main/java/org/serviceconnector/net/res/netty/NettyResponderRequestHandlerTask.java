@@ -148,7 +148,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			}
 			PerformanceLogger.beginThreadBound();
 			command.run(request, response, this);
-			PerformanceLogger.endThreadBound();
+			PerformanceLogger.endThreadBound(command.getKey().getValue());
 		} catch (HasFaultResponseException ex) {
 			// exception carries response inside
 			LOGGER.warn("run " + ex.toString());

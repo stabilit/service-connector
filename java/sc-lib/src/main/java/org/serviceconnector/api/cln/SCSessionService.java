@@ -247,15 +247,15 @@ public class SCSessionService extends SCService {
 		clnExecuteCall.setRequestBody(scMessage.getData());
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			PerformanceLogger.begin();
+			PerformanceLogger.beginThreadBound();
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			PerformanceLogger.end();
+			PerformanceLogger.endThreadBound(this.sessionId);
 			throw new SCServiceException("Execute request failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		PerformanceLogger.end();
+		PerformanceLogger.endThreadBound(this.sessionId);
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("Execute failed.");
 			scEx.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -352,10 +352,10 @@ public class SCSessionService extends SCService {
 		SCMPEchoCall clnEchoCall = new SCMPEchoCall(this.requester, this.serviceName, this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			PerformanceLogger.begin();
+			PerformanceLogger.beginThreadBound();
 			clnEchoCall.invoke(callback, this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			PerformanceLogger.end();
+			PerformanceLogger.endThreadBound(this.sessionId);
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Refreshing session by echo failed, service=" + this.serviceName
@@ -366,9 +366,9 @@ public class SCSessionService extends SCService {
 			this.messageCallback.receive(ex);
 			return;
 		}
-		PerformanceLogger.end();
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		PerformanceLogger.endThreadBound(this.sessionId);
 		if (reply.isFault()) {
 			// inactivate the session
 			this.sessionActive = false;
