@@ -80,14 +80,19 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {
-			if (key.endsWith(wildKey)) {
-				Server server = serverRegistry.getServer(key);
-				if ((server instanceof StatefulServer) == false) {
-					continue;
+			try {
+				if (key.endsWith(wildKey)) {
+					Server server = serverRegistry.getServer(key);
+					if ((server instanceof StatefulServer) == false) {
+						continue;
+					}
+					LOGGER.debug("clean up dead server with key " + wildKey);
+					StatefulServer statefulServer = (StatefulServer) server;
+					statefulServer.abortSessionsAndDestroy("clean up dead server");
 				}
-				LOGGER.debug("clean up dead server with key " + wildKey);
-				StatefulServer statefulServer = (StatefulServer) server;
-				statefulServer.abortSessionsAndDestroy("clean up dead server");
+			} catch (Exception e) {
+				LOGGER.warn("cleaning up server=" + key + "throws exception", e);
+				continue;
 			}
 		}
 	}

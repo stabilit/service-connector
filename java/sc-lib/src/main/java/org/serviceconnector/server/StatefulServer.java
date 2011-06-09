@@ -544,9 +544,16 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @param reason
 	 *            the reason
 	 */
-	public void abortSessionsAndDestroy(String reason) {
-		// deregister server from service
-		this.getService().removeServer(this);
+	public synchronized void abortSessionsAndDestroy(String reason) {
+		if (this.service != null) {
+			// deregister server from service
+			this.getService().removeServer(this);
+		}
+		for (AbstractSession session : this.sessions) {
+			// first of all delete sessions from registries
+			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
+			AppContext.getSessionRegistry().removeSession(session.getId());
+		}
 		// set up server abort session message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
@@ -558,7 +565,6 @@ public class StatefulServer extends Server implements IStatefulServer {
 			abortMessage.setServiceName(this.getServiceName());
 			// delete session in global registries
 			if (session instanceof Subscription) {
-				AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
 				if (session.getServer() == null) {
 					// server already destroyed
 					continue;
@@ -571,7 +577,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				publishMessageQueue.removeNonreferencedNodes();
 				if (session.isCascaded() == true) {
 					// session is of type cascaded - do not forward to server
-					return;
+					continue;
 				}
 				try {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
@@ -583,11 +589,6 @@ public class StatefulServer extends Server implements IStatefulServer {
 					LOGGER.warn("aborting subscription failed");
 				}
 			} else {
-				AppContext.getSessionRegistry().removeSession((Session) session);
-				if (session.isCascaded() == true) {
-					// session is of type cascaded - do not forward to server
-					return;
-				}
 				try {
 					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());

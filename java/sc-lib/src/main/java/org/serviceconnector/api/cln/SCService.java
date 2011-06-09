@@ -71,7 +71,7 @@ public abstract class SCService {
 	/**
 	 * Sets the request complete. Used only internally (method visibility).
 	 */
-	synchronized void setRequestComplete() {
+	void setRequestComplete() {
 		this.pendingRequest = false;
 	}
 
