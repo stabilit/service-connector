@@ -268,7 +268,7 @@ public class SCPublishService extends SCService {
 	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility).
 	 * The registered message callback from the client gets informed in case of an error.
 	 */
-	synchronized void receivePublication() {
+	void receivePublication() {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
 			return;
