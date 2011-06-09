@@ -63,6 +63,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.NO_DATA, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, message));
@@ -96,6 +97,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.NO_DATA, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, message));
