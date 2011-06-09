@@ -358,10 +358,11 @@ public class SCSessionService extends SCService {
 			PerformanceLogger.end();
 			// inactivate the session
 			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("Refreshing session by echo failed.");
+			SCServiceException ex = new SCServiceException("Refreshing session by echo failed, service=" + this.serviceName
+					+ " sid=" + this.sessionId + ".");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
 			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("Can not send echo message for service=" + this.serviceName
-					+ "."));
+					+ " sid=" + this.sessionId + "."));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -371,10 +372,11 @@ public class SCSessionService extends SCService {
 		if (reply.isFault()) {
 			// inactivate the session
 			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("Refreshing session by echo failed.");
+			SCServiceException ex = new SCServiceException("Refreshing session by echo failed, service=" + this.serviceName
+					+ " sid=" + this.sessionId + ".");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("Sending echo message for service=" + this.serviceName
-					+ " failed."));
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("Can not send echo message for service=" + this.serviceName
+					+ " sid=" + this.sessionId + "."));
 			this.messageCallback.receive(ex);
 			return;
 		}
