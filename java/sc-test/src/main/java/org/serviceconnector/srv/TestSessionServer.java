@@ -30,7 +30,6 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
 
@@ -149,18 +148,18 @@ public class TestSessionServer extends TestStatefulServer {
 					}
 				}
 			}
-			SessionLogger.logCreateSession(request.getSessionId(), -1);
+			LOGGER.info("create session sid=" + request.getSessionId());
 			return response;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
-			SessionLogger.logDeleteSession(request.getSessionId());
+			LOGGER.info("delete session sid=" + request.getSessionId());
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutMillis) {
-			SessionLogger.logAbortSession(request.getSessionId());
+			LOGGER.info("abort session sid=" + request.getSessionId());
 		}
 
 		@Override
