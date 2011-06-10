@@ -65,7 +65,7 @@ public abstract class FlyweightCommandFactory {
 		ICommand command = FlyweightCommandFactory.commands.get(key.getValue());
 		if (command == null) {
 			LOGGER.error("key : " + key + " not found!");
-			throw new InvalidParameterException("key : " + key + " not found!");
+			throw new InvalidParameterException("key=" + key + " not found!");
 		}
 		return command;
 	}

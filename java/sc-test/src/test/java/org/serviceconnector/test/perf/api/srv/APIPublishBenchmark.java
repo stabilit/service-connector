@@ -54,7 +54,7 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
 	}
 
@@ -86,7 +86,7 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1200);
 	}
 }

@@ -140,7 +140,7 @@ public final class SystemInfo {
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
-			LOGGER.error("Local Host Identification could not be detected: " + e.getMessage());
+			LOGGER.error("Local Host Identification could not be detected=" + e.getMessage());
 		}
 	}
 

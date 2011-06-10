@@ -78,7 +78,7 @@ public class DemoSessionCacheClient extends Thread {
 
 			for (int i = 0; i < 10; i++) {
 				requestMsg.setData("body nr : " + i);
-				LOGGER.info("Message sent: " + requestMsg.getData());
+				LOGGER.info("Message sent=" + requestMsg.getData());
 
 				// service.send(cbk, requestMsg); // regular asynchronous call
 				// service.send(cbk, requestMsg, 10); // alternative with operation timeout
@@ -90,7 +90,7 @@ public class DemoSessionCacheClient extends Thread {
 				responseMsg = service.execute(requestMsg); // regular synchronous call
 				// responseMsg = service.execute(requestMsg, 10); // alternative with operation timeout
 
-				LOGGER.info("Message received: " + responseMsg.getData());
+				LOGGER.info("Message received=" + responseMsg.getData());
 				Thread.sleep(1000);
 			}
 			requestMsg.setData("kill server");
@@ -168,7 +168,7 @@ public class DemoSessionCacheClient extends Thread {
 	// while (true) {
 	// SCMessage requestMsg = new SCMessage();
 	// requestMsg.setData("body nr : " + index++);
-	// LOGGER.info("Message sent: " + requestMsg.getData());
+	// LOGGER.info("Message sent=" + requestMsg.getData());
 	// SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
 	// DemoSessionClient.pendingRequest = true;
 	// sessionService.execute(requestMsg, callback);
@@ -195,7 +195,7 @@ public class DemoSessionCacheClient extends Thread {
 	//
 	// @Override
 	// public void receive(SCMessage reply) {
-	// LOGGER.info("Message received: " + reply.getData());
+	// LOGGER.info("Message received=" + reply.getData());
 	// DemoSessionClient.pendingRequest = false;
 	// }
 	//

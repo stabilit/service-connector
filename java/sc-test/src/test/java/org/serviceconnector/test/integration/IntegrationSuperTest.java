@@ -60,7 +60,7 @@ public class IntegrationSuperTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads=" + Thread.activeCount() + " created=" + (Thread.activeCount() - threadCount));
 		AppContext.destroy();
 	}
 

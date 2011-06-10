@@ -47,7 +47,7 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
+		testLogger.info(nr + " Sessions created and deleted performance=" + perf + " sessions/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf + " sess/sec.", perf > 100);
 	}
 
@@ -98,8 +98,8 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		}
 		stop = System.currentTimeMillis();
 		long perf2 = nr * 1000 / (stop - start);
-		testLogger.info(nr + " Session creation performance : " + perf1 + " sessions/sec.");
-		testLogger.info(nr + " Session deletion performance : " + perf2 + " sessions/sec.");
+		testLogger.info(nr + " Session creation performance=" + perf1 + " sessions/sec.");
+		testLogger.info(nr + " Session deletion performance=" + perf2 + " sessions/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf1 + " sess/sec.", perf1 > 100);
 		Assert.assertTrue("Performence not fast enough, only" + perf2 + " sess/sec.", perf2 > 500);
 

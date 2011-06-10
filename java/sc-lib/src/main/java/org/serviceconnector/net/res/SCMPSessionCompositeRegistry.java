@@ -175,7 +175,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelLargeMessageTimeout(sessionComposite);
-		LOGGER.trace("schedule large message " + sessionComposite.getSessionId() + " timeout in millis "
+		LOGGER.trace("schedule large message sid=" + sessionComposite.getSessionId() + " timeout in millis "
 				+ (long) sessionComposite.getLargeMessageTimeoutMillis());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new LargeMessageTimeout(sessionComposite));
@@ -194,7 +194,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 			// no session timeout has been set up for this session
 			return;
 		}
-		LOGGER.trace("cancel large message timeout " + sessionComposite.getSessionId());
+		LOGGER.trace("cancel large message timeout sid=" + sessionComposite.getSessionId());
 		sessionTimeout.cancel(false);
 		this.largeMessageScheduler.purge();
 		// important to set timeouter null - rescheduling of same instance not possible

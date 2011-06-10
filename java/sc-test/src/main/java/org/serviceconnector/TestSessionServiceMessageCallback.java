@@ -16,11 +16,11 @@ public class TestSessionServiceMessageCallback extends SCMessageCallback {
 
 	@Override
 	public void receive(SCMessage reply) {
-		LOGGER.info("Session client received: " + reply.getData());
+		LOGGER.info("Session client received=" + reply.getData());
 	}
 
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.info("Session client received: " + ex);
+		LOGGER.info("Session client received=" + ex);
 	}
 }

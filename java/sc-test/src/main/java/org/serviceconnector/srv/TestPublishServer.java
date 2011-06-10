@@ -169,7 +169,7 @@ public class TestPublishServer extends TestStatefulServer {
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
-						LOGGER.error("cannot not invoke method:" + sessionInfo, e1);
+						LOGGER.error("cannot not invoke method=" + sessionInfo, e1);
 					}
 				}
 			}
@@ -202,7 +202,7 @@ public class TestPublishServer extends TestStatefulServer {
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
-						LOGGER.error("cannot not invoke method:" + sessionInfo, e1);
+						LOGGER.error("cannot not invoke method=" + sessionInfo, e1);
 					}
 				}
 			}
@@ -246,7 +246,7 @@ public class TestPublishServer extends TestStatefulServer {
 				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
 				method.invoke(this, request, operationTimeoutMillis);
 			} catch (Exception e1) {
-				LOGGER.error("cannot not invoke method:" + methodName, e1);
+				LOGGER.error("cannot not invoke method=" + methodName, e1);
 				return;
 			}
 		}

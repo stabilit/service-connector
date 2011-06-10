@@ -141,8 +141,8 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 								}
 							}
 						}
-						CacheLogger.trace("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
-								+ reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = " + reply.isPollRequest());
+						CacheLogger.trace("cache message put reply, scmp reply cacheId=" + reply.getCacheId() + ", isReply="
+								+ reply.isReply() + ", isPart=" + reply.isPart() + ", isPollRequest=" + reply.isPollRequest());
 						CacheId messageCacheId = null;
 						try {
 							messageCacheId = scmpCache.putMessage(reply);
@@ -157,7 +157,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						CacheLogger.trace("cache message put done using full cacheId = " + messageCacheId.getCacheId()
+						CacheLogger.trace("cache message put done using full cacheId=" + messageCacheId.getCacheId()
 								+ ", cachePartNr=" + messageCacheId.getSequenceNr());
 						reply.setFullCacheId(messageCacheId);
 					}

@@ -40,6 +40,6 @@ public class SuperUnitTest {
 
 	@After
 	public void afterOneTest() {
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads=" + Thread.activeCount() + " created=" + (Thread.activeCount() - threadCount));
 	}
 }

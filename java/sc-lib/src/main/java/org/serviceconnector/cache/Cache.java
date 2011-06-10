@@ -162,11 +162,11 @@ public class Cache {
 		if (cacheComposite != null) {
 			return cacheComposite;
 		}
-		CacheLogger.trace("cache does not exist, start loading from server, request sessionId=" + message.getSessionId());
+		CacheLogger.trace("cache does not exist, start loading from server, request sid=" + message.getSessionId());
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// cache does not exist, this is the first request for it
 		this.startLoading(message, oti);
-		CacheLogger.trace("cache does not exist, start loading done, request sessionId=" + message.getSessionId());
+		CacheLogger.trace("cache does not exist, start loading done, request sid=" + message.getSessionId());
 		return null;
 	}
 
@@ -292,11 +292,11 @@ public class Cache {
 				if (cacheComposite.isLoadingSessionId(sessionId) == false) {
 					// put message with wrong session id
 					CacheLogger.trace("cache composite=" + cacheKey
-							+ " message put failed, wrong session id, cache loadingSessionId="
-							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+							+ " message put failed, wrong session id, cache loading sid="
+							+ cacheComposite.getLoadingSessionId() + ", message sid=" + message.getSessionId());
 					throw new CacheExpiredException("cache composite=" + cacheKey
-							+ " message put failed, wrong session id, cache loadingSessionId="
-							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+							+ " message put failed, wrong session id, cache loading sid="
+							+ cacheComposite.getLoadingSessionId() + ", message sid=" + message.getSessionId());
 				}
 			}
 			if ((cacheComposite == null)) {
@@ -323,8 +323,8 @@ public class Cache {
 				cacheComposite = (CacheComposite) value;
 			}
 			if (cacheComposite.isPartLoading()) {
-				CacheLogger.trace("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loadingSessionId="
-						+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+				CacheLogger.trace("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loading sid="
+						+ cacheComposite.getLoadingSessionId() + ", message sid=" + message.getSessionId());
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				// save this cache composite in cache manager loading map
 			    AppContext.getCacheManager().putCacheLoading(sessionId, cacheId, this);
@@ -384,18 +384,18 @@ public class Cache {
 			return;
 		}
 		Object[] compositeKeys = this.getCompositeKeys();
-		//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", composite keys length = " + compositeKeys.length);
+		//CacheLogger.debug("removeLoadingComposite, sid= " + sessionId + ", composite keys length=" + compositeKeys.length);
 		for (int i = 0; i < compositeKeys.length; i++) {
 			Object key = compositeKeys[i];
 			CacheKey cacheKey = (CacheKey) key;
-			//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", composite key = " + cacheKey);
+			//CacheLogger.debug("removeLoadingComposite, sid=" + sessionId + ", composite key=" + cacheKey);
 			try {
 				CacheComposite cacheComposite = this.getComposite(cacheKey.getCacheId());
 				if (cacheComposite.isLoading()) {
 					String loadingSessionId = cacheComposite.getLoadingSessionId();
-					//CacheLogger.debug("removeLoadingComposite, sessionId = " + sessionId + ", is loading, loadingSessionId = " + loadingSessionId);
+					//CacheLogger.debug("removeLoadingComposite, sid=" + sessionId + ", is loading, loadingSessionId=" + loadingSessionId);
 					if (sessionId.equals(loadingSessionId)) {
-					   CacheLogger.trace("removeLoadingComposite, remove cache composite immediate, sessionId = " + sessionId + " and key = " + cacheKey);
+					   CacheLogger.trace("removeLoadingComposite, remove cache composite immediate, sid=" + sessionId + " key=" + cacheKey);
 					   this.removeCompositeImmediate(cacheKey, cacheComposite);
 					}
 				}

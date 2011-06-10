@@ -149,7 +149,7 @@ public class ReceivePublicationTimeout implements ITimeout {
 				}
 			}
 		} catch (Exception ex) {
-			LOGGER.warn("timeout expired procedure failed :" + ex.getMessage());
+			LOGGER.warn("timeout expired procedure failed, " + ex.getMessage());
 			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
@@ -163,7 +163,7 @@ public class ReceivePublicationTimeout implements ITimeout {
 			try {
 				this.response.write();
 			} catch (Exception e) {
-				LOGGER.warn("timeout expired procedure failed :" + e.getMessage());
+				LOGGER.warn("timeout expired procedure failed, " + e.getMessage());
 			}
 		}
 	}

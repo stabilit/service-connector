@@ -94,7 +94,7 @@ public class PublishMessageQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
-		LOGGER.trace("insert - queue size: " + this.dataQueue.getSize());
+		LOGGER.trace("insert - queue size=" + this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -134,7 +134,7 @@ public class PublishMessageQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		LOGGER.trace("getMessage - queue size:" + this.dataQueue.getSize());
+		LOGGER.trace("getMessage - queue size=" + this.dataQueue.getSize());
 		return message;
 
 	}
@@ -198,7 +198,7 @@ public class PublishMessageQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
-			LOGGER.trace("remove - queue size:" + this.dataQueue.getSize());
+			LOGGER.trace("remove - queue size=" + this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}
@@ -222,7 +222,7 @@ public class PublishMessageQueue<E> {
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
-		LOGGER.trace("PublishMessageQueue listen " + sessionId + " listen: " + dataPointer.listening);
+		LOGGER.trace("PublishMessageQueue listen sid=" + sessionId + " listen=" + dataPointer.listening);
 	}
 
 	/**

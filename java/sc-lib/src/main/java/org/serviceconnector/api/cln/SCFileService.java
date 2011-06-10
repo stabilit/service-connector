@@ -104,9 +104,9 @@ public class SCFileService extends SCService {
 			uploadFileCall.setRemoteFileName(remoteFileName);
 			uploadFileCall.getRequest().setPartSize(Constants.SIZE_64KB);
 			try {
-				LOGGER.debug("SCFileService uploadFile begin ...");
+				LOGGER.debug("SCFileService uploadFile begin");
 				uploadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-				LOGGER.debug("...SCFileService uploadFile done");
+				LOGGER.debug("SCFileService uploadFile done");
 			} catch (Exception e) {
 				throw new SCServiceException("Upload file failed. ", e);
 			}

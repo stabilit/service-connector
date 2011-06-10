@@ -121,18 +121,18 @@ public class CacheManager {
 	 * Clear loading cache composite for session
 	 */
 	public void clearLoading(String sessionId) {
-		CacheLogger.trace("clearLoading, sessionId = " + sessionId);
+		CacheLogger.trace("clearLoading, sid=" + sessionId);
 		CacheLoadingSession cacheLoadingSession = this.getCacheLoadingSession(sessionId);
 		if (cacheLoadingSession == null) {
-			CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", no entry");
+			CacheLogger.trace("clearLoading, sid=" + sessionId + ", no entry");
 			return;
 		}
 		String[] cacheIds = cacheLoadingSession.getCacheIds();
 		if (cacheIds == null) {
-			CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheIds is null");
+			CacheLogger.trace("clearLoading, sid=" + sessionId + ", cacheIds is null");
 			return;
 		}
-		CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheIds.length = " + cacheIds.length);
+		CacheLogger.trace("clearLoading, sid=" + sessionId + ", cacheIds.length=" + cacheIds.length);
 		for (int i = 0; i < cacheIds.length; i++) {
 			String cacheId = cacheIds[i];
 			Cache cache = cacheLoadingSession.getCache(cacheId);
@@ -141,13 +141,13 @@ public class CacheManager {
 				try {
 					cacheComposite = cache.getComposite(cacheId);
 					if (cacheComposite != null && cacheComposite.isLoading()) {
-						CacheLogger.trace("clearLoading, sessionId = " + sessionId + ", cacheId = " + cacheId
+						CacheLogger.trace("clearLoading, sid=" + sessionId + ", cacheId=" + cacheId
 								+ ", remove loading cache composite immediate");
 						cache.removeCompositeImmediate(new CacheKey(cacheId), cacheComposite);
 						this.removeCacheLoading(sessionId, cacheId);
 					}
 				} catch (CacheException e) {
-					CacheLogger.error("clearLoading, no composite for cacheId = " + cacheId, e);
+					CacheLogger.error("clearLoading, no composite for cacheId=" + cacheId, e);
 				}
 			}
 		}
@@ -279,7 +279,7 @@ public class CacheManager {
 		if (cacheLoadingSession == null) {
 			return;
 		}
-		CacheLogger.trace("putCacheLoading sessionId = " + sessionId + ", cache id = " + cacheId);
+		CacheLogger.trace("putCacheLoading sid=" + sessionId + ", cache id=" + cacheId);
 		cacheLoadingSession.put(cacheId, cache);
 	}
 
@@ -290,10 +290,10 @@ public class CacheManager {
 	public synchronized void removeCacheLoading(String sessionId, String cacheId) {
 		CacheLoadingSession cacheLoadingSession = this.cacheLoadingSessionMap.get(sessionId);
 		if (cacheLoadingSession == null) {
-			CacheLogger.trace("removeCacheLoading sessionId = " + sessionId + ", not existing");
+			CacheLogger.trace("removeCacheLoading sid=" + sessionId + ", not existing");
 			return;
 		}
-		CacheLogger.trace("removeCacheLoading sessionId = " + sessionId + ", cache id = " + cacheId);
+		CacheLogger.trace("removeCacheLoading sid=" + sessionId + ", cache id=" + cacheId);
 		cacheLoadingSession.remove(cacheId);
 		this.cacheLoadingSessionMap.remove(sessionId);
 	}

@@ -79,7 +79,7 @@ public class SystemSuperTest {
 		} catch (Exception e) {
 		}
 		scCtxs = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads=" + Thread.activeCount() + " created=" + (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass

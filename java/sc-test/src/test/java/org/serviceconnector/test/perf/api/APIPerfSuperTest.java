@@ -53,7 +53,7 @@ public class APIPerfSuperTest {
 
 	@After
 	public void afterOneTest() throws Exception {
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads=" + Thread.activeCount() + " created=" + (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass

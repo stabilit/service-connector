@@ -40,7 +40,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		sessionService.deleteSession(10);
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 400);
 	}
 
@@ -75,7 +75,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		sessionService.deleteSession(10);
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 600);
 	}
 

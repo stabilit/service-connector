@@ -77,26 +77,26 @@ public class DemoSessionClient {
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				responseMsg = service.execute(requestMsg); // regular synchronous call
-				LOGGER.info("Message sent sync: " + requestMsg.getData());
-				LOGGER.info("Message received sync: " + responseMsg.getData());
+				LOGGER.info("Message sent sync=" + requestMsg.getData());
+				LOGGER.info("Message received sync=" + responseMsg.getData());
 				Thread.sleep(2000);
 			}
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				service.send(requestMsg); // regular asynchronous call
-				LOGGER.info("Message sent async: " + requestMsg.getData());
+				LOGGER.info("Message sent async=" + requestMsg.getData());
 				Thread.sleep(2000);
 			}
 
 			requestMsg.setData("cache message body");
 			requestMsg.setCacheId("700");
 			responseMsg = service.execute(requestMsg); // regular synchronous call
-			LOGGER.info("Message sent to put in cache: " + requestMsg.getData());
-			LOGGER.info("Message received: " + responseMsg.getData());
+			LOGGER.info("Message sent to put in cache=" + requestMsg.getData());
+			LOGGER.info("Message received=" + responseMsg.getData());
 
 			responseMsg = service.execute(requestMsg); // regular synchronous call
-			LOGGER.info("Message sent with cacheId: " + requestMsg.getData());
-			LOGGER.info("Message received from cache: " + responseMsg.getData());
+			LOGGER.info("Message sent with cacheId=" + requestMsg.getData());
+			LOGGER.info("Message received from cache=" + responseMsg.getData());
 		} catch (Exception e) {
 			LOGGER.error("run", e);
 		} finally {

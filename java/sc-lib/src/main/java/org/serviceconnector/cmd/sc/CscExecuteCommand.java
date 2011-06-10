@@ -85,7 +85,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
-			LOGGER.warn("session " + sessionId + " has pending request");
+			LOGGER.warn("sid=" + sessionId + " has pending request");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service="
 					+ reqMessage.getServiceName() + " sid=" + sessionId);
 			scmpCommandException.setMessageType(this.getKey());
@@ -314,8 +314,8 @@ public class CscExecuteCommand extends CommandAdapter {
 					throw scmpCommandException;
 				} else {
 					CacheLogger.trace("cache is loading (same sessionId) service=" + message.getServiceName() + " cacheId="
-							+ message.getCacheId() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
-							+ ", message sessionId=" + message.getSessionId());
+							+ message.getCacheId() + ", loading sid=" + cacheComposite.getLoadingSessionId()
+							+ ", message sid=" + message.getSessionId());
 				}
 			}
 			if (cacheComposite.isLoaded() && cacheComposite.isExpired()) {

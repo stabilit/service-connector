@@ -57,7 +57,6 @@ public class PublishCommand extends CommandAdapter {
 		PublishService service = this.validatePublishService(serviceName);
 		PublishMessageQueue<SCMPMessage> queue = service.getMessageQueue();
 		// throws an exception if failed
-		LOGGER.trace("messag body : " + message.getBody());
 		queue.insert(message);
 
 		// reply to server

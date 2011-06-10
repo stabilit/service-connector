@@ -126,21 +126,21 @@ public class ProcessesController {
 
 		String scRunableFullName = userDir + fs + "target" + fs + TestConstants.scRunable;
 		if (FileUtility.notExists(scRunableFullName)) {
-			testLogger.error("File:" + scRunableFullName + " does not exist!");
+			testLogger.error("File=" + scRunableFullName + " does not exist!");
 			throw new Exception("File:" + scRunableFullName + " does not exist!");
 		}
 		proc.setRunableName(scRunableFullName);
 
 		String scPropertiesFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		if (FileUtility.notExists(scPropertiesFullName)) {
-			testLogger.error("File:" + scPropertiesFullName + " does not exist!");
-			throw new Exception("File:" + scPropertiesFullName + " does not exist!");
+			testLogger.error("File=" + scPropertiesFullName + " does not exist!");
+			throw new Exception("File=" + scPropertiesFullName + " does not exist!");
 		}
 		proc.setPropertyFileName(scPropertiesFullName);
 		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
 		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File:" + log4jFileFullName + " does not exist!");
-			throw new Exception("File:" + log4jFileFullName + " does not exist!");
+			testLogger.error("File=" + log4jFileFullName + " does not exist!");
+			throw new Exception("File=" + log4jFileFullName + " does not exist!");
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
@@ -281,15 +281,15 @@ public class ProcessesController {
 
 		String srvRunablFullName = userDir + fs + "target" + fs + TestConstants.serverRunable;
 		if (FileUtility.notExists(srvRunablFullName)) {
-			testLogger.error("File:" + srvRunablFullName + " does not exist!");
-			throw new Exception("File:" + srvRunablFullName + " does not exist!");
+			testLogger.error("File=" + srvRunablFullName + " does not exist!");
+			throw new Exception("File=" + srvRunablFullName + " does not exist!");
 		}
 		proc.setRunableName(srvRunablFullName);
 
 		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
 		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File:" + log4jFileFullName + " does not exist!");
-			throw new Exception("File:" + log4jFileFullName + " does not exist!");
+			testLogger.error("File=" + log4jFileFullName + " does not exist!");
+			throw new Exception("File=" + log4jFileFullName + " does not exist!");
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
@@ -440,15 +440,15 @@ public class ProcessesController {
 
 		String clnRunablFullName = userDir + fs + "target" + fs + TestConstants.clientRunable;
 		if (FileUtility.notExists(clnRunablFullName)) {
-			testLogger.error("File:" + clnRunablFullName + " does not exist!");
-			throw new Exception("File:" + clnRunablFullName + " does not exist!");
+			testLogger.error("File=" + clnRunablFullName + " does not exist!");
+			throw new Exception("File=" + clnRunablFullName + " does not exist!");
 		}
 		proc.setRunableName(clnRunablFullName);
 
 		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jClnProperties;
 		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File:" + log4jFileFullName + " does not exist!");
-			throw new Exception("File:" + log4jFileFullName + " does not exist!");
+			testLogger.error("File=" + log4jFileFullName + " does not exist!");
+			throw new Exception("File=" + log4jFileFullName + " does not exist!");
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
@@ -487,7 +487,7 @@ public class ProcessesController {
 		int timeout = 15;
 		try {
 			FileUtility.waitExistsAndLocked(pidFileNameFull, timeout);
-			testLogger.info("Client " + clientName + " started doing: " + methodsToInvoke);
+			testLogger.info("Client=" + clientName + " started doing=" + methodsToInvoke);
 		} catch (Exception e) {
 			clnProcess.destroy();
 			clnProcess.waitFor();

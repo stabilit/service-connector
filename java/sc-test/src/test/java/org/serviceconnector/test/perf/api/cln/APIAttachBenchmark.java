@@ -46,7 +46,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance=" + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 50);
 	}
 
@@ -72,7 +72,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance=" + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 50);
 	}
 
@@ -104,7 +104,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance=" + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 100);
 		clients = null;
 	}
@@ -136,7 +136,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + "attach/detach performance=" + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 100);
 		clients = null;
 	}

@@ -105,8 +105,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			CacheLogger.trace("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
-					+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is "
+			CacheLogger.trace("client execute command with cache id=" + reqMessage.getCacheId() + ", cache part nr="
+					+ reqMessage.getCachePartNr() + ", part is=" + reqMessage.isPart() + ", poll is "
 					+ reqMessage.isPollRequest());
 			// try to load response from cache
 			try {
@@ -311,8 +311,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 					throw scmpCommandException;
 				} else {
 					CacheLogger.trace("cache is loading (same sessionId) service=" + message.getServiceName() + " cacheId="
-							+ message.getCacheId() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
-							+ ", message sessionId=" + message.getSessionId());
+							+ message.getCacheId() + ", cache loading sid=" + cacheComposite.getLoadingSessionId()
+							+ ", message sid=" + message.getSessionId());
 				}
 			}
 			if (cacheComposite.isLoaded() && cacheComposite.isExpired()) {

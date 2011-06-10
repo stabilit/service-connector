@@ -280,7 +280,7 @@ public class SCServer {
 			responder.startListenAsync();
 		} catch (Exception ex) {
 			this.listening = false;
-			LOGGER.error("unable to start listener :" + listenerConfig.getName(), ex);
+			LOGGER.error("unable to start listener=" + listenerConfig.getName(), ex);
 			throw new SCServiceException("Unable to start listener.", ex);
 		}
 		this.listening = true;

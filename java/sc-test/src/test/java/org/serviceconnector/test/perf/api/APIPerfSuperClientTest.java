@@ -149,7 +149,7 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 		public void receive(Exception e) {
 			LOGGER.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				LOGGER.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+				LOGGER.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text="
 						+ ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;

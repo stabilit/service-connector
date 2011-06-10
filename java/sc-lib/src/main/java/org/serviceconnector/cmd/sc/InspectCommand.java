@@ -100,7 +100,7 @@ public class InspectCommand extends CommandAdapter {
 		}
 		if (Constants.CC_CMD_SESSIONS.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			LOGGER.debug("sessions request for service: " + serviceName);
+			LOGGER.debug("sessions request for service=" + serviceName);
 			try {
 				// get sessions of all services
 				scmpReply.setBody(this.getSessionsOfServicesString(serviceName));

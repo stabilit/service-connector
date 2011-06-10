@@ -22,11 +22,11 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 		synchronized (this) {
 			receivedMsg++;
 			String responseString = ((String) reply.getData());
-			LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received: " + reply + " body=" + reply.getData());
+			LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received=" + reply + " body=" + reply.getData());
 			String number = responseString.substring(responseString.indexOf(":") + 1);
 			int currentNumber = Integer.valueOf(number);
 			if (currentNumber != lastNumber + 1) {
-				LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR: "
+				LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR="
 						+ currentNumber);
 			}
 			lastNumber = currentNumber;
@@ -37,7 +37,7 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 	public void receive(Exception ex) {
 		synchronized (this) {
 			receivedMsg++;
-			LOGGER.error("Publish client sid=" + this.service.getSessionId() + " received: " + ex);
+			LOGGER.error("Publish client sid=" + this.service.getSessionId() + " received=" + ex);
 		}
 	}
 }
