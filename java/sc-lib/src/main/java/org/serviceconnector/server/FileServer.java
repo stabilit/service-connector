@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
@@ -266,11 +267,12 @@ public class FileServer extends Server {
 	 * @param session
 	 *            the session
 	 * @param reason
-	 *            the reason {@inheritDoc}
+	 *            the reason
 	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		FileSession fileSession = (FileSession) session;
+		SessionLogger.logAbortSession(fileSession, reason);
 		HttpURLConnection httpURLConnection = fileSession.getHttpURLConnection();
 		if (httpURLConnection != null) {
 			httpURLConnection.disconnect();

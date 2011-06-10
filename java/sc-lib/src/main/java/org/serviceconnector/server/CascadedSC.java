@@ -48,6 +48,7 @@ import org.serviceconnector.cmd.casc.CscUnsubscribeCallbackActiveCascClient;
 import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.netty.NettyHttpRequest;
@@ -72,7 +73,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 
 	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
 	private List<AbstractSession> subscriptions;
-	
+
 	/**
 	 * Instantiates a new cascaded sc.
 	 * 
@@ -303,8 +304,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 				this.subscribeCascadedSCWithInActiveCascadedClient(cascClient, msgToForward, callback, oti);
 				return;
 			}
-			CscSubscribeActiveCascClientCallback cascCallback = new CscSubscribeActiveCascClientCallback(cascClient, callback
-					.getRequest(), callback);
+			CscSubscribeActiveCascClientCallback cascCallback = new CscSubscribeActiveCascClientCallback(cascClient,
+					callback.getRequest(), callback);
 			this.subscribeCascadedSCWithActiveCascadedClient(cascClient, msgToForward, cascCallback, oti);
 		} catch (Exception e) {
 			// release permit in case of an error
@@ -493,8 +494,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 *            the timeout milliseconds
 	 */
 	public void receivePublication(CascadedClient cascClient, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, cascClient
-				.getServiceName(), cascClient.getSubscriptionId());
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				cascClient.getServiceName(), cascClient.getSubscriptionId());
 		long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		receivePublicationCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 		try {
@@ -651,6 +652,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 
 			IRequest request = new NettyHttpRequest(null, null, null);
 			request.setMessage(abortMessage);
+
+			SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
 			this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallback(request, subscription),
 					Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} else {
@@ -724,7 +727,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public int getMaxSessions() {
 		return Integer.MAX_VALUE;
 	}
-	
+
 	/**
 	 * Dump the cascaded SC into the xml writer.
 	 * 
@@ -735,9 +738,9 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("cascaded-sc");
-		writer.writeAttribute("key",this.serverKey);
-		writer.writeAttribute("socketAddress",this.socketAddress.getHostName()+ "/" +this.socketAddress.getPort());
-		writer.writeAttribute("operationTimeoutMultiplier",this.operationTimeoutMultiplier);
+		writer.writeAttribute("key", this.serverKey);
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
 		writer.writeStartElement("subscriptions");
 		List<AbstractSession> subscriptionList = this.subscriptions;

@@ -95,7 +95,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			// code for type session service is below switch statement
 			break;
 		case FILE_SERVER:
-			this.sessionRegistry.removeSession(session);
 			((FileServer) abstractServer).removeSession(session);
 			// reply to client
 			SCMPMessage reply = new SCMPMessage();

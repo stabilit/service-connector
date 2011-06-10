@@ -21,7 +21,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
@@ -235,7 +234,6 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 			LOGGER.trace("Large message process times out sid=" + sessionId);
 			SCMPSessionCompositeRegistry.this.removeSCMPLargeRequest(sessionId);
 			SCMPSessionCompositeRegistry.this.removeSCMPLargeResponse(sessionId);
-			SessionLogger.logTimeoutSession(sessionId);
 		}
 
 		/** {@inheritDoc} */

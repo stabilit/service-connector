@@ -334,7 +334,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	public void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+	private void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
 		this.serverAbortSessionWithExtraRequester(this.requester, message, callback, timeoutMillis);
 	}
@@ -353,7 +353,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+	private void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
@@ -379,7 +379,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	public void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+	private void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
 		this.serverAbortSubscriptionWithExtraRequester(this.requester, message, callback, timeoutMillis);
 	}
@@ -398,7 +398,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	void serverAbortSubscriptionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+	private void serverAbortSubscriptionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
@@ -431,8 +431,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 			publishMessageQueue.unsubscribe(session.getId());
 			// remove non referenced nodes
 			publishMessageQueue.removeNonreferencedNodes();
+			SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
 		} else {
 			AppContext.getSessionRegistry().removeSession((Session) session);
+			SessionLogger.logAbortSession((Session) session, reason);
 		}
 		// delete session on this server
 		this.removeSession(session);
@@ -579,20 +581,20 @@ public class StatefulServer extends Server implements IStatefulServer {
 					// session is of type cascaded - do not forward to server
 					continue;
 				}
+				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
 				try {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
-					SubscriptionLogger.logAbortSubscription(abortMessage.getSessionId());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting subscription failed because of busy connection pool");
 				} catch (Exception e) {
 					LOGGER.warn("aborting subscription failed");
 				}
 			} else {
+				SessionLogger.logAbortSession((Session) session, reason);
 				try {
 					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
-					SessionLogger.logAbortSession(abortMessage.getSessionId());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting session failed because of busy connection pool");
 				} catch (Exception e) {

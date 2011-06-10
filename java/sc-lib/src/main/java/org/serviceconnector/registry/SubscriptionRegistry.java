@@ -205,11 +205,11 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
 			LOGGER.error("cancel of subscription timeout failed sid=" + subscription.getId() + " delay="
-					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS)+"ms");
+					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
 			boolean remove = this.subscriptionScheduler.remove(subscription.getTimeouterTask());
 			if (remove == false) {
 				LOGGER.error("remove of subscription timeout failed sid=" + subscription.getId() + " delay="
-						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
+						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			}
 		}
 
@@ -265,7 +265,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			SubscriptionRegistry.this.removeSubscription(subscription);
 			IStatefulServer server = subscription.getServer();
 			server.abortSession(subscription, "subscription timed out in registry");
-			SubscriptionLogger.logTimeoutSubscription(subscription.getId());
+			SubscriptionLogger.logTimeoutSubscription(subscription);
 		}
 
 		/** {@inheritDoc} */

@@ -16,9 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
+import java.util.Date;
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.service.Session;
 
 /**
  * The Class SessionLogger.
@@ -33,13 +35,13 @@ public final class SessionLogger {
 	/** The delete session string. */
 	private static String deleteSessionStr = "delete session sid=%s";
 	/** The abort session string. */
-	private static String abortSessionStr = "abort session sid=%s";
+	private static String abortSessionStr = "abort session sid=%s eci=%sms creationTime=%3$tH:%3$tM:%3$tS.%3$tL lastExecuteTime=%4$tH:%4$tM:%4$tS.%4$tL reason=%5$s";
 	/** The schedule timeout string. */
 	private static String scheduleTimeoutStr = "schedule session sid=%s, timeout=%sms, delay=%sms";
 	/** The cancel timeout string. */
 	private static String cancelTimeoutStr = "cancel timeout session sid=%s";
 	/** The timeout session string. */
-	private static String timeoutSessionStr = "timeout session sid=%s";
+	private static String timeoutSessionStr = "timeout session sid=%s eci=%sms creationTime=%3$tH:%3$tM:%3$tS.%3$tL lastExecuteTime=%4$tH:%4$tM:%4$tS.%4$tL";
 	/** The reject session string. */
 	private static String rejectSessionStr = "reject session sid=%s";
 
@@ -128,34 +130,43 @@ public final class SessionLogger {
 			format.close();
 		}
 	}
-	
+
 	/**
 	 * Log timeout session.
 	 * 
-	 * @param sessionId
-	 *            the session id
+	 * @param session
+	 *            the session
 	 */
-	public static synchronized void logTimeoutSession(String sessionId) {
-		if (SESSION_LOGGGER.isDebugEnabled()) {
+	public static synchronized void logTimeoutSession(Session session) {
+		if (SESSION_LOGGGER.isInfoEnabled()) {
 			Formatter format = new Formatter();
-			format.format(timeoutSessionStr, sessionId);
-			SESSION_LOGGGER.debug(format.toString());
+			String sessionId = session.getId();
+			double eci = session.getSessionTimeoutMillis();
+			Date creationTime = session.getCreationTime();
+			Date lastExecuteTime = session.getLastExecuteTime();
+			format.format(timeoutSessionStr, sessionId, eci, creationTime, lastExecuteTime);
+			SESSION_LOGGGER.info(format.toString());
 			format.close();
 		}
 	}
 
-	
 	/**
 	 * Log abort session.
 	 * 
-	 * @param sessionId
-	 *            the session id
+	 * @param session
+	 *            the session
+	 * @param reason
+	 *            the reason
 	 */
-	public static synchronized void logAbortSession(String sessionId) {
-		if (SESSION_LOGGGER.isDebugEnabled()) {
+	public static synchronized void logAbortSession(Session session, String reason) {
+		if (SESSION_LOGGGER.isInfoEnabled()) {
 			Formatter format = new Formatter();
-			format.format(abortSessionStr, sessionId);
-			SESSION_LOGGGER.debug(format.toString());
+			String sessionId = session.getId();
+			double eci = session.getSessionTimeoutMillis();
+			Date creationTime = session.getCreationTime();
+			Date lastExecuteTime = session.getLastExecuteTime();
+			format.format(abortSessionStr, sessionId, eci, creationTime, lastExecuteTime, reason);
+			SESSION_LOGGGER.info(format.toString());
 			format.close();
 		}
 	}

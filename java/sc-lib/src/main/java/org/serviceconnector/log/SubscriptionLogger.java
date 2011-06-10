@@ -16,9 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
+import java.util.Date;
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.service.Subscription;
 
 /**
  * The Class SubscriptionLogger.
@@ -39,14 +41,14 @@ public final class SubscriptionLogger {
 	/** The delete subscription str. */
 	private static String deleteSubscriptionStr = "delete subscription=%s";
 	/** The abort subscription str. */
-	private static String abortSubscriptionStr = "abort subscription=%s";
+	private static String abortSubscriptionStr = "abort subscription sid=%s noi=%sms creationTime=%3$tH:%3$tM:%3$tS.%3$tL reason=%4$s";
 	/** The timeout subscription string. */
-	private static String timeoutSubscriptionStr = "timeout subscription sid=%s";
+	private static String timeoutSubscriptionStr = "timeout subscription sid=%s noi=%sms creationTime=%3$tH:%3$tM:%3$tS.%3$tL";
 	/** The schedule timeout string. */
 	private static String scheduleTimeoutStr = "schedule subscription sid=%s, timeout=%sms, delay=%sms";
 	/** The cancel timeout string. */
 	private static String cancelTimeoutStr = "cancel subscription session sid=%s";
-	
+
 	/**
 	 * Private constructor for singleton use.
 	 */
@@ -134,7 +136,7 @@ public final class SubscriptionLogger {
 	 * @param timeoutMillis
 	 *            the timeout
 	 */
-	public static void logCreateSubscription(String id, double timeoutMillis, double noiMillis) {
+	public static synchronized void logCreateSubscription(String id, double timeoutMillis, double noiMillis) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(createSubscriptionStr, id, timeoutMillis, noiMillis);
@@ -149,7 +151,7 @@ public final class SubscriptionLogger {
 	 * @param id
 	 *            the id
 	 */
-	public static void logDeleteSubscription(String id) {
+	public static synchronized void logDeleteSubscription(String id) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(deleteSubscriptionStr, id);
@@ -161,14 +163,19 @@ public final class SubscriptionLogger {
 	/**
 	 * Log abort subscription.
 	 * 
-	 * @param id
-	 *            the id
+	 * @param subscription
+	 *            the subscription
+	 * @param reason
+	 *            the reason
 	 */
-	public static void logAbortSubscription(String id) {
-		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
+	public static synchronized void logAbortSubscription(Subscription subscription, String reason) {
+		if (SUBSCRIPTION_LOGGER.isInfoEnabled()) {
 			Formatter format = new Formatter();
-			format.format(abortSubscriptionStr, id);
-			SUBSCRIPTION_LOGGER.debug(format.toString());
+			String subscriptionId = subscription.getId();
+			int noi = subscription.getNoDataIntervalMillis();
+			Date creationTime = subscription.getCreationTime();
+			format.format(abortSubscriptionStr, subscriptionId, noi, creationTime, reason);
+			SUBSCRIPTION_LOGGER.info(format.toString());
 			format.close();
 		}
 	}
@@ -176,14 +183,17 @@ public final class SubscriptionLogger {
 	/**
 	 * Log timeout subscription.
 	 * 
-	 * @param subscriptionId
-	 *            the subscription Id
+	 * @param subscription
+	 *            the subscription
 	 */
-	public static synchronized void logTimeoutSubscription(String subscriptionId) {
-		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
+	public static synchronized void logTimeoutSubscription(Subscription subscription) {
+		if (SUBSCRIPTION_LOGGER.isInfoEnabled()) {
 			Formatter format = new Formatter();
-			format.format(timeoutSubscriptionStr, subscriptionId);
-			SUBSCRIPTION_LOGGER.debug(format.toString());
+			String subscriptionId = subscription.getId();
+			int noi = subscription.getNoDataIntervalMillis();
+			Date creationTime = subscription.getCreationTime();
+			format.format(timeoutSubscriptionStr, subscriptionId, noi, creationTime);
+			SUBSCRIPTION_LOGGER.info(format.toString());
 			format.close();
 		}
 	}

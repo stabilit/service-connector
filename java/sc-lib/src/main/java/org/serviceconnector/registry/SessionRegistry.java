@@ -232,7 +232,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			IServer server = session.getServer();
 			// aborts session on server
 			server.abortSession(session, "session timed out in session registry");
-			SessionLogger.logTimeoutSession(session.getId());
+			SessionLogger.logTimeoutSession(session);
 		}
 
 		/** {@inheritDoc} */
