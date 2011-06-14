@@ -24,7 +24,10 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.XMLDumpWriter;
 
@@ -328,7 +331,7 @@ public class ConnectionPool {
 		writer.writeElement("usedConnections", this.usedConnections.toString());
 		writer.writeEndElement(); // end of connection-pool
 	}
-	
+
 	/**
 	 * Sets the close on free. Indicates that connection should be closed at the time they get freed.
 	 * 
@@ -435,11 +438,20 @@ public class ConnectionPool {
 		}
 		// send a keep alive message
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
+		connection.incrementNrOfIdles();
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback(true);
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
-			connection.incrementNrOfIdles();
+			SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
+			if (reply.isFault() == true) {
+				// reply of keep alive is fault
+				SCMPMessageFault fault = (SCMPMessageFault) reply;
+				LOGGER.error("send keepalive failed - connection gets destroyed, scErrorText="
+						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT) + " scErrorCode="
+						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				this.forceClosingConnection(connection);
+				return;
+			}
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {
 			LOGGER.error("send keepalive failed - connection gets destroyed", ex);
