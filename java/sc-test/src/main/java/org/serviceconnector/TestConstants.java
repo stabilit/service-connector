@@ -99,7 +99,7 @@ public class TestConstants {
 	public static final String appErrorText = "application error text";
 	public static final int appErrorCode = 45234;
 
-	public static final String logDirectoryToken = "log-path";
+	public static final String logDirectoryToken = "logPath";
 	public static final String configPortToken = "sc-tcp.port";
 	public static final String scRunable = "sc.jar";
 	public static final String serverRunable = "test-server.jar";
