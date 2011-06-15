@@ -146,7 +146,7 @@ public final class Constants {
 	/** The default number of subsequent keep alive messages before the connection is closed. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_MILLIS is not configured. */
-	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
+	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 10000;
 	/** The default maximal connection pool size. */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
 
