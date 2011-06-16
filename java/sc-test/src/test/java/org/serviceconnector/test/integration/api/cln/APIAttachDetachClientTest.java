@@ -257,5 +257,4 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 		}
 		Assert.assertEquals("Client is attached", false, client.isAttached());
 	}
-
 }
