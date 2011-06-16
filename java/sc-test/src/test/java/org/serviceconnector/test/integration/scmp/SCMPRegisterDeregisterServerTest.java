@@ -44,7 +44,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1), 0);
 	}
 
 	@After
@@ -220,6 +220,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		SCMPMessage reply = cbk.getMessageSync(10000);
 		Assert.assertTrue(reply.isFault());
 		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), reply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(SCMPError.SERVER_NOT_FOUND.getErrorCode(), reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE).intValue());
+		Assert.assertEquals(SCMPError.SERVER_NOT_FOUND.getErrorCode(), reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE)
+				.intValue());
 	}
 }

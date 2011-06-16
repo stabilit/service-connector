@@ -66,6 +66,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	private int port;
 	private ConnectionType connectionType;
 	private int keepAlivSeconds = 1;
+	private int keepAliveOTIMillis = 10000;
 	private ConnectionPool connectionPool;
 
 	public ConnectionPoolTest(Integer port, ConnectionType connectionType) {
@@ -83,7 +84,8 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAlivSeconds);
+		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAlivSeconds,
+				this.keepAliveOTIMillis);
 	}
 
 	@After
@@ -227,7 +229,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 
 		for (int i = 0; i < 10000; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
-					this.keepAlivSeconds);
+					this.keepAlivSeconds, this.keepAliveOTIMillis);
 			IConnection connection = cp.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);

@@ -61,7 +61,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		super.beforeOneTest();
 		if (cascadingLevel == 1) {
 			this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10), 0);
 			AppContext.init();
 			this.createSession();
 		}
@@ -460,7 +460,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SCMPMessage responseMessage = cbk.getMessageSync(2000);
 		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT, SCMPMsgType.CLN_EXECUTE);
 	}
-	
+
 	/**
 	 * Description: execute 2 times on same session<br>
 	 * Expectation: throws parallel request error

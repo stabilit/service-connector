@@ -174,28 +174,57 @@ public class APISCClientTest extends SuperUnitTest {
 	public void t20_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		client.setKeepAliveIntervalSeconds(0); // can be set before attach
-		Assert.assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalSeconds());
+		Assert.assertEquals("KeepAliveInterval not equal", 0, client.getKeepAliveIntervalSeconds());
 	}
 
 	/**
 	 * Description: Invoke keep alive Interval with value = Integer.MAX_VALUE<br>
-	 * Expectation: value = Integer.MAX_VALUE was properly set
+	 * Expectation: throws validation exception
 	 */
-	@Test
+	@Test(expected = SCMPValidatorException.class)
 	public void t21_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		client.setKeepAliveIntervalSeconds(Integer.MAX_VALUE); // can be set before attach
-		Assert.assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalSeconds());
 	}
 
 	/**
 	 * Description: Invoke keep alive Interval with value = Integer.MIN_VALUE<br>
-	 * Expectation: value = Integer.MMIN_VALUE was properly set
+	 * Expectation: throws validation exception
 	 */
-	@Test
+	@Test(expected = SCMPValidatorException.class)
 	public void t22_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
 		client.setKeepAliveIntervalSeconds(Integer.MIN_VALUE); // can be set before attach
-		Assert.assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalSeconds());
+	}
+
+	/**
+	 * Description: Invoke keep alive timeout with value = 1<br>
+	 * Expectation: value = 1 was properly set
+	 */
+	@Test
+	public void t23_keepAliveTimeout() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
+		client.setKeepAliveTimeoutSeconds(1); // can be set before attach
+		Assert.assertEquals("KeepAliveTimeout not equal", 1, client.getKeepAliveTimeoutSeconds());
+	}
+
+	/**
+	 * Description: Invoke keep alive timeout with value = Integer.MAX_VALUE<br>
+	 * Expectation: throws validation exception
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t24_keepAliveTimeout() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
+		client.setKeepAliveTimeoutSeconds(Integer.MAX_VALUE); // can be set before attach
+	}
+
+	/**
+	 * Description: Invoke keep alive timeout with value = Integer.MIN_VALUE<br>
+	 * Expectation: throws validation exception
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t25_keepAliveTimeout() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP);
+		client.setKeepAliveTimeoutSeconds(Integer.MIN_VALUE); // can be set before attach
 	}
 }

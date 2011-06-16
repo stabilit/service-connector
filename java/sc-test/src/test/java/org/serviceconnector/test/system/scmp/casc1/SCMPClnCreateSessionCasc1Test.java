@@ -63,7 +63,7 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 3));
+				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 3), 0);
 		AppContext.init();
 	}
 

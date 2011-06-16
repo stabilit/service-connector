@@ -29,12 +29,12 @@ public class SCMPClnSubscribeCasc2Test extends SCMPClnSubscribeCasc1Test {
 	public SCMPClnSubscribeCasc2Test() {
 		SCMPClnSubscribeCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
-	
+
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
+				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10), 0);
 		AppContext.init();
 	}
 }

@@ -52,16 +52,16 @@ public class SCMPClnCreateSessionTest extends SCMPClnCreateSessionCasc1Test {
 				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0Defs;
-	}	
-	
+	}
+
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 3));
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 3), 0);
 		AppContext.init();
 	}
-	
+
 	/**
 	 * Description: create session - echo time interval wrong<br>
 	 * Expectation: passes, returns error
