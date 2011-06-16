@@ -358,23 +358,26 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Connection idle. Process idle event of connection.
+	 * Connection idle. Process idle event of connection. Sending of keep alive does not need to be synchronized.
 	 * 
 	 * @param connection
 	 *            the connection
 	 */
-	public synchronized void connectionIdle(IConnection connection) {
-		if (this.freeConnections.remove(connection) == false) {
-			// this connection is no more free - no keep alive necessary
-			return;
-		}
-		if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
-			// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
-			if ((this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
-				// there are still enough (totalCons > minConnections) free - disconnect this one
-				this.disconnectConnection(connection);
+	public void connectionIdle(IConnection connection) {
+		synchronized (this) {
+			if (this.freeConnections.remove(connection) == false) {
+				// this connection is no more free - no keep alive necessary
 				return;
 			}
+			if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
+				// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
+				if ((this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
+					// there are still enough (totalCons > minConnections) free - disconnect this one
+					this.disconnectConnection(connection);
+					return;
+				}
+			}
+			this.usedConnections.add(connection);
 		}
 		// send a keep alive message
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
@@ -392,7 +395,10 @@ public class ConnectionPool {
 				this.forceClosingConnection(connection);
 				return;
 			}
-			this.freeConnections.add(connection);
+			synchronized (this) {
+				this.usedConnections.remove(connection);
+				this.freeConnections.add(0, connection);
+			}
 		} catch (Exception ex) {
 			LOGGER.error("send keepalive failed - connection gets destroyed", ex);
 			this.forceClosingConnection(connection);
