@@ -78,6 +78,8 @@ public class SCClient {
 	 * means no keep alive messages will be sent. Default = 60.
 	 */
 	private int keepAliveIntervalSeconds;
+	/** The keep alive timeout in seconds. Time to wait for the reply of a keep alive sent to the SC. Default = 10.*/
+	private int keepAliveTimeoutSeconds;
 	/** The connection type used to connect to SC. {netty.http/netty.tcp}. Default netty.tcp */
 	private ConnectionType connectionType;
 	/** The requester. */
@@ -112,6 +114,7 @@ public class SCClient {
 		this.port = port;
 		this.connectionType = connectionType;
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
+		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
 		this.attached = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 	}
@@ -160,8 +163,9 @@ public class SCClient {
 		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
-			this.requester = new SCRequester(new RemoteNodeConfiguration(this.port + "client", this.host, this.port,
-					this.connectionType.getValue(), keepAliveIntervalSeconds, this.maxConnections));
+			RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(this.port + "client", this.host, this.port,
+					this.connectionType.getValue(), this.keepAliveIntervalSeconds, this.maxConnections);
+			this.requester = new SCRequester(remoteNodeConf, this.keepAliveTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 			try {
@@ -685,15 +689,6 @@ public class SCClient {
 	}
 
 	/**
-	 * Gets the keep alive interval in seconds.
-	 * 
-	 * @return the keep alive interval in seconds
-	 */
-	public int getKeepAliveIntervalSeconds() {
-		return this.keepAliveIntervalSeconds;
-	}
-
-	/**
 	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive
 	 * message is solely used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle
 	 * connection. The value = 0 means no keep alive messages will be sent. <br />
@@ -708,12 +703,52 @@ public class SCClient {
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCServiceException, SCMPValidatorException {
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, this.keepAliveIntervalSeconds, Constants.MAX_KPI_VALUE,
+		ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, keepAliveIntervalSeconds, Constants.MAX_KPI_VALUE,
 				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
+	}
+
+	/**
+	 * Gets the keep alive interval in seconds.
+	 * 
+	 * @return the keep alive interval in seconds
+	 */
+	public int getKeepAliveIntervalSeconds() {
+		return this.keepAliveIntervalSeconds;
+	}
+
+	/**
+	 * Sets the keep alive timeout in seconds. Time in seconds a keep alive request waits to be confirmed. If no confirmation is
+	 * received single connection gets closed.
+	 * 
+	 * @param keepAliveTimeoutSeconds
+	 *            time to wait for completion of a keep alive request
+	 *            Example: 10
+	 * @throws SCMPValidatorException
+	 *             keepAliveTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException
+	 *             called method after attach
+	 */
+	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
+		// validate in this case its a local needed information
+		ValidatorUtility.validateInt(1, keepAliveTimeoutSeconds, Constants.MAX_KP_TIMEOUT_VALUE,
+				SCMPError.HV_WRONG_KEEPALIVE_TIMEOUT);
+		if (this.attached) {
+			throw new SCServiceException("Can not set property, client is already attached.");
+		}
+		this.keepAliveTimeoutSeconds = keepAliveTimeoutSeconds;
+	}
+
+	/**
+	 * Gets the keep alive timeout seconds.
+	 * 
+	 * @return the keep alive timeout seconds
+	 */
+	public int getKeepAliveTimeoutSeconds() {
+		return this.keepAliveTimeoutSeconds;
 	}
 
 	/**

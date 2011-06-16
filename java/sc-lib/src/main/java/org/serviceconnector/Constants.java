@@ -147,6 +147,8 @@ public final class Constants {
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_MILLIS is not configured. */
 	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 10000;
+	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_SECONDS is not configured. */
+	public static final int DEFAULT_KEEP_ALIVE_OTI_SECONDS = DEFAULT_KEEP_ALIVE_OTI_MILLIS / SEC_TO_MILLISEC_FACTOR;
 	/** The default maximal connection pool size. */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
 
@@ -295,13 +297,13 @@ public final class Constants {
 	/** The Constant UPLOAD_SERVICE_PARAM_NAME. */
 	public static final String UPLOAD_SERVICE_PARAM_NAME = "servicename";
 	/** The Constant DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED. web default values */
-	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;	
+	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
 	/** The Constant DEFAULT_WEB_COLOR_SCHEME. */
 	public static final String DEFAULT_WEB_COLOR_SCHEME = "classic";
 	/** The Constant DEFAULT_WEB_PAGE_SIZE, the default visible element per page */
-	public static final int DEFAULT_WEB_PAGE_SIZE = 25;	
+	public static final int DEFAULT_WEB_PAGE_SIZE = 25;
 	/** The Constant DEFAULT_WEB_SITE_SIZE, the default visible site size in paging area */
-	public static final int DEFAULT_WEB_SITE_SIZE = 20;	
+	public static final int DEFAULT_WEB_SITE_SIZE = 20;
 	/**
 	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS.
 	 * default session inactivity control schedule timeout (3 minutes)
@@ -398,4 +400,6 @@ public final class Constants {
 	public static final int MAX_KPI_VALUE = NUMBER_3600;
 	/** The Constant MAX_ECHO_TIMEOUT_VALUE. */
 	public static final int MAX_ECHO_TIMEOUT_VALUE = NUMBER_3600;
+	/** The Constant MAX_KP_TIMEOUT_VALUE. */
+	public static final int MAX_KP_TIMEOUT_VALUE = NUMBER_3600;
 }

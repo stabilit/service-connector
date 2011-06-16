@@ -56,7 +56,8 @@ public class Requester implements IRequester {
 	public Requester(RemoteNodeConfiguration remoteNodeConfiguration) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
 		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
-				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds());
+				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds(), AppContext
+						.getBasicConfiguration().getKeepAliveOTIMillis());
 		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
 	}
 
@@ -225,7 +226,7 @@ public class Requester implements IRequester {
 		// initial done - set it back to 1
 		this.connectionPool.setMinConnections(Constants.DEFAULT_MIN_CONNECTION_POOL_SIZE);
 	}
-	
+
 	/**
 	 * Dump the requester into the xml writer.
 	 * 

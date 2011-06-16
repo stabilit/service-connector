@@ -23,7 +23,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -68,6 +67,8 @@ public class ConnectionPool {
 	private boolean closeOnFree;
 	/** The keep alive interval. */
 	private int keepAliveIntervalSeconds;
+	/** The keep alive oti millis. */
+	private int keepAliveOTIMillis;
 	/** The free connections. */
 	private List<IConnection> freeConnections;
 	/** The used connections. */
@@ -87,7 +88,7 @@ public class ConnectionPool {
 	 * @param keepAliveIntervalSeconds
 	 *            the keep alive interval
 	 */
-	public ConnectionPool(String host, int port, String conType, int keepAliveIntervalSeconds) {
+	public ConnectionPool(String host, int port, String conType, int keepAliveIntervalSeconds, int keepAliveOTIMillis) {
 		this.host = host;
 		this.port = port;
 		this.connectionType = conType;
@@ -99,46 +100,7 @@ public class ConnectionPool {
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.connectionFactory = AppContext.getConnectionFactory();
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
-	}
-
-	/**
-	 * Instantiates a new connection pool.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param conType
-	 *            the connection type
-	 */
-	public ConnectionPool(String host, int port, String conType) {
-		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
-	}
-
-	/**
-	 * Instantiates a new connection pool.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 */
-	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), keepAliveInterval);
-	}
-
-	/**
-	 * Instantiates a new connection pool.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 */
-	public ConnectionPool(String host, int port) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
+		this.keepAliveOTIMillis = keepAliveOTIMillis;
 	}
 
 	/**
@@ -311,28 +273,6 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Dump the connection pool into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("connection-pool");
-		writer.writeAttribute("host", this.host);
-		writer.writeAttribute("port", this.port);
-		writer.writeAttribute("connectionType", this.connectionType);
-		writer.writeAttribute("maxConnections", this.maxConnections);
-		writer.writeAttribute("minConnections", this.minConnections);
-		writer.writeAttribute("closeOnFree", this.closeOnFree);
-		writer.writeAttribute("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
-		writer.writeElement("freeConnections", this.freeConnections.toString());
-		writer.writeElement("usedConnections", this.usedConnections.toString());
-		writer.writeEndElement(); // end of connection-pool
-	}
-
-	/**
 	 * Sets the close on free. Indicates that connection should be closed at the time they get freed.
 	 * 
 	 * @param closeOnFree
@@ -442,7 +382,7 @@ public class ConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback(true);
 			connection.send(keepAliveMessage, callback);
-			SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
+			SCMPMessage reply = callback.getMessageSync(this.keepAliveOTIMillis);
 			if (reply.isFault() == true) {
 				// reply of keep alive is fault
 				SCMPMessageFault fault = (SCMPMessageFault) reply;
@@ -502,6 +442,29 @@ public class ConnectionPool {
 	 */
 	public List<IConnection> getUsedConnections() {
 		return Collections.unmodifiableList(usedConnections);
+	}
+
+	/**
+	 * Dump the connection pool into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("connection-pool");
+		writer.writeAttribute("host", this.host);
+		writer.writeAttribute("port", this.port);
+		writer.writeAttribute("connectionType", this.connectionType);
+		writer.writeAttribute("maxConnections", this.maxConnections);
+		writer.writeAttribute("minConnections", this.minConnections);
+		writer.writeAttribute("closeOnFree", this.closeOnFree);
+		writer.writeAttribute("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
+		writer.writeAttribute("keepAliveOTIMillis", this.keepAliveOTIMillis);
+		writer.writeElement("freeConnections", this.freeConnections.toString());
+		writer.writeElement("usedConnections", this.usedConnections.toString());
+		writer.writeEndElement(); // end of connection-pool
 	}
 
 	/**

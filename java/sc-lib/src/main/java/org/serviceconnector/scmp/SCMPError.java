@@ -85,30 +85,32 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	HV_WRONG_PORTNR(436, "Invalid portNr."),
 	/** The HV_WRONG_KEEPALIVE_INTERVAL. */
 	HV_WRONG_KEEPALIVE_INTERVAL(437, "Invalid keepaliveInterval value."),
+	/** The HV_WRONG_KEEPALIVE_TIMEOUT. */
+	HV_WRONG_KEEPALIVE_TIMEOUT(438, "Invalid keepaliveTimeout value."),
 	/** The HV_WRONG_NODATA_INTERVAL. */
-	HV_WRONG_NODATA_INTERVAL(438, "Invalid notDataInterval value."),
+	HV_WRONG_NODATA_INTERVAL(439, "Invalid notDataInterval value."),
 	/** The HV_WRONG_MASK. */
-	HV_WRONG_MASK(439, "Invalid mask."),
+	HV_WRONG_MASK(440, "Invalid mask."),
 	/** The HV_WRONG_SESSION_INFO. */
-	HV_WRONG_SESSION_INFO(440, "Invalid sessionInfo value."),
+	HV_WRONG_SESSION_INFO(441, "Invalid sessionInfo value."),
 	/** The HV_WRONG_SERVICE_NAME. */
-	HV_WRONG_SERVICE_NAME(441, "Invalid serviceName value."),
+	HV_WRONG_SERVICE_NAME(442, "Invalid serviceName value."),
 	/** The HV_WRONG_MESSAGE_INFO. */
-	HV_WRONG_MESSAGE_INFO(442, "Invalid messageInfo value."),
+	HV_WRONG_MESSAGE_INFO(443, "Invalid messageInfo value."),
 	/** The HV_WRONG_MESSAGE_SEQUENCE_NR. */
-	HV_WRONG_MESSAGE_SEQUENCE_NR(443, "Invalid messageSequenceNumber."),
+	HV_WRONG_MESSAGE_SEQUENCE_NR(444, "Invalid messageSequenceNumber."),
 	/** The HV_WRONG_REMOTE_FILE_NAME. */
-	HV_WRONG_REMOTE_FILE_NAME(444, "Invalid remoteFileName value."),
+	HV_WRONG_REMOTE_FILE_NAME(445, "Invalid remoteFileName value."),
 	/** The HV_WRONG_MESSAGE_ID. */
-	HV_WRONG_SESSION_ID(445, "Invalid sessionId value."),
+	HV_WRONG_SESSION_ID(446, "Invalid sessionId value."),
 	/** The HV_WRONG_SC_ERROR_CODE. */
-	HV_WRONG_SC_ERROR_CODE(446, "Invalid scErrorCode value."),
+	HV_WRONG_SC_ERROR_CODE(447, "Invalid scErrorCode value."),
 	/** The HV_WRONG_SC_ERROR_TEXT. */
-	HV_WRONG_SC_ERROR_TEXT(447, "Invalid scErrorText value."),
+	HV_WRONG_SC_ERROR_TEXT(448, "Invalid scErrorText value."),
 	/** The HV_WRONG_APP_ERROR_CODE. */
-	HV_WRONG_APP_ERROR_CODE(448, "Invalid appErrorCode value."), // not used
+	HV_WRONG_APP_ERROR_CODE(449, "Invalid appErrorCode value."), // not used
 	/** The HV_WRONG_APP_ERROR_TEXT. */
-	HV_WRONG_APP_ERROR_TEXT(449, "Invalid appErrorText value."), // not used
+	HV_WRONG_APP_ERROR_TEXT(450, "Invalid appErrorText value."), // not used
 
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE(460, "Invalid configuration file."),

@@ -50,10 +50,8 @@ public class SCRequester implements IRequester {
 	private static final Logger LOGGER = Logger.getLogger(SCRequester.class);
 	/** The context. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
-	
 	/** The msg sequence nr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
-
 	/** The connection pool. */
 	private ConnectionPool connectionPool = null;
 
@@ -63,10 +61,11 @@ public class SCRequester implements IRequester {
 	 * @param remoteNodeConfiguration
 	 *            the remote node configuration
 	 */
-	public SCRequester(RemoteNodeConfiguration remoteNodeConfiguration) {
+	public SCRequester(RemoteNodeConfiguration remoteNodeConfiguration, int keepAliveTimeoutMillis) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
 		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
-				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds());
+				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds(),
+				keepAliveTimeoutMillis);
 		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
@@ -257,8 +256,8 @@ public class SCRequester implements IRequester {
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				}
 				// updating cache part number for poll request
-				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, scmpReply
-						.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
+				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER,
+						scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
 				LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
@@ -309,8 +308,8 @@ public class SCRequester implements IRequester {
 				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 			// updating cache part number for poll request
-			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, scmpReply
-					.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
+			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER,
+					scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
 			LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 			// poll & exit
 			this.connectionCtx.getConnection().send(message, this);
