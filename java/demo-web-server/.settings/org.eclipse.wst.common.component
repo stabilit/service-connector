@@ -10,7 +10,7 @@
         <dependent-module archiveName="sc-lib-all.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sc-lib/sc-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <property name="context-root" value="webapp"/>
         <property name="java-output-path" value="/webapp/target/classes"/>
+        <property name="context-root" value="demo-web-server"/>
     </wb-module>
 </project-modules>
