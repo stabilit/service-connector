@@ -21,16 +21,16 @@
 		<param-value>localhost</param-value>
 	</context-param>
 	<context-param>
-		<param-name>tomcatPort</param-name>
-		<param-value>8080</param-value>
-	</context-param>
-	<context-param>
 		<param-name>toSCKeepAliveIntervalSeconds</param-name>
 		<param-value>10</param-value>
 	</context-param>
 	<context-param>
 		<param-name>keepAliveTimeoutSeconds</param-name>
 		<param-value>10</param-value>
+	</context-param>
+	<context-param>
+		<param-name>tomcatPort</param-name>
+		<param-value>8080</param-value>
 	</context-param>
 	<servlet>
 		<description>Demo servlet session service implementation</description>
