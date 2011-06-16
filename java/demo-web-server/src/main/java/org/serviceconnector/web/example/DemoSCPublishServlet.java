@@ -13,7 +13,7 @@ public class DemoSCPublishServlet extends SCBasePublishServlet {
 	private static final Logger LOGGER = Logger.getLogger(DemoSCPublishServlet.class);
 
 	public DemoSCPublishServlet() {
-		super("/demo-web/DemoSCPublishServlet");
+		super("/demo-web-server/DemoSCPublishServlet");
 	}
 
 	@Override

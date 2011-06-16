@@ -13,7 +13,7 @@ public class DemoSCSessionServlet extends SCBaseSessionServlet {
 	private static final Logger LOGGER = Logger.getLogger(DemoSCSessionServlet.class);
 
 	public DemoSCSessionServlet() {
-		super("/demo-web/DemoSCSessionServlet");
+		super("/demo-web-server/DemoSCSessionServlet");
 	}
 
 	@Override
