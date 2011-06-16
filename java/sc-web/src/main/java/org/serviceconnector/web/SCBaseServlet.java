@@ -80,8 +80,12 @@ import org.serviceconnector.util.ValidatorUtility;
  *		<param-value>localhost</param-value>
  *	</context-param>
  *	<context-param>
- *		<param-name>toSCKeepAliveSeconds</param-name>
- *		<param-value>0</param-value>
+ *		<param-name>toSCKeepAliveIntervalSeconds</param-name>
+ *		<param-value>10</param-value>
+ *	</context-param>
+ * 	<context-param>
+ *		<param-name>keepAliveTimeoutSeconds</param-name>
+ *		<param-value>10</param-value>
  *	</context-param>
  *	<context-param>
  *		<param-name>tomcatPort</param-name>
@@ -193,7 +197,9 @@ public abstract class SCBaseServlet extends HttpServlet {
 		String remotNodeName = this.tomcatPort + this.getServletName();
 		String scHost = context.getInitParameter(WebConstants.PROPERTY_SC_HOST);
 		int scPort = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_SC_PORT));
-		int keepAliveToSCSeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_TOSC));
+		int keepAliveIntervalToSCSeconds = Integer
+				.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_INTERVAL_TOSC));
+		int keepAliveOTISeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_OTI));
 
 		if (scHost == null) {
 			throw new SCMPValidatorException("Host must be set.");
@@ -205,8 +211,9 @@ public abstract class SCBaseServlet extends HttpServlet {
 			throw new SCMPValidatorException("SC port and tomcat port must not be the same.");
 		}
 		// init the requester to communicate to SC
-		this.requester = new SCRequester(new RemoteNodeConfiguration(remotNodeName, scHost, scPort,
-				ConnectionType.NETTY_HTTP.getValue(), keepAliveToSCSeconds, 1));
+		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(remotNodeName, scHost, scPort,
+				ConnectionType.NETTY_HTTP.getValue(), keepAliveIntervalToSCSeconds, 1);
+		this.requester = new SCRequester(remoteNodeConf, keepAliveOTISeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**

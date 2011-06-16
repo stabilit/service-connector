@@ -35,13 +35,15 @@ public final class WebConstants {
 	/** The Constant PROPERTY_MAX_SESSIONS. */
 	public static final String PROPERTY_MAX_SESSIONS = "maxSessions";
 	/** The Constant PROPERTY_MAX_CONNECTIONS. */
-	public static final String PROPERTY_MAX_CONNECTIONS = "maxConnections";	
+	public static final String PROPERTY_MAX_CONNECTIONS = "maxConnections";
 	/** The Constant PROPERTY_SC_HOST. */
-	public static final String PROPERTY_SC_HOST = "scHost";	
+	public static final String PROPERTY_SC_HOST = "scHost";
 	/** The Constant PROPERTY_SC_PORT. */
-	public static final String PROPERTY_SC_PORT = "scPort";	
+	public static final String PROPERTY_SC_PORT = "scPort";
 	/** The Constant PROPERTY_KEEPALIVE_TOSC. */
-	public static final String PROPERTY_KEEPALIVE_TOSC = "toSCKeepAliveSeconds";		
+	public static final String PROPERTY_KEEPALIVE_INTERVAL_TOSC = "toSCKeepAliveIntervalSeconds";
+	/** The Constant PROPERTY_KEEPALIVE_OTI. */
+	public static final String PROPERTY_KEEPALIVE_OTI = "keepAliveTimeoutSeconds";
 	/** The Constant PROPERTY_TOMCAT_PORT. */
 	public static final String PROPERTY_TOMCAT_PORT = "tomcatPort";
 }
