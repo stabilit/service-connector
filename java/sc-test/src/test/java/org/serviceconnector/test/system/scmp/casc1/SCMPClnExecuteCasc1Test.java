@@ -447,6 +447,61 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	}
 
 	/**
+	 * Description: execute - waits 2 seconds - another execute times out when
+	 * waiting for free connection<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t71_LoopsForFreeConnectionAndWorksFineAfter() throws Exception {
+		// reserve connection 1 with standard session
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
+		clnExecuteCall.setRequestBody("3000");
+		TestCallback cbk = new TestCallback();
+		clnExecuteCall.invoke(cbk, 10000);
+
+		// create another session2
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoIntervalSeconds(3600);
+		TestCallback cbk2 = new TestCallback();
+		createSessionCall.invoke(cbk2, 3000);
+		SCMPMessage resp = cbk2.getMessageSync(3000);
+		String sessionId2 = resp.getSessionId();
+
+		// create another session3
+		createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoIntervalSeconds(3600);
+		TestCallback cbk3 = new TestCallback();
+		createSessionCall.invoke(cbk3, 3000);
+		resp = cbk3.getMessageSync(3000);
+		String sessionId3 = resp.getSessionId();
+
+		// reserve connection 2 with session2
+		clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, sessionId3);
+		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
+		clnExecuteCall.setRequestBody("3000");
+		TestCallback cbk4 = new TestCallback();
+		clnExecuteCall.invoke(cbk4, 10000);
+
+		// to assure second create is not faster
+		Thread.sleep(20);
+		// try to get a third connection with a third session - should work with the wait mec for free connections
+		clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, sessionId2);
+		TestCallback cbk5 = new TestCallback();
+		clnExecuteCall.invoke(cbk5, 7000);
+
+		SCMPMessage reply = cbk4.getMessageSync(4000);
+		SCMPMessage reply1 = cbk5.getMessageSync(7000);
+
+		TestUtil.checkReply(reply);
+		TestUtil.checkReply(reply1);
+		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), reply1.getMessageType());
+		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), reply.getMessageType());
+	}
+
+	/**
 	 * Description: execute - waits 2 seconds, OTI runs out on SC<br>
 	 * Expectation: passes
 	 */
