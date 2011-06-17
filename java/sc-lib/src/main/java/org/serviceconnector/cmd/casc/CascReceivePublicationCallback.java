@@ -54,20 +54,21 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			// could not get permit to process - response done inside method
 			return;
 		}
+		String sid = reply.getSessionId();
 		// try catch block to assure releasing permit in case if any error - very important!
 		try {
 			// got permit to continue
 			// 3. receiving reply and error handling
 			if (this.cascClient.isSubscribed() == false) {
 				LOGGER.debug("receive publication for cascaded client which is not subscribed anymore service="
-						+ cascClient.getServiceName());
+						+ cascClient.getServiceName() + " sid=" + sid);
 				// cascaded client is not subscribed anymore - stop continuing
 				return;
 			}
 			if (reply.isFault()) {
 				// operation failed
 				LOGGER.error("receive publication failed for cascaded client (set to be unsubscribed) service="
-						+ cascClient.getServiceName());
+						+ cascClient.getServiceName() + " sid=" + sid);
 				this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 				this.cascClient.destroy();
 				return;
@@ -76,7 +77,8 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 			if (noData == false) {
 				// message received,insert in queue
-				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName());
+				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName()
+						+ " =sid" + sid);
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);
 			}

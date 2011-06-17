@@ -86,6 +86,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			break;
 		}
 
+		ClnChangeSubscriptionCommandCallback callback = null;
 		StatefulServer server = (StatefulServer) subscription.getServer();
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
@@ -93,11 +94,11 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		int i = 0;
 
 		do {
-			ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback(request, response,
-					responderCallback, subscription);
+			// reset ipList&msgType, might have been modified in below change subscription try
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+			reqMessage.setMessageType(this.getKey());
+			callback = new ClnChangeSubscriptionCommandCallback(request, response, responderCallback, subscription);
 			try {
-				// reset ipList, might have been modified in creates session try
-				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

@@ -120,6 +120,8 @@ public class CscDeleteSessionCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
+			// reset msgType, might have been modified in below delete session try
+			reqMessage.setMessageType(this.getKey());
 			callback = new DeleteSessionCommandCallback(request, response, responderCallback, session, statefulServer);
 			try {
 				statefulServer.deleteSession(reqMessage, callback, otiOnSCMillis

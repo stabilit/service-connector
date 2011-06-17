@@ -138,10 +138,11 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
+			// reset ipList&msgType, might have been modified in below create session try
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+			reqMessage.setMessageType(this.getKey());
 			callback = new CreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
-				// reset ipList, might have been modified in creates session try
-				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

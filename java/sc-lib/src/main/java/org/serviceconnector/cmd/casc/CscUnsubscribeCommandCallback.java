@@ -98,8 +98,9 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 	 */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
-		SCMPMessage reqMessage = request.getMessage();
+		SCMPMessage reqMessage = this.request.getMessage();
+		String sid = reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		String serviceName = reqMessage.getServiceName();
 		if (reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
 			// free server from subscription if cascaded SC unsubscribes himself
@@ -108,15 +109,13 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc unsubscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc unsubscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc unsubscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc unsubscribe sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + "sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc unsubscribe failed sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc unsubscribe failed sid=" + sid);
 		}
 		// forward server reply to client
 		fault.setIsReply(true);

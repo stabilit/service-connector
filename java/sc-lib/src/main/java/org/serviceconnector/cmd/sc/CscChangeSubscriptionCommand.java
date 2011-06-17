@@ -83,18 +83,19 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			break;
 		}
 		StatefulServer server = (StatefulServer) cascSubscription.getServer();
-
+		CscChangeSubscriptionCallbackForCasc callback = null;
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 
 		do {
-			CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response,
-					responderCallback, cascSubscription, cascadedSCMask);
+			// reset ipList&msgType, might have been modified in below change subscription try
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+			reqMessage.setMessageType(this.getKey());
+			callback = new CscChangeSubscriptionCallbackForCasc(request, response, responderCallback, cascSubscription,
+					cascadedSCMask);
 			try {
-				// reset ipList, might have been modified in creates session try
-				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

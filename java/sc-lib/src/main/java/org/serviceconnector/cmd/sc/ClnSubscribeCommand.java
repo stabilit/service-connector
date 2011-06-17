@@ -107,17 +107,18 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// check service is present
 		PublishService service = this.validatePublishService(abstractService);
+		SubscribeCommandCallback callback = null;
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
+			// reset ipList&msgType, might have been modified in below subscribe try
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+			reqMessage.setMessageType(this.getKey());
+			// service is local - normal client is subscribing
+			callback = new SubscribeCommandCallback(request, response, responderCallback, tmpSubscription);
 			try {
-				// reset ipList, might have been modified in creates session try
-				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
-				// service is local - normal client is subscribing
-				SubscribeCommandCallback callback = new SubscribeCommandCallback(request, response, responderCallback,
-						tmpSubscription);
 				service.allocateServerAndSubscribe(reqMessage, callback, tmpSubscription, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

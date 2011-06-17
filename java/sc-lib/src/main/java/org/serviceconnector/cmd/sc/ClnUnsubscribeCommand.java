@@ -26,7 +26,6 @@ import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -87,16 +86,18 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			// code for other types of services is below
 			break;
 		}
-		ISCMPMessageCallback callback;
 		StatefulServer server = (StatefulServer) subscription.getServer();
+		ClnUnsubscribeCommandCallback callback = null;
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
+			// reset msgType, might have been modified in below unsubscribe try
+			reqMessage.setMessageType(this.getKey());
+			// set up callback for normal client unsubscribe operation
+			callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 			try {
-				// set up callback for normal client unsubscribe operation
-				callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// delete unreferenced nodes in queue
 				publishMessageQueue.removeNonreferencedNodes();

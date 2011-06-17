@@ -89,22 +89,21 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		SCMPMessage reqMessage = request.getMessage();
+		String sid = reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		// free server from subscription
 		this.subscription.getServer().removeSession(subscription);
-		SCMPMessage reqMessage = request.getMessage();
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln unsubscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln unsubscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln unsubscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln unsubscribe sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + "sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + "sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed sid=" + sid);
 		}
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client

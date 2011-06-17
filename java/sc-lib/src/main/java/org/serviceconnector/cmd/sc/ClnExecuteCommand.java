@@ -128,6 +128,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
+			// reset msgType, might have been modified in below execute try
+			reqMessage.setMessageType(this.getKey());
 			callback = new ExecuteCommandCallback(request, response, responderCallback, sessionId);
 			try {
 				server.execute(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));

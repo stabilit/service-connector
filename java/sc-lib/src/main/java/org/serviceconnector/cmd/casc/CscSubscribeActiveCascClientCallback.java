@@ -38,7 +38,7 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-	
+
 	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 
@@ -87,14 +87,16 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 		try {
 			this.commandCallback.receive(reply);
 		} catch (Exception e) {
-			LOGGER.warn("receive rejected or fault reply failed", e);
+			LOGGER.warn("receive rejected or fault reply failed, sid=" + this.request.getMessage().getSessionId(), e);
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		SCMPMessage reqMessage = this.request.getMessage();
+		String sid = reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

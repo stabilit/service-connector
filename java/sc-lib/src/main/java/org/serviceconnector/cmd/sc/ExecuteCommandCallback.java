@@ -55,7 +55,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 	/** The request message. */
 	private SCMPMessage requestMessage;
 	/** The session id. */
-	private String sessionId;
+	private String sid;
 	/** The request cache id. */
 	private String requestCacheId;
 	/** The request service name. */
@@ -83,7 +83,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		this.responderCallback = callback;
 		this.request = request;
 		this.response = response;
-		this.sessionId = sessionId;
+		this.sid = sessionId;
 		this.requestMessage = this.request.getMessage();
 		this.requestCacheId = requestMessage.getCacheId();
 		this.requestServiceName = requestMessage.getServiceName();
@@ -126,18 +126,18 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 						cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
 							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache
-							if (cacheComposite.isLoadingSessionId(sessionId) && cacheComposite.isPartLoading() == false) {
-								scmpCache.removeComposite(sessionId, cacheId);
+							if (cacheComposite.isLoadingSessionId(this.sid) && cacheComposite.isPartLoading() == false) {
+								scmpCache.removeComposite(this.sid, cacheId);
 								if (reply.isFault()) {
 									CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId
 											+ "), cacheComposite state=" + cacheComposite.getCacheState()
 											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
-											+ ", request sessionId=" + this.sessionId);
+											+ ", request sessionId=" + this.sid);
 								} else {
 									CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId
 											+ "), cacheComposite state=" + cacheComposite.getCacheState()
 											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
-											+ ", request sessionId=" + this.sessionId);
+											+ ", request sessionId=" + this.sid);
 								}
 							}
 						}
@@ -153,8 +153,8 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 								// remove cacheId from cache
 								CacheComposite localCacheComposite = scmpCache.getComposite(this.requestCacheId);
 								if (localCacheComposite != null) {
-									if (localCacheComposite.isLoadingSessionId(sessionId)) {
-										scmpCache.removeComposite(sessionId, this.requestCacheId);
+									if (localCacheComposite.isLoadingSessionId(this.sid)) {
+										scmpCache.removeComposite(this.sid, this.requestCacheId);
 										CacheLogger.warn("cache composite (" + this.requestCacheId
 												+ ") removed, server did reply different cache id, cache (" + cacheId + ")");
 									}
@@ -186,7 +186,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 				CacheLogger.trace("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(this.sessionId, cacheId);
+					scmpCache.removeComposite(this.sid, cacheId);
 					CacheLogger
 							.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}
@@ -198,7 +198,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		reply.setServiceName(this.requestServiceName);
 		this.response.setSCMP(reply);
 		// schedule session timeout
-		Session session = this.sessionRegistry.getSession(this.sessionId);
+		Session session = this.sessionRegistry.getSession(this.sid);
 		if (session != null) {
 			synchronized (session) {
 				// reset session timeout to ECI
@@ -212,27 +212,24 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		LOGGER.warn("receive exception sid=" + this.sid, ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + this.sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid=" + this.sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + this.sid);
 		}
 		// forward server reply to client
-		fault.setSessionId(sessionId);
+		fault.setSessionId(this.sid);
 		fault.setIsReply(true);
 		fault.setMessageType(this.msgType);
 		fault.setServiceName(this.requestServiceName);
 		this.response.setSCMP(fault);
 		// schedule session timeout
-		Session session = this.sessionRegistry.getSession(this.sessionId);
+		Session session = this.sessionRegistry.getSession(this.sid);
 		if (session != null) {
 			synchronized (session) {
 				// reset session timeout to ECI
@@ -257,7 +254,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 					// remove request cacheId from cache
 					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 					if (cacheComposite != null) {
-						scmpCache.removeComposite(this.sessionId, this.requestCacheId);
+						scmpCache.removeComposite(this.sid, this.requestCacheId);
 						CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + this.requestCacheId
 								+ ")");
 					}
@@ -266,7 +263,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				ExecuteCommandCallback.LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(this.sessionId, this.requestCacheId);
+					scmpCache.removeComposite(this.sid, this.requestCacheId);
 					CacheLogger
 							.warn("cache composite removed because an expcetion did occure, cache (" + this.requestCacheId + ")");
 				}

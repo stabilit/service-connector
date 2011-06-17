@@ -123,9 +123,10 @@ public class CscSubscribeCommand extends CommandAdapter {
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
+			// reset ipList&msgType, might have been modified in below operation try
+			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+			reqMessage.setMessageType(this.getKey());
 			try {
-				// reset ipList, might have been modified in creates session try
-				reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 				if (cscSubscription != null) {
 					// cascaded subscribe made by an active cascaded SC
 					CscChangeSubscriptionCallbackForCasc cascCallback = new CscChangeSubscriptionCallbackForCasc(request, response,

@@ -113,20 +113,19 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		SCMPMessage reqMessage = this.request.getMessage();
+		String sid = reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		server.removeSession(session);
 		SCMPMessage fault = null;
-		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC create session sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC create session sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing create session failed sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing create session failed sid=" + sid);
 		}
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);

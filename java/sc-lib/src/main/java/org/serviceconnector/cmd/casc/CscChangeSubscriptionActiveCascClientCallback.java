@@ -37,7 +37,7 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-	
+
 	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 
@@ -93,7 +93,9 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		SCMPMessage reqMessage = this.request.getMessage();
+		String sid = reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

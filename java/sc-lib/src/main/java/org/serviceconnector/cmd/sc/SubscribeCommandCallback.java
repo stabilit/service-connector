@@ -124,25 +124,23 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		String sid = this.reqMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		// creation failed remove from server
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
 		String serviceName = this.reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid=" + sid);
 		} else if (ex instanceof InterruptedException) {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid="
-					+ reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed sid=" + reqMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed sid=" + sid);
 		}
 		// forward reply to client
 		fault.setIsReply(true);

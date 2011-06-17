@@ -138,9 +138,11 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
+			// reset msgType, might have been modified in below unsubscribe try
+			reqMessage.setMessageType(this.getKey());
+			// set up callback for normal client unsubscribe operation
+			callback = new CscUnsubscribeCommandCallback(request, response, responderCallback, cascSubscription);
 			try {
-				// set up callback for normal client unsubscribe operation
-				callback = new CscUnsubscribeCommandCallback(request, response, responderCallback, cascSubscription);
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// delete unreferenced nodes in queue
 				publishMessageQueue.removeNonreferencedNodes();

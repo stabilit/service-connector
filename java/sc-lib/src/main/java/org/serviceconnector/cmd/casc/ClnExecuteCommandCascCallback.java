@@ -182,23 +182,20 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		String sid = this.requestMessage.getSessionId();
+		LOGGER.warn("receive exception sid=" + sid, ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid="
-					+ requestMessage.getSessionId());
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + sid);
 		}
 		String serviceName = this.requestMessage.getServiceName();
-		String sessionId = this.requestMessage.getSessionId();
 		// forward server reply to client
-		fault.setSessionId(this.request.getMessage().getSessionId());
+		fault.setSessionId(sid);
 		fault.setIsReply(true);
 		fault.setMessageType(this.msgType);
 		fault.setServiceName(serviceName);
@@ -220,7 +217,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 					// remove request cacheId from cache
 					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 					if (cacheComposite != null) {
-						scmpCache.removeComposite(sessionId, this.requestCacheId);
+						scmpCache.removeComposite(sid, this.requestCacheId);
 						CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + this.requestCacheId
 								+ ")");
 					}
@@ -229,7 +226,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 				CacheLogger.trace("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				LOGGER.error(e.toString());
 				if (scmpCache != null) {
-					scmpCache.removeComposite(sessionId, this.requestCacheId);
+					scmpCache.removeComposite(sid, this.requestCacheId);
 					CacheLogger
 							.warn("cache composite removed because an exception did occure, cache (" + this.requestCacheId + ")");
 				}
