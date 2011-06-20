@@ -38,14 +38,14 @@ public abstract class Server implements IServer {
 
 	/** The remote node configuration. */
 	protected RemoteNodeConfiguration remoteNodeConfiguration;
-
 	/** The socket address. */
 	protected InetSocketAddress socketAddress;
 	/** The requester. */
 	protected Requester requester;
 	/** The server key. */
 	protected String serverKey;
-
+	/** The destroyed, marks if server has been destroyed. */
+	protected boolean destroyed;
 	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
@@ -62,6 +62,7 @@ public abstract class Server implements IServer {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
 		this.serverKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.socketAddress = socketAddress;
+		this.destroyed = false;
 	}
 
 	/**
@@ -88,6 +89,7 @@ public abstract class Server implements IServer {
 	 */
 	public void destroy() {
 		LOGGER.info("server destroy " + this.serverKey);
+		this.destroyed = true;
 		this.requester.destroy();
 		AppContext.getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;
@@ -151,6 +153,15 @@ public abstract class Server implements IServer {
 	 */
 	public IRequester getRequester() {
 		return requester;
+	}
+
+	/**
+	 * Checks if the server has been destroyed.
+	 * 
+	 * @return true, if is destroyed
+	 */
+	public boolean isDestroyed() {
+		return this.destroyed;
 	}
 
 	/** {@inheritDoc} */

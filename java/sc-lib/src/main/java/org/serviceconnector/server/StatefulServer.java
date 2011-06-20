@@ -422,19 +422,25 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
-		// delete session in global registries
-		if (session instanceof Subscription) {
-			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
-			PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
-					.getService()).getMessageQueue();
-			// unsubscribe subscription
-			publishMessageQueue.unsubscribe(session.getId());
-			// remove non referenced nodes
-			publishMessageQueue.removeNonreferencedNodes();
-			SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
-		} else {
-			AppContext.getSessionRegistry().removeSession((Session) session);
-			SessionLogger.logAbortSession((Session) session, reason);
+		synchronized (this) {
+			if (this.destroyed == true) {
+				// server got already destroyed - no need to continue.
+				return;
+			}
+			// delete session in global registries
+			if (session instanceof Subscription) {
+				AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
+						.getService()).getMessageQueue();
+				// unsubscribe subscription
+				publishMessageQueue.unsubscribe(session.getId());
+				// remove non referenced nodes
+				publishMessageQueue.removeNonreferencedNodes();
+				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
+			} else {
+				AppContext.getSessionRegistry().removeSession((Session) session);
+				SessionLogger.logAbortSession((Session) session, reason);
+			}
 		}
 		// delete session on this server
 		this.removeSession(session);
@@ -471,6 +477,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the abort subscription
 	 */
 	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason, boolean abortSubscription) {
+		if (this.destroyed == true) {
+			// server got already destroyed - no need to continue.
+			return;
+		}
 		int tries = (int) ((oti * AppContext.getBasicConfiguration().getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		CommandCallback callback = null;
@@ -547,10 +557,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the reason
 	 */
 	public synchronized void abortSessionsAndDestroy(String reason) {
-		if (this.service != null) {
-			// deregister server from service
-			this.getService().removeServer(this);
+		if (this.destroyed == true) {
+			// server got already destroyed - no need to continue.
+			return;
 		}
+		// deregister server from service
+		this.getService().removeServer(this);
+
 		for (AbstractSession session : this.sessions) {
 			// first of all delete sessions from registries
 			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());

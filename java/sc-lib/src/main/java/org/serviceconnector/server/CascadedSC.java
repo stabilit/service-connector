@@ -451,7 +451,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				cscAbortCall.invoke(callback, oti);
 				return;
 			}
-			// no client subscription left - destroy client after XAS
+			// no client subscription left - destroy client after XAB
 			SCMPCscAbortSubscriptionCall cscAbortCall = new SCMPCscAbortSubscriptionCall(this.requester, msgToForward);
 			cscAbortCall.invoke(callback, oti);
 		} catch (Exception e) {
