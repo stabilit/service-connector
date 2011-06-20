@@ -89,7 +89,6 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
 					// check if reply is fault
-					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
 						if (cacheId == null) {
 							cacheId = this.requestCacheId;
@@ -105,7 +104,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache
+							// in this case the cache composite state must be PART_LOADING otherwise remove this composite from cache
 							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId())
 									&& cacheComposite.isPartLoading() == false) {
 								scmpCache.removeComposite(this.requestMessage.getSessionId(), cacheId);

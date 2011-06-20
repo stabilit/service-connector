@@ -103,7 +103,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		}
 
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			CacheLogger.trace("execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+			CacheLogger.trace("csc execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is "
 					+ reqMessage.isPollRequest());
 			try {
@@ -176,7 +176,7 @@ public class CscExecuteCommand extends CommandAdapter {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			LOGGER.info("execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+			LOGGER.info("csc execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr());
 			// try to load response from cache
 			try {
