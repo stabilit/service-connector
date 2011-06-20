@@ -18,6 +18,7 @@ package org.serviceconnector.cache;
 
 import java.io.Serializable;
 
+import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.registry.Registry;
 
 /**
@@ -31,7 +32,7 @@ import org.serviceconnector.registry.Registry;
  * 
  *  
  */
-class CacheCompositeRegistry extends Registry<CacheKey, CacheKey> implements Serializable {
+public class CacheCompositeRegistry extends Registry<CacheKey, CacheKey> implements Serializable {
 
 	/**
 	 * 
@@ -56,6 +57,7 @@ class CacheCompositeRegistry extends Registry<CacheKey, CacheKey> implements Ser
 	 *            the value
 	 */
 	protected void put(CacheKey key, CacheKey value) {
+		CacheLogger.trace("cache composite registry put, key = " + key.toString() + ", value = " + value);
 		this.registryMap.put(key, value);
 	}
 
@@ -84,6 +86,7 @@ class CacheCompositeRegistry extends Registry<CacheKey, CacheKey> implements Ser
 		if (key == null) {
 			return null;
 		}
+		CacheLogger.trace("cache composite registry remove, key = " + key.toString());
 		return this.registryMap.remove(key);
 	}
 

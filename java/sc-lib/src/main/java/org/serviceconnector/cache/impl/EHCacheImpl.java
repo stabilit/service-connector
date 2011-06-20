@@ -20,14 +20,18 @@ import java.io.File;
 import java.io.FileFilter;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
+import net.sf.ehcache.event.RegisteredEventListeners;
 
+import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.ICacheConfiguration;
+import org.serviceconnector.log.CacheLogger;
 
 /**
  * The Class EHCacheSCMPCacheImpl.
@@ -48,98 +52,55 @@ public class EHCacheImpl implements ICacheImpl {
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 
 	/*
-	 * Instantiates a new eHcache impl. 
-	 *  see also http://ehcache.org/documentation/configuration.html
-	 *   
-	 * The following attributes are required for eHcache.
-	 *    name:
-	 *         Sets the name of the cache. This is used to identify the cache. It must be unique.
-	 *         
-	 *    maxElementsInMemory:
-	 *         Sets the maximum number of objects that will be created in memory.  0 = no limit.
-	 *         In practice no limit means Integer.MAX_SIZE (2147483647) unless the cache is distributed
-	 *         with a Terracotta server in which case it is limited by resources.
-	 *         
-	 *    maxElementsOnDisk:
-	 *         Sets the maximum number of objects that will be maintained in the DiskStore
-	 *         The default value is zero, meaning unlimited.
-	 *         
-	 *    eternal:
-	 *         Sets whether elements are eternal. If eternal, timeouts are ignored and the
-	 *         element is never expired.
-	 *         
-	 *    overflowToDisk:
-	 *         Sets whether elements can overflow to disk when the memory store
-	 *         has reached the maxInMemory limit.
-	 *         
-	 * The following attributes and elements are optional.
-	 *    overflowToOffHeap:
-	 *         (boolean) This feature is available only in enterprise versions of Ehcache.
-	 *         When set to true, enables the cache to utilize off-heap memory
-	 *         storage to improve performance. Off-heap memory is not subject to Java
-	 *         GC. The default value is false.
-	 *         
-	 *    maxMemoryOffHeap:
-	 *         (string) This feature is available only in enterprise versions of Ehcache.
-	 *         Sets the amount of off-heap memory available to the cache.
-	 *         This attribute's values are given as <number>k|K|m|M|g|G|t|T for
-	 *         kilobytes (k|K), megabytes (m|M), gigabytes (g|G), or terabytes
-	 *         (t|T). For example, maxMemoryOffHeap="2g" allots 2 gigabytes to
-	 *         off-heap memory.
-	 *         This setting is in effect only if overflowToOffHeap is true.
-	 *         Note that it is recommended to set maxElementsInMemory to at least 100 
-	 *         elements when using an off-heap store, otherwise performance will be 
-	 *         seriously degraded, and a warning will be logged.
-	 *         The minimum amount that can be allocated is 128MB. There is no maximum.
-	 *         
-	 *    timeToIdleSeconds:
-	 *        Sets the time to idle for an element before it expires.
-	 *        i.e. The maximum amount of time between accesses before an element expires
-	 *        Is only used if the element is not eternal. A value of 0 means that an 
-	 *        Element can idle for infinity. The default value is 0.
-	 *        
-	 *    timeToLiveSeconds:
-	 *        Sets the time to live for an element before it expires.
-	 *         i.e. The maximum time between creation time and when an element expires.
-	 *         Is only used if the element is not eternal. A value of 0 means that and 
-	 *         Element can live for infinity. The default value is 0.
-	 *         
-	 *    diskPersistent:
-	 *        Whether the disk store persists between restarts of the Virtual Machine.
-	 *        The default value is false.
-	 *        
-	 *    diskExpiryThreadIntervalSeconds:
-	 *        The number of seconds between runs of the disk expiry thread. The default value
-	 *        is 120 seconds.
-	 *        
-	 *    diskSpoolBufferSizeMB:
-	 *        This is the size to allocate the DiskStore for a spool buffer. Writes are made
-	 *        to this area and then asynchronously written to disk. The default size is 30MB.
-	 *        Each spool buffer is used only by its cache. If you get OutOfMemory errors consider
-	 *        lowering this value. To improve DiskStore performance consider increasing it. 
-	 *        Trace level logging in the DiskStore will show if put back ups are occurring.
-	 *        
-	 *    clearOnFlush:
-	 *        whether the MemoryStore should be cleared when flush() is called on the cache.
-	 *        By default, this is true i.e. the MemoryStore is cleared.
-	 *        
-	 *    statistics:
-	 *        Whether to collect statistics. Note that this should be turned on if you are using
-	 *        the Ehcache Monitor. By default statistics is turned off to favour raw performance.
-	 *        To enable set statistics="true"
-	 *        
-	 *    memoryStoreEvictionPolicy:
-	 *        Policy would be enforced upon reaching the maxElementsInMemory limit. Default
-	 *        policy is Least Recently Used (specified as LRU). Other policies available -
-	 *        First In First Out (specified as FIFO) and Less Frequently Used
-	 *        specified as LFU)
-	 *        
-	 *    copyOnRead:
-	 *        Whether an Element is copied when being read from a cache. By default this is false.
-	 *        
-	 *    copyOnWrite:
-	 *        Whether an Element is copied when being added to the cache. By default this is false.
-	*/
+	 * Instantiates a new eHcache impl. see also http://ehcache.org/documentation/configuration.html
+	 * 
+	 * The following attributes are required for eHcache. name: Sets the name of the cache. This is used to identify the cache. It must be unique.
+	 * 
+	 * maxElementsInMemory: Sets the maximum number of objects that will be created in memory. 0 = no limit. In practice no limit means Integer.MAX_SIZE
+	 * (2147483647) unless the cache is distributed with a Terracotta server in which case it is limited by resources.
+	 * 
+	 * maxElementsOnDisk: Sets the maximum number of objects that will be maintained in the DiskStore The default value is zero, meaning unlimited.
+	 * 
+	 * eternal: Sets whether elements are eternal. If eternal, timeouts are ignored and the element is never expired.
+	 * 
+	 * overflowToDisk: Sets whether elements can overflow to disk when the memory store has reached the maxInMemory limit.
+	 * 
+	 * The following attributes and elements are optional. overflowToOffHeap: (boolean) This feature is available only in enterprise versions of Ehcache. When
+	 * set to true, enables the cache to utilize off-heap memory storage to improve performance. Off-heap memory is not subject to Java GC. The default value is
+	 * false.
+	 * 
+	 * maxMemoryOffHeap: (string) This feature is available only in enterprise versions of Ehcache. Sets the amount of off-heap memory available to the cache.
+	 * This attribute's values are given as <number>k|K|m|M|g|G|t|T for kilobytes (k|K), megabytes (m|M), gigabytes (g|G), or terabytes (t|T). For example,
+	 * maxMemoryOffHeap="2g" allots 2 gigabytes to off-heap memory. This setting is in effect only if overflowToOffHeap is true. Note that it is recommended to
+	 * set maxElementsInMemory to at least 100 elements when using an off-heap store, otherwise performance will be seriously degraded, and a warning will be
+	 * logged. The minimum amount that can be allocated is 128MB. There is no maximum.
+	 * 
+	 * timeToIdleSeconds: Sets the time to idle for an element before it expires. i.e. The maximum amount of time between accesses before an element expires Is
+	 * only used if the element is not eternal. A value of 0 means that an Element can idle for infinity. The default value is 0.
+	 * 
+	 * timeToLiveSeconds: Sets the time to live for an element before it expires. i.e. The maximum time between creation time and when an element expires. Is
+	 * only used if the element is not eternal. A value of 0 means that and Element can live for infinity. The default value is 0.
+	 * 
+	 * diskPersistent: Whether the disk store persists between restarts of the Virtual Machine. The default value is false.
+	 * 
+	 * diskExpiryThreadIntervalSeconds: The number of seconds between runs of the disk expiry thread. The default value is 120 seconds.
+	 * 
+	 * diskSpoolBufferSizeMB: This is the size to allocate the DiskStore for a spool buffer. Writes are made to this area and then asynchronously written to
+	 * disk. The default size is 30MB. Each spool buffer is used only by its cache. If you get OutOfMemory errors consider lowering this value. To improve
+	 * DiskStore performance consider increasing it. Trace level logging in the DiskStore will show if put back ups are occurring.
+	 * 
+	 * clearOnFlush: whether the MemoryStore should be cleared when flush() is called on the cache. By default, this is true i.e. the MemoryStore is cleared.
+	 * 
+	 * statistics: Whether to collect statistics. Note that this should be turned on if you are using the Ehcache Monitor. By default statistics is turned off
+	 * to favour raw performance. To enable set statistics="true"
+	 * 
+	 * memoryStoreEvictionPolicy: Policy would be enforced upon reaching the maxElementsInMemory limit. Default policy is Least Recently Used (specified as
+	 * LRU). Other policies available - First In First Out (specified as FIFO) and Less Frequently Used specified as LFU)
+	 * 
+	 * copyOnRead: Whether an Element is copied when being read from a cache. By default this is false.
+	 * 
+	 * copyOnWrite: Whether an Element is copied when being added to the cache. By default this is false.
+	 */
 	/**
 	 * 
 	 * @param cacheConfiguration
@@ -161,11 +122,10 @@ public class EHCacheImpl implements ICacheImpl {
 				configuration.setName(EHCacheImpl.DEFAULT_CACHE_NAME);
 
 				// default Cache configuration is required for CacheManager
-				CacheConfiguration defaultConfiguration = new CacheConfiguration(EHCacheImpl.DEFAULT_CACHE_NAME,
-						cacheConfiguration.getMaxElementsInMemory());
-				defaultConfiguration.setEternal(false);
-				defaultConfiguration.setTimeToIdleSeconds(60);
-				defaultConfiguration.setTimeToLiveSeconds(120);
+				CacheConfiguration defaultConfiguration = new CacheConfiguration(EHCacheImpl.DEFAULT_CACHE_NAME, cacheConfiguration.getMaxElementsInMemory());
+				defaultConfiguration.setEternal(true); // elements stay in cache until app removes them
+				// defaultConfiguration.setTimeToIdleSeconds(60);
+				// defaultConfiguration.setTimeToLiveSeconds(120);
 				defaultConfiguration.setOverflowToDisk(true);
 				defaultConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
 				defaultConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
@@ -185,6 +145,10 @@ public class EHCacheImpl implements ICacheImpl {
 		EHCacheImpl.config.setDiskPersistent(EHCacheImpl.DEFAULT_CACHE_DISK_PERSISTENT);
 		EHCacheImpl.config.setName(EHCacheImpl.DEFAULT_CACHE_NAME + "." + serviceName);
 		this.cache = new Cache(EHCacheImpl.config);
+		if (CacheLogger.isEnabled()) { // only if trace is enabled
+			RegisteredEventListeners registeredEventListeners = this.cache.getCacheEventNotificationService();
+			registeredEventListeners.registerListener(new TraceCacheEventListener());
+		}
 		this.cache.setName(EHCacheImpl.DEFAULT_CACHE_NAME + "." + serviceName);
 		this.cache.setDiskStorePath(serviceName);
 		manager.addCache(this.cache);
@@ -311,4 +275,60 @@ public class EHCacheImpl implements ICacheImpl {
 		return this.cache.getDiskStoreSize();
 	}
 
+	private class TraceCacheEventListener implements net.sf.ehcache.event.CacheEventListener {
+
+		@Override
+		public void notifyElementRemoved(Ehcache cache, Element element) throws CacheException {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementRemoved" + this.toElementKey(element));
+		}
+
+		@Override
+		public void notifyElementPut(Ehcache cache, Element element) throws CacheException {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementPut" + this.toElementKey(element));
+		}
+
+		@Override
+		public void notifyElementUpdated(Ehcache cache, Element element) throws CacheException {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementUpdated" + this.toElementKey(element));
+		}
+
+		@Override
+		public void notifyElementExpired(Ehcache cache, Element element) {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementExpired" + this.toElementKey(element));
+		}
+
+		@Override
+		public void notifyElementEvicted(Ehcache cache, Element element) {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementEvicted" + this.toElementKey(element));
+		}
+
+		@Override
+		public void notifyRemoveAll(Ehcache cache) {
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyRemoveAll");
+		}
+
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public Object clone() throws CloneNotSupportedException {
+			return super.clone();
+		}
+
+		private String toElementKey(Element element) {
+			Object key = element.getKey();
+			if (key == null) {
+				return " element key = null";
+			}
+			if (key instanceof CacheKey) {
+				return " element key = CacheKey, cacheId = " + ((CacheKey) key).getCacheId();
+			}
+			if (key instanceof String) {
+				return " element key = String, value = " + key.toString();
+			}
+			return " element key = " + key.getClass().getSimpleName();
+		}
+
+	}
 }
