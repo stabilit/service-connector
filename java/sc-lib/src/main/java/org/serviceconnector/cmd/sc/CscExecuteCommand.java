@@ -47,8 +47,7 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class CscExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
- * server. Execute command runs
- * asynchronously and passes through any parts messages.
+ * server. Execute command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
