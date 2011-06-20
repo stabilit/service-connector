@@ -14,3 +14,7 @@ call mvn-assembly-cmd.bat					..\..\sc-test
 
 rem create sc-web.jar
 call mvn-assembly-cmd.bat					..\..\sc-web
+
+rem create demo-web-server
+call mvn-source-test-install-cmd.bat		..\..\demo-web-server
+call mvn-war-cmd.bat 						..\..\demo-web-server
