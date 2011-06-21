@@ -179,12 +179,8 @@ public class CscExecuteCommand extends CommandAdapter {
 			LOGGER.info("csc execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr());
 			// try to load response from cache
-			try {
-				if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
-					return;
-				}
-			} catch (Exception e) {
-				throw e;
+			if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
+				return;
 			}
 		}
 		Service abstractService = this.getService(serviceName);
