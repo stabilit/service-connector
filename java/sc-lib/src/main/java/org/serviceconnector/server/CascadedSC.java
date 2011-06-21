@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import javax.activity.InvalidActivityException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCscAbortSubscriptionCall;
@@ -265,7 +267,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 		if (cascClient.isDestroyed() == true) {
 			// cascaded client got destroyed in the meantime, stop operation
-			callback.receive(new IdleTimeoutException("oti expired. operation - could not be completed."));
+			callback.receive(new InvalidActivityException("cascaded client got destroyed in the meantime, stop operation service="
+					+ cascClient.getServiceName()));
 			// release permit
 			cascClientSemaphore.release();
 			LOGGER.warn("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName());
