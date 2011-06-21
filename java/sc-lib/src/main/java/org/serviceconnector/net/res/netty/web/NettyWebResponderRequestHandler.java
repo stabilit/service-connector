@@ -68,13 +68,13 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
 		int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
 		responderRegistry.setThreadLocal(port);
-		
+
 		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
 		ListenerConfiguration respConfig = responder.getListenerConfig();
 		String contextUserid = respConfig.getUsername();
 		String contextPassword = respConfig.getPassword();
 		WebContext.setSCWebCredentials(new WebCredentials(contextUserid, contextPassword));
-		
+
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		IWebRequest webRequest = new NettyWebRequest(httpRequest, localAddress, remoteAddress);
@@ -98,7 +98,8 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			// never reply in case of channel closed exception
 			return;
 		}
-		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage()
+				+ "caught exception in web responder request handler");
 		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();
