@@ -24,7 +24,6 @@ import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
@@ -36,7 +35,6 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 
 	/** The subscription. */
 	private Subscription cascSCSubscription;
-	
 	/** The casc sc mask string. */
 	private String cascSCMaskString;
 
@@ -83,7 +81,7 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CSC_CHANGE_SUBSCRIPTION);
+		reply.setMessageType(this.msgType);
 		response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
 	}
