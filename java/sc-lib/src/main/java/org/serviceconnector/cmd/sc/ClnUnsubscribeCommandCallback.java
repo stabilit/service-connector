@@ -91,7 +91,8 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		String serviceName = reqMessage.getServiceName();
+		LOGGER.warn("receive exception sid=" + sid + " service=", ex);
 		// free server from subscription
 		this.subscription.getServer().removeSession(subscription);
 		SCMPMessage fault = null;
@@ -105,7 +106,6 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed sid=" + sid);
 		}
-		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);
