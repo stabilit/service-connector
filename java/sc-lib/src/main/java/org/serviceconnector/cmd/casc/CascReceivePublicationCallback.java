@@ -96,12 +96,11 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		LOGGER.warn(ex + "sid=" + this.cascClient.getSubscriptionId() + " service=" + cascClient.getServiceName());
 		if (this.cascClient.isDestroyed() == true) {
 			// cascaded client already destroyed ignore exception
 			return;
 		}
-		LOGGER.error(ex);
 		this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 		// destroy cascaded client, without having a permit!
 		this.cascClient.destroy();
