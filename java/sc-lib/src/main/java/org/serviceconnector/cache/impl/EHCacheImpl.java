@@ -27,7 +27,6 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
-import net.sf.ehcache.config.FactoryConfiguration;
 import net.sf.ehcache.event.RegisteredEventListeners;
 
 import org.serviceconnector.cache.CacheKey;
