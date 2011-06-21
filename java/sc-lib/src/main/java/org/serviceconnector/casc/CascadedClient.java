@@ -40,30 +40,22 @@ public class CascadedClient {
 
 	/** The subscribed. */
 	private boolean subscribed;
-
 	/** The subscription id. */
 	private String subscriptionId;
 	/** The cascaded client semaphore. */
 	private Semaphore cascClientSemaphore;
-
 	/** The subscription mask. */
 	private SubscriptionMask subscriptionMask;
-
 	/** The client subscription ids. */
 	private Map<String, SubscriptionMask> clientSubscriptionIds;
-
 	/** The cascaded sc. */
 	private CascadedSC cascadedSC;
-
 	/** The publish service. */
 	private CascadedPublishService publishService;
-
 	/** The destroyed. */
 	private boolean destroyed;
-
 	/** The service name. */
 	private String serviceName;
-
 	/** The msg sequence nr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
 
