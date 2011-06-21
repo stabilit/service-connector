@@ -27,6 +27,7 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
+import net.sf.ehcache.config.FactoryConfiguration;
 import net.sf.ehcache.event.RegisteredEventListeners;
 
 import org.serviceconnector.cache.CacheKey;
@@ -102,7 +103,6 @@ public class EHCacheImpl implements ICacheImpl {
 	 * copyOnWrite: Whether an Element is copied when being added to the cache. By default this is false.
 	 */
 	/**
-	 * 
 	 * @param cacheConfiguration
 	 *            the scmp cache configuration
 	 * @param serviceName
@@ -122,7 +122,8 @@ public class EHCacheImpl implements ICacheImpl {
 				configuration.setName(EHCacheImpl.DEFAULT_CACHE_NAME);
 
 				// default Cache configuration is required for CacheManager
-				CacheConfiguration defaultConfiguration = new CacheConfiguration(EHCacheImpl.DEFAULT_CACHE_NAME, cacheConfiguration.getMaxElementsInMemory());
+				CacheConfiguration defaultConfiguration = new CacheConfiguration(EHCacheImpl.DEFAULT_CACHE_NAME,
+						cacheConfiguration.getMaxElementsInMemory());
 				defaultConfiguration.setEternal(true); // elements stay in cache until app removes them
 				// defaultConfiguration.setTimeToIdleSeconds(60);
 				// defaultConfiguration.setTimeToLiveSeconds(120);
@@ -133,6 +134,12 @@ public class EHCacheImpl implements ICacheImpl {
 				defaultConfiguration.setName(EHCacheImpl.DEFAULT_CACHE_NAME);
 				configuration.setDefaultCacheConfiguration(defaultConfiguration);
 				configuration.setUpdateCheck(false); // disable update checker
+				// To add ehcache monitor by JOT
+				// FactoryConfiguration<FactoryConfiguration> factory = new FactoryConfiguration<FactoryConfiguration>();
+				// factory.className("org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory");
+				// factory.setProperties("monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true");
+				// factory.setPropertySeparator(",");
+				// configuration.addCacheManagerPeerListenerFactory(factory);
 				manager = new CacheManager(configuration);
 			}
 		}
@@ -279,27 +286,32 @@ public class EHCacheImpl implements ICacheImpl {
 
 		@Override
 		public void notifyElementRemoved(Ehcache cache, Element element) throws CacheException {
-			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementRemoved" + this.toElementKey(element));
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementRemoved"
+					+ this.toElementKey(element));
 		}
 
 		@Override
 		public void notifyElementPut(Ehcache cache, Element element) throws CacheException {
-			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementPut" + this.toElementKey(element));
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementPut"
+					+ this.toElementKey(element));
 		}
 
 		@Override
 		public void notifyElementUpdated(Ehcache cache, Element element) throws CacheException {
-			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementUpdated" + this.toElementKey(element));
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementUpdated"
+					+ this.toElementKey(element));
 		}
 
 		@Override
 		public void notifyElementExpired(Ehcache cache, Element element) {
-			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementExpired" + this.toElementKey(element));
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementExpired"
+					+ this.toElementKey(element));
 		}
 
 		@Override
 		public void notifyElementEvicted(Ehcache cache, Element element) {
-			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementEvicted" + this.toElementKey(element));
+			CacheLogger.trace("trace ehcache event listener, cache = " + cache.getName() + ",  notifyElementEvicted"
+					+ this.toElementKey(element));
 		}
 
 		@Override
