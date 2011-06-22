@@ -262,7 +262,8 @@ public class CascadedClient {
 	}
 
 	/**
-	 * Checks if is destroyed.
+	 * Checks if is destroyed. Careful in use - destroy method renews the client. This method is only to use if u are still holding
+	 * the same instance. On the service it might be a new cascaded client instance in the meantime.
 	 * 
 	 * @return true, if is destroyed
 	 */
