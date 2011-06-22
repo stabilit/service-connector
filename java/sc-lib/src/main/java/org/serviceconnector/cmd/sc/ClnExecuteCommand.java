@@ -106,8 +106,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			CacheLogger.trace("client execute command with cache id=" + reqMessage.getCacheId() + ", cache part nr="
-					+ reqMessage.getCachePartNr() + ", part is=" + reqMessage.isPart() + ", poll is "
-					+ reqMessage.isPollRequest());
+					+ reqMessage.getCachePartNr() + ", part is=" + reqMessage.isPart() + ", poll is " + reqMessage.isPollRequest());
 			// try to load response from cache
 			try {
 				if (tryLoadingMessageFromCache(request, response, responderCallback, false)) {
@@ -390,9 +389,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 				}
 				// write cache composite header to scmp message, reply sessionId later
 				cacheComposite.writeHeaderToMessage(scmpReply);
-				// scmpReply.setServiceName(message.getServiceName()); not necessary, take service name from cache composite
 				scmpReply.setSessionId(message.getSessionId()); // replace session id
-				// scmpReply.setMessageType(getKey()); not necessary, take message type from cache composite
+				scmpReply.setMessageType(getKey());
 				cacheId = cacheMessage.getCacheId();
 				if (cacheId == null) {
 					CacheLogger.error("cache message has illegal state, cacheId=null");
