@@ -134,7 +134,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessionId=" + this.sid);
 								} else {
-									CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId
+									CacheLogger.info("cache composite removed, server did reply no cacheId, cache (" + cacheId
 											+ "), cacheComposite state=" + cacheComposite.getCacheState()
 											+ ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessionId=" + this.sid);

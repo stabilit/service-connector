@@ -177,7 +177,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			LOGGER.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+			CacheLogger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 					+ reqMessage.getCachePartNr());
 			// try to load response from cache
 			if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
