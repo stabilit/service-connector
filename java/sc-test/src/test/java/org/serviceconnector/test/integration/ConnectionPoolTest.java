@@ -179,6 +179,25 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	}
 
 	/**
+	 * Description: Send keep alive over connection, connection stays forever<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t32_CloseAfterKeepAlive() throws Exception {
+		connectionPool.setMaxConnections(2);
+		connectionPool.setMinConnections(2);
+		connectionPool.setCloseAfterKeepAlive(false);
+		connectionPool.initMinConnections();
+		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR)
+				* Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
+		IConnection connection = connectionPool.getConnection();
+		Assert.assertTrue(connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
+		Assert.assertTrue(connection.isConnected());
+		connectionPool.freeConnection(connection);
+		connectionPool.setCloseAfterKeepAlive(true);
+	}
+
+	/**
 	 * Description: Test 100 connections in use<br>
 	 * Expectation: passes
 	 */
