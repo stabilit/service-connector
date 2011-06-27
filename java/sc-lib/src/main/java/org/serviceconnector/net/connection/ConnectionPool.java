@@ -63,8 +63,10 @@ public class ConnectionPool {
 	private int maxConnections;
 	/** The minimum connections. */
 	private int minConnections;
-	/** The close on free. */
+	/** The close on free, marks if connection should get closed after freeing. */
 	private boolean closeOnFree;
+	/** The close after keep alive, marks if connection gets closed after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE. */
+	private boolean closeAfterKeepAlive;
 	/** The keep alive interval. */
 	private int keepAliveIntervalSeconds;
 	/** The keep alive oti millis. */
@@ -94,6 +96,8 @@ public class ConnectionPool {
 		this.connectionType = conType;
 		// default = false connection will not be closed at the time they are freed
 		this.closeOnFree = false;
+		// default = true connection will get closed after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE of keep alive
+		this.closeAfterKeepAlive = true;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.minConnections = Constants.DEFAULT_MIN_CONNECTION_POOL_SIZE;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
@@ -283,6 +287,16 @@ public class ConnectionPool {
 	}
 
 	/**
+	 * Sets the close after keep alive. Indicates that a connection gets closed after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE.
+	 * 
+	 * @param closeAfterKeepAlive
+	 *            the new close after keep alive
+	 */
+	public void setCloseAfterKeepAlive(boolean closeAfterKeepAlive) {
+		this.closeAfterKeepAlive = closeAfterKeepAlive;
+	}
+
+	/**
 	 * Sets the minimum connections for the pool.
 	 * 
 	 * @param minConnections
@@ -369,7 +383,7 @@ public class ConnectionPool {
 				// this connection is no more free - no keep alive necessary
 				return;
 			}
-			if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
+			if (this.closeAfterKeepAlive && (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE)) {
 				// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
 				if ((this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
 					// there are still enough (totalCons > minConnections) free - disconnect this one

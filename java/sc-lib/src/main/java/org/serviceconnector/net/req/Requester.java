@@ -220,6 +220,8 @@ public class Requester implements IRequester {
 	 * Immediate connect.
 	 */
 	public void immediateConnect() {
+		// avoids connection destroy after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE
+		this.connectionPool.setCloseAfterKeepAlive(false);
 		// set minimum connections to max for initial process
 		this.connectionPool.setMinConnections(this.connectionPool.getMaxConnections());
 		this.connectionPool.initMinConnections();

@@ -54,6 +54,7 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -93,7 +94,7 @@ public final class AppContext {
 	/** The service configuration. */
 	private static ServiceListConfiguration serviceConfiguration = new ServiceListConfiguration();
 
-	// Factories
+	// factories
 	/** The command factory. */
 	private static FlyweightCommandFactory commandFactory;
 	/** The Constant responderRegistry. */
@@ -107,7 +108,7 @@ public final class AppContext {
 	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory ENCODER_DECODER_FACTORY = new FlyweightEncoderDecoderFactory();
 
-	// Registries
+	// registries
 	/** The server registry. */
 	private static ServerRegistry serverRegistry = null;
 	/** The service registry. */
@@ -391,13 +392,17 @@ public final class AppContext {
 		synchronized (AppContext.communicatorsLock) {
 			ConnectionFactory.init();
 			if (AppContext.otiScheduler == null) {
-				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1);
+				// set up new scheduler with high priority threads
+				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
+						Thread.MAX_PRIORITY));
 			}
 			if (AppContext.eciScheduler == null) {
-				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1);
+				// set up new scheduler with high priority threads
+				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI",
+						Thread.MAX_PRIORITY));
 			}
 			if (AppContext.threadPool == null) {
-				AppContext.threadPool = Executors.newCachedThreadPool();
+				AppContext.threadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC"));
 			}
 		}
 	}
