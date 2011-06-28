@@ -103,10 +103,9 @@ if ($sendMailFlag == 1) {
 	set_error_handler("mailErrorHandler");
 
 	$mailTo = array("Joel Traber <joel.traber@stabilit.ch>", "Jan Trnka <jan.trnka@stabilit.ch>");	// mail To: list is required
-	$mailTo = array("Jan Trnka <jan.trnka@stabilit.ch>");	// mail To: list is required
 	$mailCc = array("INFO CC <info@stabilit.ch>");			// mail CC list or null
 	$mailBcc = null; 										// mail BCC list or null
-	$mailFrom = "Service-Connector <info@stabilit.ch>";	// mail sender required
+	$mailFrom = "Service-Connector <info@stabilit.ch>";	    // mail sender required
 	$subject = "Upload file notification for service=".$service;
 	$message = "File=".$fileName." has been uploaded via service=".$service." at=".date("Y-m-d H:i:s");
 

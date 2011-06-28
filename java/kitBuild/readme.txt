@@ -1,5 +1,5 @@
-Service Connector - open source messaging middleware
-====================================================
+Service Connector - service oriented messaging middleware
+=========================================================
 
  Kit structure:
  --------------
@@ -73,10 +73,18 @@ Service Connector - open source messaging middleware
        sc-lib-all-sources.jar         (source code of the SC library)
        sc-web-sources.jar             (source code of the SC web library)
  
- For complete source see: 
- 		http://www.stabilit.ch/svn/repos/sc (latest branch, restricted access)
- 		or
- 		http://serviceconnecto.svn.sourceforge.net/ (taged versions, public access) 
+ Kit download:
+ -------------
+  http://www.stabilit.ch/download/sc/
+  or 
+  http://sourceforge.net/projects/serviceconnecto/files/ (selected versions)
+ 
+ 
+ Source code repository:
+ ----------------------- 
+  http://www.stabilit.ch/svn/repos/sc (latest branch, all tagged versions, restricted access)
+  or
+  http://serviceconnecto.svn.sourceforge.net/ (selected tagged versions, public access) 
 
 
  Pre-requisites:
@@ -86,6 +94,17 @@ Service Connector - open source messaging middleware
   PHP 4.0 or later (on node running file services)
   Tomcat 6.0 or later (for services running as servlet)
 
+
+ Open Source components used inside SC:
+ --------------------------------------
+  Log4J - logging.apache.org
+  slf4j - org.slf4j
+  Apache commons-configuration
+  JBoss netty - org.jboss.netty
+  jmx - com.sun.jmx
+  EH cache - net.sf.ehcache
+  Servlet API - javax.servlet
+  
 
  Installation and verification:
  ------------------------------
@@ -103,12 +122,14 @@ Service Connector - open source messaging middleware
  		"ERROR" or "FATAL" must not appear here, "WARN" are possible.
  8. Congratulation, you have successfully installed the sc!
 
+
  Software upgrade
  ----------------
  If you made changes to the SC configurations, then preserve these files before upgrade. 
  The upgrade is simply done by extracting the kit file into a directory of the 
  previous installation. 
  For compatibility rules see SC_0_SCMP_E.PDF Chapter 9.30 (scVersion) included in sc-src_V9.9-999.zip
+
 
  Software removal
  ----------------
@@ -121,12 +142,15 @@ Service Connector - open source messaging middleware
 		Delete these directories
  3. Delete the directory where you have extracted the SC kit file.
 
+
  Release notes:
  --------------
-	See doc/Open_Issues.xls
+	See doc/Open_Issues.xls inside the develoment kit
+
 
  Special configurations:
  -----------------------
+- logging properties are configured for troubleshooting purposes and may produce large files
 - the SC is configured by sc.properties: http=localhost:7000 tcp=localhost:9000
 - demo-client is hardcoded connect to port 7000
 - demo-server is hardcoded connect to port 9000
