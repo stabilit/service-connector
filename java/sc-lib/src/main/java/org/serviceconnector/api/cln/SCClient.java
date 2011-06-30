@@ -78,7 +78,7 @@ public class SCClient {
 	 * means no keep alive messages will be sent. Default = 60.
 	 */
 	private int keepAliveIntervalSeconds;
-	/** The keep alive timeout in seconds. Time to wait for the reply of a keep alive sent to the SC. Default = 10.*/
+	/** The keep alive timeout in seconds. Time to wait for the reply of a keep alive sent to the SC. Default = 10. */
 	private int keepAliveTimeoutSeconds;
 	/** The connection type used to connect to SC. {netty.http/netty.tcp}. Default netty.tcp */
 	private ConnectionType connectionType;
@@ -172,6 +172,8 @@ public class SCClient {
 				attachCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				this.requester.destroy();
+				// release resources
+				AppContext.destroy();
 				throw new SCServiceException("Attach to " + host + ":" + port + " failed. ", e);
 			}
 			// 3. receiving reply and error handling
