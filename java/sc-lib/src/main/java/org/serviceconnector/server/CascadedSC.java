@@ -745,12 +745,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
-		writer.writeStartElement("subscriptions");
-		List<AbstractSession> subscriptionList = this.subscriptions;
-		for (AbstractSession subscription : subscriptionList) {
-			subscription.dump(writer);
-		}
-		writer.writeEndElement(); // end of subscriptions
 		writer.writeEndElement(); // end of cascaded-sc
 	}
 }
