@@ -429,6 +429,7 @@ public class SCRequester implements IRequester {
 		 */
 		@Override
 		public void timeout() {
+			LOGGER.warn("oti timeout expiration in sc client API oti=" + this.timeoutMillis);
 			this.disconnectConnection();
 			try {
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
