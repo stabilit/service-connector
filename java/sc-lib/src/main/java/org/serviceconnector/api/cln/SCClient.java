@@ -707,7 +707,7 @@ public class SCClient {
 		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, keepAliveIntervalSeconds, Constants.MAX_KPI_VALUE,
 				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
-		if (this.attached) {
+		if (this.attached == true) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
@@ -765,7 +765,7 @@ public class SCClient {
 	 *             called method after attach
 	 */
 	public void setMaxConnections(int maxConnections) throws SCServiceException, SCMPValidatorException {
-		if (this.attached) {
+		if (this.attached == true) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}
 		// maxConnections must be at least 2 - echo call and execute/send might be parallel
