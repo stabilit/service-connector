@@ -291,6 +291,8 @@ public class CascadedClient {
 			// cascaded client got already destroyed
 			return;
 		}
+		// release threads waiting for permits, just allow any thread to continue after destroy no one continues
+		this.cascClientSemaphore.release(Integer.MAX_VALUE);
 		LOGGER.warn("cascadedClient gets destroyed service=" + this.getServiceName());
 		this.destroyed = true;
 		this.subscribed = false;
@@ -301,8 +303,6 @@ public class CascadedClient {
 			this.publishService.getMessageQueue().unsubscribe(clientSubscriptionId);
 		}
 		this.publishService.getMessageQueue().removeNonreferencedNodes();
-		// release threads waiting for permits, just allow any thread to continue
-		this.cascClientSemaphore.release(Integer.MAX_VALUE);
 		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;
