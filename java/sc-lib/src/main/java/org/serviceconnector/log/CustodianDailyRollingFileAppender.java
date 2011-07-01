@@ -37,7 +37,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * to extend the functionality of the existing class so that the user can
  * limit the number of log backups on disk. Base coding done by Ryan Kimber.
  * 
- * @author Joël Traber
+ * @author Ryan Kimber, Joël Traber
  */
 public class CustodianDailyRollingFileAppender extends FileAppender {
 	// The code assumes that the following constants are in a increasing sequence.
