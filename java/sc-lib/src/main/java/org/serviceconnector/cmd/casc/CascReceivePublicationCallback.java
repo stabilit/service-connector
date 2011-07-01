@@ -67,9 +67,8 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			}
 			if (reply.isFault()) {
 				// operation failed
-				LOGGER.error("receive publication failed for cascaded client (set to be unsubscribed) service="
+				LOGGER.warn("receive publication failed for cascaded client (set to be unsubscribed) service="
 						+ cascClient.getServiceName() + " sid=" + sid);
-				this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 				this.cascClient.destroy();
 				return;
 			}
@@ -78,7 +77,7 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			if (noData == false) {
 				// message received,insert in queue
 				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName()
-						+ " =sid" + sid);
+						+ " sid=" + sid);
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);
 			}
@@ -96,13 +95,12 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex + "sid=" + this.cascClient.getSubscriptionId() + " service=" + cascClient.getServiceName());
+		LOGGER.warn(ex + " sid=" + this.cascClient.getSubscriptionId() + " service=" + cascClient.getServiceName());
 		if (this.cascClient.isDestroyed() == true) {
 			// cascaded client already destroyed ignore exception
 			return;
 		}
-		this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
-		// destroy cascaded client, without having a permit!
+		// destroy cascaded client, without having a permit, emergency!
 		this.cascClient.destroy();
 	}
 }

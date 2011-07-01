@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +37,8 @@ public class Subscription extends AbstractSession {
 	private int noDataIntervalMillis = 0;
 	/** The subscription timeout seconds. */
 	private double subscriptionTimeoutMillis;
+	/** The subscription ids for which this subscription is proxy. */
+	private Map<String, SubscriptionMask> cscSubscriptionIds;
 
 	/**
 	 * Instantiates a new subscription.
@@ -57,6 +62,7 @@ public class Subscription extends AbstractSession {
 		this.mask = mask;
 		this.noDataIntervalMillis = noDataInterval;
 		this.subscriptionTimeoutMillis = subscriptionTimeoutMillis;
+		this.cscSubscriptionIds = new HashMap<String, SubscriptionMask>();
 	}
 
 	/**
@@ -105,7 +111,38 @@ public class Subscription extends AbstractSession {
 	public int getNoDataIntervalMillis() {
 		return noDataIntervalMillis;
 	}
-	
+
+	/**
+	 * Adds the csc subscription id.
+	 * 
+	 * @param cscSubscriptionId
+	 *            the csc subscription id
+	 * @param cscMask
+	 *            the csc mask
+	 */
+	public void addCscSubscriptionId(String cscSubscriptionId, SubscriptionMask cscMask) {
+		this.cscSubscriptionIds.put(cscSubscriptionId, cscMask);
+	}
+
+	/**
+	 * Removes the csc subscription id.
+	 * 
+	 * @param cscSubscriptionId
+	 *            the csc subscription id
+	 */
+	public void removeCscSubscriptionId(String cscSubscriptionId) {
+		this.cscSubscriptionIds.remove(cscSubscriptionId);
+	}
+
+	/**
+	 * Gets the csc subscription ids.
+	 * 
+	 * @return the csc subscription ids
+	 */
+	public Map<String, SubscriptionMask> getCscSubscriptionIds() {
+		return this.cscSubscriptionIds;
+	}
+
 	/**
 	 * Dump the subscription into the xml writer.
 	 * 
@@ -128,6 +165,16 @@ public class Subscription extends AbstractSession {
 		}
 		writer.writeElement("ipAddressList", this.getIpAddressList());
 		writer.writeElement("creationTime", this.getCreationTime().toString());
+		if (this.cscSubscriptionIds != null && this.cscSubscriptionIds.size() > 0) {
+			writer.writeStartElement("cscSubscriptions");
+			for (Entry<String, SubscriptionMask> entries : this.cscSubscriptionIds.entrySet()) {
+				writer.writeStartElement("cscSubscription");
+				writer.writeAttribute("subscriptionId", entries.getKey());
+				writer.writeAttribute("subscriptionMask", entries.getValue().getValue());
+				writer.writeEndElement(); // cscSubscription
+			}
+			writer.writeEndElement(); // cscSubscriptions
+		}
 		this.getService().dump(writer);
 		writer.writeEndElement(); // subscription
 	}

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -71,6 +73,9 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 
+		// update csc subscription id list for cascaded subscription
+		cascSubscription.removeCscSubscriptionId(reqMessage.getSessionId());
+
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
@@ -119,6 +124,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				responderCallback.responseCallback(request, response);
 				// delete unreferenced nodes in queue
 				publishMessageQueue.removeNonreferencedNodes();
+				this.abortCascSubscriptions(cascSubscription);
 				return;
 			}
 		} else {
@@ -152,6 +158,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of csc unsubscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
+					server.abortSessionsAndDestroy("csc unsubscribe subscription failed, connection pool to server busy");
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
@@ -162,6 +169,34 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
+
+		if (cascadedSCMask == null) {
+			this.abortCascSubscriptions(cascSubscription);
+		}
+	}
+
+	private void abortCascSubscriptions(Subscription cascSubscription) {
+		if (cascSubscription.isCascaded() == true) {
+			// XAB procedure for casc subscriptions
+			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
+
+			int oti = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR;
+			// set up abort message
+			SCMPMessage abortMessage = new SCMPMessage();
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
+					SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
+			abortMessage.setServiceName(cascSubscription.getService().getName());
+			abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+
+			StatefulServer server = (StatefulServer) cascSubscription.getServer();
+
+			for (String id : subscriptionIds) {
+				abortMessage.setSessionId(id);
+				server.abortSessionAndWaitMech(oti, abortMessage, "Cascaded subscription abort in csc unsubscribe command", true);
+			}
+			cascSubscription.getCscSubscriptionIds().clear();
+		}
 	}
 
 	/** {@inheritDoc} */

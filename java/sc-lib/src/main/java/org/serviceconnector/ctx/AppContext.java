@@ -471,6 +471,7 @@ public final class AppContext {
 				AppContext.getBasicConfiguration().dump(writer);
 				AppContext.getResponderRegistry().dump(writer);
 				AppContext.getServerRegistry().dump(writer);
+				AppContext.getSubscriptionRegistry().dump(writer);
 				AppContext.getCacheManager().dump(writer);
 				// end dump
 				writer.writeEndElement(); // end of sc-dump

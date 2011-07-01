@@ -24,7 +24,7 @@ import org.serviceconnector.service.Subscription;
 /**
  * The Class CscAbortSubscriptionCallback.
  */
-public class CscAbortSubscriptionCallback implements ISubscriptionCallback {
+public class CscAbortSubscriptionCallbackForCasc implements ISubscriptionCallback {
 
 	/** The subscription. */
 	private Subscription subscription;
@@ -39,7 +39,7 @@ public class CscAbortSubscriptionCallback implements ISubscriptionCallback {
 	 * @param subscription
 	 *            the subscription
 	 */
-	public CscAbortSubscriptionCallback(IRequest request, Subscription subscription) {
+	public CscAbortSubscriptionCallbackForCasc(IRequest request, Subscription subscription) {
 		this.subscription = subscription;
 		this.request = request;
 	}

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +43,7 @@ import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
-import org.serviceconnector.cmd.casc.CscAbortSubscriptionCallback;
+import org.serviceconnector.cmd.casc.CscAbortSubscriptionCallbackForCasc;
 import org.serviceconnector.cmd.casc.CscChangeSubscriptionActiveCascClientCallback;
 import org.serviceconnector.cmd.casc.CscSubscribeActiveCascClientCallback;
 import org.serviceconnector.cmd.casc.CscSubscribeInactiveCascClientCallback;
@@ -261,10 +262,13 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 		if (permit == false) {
 			// thread didn't get a permit in time
-			callback.receive(new IdleTimeoutException("oti expired. operation - could not be completed."));
-			LOGGER.warn("thread didn't get a permit in time service=" + cascClient.getServiceName());
+			callback.receive(new IdleTimeoutException("oti(ms)=" + oti + " expired. operation - could not be completed."));
+			LOGGER.warn("thread didn't get a permit in time service=" + cascClient.getServiceName() + " time(ms)=" + oti);
+			cascClient.incrementAndCheckSemaphorePermitDenialCounter();
 			return false;
 		}
+		// reset the denial counter - we got a permit in time!
+		cascClient.resetSemaphorePermitDenialCounter();
 		if (cascClient.isDestroyed() == true) {
 			// cascaded client got destroyed in the meantime, stop operation
 			callback.receive(new InvalidActivityException("cascaded client got destroyed in the meantime, stop operation service="
@@ -342,11 +346,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			// thread got permit to continue
-			if (cascClient.isSubscribed() == false) {
-				// cascaded client is not subscribed yet
-				this.subscribeCascadedSCWithInActiveCascadedClient(cascClient, msgToForward, callback, oti);
-				return;
-			}
 			CscChangeSubscriptionActiveCascClientCallback cascCallback = new CscChangeSubscriptionActiveCascClientCallback(
 					cascClient, callback.getRequest(), callback);
 			this.changeSubscriptionCascadedSCWithActiveCascadedClient(cascClient, msgToForward, cascCallback, oti);
@@ -397,6 +396,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				try {
 					cscUnsubscribeCall.invoke(callback, oti);
 				} finally {
+					cascClient.setSubscribed(false);
 					cascClient.destroy();
 				}
 				return;
@@ -472,6 +472,9 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 *            the cascaded client
 	 */
 	public void unsubscribeCascadedClientInErrorCases(CascadedClient cascClient) {
+		if (cascClient.isSubscribed() == false) {
+			return;
+		}
 		try {
 			SCMPMessage message = new SCMPMessage();
 			message.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
@@ -646,19 +649,39 @@ public class CascadedSC extends Server implements IStatefulServer {
 			publishMessageQueue.removeNonreferencedNodes();
 
 			CascadedClient cascClient = casService.getCascClient();
+			// remove timed out subscription id from client subscription list
+			cascClient.removeClientSubscriptionId(subscription.getId());
+
+			if (cascClient.isDestroyed() == true) {
+				// cascaced client got destroyed - do not continue
+				return;
+			}
+
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 			IRequest request = new NettyHttpRequest(null, null, null);
-
 			SCMPMessage abortMessage = new SCMPMessage();
-			abortMessage.setSessionId(subscription.getId());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, casService.getName());
 			// cascaded id will be set in following (cascadedSCAbortSubscription) method
 			request.setMessage(abortMessage);
 
-			SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
-			this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallback(request, subscription),
-					Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			if (subscription.isCascaded() == true) {
+				// XAB procedure for casc subscriptions
+				Set<String> subscriptionIds = subscription.getCscSubscriptionIds().keySet();
+
+				for (String id : subscriptionIds) {
+					abortMessage.setSessionId(id);
+					this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallbackForCasc(request,
+							subscription), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+				}
+				subscription.getCscSubscriptionIds().clear();
+			} else {
+				// normal XAB procedure
+				abortMessage.setSessionId(subscription.getId());
+				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
+				this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallbackForCasc(request,
+						subscription), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			}
 		} else {
 			LOGGER.error("session which is in relation with a cascadedSC timed out - should nerver occur");
 		}

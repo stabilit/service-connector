@@ -73,6 +73,11 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 				this.cascClient.receivePublication();
 				// adding client subscription id to cascaded client
 				this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
+				if (cscScSubscription.isCascaded() == true) {
+					// update csc subscription id list for cascaded subscription
+					cscScSubscription.addCscSubscriptionId(this.commandCallback.getRequest().getMessage().getSessionId(),
+							new SubscriptionMask(this.tmpCscMask));
+				}
 				// release permit
 				this.cascClient.getCascClientSemaphore().release();
 				return;

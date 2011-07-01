@@ -16,10 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.casc.CscAbortSubscriptionCallback;
+import org.serviceconnector.cmd.casc.CscAbortSubscriptionCommandCallback;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -66,6 +68,9 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 		String cascadedSCMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
+		// update csc subscription id list for cascaded subscription
+		cascSubscription.removeCscSubscriptionId(reqMessage.getSessionId());
+
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
@@ -86,7 +91,8 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 				cascSubscription.setMask(cascSCMask);
 				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 			}
-			CscAbortSubscriptionCallback callback = new CscAbortSubscriptionCallback(request, cascSubscription);
+			CscAbortSubscriptionCommandCallback callback = new CscAbortSubscriptionCommandCallback(request, response,
+					responderCallback, cascSubscription);
 			cascadedSC.cascadedSCAbortSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
 		default:
@@ -124,6 +130,33 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 		responderCallback.responseCallback(request, response);
 		// delete unreferenced nodes in queue
 		publishMessageQueue.removeNonreferencedNodes();
+		if (cascadedSCMask == null) {
+			this.abortCascSubscriptions(cascSubscription);
+		}
+	}
+
+	private void abortCascSubscriptions(Subscription cascSubscription) {
+		if (cascSubscription.isCascaded() == true) {
+			// XAB procedure for casc subscriptions
+			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
+
+			int oti = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR;
+			// set up abort message
+			SCMPMessage abortMessage = new SCMPMessage();
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
+					SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
+			abortMessage.setServiceName(cascSubscription.getService().getName());
+			abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+
+			StatefulServer server = (StatefulServer) cascSubscription.getServer();
+
+			for (String id : subscriptionIds) {
+				abortMessage.setSessionId(id);
+				server.abortSessionAndWaitMech(oti, abortMessage, "Cascaded subscription abort in csc abort command", true);
+			}
+			cascSubscription.getCscSubscriptionIds().clear();
+		}
 	}
 
 	/** {@inheritDoc} */

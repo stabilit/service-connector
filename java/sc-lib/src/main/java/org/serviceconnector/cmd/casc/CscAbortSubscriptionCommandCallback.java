@@ -23,24 +23,20 @@ import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.server.IStatefulServer;
-import org.serviceconnector.server.StatefulServer;
-import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
 
 /**
- * The Class CscUnsubscribeCommandCallback.
+ * The Class CscAbortSubscriptionCommandCallback.
  */
-public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
+public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CscAbortSubscriptionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -51,7 +47,7 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 	private Subscription cascSubscription;
 
 	/**
-	 * Instantiates a new csc unsubscribe command callback.
+	 * Instantiates a new csc abort subscription command callback.
 	 * 
 	 * @param request
 	 *            the request
@@ -59,10 +55,8 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 	 *            the response
 	 * @param responderCallback
 	 *            the responder callback
-	 * @param cascSubscription
-	 *            the casc subscription
 	 */
-	public CscUnsubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
+	public CscAbortSubscriptionCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
 			Subscription cascSubscription) {
 		this.responderCallback = responderCallback;
 		this.request = request;
@@ -70,75 +64,50 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 		this.cascSubscription = cascSubscription;
 	}
 
-	/**
-	 * Receive.
-	 * 
-	 * @param reply
-	 *            the reply {@inheritDoc}
-	 */
 	@Override
 	public void receive(SCMPMessage reply) {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		IStatefulServer server = this.cascSubscription.getServer();
-		if (reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
-			// free server from subscription if cascaded SC unsubscribes himself
-			server.removeSession(this.cascSubscription);
-		}
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CSC_UNSUBSCRIBE);
+		reply.setMessageType(SCMPMsgType.CSC_ABORT_SUBSCRIPTION);
 		this.response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
-		if (reply.isFault()) {
-			// delete subscription failed
-			if (server instanceof StatefulServer) {
-				((StatefulServer) server).abortSessionsAndDestroy("unsubscribe failed, fault reply received in callback");
-			} else {
-				server.abortSession(this.cascSubscription, "unsubscribe failed, fault reply received in callback");
-			}
-		}
 	}
 
-	/**
-	 * Receive.
-	 * 
-	 * @param ex
-	 *            the ex {@inheritDoc}
-	 */
 	@Override
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
 		LOGGER.warn("receive exception sid=" + sid, ex);
 		String serviceName = reqMessage.getServiceName();
-		IStatefulServer server = this.cascSubscription.getServer();
-
-		if (reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
-			// free server from subscription if cascaded SC unsubscribes himself
-			server.removeSession(this.cascSubscription);
-		}
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc unsubscribe sid=" + sid);
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc abort subscription sid="
+					+ sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc unsubscribe sid=" + sid);
-		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc abort subscription sid="
+					+ sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc unsubscribe failed sid=" + sid);
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc abort subscription failed sid=" + sid);
 		}
 		// forward server reply to client
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);
-		fault.setMessageType(SCMPMsgType.CSC_UNSUBSCRIBE);
+		fault.setMessageType(SCMPMsgType.CSC_ABORT_SUBSCRIPTION);
 		this.response.setSCMP(fault);
 		this.responderCallback.responseCallback(request, response);
-		// delete subscription failed
-		if (server instanceof StatefulServer) {
-			((StatefulServer) server).abortSessionsAndDestroy("csc unsubscribe failed, exception received in callback");
-		}
+	}
+
+	@Override
+	public Subscription getSubscription() {
+		return this.cascSubscription;
+	}
+
+	@Override
+	public IRequest getRequest() {
+		return this.request;
 	}
 }

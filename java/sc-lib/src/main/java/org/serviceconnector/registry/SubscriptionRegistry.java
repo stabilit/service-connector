@@ -30,6 +30,7 @@ import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class SubscriptionRegistry. Registry stores entries for properly created subscriptions.
@@ -228,6 +229,24 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		this.cancelSubscriptionTimeout(subscription);
 		this.scheduleSubscriptionTimeout(subscription, newTimeoutMillis);
+	}
+
+	/**
+	 * Dump the su8bscriptions into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("subscriptions");
+		Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
+		for (Entry<String, Subscription> entry : entries) {
+			Subscription subscriptions = entry.getValue();
+			subscriptions.dump(writer);
+		}
+		writer.writeEndElement(); // end of subscriptions
 	}
 
 	/**

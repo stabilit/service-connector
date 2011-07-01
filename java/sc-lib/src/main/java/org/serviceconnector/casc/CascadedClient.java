@@ -19,6 +19,7 @@ package org.serviceconnector.casc;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -58,6 +59,8 @@ public class CascadedClient {
 	private String serviceName;
 	/** The msg sequence nr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
+	/** The permit denial count, counts how many times semaphore denies to give permits in time. */
+	private AtomicInteger permitDenialCounter;
 
 	/**
 	 * Instantiates a new cascaded client.
@@ -79,6 +82,7 @@ public class CascadedClient {
 		this.subscriptionMask = null;
 		this.clientSubscriptionIds = new HashMap<String, SubscriptionMask>();
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
+		this.permitDenialCounter = new AtomicInteger();
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class CascadedClient {
 	 */
 	public boolean isSubscribed() {
 		if (this.destroyed == true) {
-			LOGGER.warn("cascaded client gots destroyed before");
+			LOGGER.debug("cascaded client gots destroyed before");
 			// client is already destroyed
 			return false;
 		}
@@ -127,6 +131,28 @@ public class CascadedClient {
 	 */
 	public String getSubscriptionId() {
 		return subscriptionId;
+	}
+
+	/**
+	 * Increment and checks semaphore permit denial counter. If the counter achieves 5 this cascaded client destroys himself. It
+	 * should never appear. It under some circumstances releasing the semaphore fails it continues running fine after destroying.
+	 */
+	public int incrementAndCheckSemaphorePermitDenialCounter() {
+		int counter = this.permitDenialCounter.incrementAndGet();
+
+		if (counter == 5) {
+			// After 5 times denial of permit something is wrong and we destroy the cascaded client.
+			LOGGER.error("cascaded client got destroyed because semaphore denied giving permits 5 times in series, this operation should never appear inform STABILIT (JOT)");
+			this.destroy();
+		}
+		return counter;
+	}
+
+	/**
+	 * Reset semaphore permit denial counter.
+	 */
+	public void resetSemaphorePermitDenialCounter() {
+		this.permitDenialCounter.set(0);
 	}
 
 	/**
@@ -284,18 +310,17 @@ public class CascadedClient {
 	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The publish
 	 * service gets a new instance of CascadedClient which holds current subscribers. Destroy should be called having a permit to
 	 * avoid errors in proceeding subscribe/unsubscribe/changeSubscription. Destroy releases any thread waiting for a permit on
-	 * semaphore.
+	 * semaphore. It unsubscribes the current cascaded client.
 	 */
 	public void destroy() {
 		if (this.destroyed == true) {
 			// cascaded client got already destroyed
 			return;
 		}
+		this.destroyed = true;
 		// release threads waiting for permits, just allow any thread to continue after destroy no one continues
 		this.cascClientSemaphore.release(Integer.MAX_VALUE);
-		LOGGER.warn("cascadedClient gets destroyed service=" + this.getServiceName());
-		this.destroyed = true;
-		this.subscribed = false;
+		LOGGER.debug("cascadedClient gets destroyed service=" + this.getServiceName());
 		for (String clientSubscriptionId : this.clientSubscriptionIds.keySet()) {
 			// delete all client subscriptions
 			AppContext.getSubscriptionRegistry().removeSubscription(clientSubscriptionId);
@@ -303,6 +328,9 @@ public class CascadedClient {
 			this.publishService.getMessageQueue().unsubscribe(clientSubscriptionId);
 		}
 		this.publishService.getMessageQueue().removeNonreferencedNodes();
+		this.cascadedSC.unsubscribeCascadedClientInErrorCases(this);
+		// needs to be after unsubscribe
+		this.subscribed = false;
 		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;

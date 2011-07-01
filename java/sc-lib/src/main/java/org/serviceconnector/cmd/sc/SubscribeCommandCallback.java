@@ -91,6 +91,11 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			if (rejectSubscriptionFlag == false) {
+				if (tempSubscription.isCascaded() == true) {
+					// update csc subscription id list for cascaded subscription
+					tempSubscription.addCscSubscriptionId(this.reqMessage.getSessionId(),
+							new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
+				}
 				// subscription has not been rejected, add server to subscription
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService())
 						.getMessageQueue();

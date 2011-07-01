@@ -71,6 +71,11 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 		String serviceName = reqMessage.getServiceName();
 
 		if (reply.isFault() == false && reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION) == false) {
+			if (cascSCSubscription.isCascaded() == true) {
+				// update csc subscription id list for cascaded subscription
+				cascSCSubscription.addCscSubscriptionId(reqMessage.getSessionId(),
+						new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
+			}
 			// change subscription for cascaded SC
 			PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSCSubscription.getService()).getMessageQueue();
 			SubscriptionMask cascSCMask = new SubscriptionMask(cascSCMaskString);

@@ -29,6 +29,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.IStatefulServer;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
 
@@ -71,7 +73,8 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 	@Override
 	public void receive(SCMPMessage reply) {
 		// free server from subscription
-		this.subscription.getServer().removeSession(subscription);
+		IStatefulServer server = this.subscription.getServer();
+		server.removeSession(subscription);
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
@@ -82,7 +85,11 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		this.responderCallback.responseCallback(request, response);
 		if (reply.isFault()) {
 			// delete subscription failed
-			this.subscription.getServer().abortSession(subscription, "unsubscribe failed");
+			if (server instanceof StatefulServer) {
+				((StatefulServer) server).abortSessionsAndDestroy("unsubscribe failed, fault reply received in callback");
+			} else {
+				server.abortSession(subscription, "unsubscribe failed, fault reply received in callback");
+			}
 		}
 	}
 
@@ -94,7 +101,8 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		String serviceName = reqMessage.getServiceName();
 		LOGGER.warn("receive exception sid=" + sid + " service=", ex);
 		// free server from subscription
-		this.subscription.getServer().removeSession(subscription);
+		IStatefulServer server = this.subscription.getServer();
+		server.removeSession(subscription);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
@@ -113,7 +121,11 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		this.response.setSCMP(fault);
 		this.responderCallback.responseCallback(request, response);
 		// delete subscription failed
-		this.subscription.getServer().abortSession(subscription, "unsubscribe failed");
+		if (server instanceof StatefulServer) {
+			((StatefulServer) server).abortSessionsAndDestroy("unsubscribe subscription failed, exception received in callback");
+		} else {
+			server.abortSession(subscription, "unsubscribe failed, exception received in callback");
+		}
 	}
 
 	/** {@inheritDoc} */

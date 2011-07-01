@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -381,11 +382,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	private void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		this.serverAbortSubscriptionWithExtraRequester(this.requester, message, callback, timeoutMillis);
+		this.serverAbortSubscriptionWithRequester(this.requester, message, callback, timeoutMillis);
 	}
 
 	/**
-	 * Server abort subscription with extra requester.
+	 * Server abort subscription with requester.
 	 * 
 	 * @param requester
 	 *            the requester
@@ -398,7 +399,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	private void serverAbortSubscriptionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+	private void serverAbortSubscriptionWithRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
@@ -445,18 +446,29 @@ public class StatefulServer extends Server implements IStatefulServer {
 		// delete session on this server
 		this.removeSession(session);
 
-		if (session.isCascaded() == true) {
-			// session is of type cascaded - do not forward to server
-			return;
-		}
 		int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
 		// set up abort message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 		abortMessage.setServiceName(this.getServiceName());
-		abortMessage.setSessionId(session.getId());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+
+		if (session.isCascaded() == true) {
+			Subscription subscription = ((Subscription) session);
+			// XAB procedure for casc subscriptions
+			Set<String> subscriptionIds = subscription.getCscSubscriptionIds().keySet();
+
+			for (String id : subscriptionIds) {
+				abortMessage.setSessionId(id);
+				this.abortSessionAndWaitMech(oti, abortMessage, reason, true);
+			}
+			subscription.getCscSubscriptionIds().clear();
+			// subscription is of type cascaded - do not forward to server
+			return;
+		}
+
+		abortMessage.setSessionId(session.getId());
 		if (session instanceof Subscription) {
 			this.abortSessionAndWaitMech(oti, abortMessage, reason, true);
 		} else {
@@ -590,11 +602,28 @@ public class StatefulServer extends Server implements IStatefulServer {
 				publishMessageQueue.unsubscribe(session.getId());
 				// remove non referenced nodes
 				publishMessageQueue.removeNonreferencedNodes();
+				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
+
 				if (session.isCascaded() == true) {
-					// session is of type cascaded - do not forward to server
+					Subscription subscription = ((Subscription) session);
+					// XAB procedure for casc subscriptions
+					Set<String> subscriptionIds = subscription.getCscSubscriptionIds().keySet();
+
+					for (String id : subscriptionIds) {
+						abortMessage.setSessionId(id);
+						try {
+							this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext
+									.getBasicConfiguration().getSrvAbortOTIMillis());
+						} catch (ConnectionPoolBusyException e) {
+							LOGGER.warn("aborting subscription failed because of busy connection pool");
+						} catch (Exception e) {
+							LOGGER.warn("aborting subscription failed");
+						}
+					}
+					subscription.getCscSubscriptionIds().clear();
+					// subscription is of type cascaded - do not forward to server
 					continue;
 				}
-				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
 				try {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
