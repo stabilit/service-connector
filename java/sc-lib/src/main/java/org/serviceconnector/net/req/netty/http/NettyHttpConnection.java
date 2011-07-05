@@ -77,23 +77,23 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyConnectionAdpater.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
-		this.localSocketAddress = new InetSocketAddress(host, port);
-		ChannelFuture future = bootstrap.connect(this.localSocketAddress);
+		this.remotSocketAddress = new InetSocketAddress(host, port);
+		ChannelFuture future = bootstrap.connect(this.remotSocketAddress);
 		this.operationListener = new NettyOperationListener();
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
 			this.channel = this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
 			// complete localSocketAdress
-			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
+			this.remotSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
-					+ this.localSocketAddress.toString());
+					+ this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort());
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -124,8 +124,8 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		request.setContent(channelBuffer);
 		channel.write(request);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort(), buffer, 0, buffer.length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort(), buffer, 0, buffer.length);
 		}
 		return;
 	}

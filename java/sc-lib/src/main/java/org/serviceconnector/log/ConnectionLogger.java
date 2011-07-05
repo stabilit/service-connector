@@ -31,8 +31,10 @@ public final class ConnectionLogger {
 
 	/** The connect string. */
 	private static String connectStr = "%s connect to:%s/%s";
-	/** The disconnect string. */
-	private static String disconnectStr = "%s disconnect from:%s/%s";
+	/** The disconnect string, logging string for connection disconnect by local host. */
+	private static String disconnectStrByLocalHost = "%s disconnect from:%s/%s";
+	/** The got disconnected str, logging string for connection disconnect by remote host. */
+	private static String disconnectStrByRemotHost = "%s connection disconnect noticed from:%s/%s";
 	/** The read string. */
 	private static String readStr = "%s read from:%s/%s buffer:%s";
 	/** The write string. */
@@ -64,7 +66,7 @@ public final class ConnectionLogger {
 	}
 
 	/**
-	 * Log disconnect.
+	 * Log disconnect by local host.
 	 * 
 	 * @param className
 	 *            the class name
@@ -73,9 +75,26 @@ public final class ConnectionLogger {
 	 * @param port
 	 *            the port
 	 */
-	public static synchronized void logDisconnect(String className, String hostName, int port) {
+	public static synchronized void logDisconnectByLocalHost(String className, String hostName, int port) {
 		Formatter format = new Formatter();
-		format.format(disconnectStr, className, hostName, String.valueOf(port));
+		format.format(disconnectStrByLocalHost, className, hostName, String.valueOf(port));
+		CONNECTION_LOGGER.debug(format.toString());
+		format.close();
+	}
+
+	/**
+	 * Log disconnect by remote host.
+	 * 
+	 * @param className
+	 *            the class name
+	 * @param hostName
+	 *            the host name
+	 * @param port
+	 *            the port
+	 */
+	public static synchronized void logDisconnectByRemoteHost(String className, String hostName, int port) {
+		Formatter format = new Formatter();
+		format.format(disconnectStrByRemotHost, className, hostName, String.valueOf(port));
 		CONNECTION_LOGGER.debug(format.toString());
 		format.close();
 	}

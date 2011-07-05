@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
+import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +26,7 @@ import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.connection.DisconnectException;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -143,9 +145,10 @@ public class Requester implements IRequester {
 		public void receive(Exception ex) {
 			// cancel operation timeout
 			this.operationTimeout.cancel(false);
+			this.scmpCallback.receive(ex);
 			// first handle connection - that user has a connection to work, if he has only 1
-			if (ex instanceof IdleTimeoutException) {
-				// operation timed out - delete this specific connection, prevents race conditions
+			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException || ex instanceof DisconnectException) {
+				// operation stopped - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {
 				// another exception occurred - just free the connection
@@ -153,7 +156,6 @@ public class Requester implements IRequester {
 			}
 			// removes canceled oti timeouts
 			AppContext.otiScheduler.purge();
-			this.scmpCallback.receive(ex);
 		}
 
 		/**

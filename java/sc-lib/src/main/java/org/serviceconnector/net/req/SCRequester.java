@@ -25,6 +25,7 @@ import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.connection.DisconnectException;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -366,13 +367,15 @@ public class SCRequester implements IRequester {
 			this.largeResponse = null;
 			this.largeRequest = null;
 			this.scmpCallback.receive(ex);
-			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException) {
-				// operation timed out - delete this specific connection, prevents race conditions
+			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException || ex instanceof DisconnectException) {
+				// operation stopped - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {
 				// another exception occurred - just free the connection
 				this.freeConnection();
 			}
+			// removes canceled oti timeouts
+			AppContext.otiScheduler.purge();
 		}
 
 		/**

@@ -56,8 +56,8 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	protected int port;
 	/** The host. */
 	protected String host;
-	/** The local socket address. */
-	protected InetSocketAddress localSocketAddress;
+	/** The remote socket address. */
+	protected InetSocketAddress remotSocketAddress;
 	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;
 	/** The operation listener. */
@@ -92,7 +92,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		this.operationListener = null;
 		this.connectionContext = null;
 		this.encoderDecoder = null;
-		this.localSocketAddress = null;
+		this.remotSocketAddress = null;
 		this.channel = null;
 		this.bootstrap = null;
 		this.pipelineFactory = null;
@@ -131,11 +131,11 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		} catch (CommunicationException ex) {
 			LOGGER.error("disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect from IP="
-					+ this.localSocketAddress.toString());
+					+ this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort());
+			ConnectionLogger.logDisconnectByLocalHost(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -189,7 +189,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
+
 	@Override
 	public int getPort() {
 		return port;

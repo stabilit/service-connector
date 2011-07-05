@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -29,6 +30,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.net.connection.DisconnectException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -73,13 +75,36 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			// set up responderRequestHandlerTask to take care of the request
-			NettyHttpRequesterResponseHandlerTask responseHandlerTask = new NettyHttpRequesterResponseHandlerTask((HttpResponse) e
-					.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
+			NettyHttpRequesterResponseHandlerTask responseHandlerTask = new NettyHttpRequesterResponseHandlerTask(
+					(HttpResponse) e.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
 			AppContext.getThreadPool().submit(responseHandlerTask);
 			return;
 		}
 		// unsolicited input, message not expected - race condition
 		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
+	}
+
+	@Override
+	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		super.channelDisconnected(ctx, e);
+		if (this.pendingRequest) {
+			this.pendingRequest = false;
+			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
+			if (ConnectionLogger.isEnabled()) {
+				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
+						remoteSocketAddress.getPort());
+			}
+			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stoped.");
+			NettyHttpRequesterErrorHandlerTask errorHandler = new NettyHttpRequesterErrorHandlerTask(ex);
+			AppContext.getThreadPool().submit(errorHandler);
+			return;
+		}
+		if (ConnectionLogger.isEnabled()) {
+			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
+					remoteSocketAddress.getPort());
+		}
 	}
 
 	@Override
@@ -89,13 +114,13 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			Exception ex = (Exception) th;
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
+				LOGGER.warn("connection exception in pending request state, stop operation.", ex);
 				NettyHttpRequesterErrorHandlerTask errorHandler = new NettyHttpRequesterErrorHandlerTask(ex);
 				AppContext.getThreadPool().submit(errorHandler);
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
-				// idle timed out no pending request outstanding - ignore
-				// exception
+				// idle timed out no pending request outstanding - ignore exception
 				return;
 			}
 		}
@@ -141,8 +166,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				content.readBytes(buffer);
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), socketAddress.getHostName(), socketAddress
-							.getPort(), buffer, 0, buffer.length);
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), socketAddress.getHostName(),
+							socketAddress.getPort(), buffer, 0, buffer.length);
 				}
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);

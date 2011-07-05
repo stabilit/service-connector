@@ -65,22 +65,22 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
 		// Start the connection attempt.
-		this.localSocketAddress = new InetSocketAddress(host, port);
-		ChannelFuture future = bootstrap.connect(this.localSocketAddress);
+		this.remotSocketAddress = new InetSocketAddress(host, port);
+		ChannelFuture future = bootstrap.connect(this.remotSocketAddress);
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		try {
 			this.channel = operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
-			// complete localSocketAdress
-			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
+			// complete remotSocketAddress
+			this.remotSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
-			LOGGER.error("connect failed to " + this.localSocketAddress.toString(), ex);
+			LOGGER.error("connect failed to " + this.remotSocketAddress.toString(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
-					+ this.localSocketAddress.toString());
+					+ this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort());
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -98,8 +98,8 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		chBuffer.writeBytes(baos.toByteArray());
 		channel.write(chBuffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
 	}
 }
