@@ -55,10 +55,9 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 		AppContext.getThreadPool().submit(responseHandlerTask);
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-		super.channelClosed(ctx, e);
+	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		super.channelDisconnected(ctx, e);
 		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
 		if (AppContext.isScEnvironment()) {
 			// if in sc environment - clean up server
