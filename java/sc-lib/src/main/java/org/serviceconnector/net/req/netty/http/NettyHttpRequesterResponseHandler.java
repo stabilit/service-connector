@@ -95,7 +95,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
 						remoteSocketAddress.getPort());
 			}
-			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stoped.");
+			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
 			NettyHttpRequesterErrorHandlerTask errorHandler = new NettyHttpRequesterErrorHandlerTask(ex);
 			AppContext.getThreadPool().submit(errorHandler);
 			return;
