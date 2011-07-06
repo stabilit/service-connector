@@ -535,7 +535,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 			response = sessionService1.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		} catch (SCServiceException e) {
 			// will get here after 3000 ms
-			// continue immediatelly
+			// continue immediately
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
