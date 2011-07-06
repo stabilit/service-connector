@@ -400,6 +400,8 @@ public final class Constants {
 	public static final int MAX_KPI_VALUE = NUMBER_3600;
 	/** The Constant MAX_ECHO_TIMEOUT_VALUE. */
 	public static final int MAX_ECHO_TIMEOUT_VALUE = NUMBER_3600;
+	/** The Constant MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE. */
+	public static final int MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE = NUMBER_3600;
 	/** The Constant MAX_KP_TIMEOUT_VALUE. */
 	public static final int MAX_KP_TIMEOUT_VALUE = NUMBER_3600;
 }

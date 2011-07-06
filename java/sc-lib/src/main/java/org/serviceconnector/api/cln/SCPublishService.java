@@ -64,6 +64,11 @@ public class SCPublishService extends SCService {
 	 * set. Default = 0.
 	 */
 	private int noDataIntervalSeconds;
+	/**
+	 * The receive publication timeout in seconds. Time to wait for the reply of SC in case of a receive publication until the
+	 * subscription is marked as dead.
+	 */
+	private int receivePublicationTimeoutSeconds;
 
 	/**
 	 * Instantiates a new SC publish service. Should only be used by service connector internal classes. Instantiating
@@ -79,6 +84,7 @@ public class SCPublishService extends SCService {
 	SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 		this.noDataIntervalSeconds = 0;
+		this.receivePublicationTimeoutSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 		this.messageCallback = null;
 	}
 
@@ -266,7 +272,8 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility).
-	 * The registered message callback from the client gets informed in case of an error.
+	 * The registered message callback from the client gets informed in case of an error. Operation timeout for receive publication
+	 * is (receivePublicationTimeoutSeconds+noDataIntervalSeconds).
 	 */
 	void receivePublication() {
 		// 1. checking preconditions and initialize
@@ -281,7 +288,7 @@ public class SCPublishService extends SCService {
 		try {
 			PerformanceLogger.begin(this.sessionId);
 			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
-					* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataIntervalSeconds));
+					* (this.receivePublicationTimeoutSeconds + this.noDataIntervalSeconds));
 		} catch (Exception e) {
 			PerformanceLogger.end(this.sessionId);
 			// inactivate the session
@@ -389,5 +396,38 @@ public class SCPublishService extends SCService {
 	 */
 	public boolean isSubscribed() {
 		return this.sessionActive;
+	}
+
+	/**
+	 * Sets the receive publication timeout in seconds. Time in seconds a receive publication request waits to be confirmed. If no
+	 * confirmation is received
+	 * subscription is marked as dead.
+	 * 
+	 * @param receivePublicationTimeoutSeconds
+	 *            time to wait for completion of a receive publication request
+	 *            Example: 10
+	 * @throws SCMPValidatorException
+	 *             receivePublicationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException
+	 *             called method after subscribe
+	 */
+	public void setReceivePublicationTimeoutSeconds(int receivePublicationTimeoutSeconds) throws SCMPValidatorException,
+			SCServiceException {
+		if (this.sessionActive) {
+			throw new SCServiceException("Can not set receivePublicationTimeoutSeconds, subscription is already subscribed.");
+		}
+		// validate in this case its a local needed information
+		ValidatorUtility.validateInt(1, receivePublicationTimeoutSeconds, Constants.MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE,
+				SCMPError.HV_WRONG_RECEIVE_PUBLICAION_TIMEOUT);
+		this.receivePublicationTimeoutSeconds = receivePublicationTimeoutSeconds;
+	}
+
+	/**
+	 * Gets the receive publication timeout in seconds. Time in seconds a receive publication request waits to be confirmed.
+	 * 
+	 * @return the receive publication timeout in seconds
+	 */
+	public int getReceivePublicationTimeoutSeconds() {
+		return this.receivePublicationTimeoutSeconds;
 	}
 }
