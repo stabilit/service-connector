@@ -518,7 +518,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: operation timeout expired during execution, catch exception and continue immediatelly<br>
+	 * Description: operation timeout expired during execution, catch exception and continue immediately<br>
 	 * Expectation: passes
 	 */
 	@Test
