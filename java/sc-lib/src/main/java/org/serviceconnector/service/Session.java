@@ -36,7 +36,7 @@ public class Session extends AbstractSession {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Session.class);
 
-	/** The session timeout millis. */
+	/** The session timeout milliseconds. */
 	private double sessionTimeoutMillis;
 	/** The pending request. */
 	private boolean pendingRequest;

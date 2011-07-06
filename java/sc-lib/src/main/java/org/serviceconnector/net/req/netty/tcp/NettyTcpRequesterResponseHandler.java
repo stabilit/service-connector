@@ -131,6 +131,14 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	}
 
 	/**
+	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in
+	 * disconnect procedure.
+	 */
+	public void connectionDisconnect() {
+		this.pendingRequest = false;
+	}
+
+	/**
 	 * The Class NettyTcpRequesterResponseHandlerTask. Is responsible for processing a response. It has to be a new thread because
 	 * of NETTY threading concept.
 	 * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.

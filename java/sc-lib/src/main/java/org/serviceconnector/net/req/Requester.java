@@ -214,7 +214,7 @@ public class Requester implements IRequester {
 		public void timeout() {
 			LOGGER.warn("oti timeout expiration on SC oti=" + this.timeoutMillis);
 			this.disconnectConnection();
-			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
+			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed on SC."));
 		}
 	}
 

@@ -130,6 +130,15 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			LOGGER.error("Response error", th);
 		}
 	}
+	
+	/**
+	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in
+	 * disconnect procedure.
+	 */
+	public void connectionDisconnect() {
+		this.pendingRequest = false;
+	}
+
 
 	/**
 	 * The Class NettyHttpRequesterResponseHandlerTask. Is responsible for processing a response. It has to be a new thread because

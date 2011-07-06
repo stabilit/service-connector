@@ -190,12 +190,12 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * 
 	 * @param session
 	 *            the session
-	 * @param newTimeoutInSeconds
-	 *            the new timeout in seconds
+	 * @param newTimeoutMillis
+	 *            the new timeout in milliseconds
 	 */
-	public void resetSessionTimeout(Session session, double newTimeoutInSeconds) {
+	public void resetSessionTimeout(Session session, double newTimeoutMillis) {
 		this.cancelSessionTimeout(session);
-		this.scheduleSessionTimeout(session, newTimeoutInSeconds);
+		this.scheduleSessionTimeout(session, newTimeoutMillis);
 	}
 
 	/**

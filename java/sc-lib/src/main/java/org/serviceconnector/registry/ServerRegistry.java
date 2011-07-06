@@ -167,12 +167,12 @@ public class ServerRegistry extends Registry<String, Server> {
 	 * 
 	 * @param server
 	 *            the server
-	 * @param newTimeoutInSeconds
-	 *            the new timeout in seconds
+	 * @param newTimeoutMillis
+	 *            the new timeout in milliseconds
 	 */
-	public void resetServerTimeout(Server server, double newTimeoutInSeconds) {
+	public void resetServerTimeout(Server server, double newTimeoutMillis) {
 		this.cancelServerTimeout(server);
-		this.scheduleServerTimeout(server, newTimeoutInSeconds);
+		this.scheduleServerTimeout(server, newTimeoutMillis);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class ServerRegistry extends Registry<String, Server> {
 				((StatefulServer) this.server)
 						.abortSessionsAndDestroy("Server timeout - refreshing server by keep alive message failed. Clean up dead server.");
 				LOGGER.warn("Server timeout - refreshing server by keep alive message failed. Clean up dead server="
-						+ this.server.getServerKey());
+						+ this.server.getServerKey() + " timeout(ms)=" + this.timeoutMillis);
 			}
 		}
 

@@ -17,6 +17,7 @@
 package org.serviceconnector.net.res.netty;
 
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
@@ -29,6 +30,7 @@ import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
+import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
@@ -39,6 +41,8 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY
@@ -85,8 +89,14 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			String sessionId = scmpReq.getSessionId();
 			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry
 					.getSCMPMsgSequenceNr(sessionId);
+			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+			String host = ((InetSocketAddress) channel.getLocalAddress()).getHostName();
 
 			if (scmpReq.isKeepAlive()) {
+				if (AppContext.isScEnvironment()) {
+					// if in sc environment - reset server timeout
+					this.resetServerTimeout(host, port);
+				}
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
 				response.write();
@@ -102,7 +112,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
 			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
 			responderRegistry.setThreadLocal(port);
 
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
@@ -251,6 +260,23 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			response.write();
 		} catch (Exception ex) {
 			LOGGER.error("send response failed", ex);
+		}
+	}
+
+	private void resetServerTimeout(String host, int port) {
+		String wildKey = "_" + host + "/" + port;
+		ServerRegistry serverRegistry = AppContext.getServerRegistry();
+		Set<String> keySet = serverRegistry.keySet();
+
+		for (String key : keySet) {
+			if (key.endsWith(wildKey)) {
+				Server server = serverRegistry.getServer(key);
+				if (server instanceof StatefulServer) {
+					// reset server timeout for stateful servers.
+					LOGGER.debug("refresh server timeout server=" + server.getServerKey());
+					serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
+				}
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ import java.nio.channels.ClosedChannelException;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.serviceconnector.net.req.IRequest;
@@ -54,6 +55,12 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 		IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
 		// process request in super class
 		super.messageReceived(request, response, channel);
+	}
+	
+	@Override
+	public void channelInterestChanged(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		// TODO Auto-generated method stub
+		super.channelInterestChanged(ctx, e);
 	}
 
 	/** {@inheritDoc} */
