@@ -28,7 +28,8 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client
- * and a server.
+ * and a server. Session activity is observed by a timer. The timer gets initialized when adding the session to the registry. It gets
+ * reseted when session is used by requests.
  */
 public class Session extends AbstractSession {
 

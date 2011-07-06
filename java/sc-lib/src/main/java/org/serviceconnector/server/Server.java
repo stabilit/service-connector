@@ -30,7 +30,8 @@ import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
- * holds a connection pool to communicate to backend server.
+ * holds a connection pool to communicate to a backend server. Servers activity is observed by a timer. It gets initialized by
+ * adding server to server registry.
  * 
  * @author JTraber
  */

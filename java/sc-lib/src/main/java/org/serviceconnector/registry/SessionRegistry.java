@@ -32,7 +32,8 @@ import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the
- * session timeout and initiating clean up in case of a broken session.
+ * session timeout and initiating clean up in case of a broken session. Session timer gets initialized by adding the session.
+ * Resetting the timer needs to be done outside the registry by calling reset method.
  * 
  * @author JTraber
  */
@@ -146,7 +147,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
 				sessionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
 		if (SessionLogger.isTraceEnabled()) {
-			SessionLogger.logScheduleTimeout(session.getId(),newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
+			SessionLogger.logScheduleTimeout(session.getId(), newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
 		}
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
@@ -173,11 +174,11 @@ public class SessionRegistry extends Registry<String, Session> {
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
 			LOGGER.error("cancel of session timeout failed sid=" + session.getId() + " delay="
-					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
+					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
 				LOGGER.error("remove of session timeout failed sid=" + session.getId() + " delay="
-						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
+						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			}
 		}
 		this.sessionScheduler.purge();

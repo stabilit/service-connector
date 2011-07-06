@@ -278,7 +278,8 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 				Server server = serverRegistry.getServer(key);
 				if (server instanceof StatefulServer) {
 					// reset server timeout for stateful servers.
-					LOGGER.debug("refresh server timeout server=" + server.getServerKey());
+					LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)="
+							+ server.getServerTimeoutMillis());
 					serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
 				}
 			}

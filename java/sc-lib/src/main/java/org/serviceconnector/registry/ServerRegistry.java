@@ -30,7 +30,9 @@ import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class ServerRegistry. Stores an entry for every registered server in system.
+ * The Class ServerRegistry. Stores an entry for every registered server in system. Server registry is also responsible for
+ * observation of server timeout and to clean up in case of broken servers. Server timeout gets initialized by adding server.
+ * Resetting the timer needs to be done outside the registry by calling reset method.
  * 
  * @author JTraber
  */

@@ -85,12 +85,12 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 					if ((server instanceof StatefulServer) == false) {
 						continue;
 					}
-					LOGGER.debug("clean up dead server with key " + wildKey);
+					LOGGER.debug("clean up dead server with wild key " + wildKey);
 					StatefulServer statefulServer = (StatefulServer) server;
 					statefulServer.abortSessionsAndDestroy("clean up dead server");
 				}
 			} catch (Exception e) {
-				LOGGER.warn("cleaning up server=" + key + "throws exception", e);
+				LOGGER.error("cleaning up server=" + key + "throws exception", e);
 				continue;
 			}
 		}
