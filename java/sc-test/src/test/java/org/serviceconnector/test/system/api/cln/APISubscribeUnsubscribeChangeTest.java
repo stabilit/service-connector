@@ -328,7 +328,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 	 * Description: receivePublication timeout = -1<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t29_receivePublicationNegative() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		publishService.setReceivePublicationTimeoutSeconds(-1);
@@ -338,8 +338,8 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 	 * Description: receivePublication timeout = 0<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCServiceException.class)
-	public void t29_receivePublicationZero() throws Exception {
+	@Test(expected = SCMPValidatorException.class)
+	public void t30_receivePublicationZero() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		publishService.setReceivePublicationTimeoutSeconds(0);
 	}
@@ -348,8 +348,8 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 	 * Description: receivePublication timeout = 67000<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCServiceException.class)
-	public void t29_receivePublicationTooBig() throws Exception {
+	@Test(expected = SCMPValidatorException.class)
+	public void t31_receivePublicationTooBig() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		publishService.setReceivePublicationTimeoutSeconds(67000);
 	}
