@@ -105,9 +105,9 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	@Override
 	public void disconnect() throws Exception {
-		super.disconnect();
 		// this avoids receiving messages (outstanding replies) in disconnecting procedure
 		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
 		handler.connectionDisconnect();
+		super.disconnect();
 	}
 }

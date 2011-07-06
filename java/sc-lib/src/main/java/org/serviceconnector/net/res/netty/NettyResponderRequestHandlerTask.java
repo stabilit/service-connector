@@ -89,13 +89,11 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			String sessionId = scmpReq.getSessionId();
 			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry
 					.getSCMPMsgSequenceNr(sessionId);
-			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
-			String host = ((InetSocketAddress) channel.getLocalAddress()).getHostName();
 
 			if (scmpReq.isKeepAlive()) {
 				if (AppContext.isScEnvironment()) {
 					// if in sc environment - reset server timeout
-					this.resetServerTimeout(host, port);
+					this.resetServerTimeout((InetSocketAddress) channel.getRemoteAddress());
 				}
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
@@ -112,6 +110,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
 			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
 			responderRegistry.setThreadLocal(port);
 
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
@@ -263,8 +262,14 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 		}
 	}
 
-	private void resetServerTimeout(String host, int port) {
-		String wildKey = "_" + host + "/" + port;
+	/**
+	 * Reset server timeout. Steps through the registry and refreshes server timeouts.
+	 * 
+	 * @param socketAddress
+	 *            the socket address
+	 */
+	private void resetServerTimeout(InetSocketAddress socketAddress) {
+		String wildKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
