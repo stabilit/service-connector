@@ -18,9 +18,15 @@ package org.serviceconnector.registry;
 
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
@@ -33,6 +39,16 @@ public class ServerRegistry extends Registry<String, Server> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ServerRegistry.class);
 
+	/** The timer. Timer instance is responsible to observe server timeouts. */
+	private ScheduledThreadPoolExecutor serverScheduler;
+
+	/**
+	 * Instantiates a ServerRegistry.
+	 */
+	public ServerRegistry() {
+		this.serverScheduler = new ScheduledThreadPoolExecutor(1);
+	}
+
 	/**
 	 * Adds an entry of a server.
 	 * 
@@ -43,6 +59,8 @@ public class ServerRegistry extends Registry<String, Server> {
 	 */
 	public void addServer(String key, Server server) {
 		this.put(key, server);
+		LOGGER.info("Adding Server to registry, server=" + server.toString());
+		this.scheduleServerTimeout(server, server.getServerTimeoutMillis());
 	}
 
 	/**
@@ -56,10 +74,9 @@ public class ServerRegistry extends Registry<String, Server> {
 		return super.get(key);
 	}
 
-	
 	/**
 	 * Gets all servers.
-	 *
+	 * 
 	 * @return the servers
 	 */
 	public Server[] getServers() {
@@ -68,7 +85,7 @@ public class ServerRegistry extends Registry<String, Server> {
 			Server[] servers = new Server[entries.size()];
 			int index = 0;
 			for (Entry<String, Server> entry : entries) {
-				//String key = entry.getKey();
+				// String key = entry.getKey();
 				Server server = entry.getValue();
 				servers[index++] = server;
 			}
@@ -77,6 +94,85 @@ public class ServerRegistry extends Registry<String, Server> {
 			LOGGER.error("getServers", e);
 		}
 		return null;
+	}
+
+	/**
+	 * Removes the server.
+	 * 
+	 * @param key
+	 *            the key
+	 */
+	public void removeServer(String key) {
+		super.remove(key);
+		LOGGER.info("Removing Server from registry, server=" + key);
+	}
+
+	/**
+	 * Schedule server timeout.
+	 * 
+	 * @param server
+	 *            the server
+	 */
+	@SuppressWarnings("unchecked")
+	private void scheduleServerTimeout(Server server, double newTimeoutMillis) {
+		if (server == null || newTimeoutMillis == 0) {
+			// no scheduling of server timeout
+			return;
+		}
+		// always cancel old timeouter before setting up a new one
+		this.cancelServerTimeout(server);
+		// sets up server timeout
+		TimeoutWrapper serverTimeouter = new TimeoutWrapper(new ServerTimeout(server, server.getServerTimeoutMillis()));
+		// schedule serverTimeouter in registry timer
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.serverScheduler.schedule(serverTimeouter,
+				(long) newTimeoutMillis, TimeUnit.MILLISECONDS);
+		LOGGER.trace("schedule server timeout server=" + server.getServerKey() + " timeout=" + newTimeoutMillis);
+		server.setTimeout(timeout);
+		server.setTimeouterTask(serverTimeouter);
+	}
+
+	/**
+	 * Cancel server timeout.
+	 * 
+	 * @param server
+	 *            the server
+	 */
+	private void cancelServerTimeout(Server server) {
+		if (server == null) {
+			return;
+		}
+		ScheduledFuture<TimeoutWrapper> serverTimeout = server.getTimeout();
+		if (serverTimeout == null) {
+			// no session timeout has been set up for this server
+			return;
+		}
+		LOGGER.trace("cancel server timeout server=" + server.getServerKey());
+		boolean cancelSuccess = serverTimeout.cancel(false);
+		if (cancelSuccess == false) {
+			LOGGER.error("cancel of server timeout failed server=" + server.getServerKey() + " delay="
+					+ serverTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
+			boolean remove = this.serverScheduler.remove(server.getTimeouterTask());
+			if (remove == false) {
+				LOGGER.error("remove of server timeout failed server=" + server.getServerKey() + " delay="
+						+ serverTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
+			}
+		}
+		this.serverScheduler.purge();
+		// important to set timeouter null - rescheduling of same instance not possible
+		server.setTimeout(null);
+	}
+
+	/**
+	 * Reset server timeout. Careful in use - take care of synchronization when parallel request possible.
+	 * 
+	 * @param server
+	 *            the server
+	 * @param newTimeoutInSeconds
+	 *            the new timeout in seconds
+	 */
+	public void resetServerTimeout(Server server, double newTimeoutInSeconds) {
+		this.cancelServerTimeout(server);
+		this.scheduleServerTimeout(server, newTimeoutInSeconds);
 	}
 
 	/**
@@ -96,14 +192,48 @@ public class ServerRegistry extends Registry<String, Server> {
 		}
 		writer.writeEndElement(); // end of servers
 	}
-	
+
 	/**
-	 * Removes the server.
-	 * 
-	 * @param key
-	 *            the key
+	 * The Class ServerTimeout. Gets control when a server times out. Responsible for cleaning up when server gets broken.
 	 */
-	public void removeServer(String key) {
-		super.remove(key);
+	private class ServerTimeout implements ITimeout {
+		/** The server. */
+		private Server server;
+		/** The timeout. */
+		private double timeoutMillis;
+
+		/**
+		 * Instantiates a new server timer run.
+		 * 
+		 * @param server
+		 *            the server
+		 */
+		public ServerTimeout(Server server, double timeoutMillis) {
+			this.server = server;
+			this.timeoutMillis = server.getServerTimeoutMillis();
+		}
+
+		/**
+		 * Timeout. Server timeout run out.
+		 */
+		@Override
+		public void timeout() {
+			/**
+			 * broken stateful server procedure<br />
+			 * 1. abort sessions and destroy server, everything done inside method<br />
+			 */
+			if (this.server instanceof StatefulServer) {
+				((StatefulServer) this.server)
+						.abortSessionsAndDestroy("Server timeout - refreshing server by keep alive message failed. Clean up dead server.");
+				LOGGER.warn("Server timeout - refreshing server by keep alive message failed. Clean up dead server="
+						+ this.server.getServerKey());
+			}
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getTimeoutMillis() {
+			return (int) this.timeoutMillis;
+		}
 	}
 }

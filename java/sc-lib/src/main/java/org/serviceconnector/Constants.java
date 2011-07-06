@@ -111,6 +111,8 @@ public final class Constants {
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value used if no interval is passed in the API. */
 	public static final int DEFAULT_ECHO_INTERVAL_SECONDS = 60;
+	/** Default value if no SERVER_TIMEOUT_MULTIPLIER is configured. */
+	public static final double DEFAULT_SERVER_TIMEOUT_MULTIPLIER = 1.2;
 	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/** Default value used if no timeout for operation is passed in the API. */
@@ -213,6 +215,8 @@ public final class Constants {
 	 */
 	/** The Constant ROOT_WRITEPID. */
 	public static final String ROOT_WRITEPID = "root.writePID";
+	/** The Constant ROOT_SERVER_TIMEOUT_MULTIPLIER. */
+	public static final String ROOT_SERVER_TIMEOUT_MULTIPLIER = "root.serverTimeoutMultiplier";
 	/** The Constant ROOT_OPERATION_TIMEOUT_MULTIPLIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	/** The Constant ROOT_ECHO_INTERVAL_MULTIPLIER. */

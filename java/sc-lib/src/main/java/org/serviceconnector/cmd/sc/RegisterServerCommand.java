@@ -78,7 +78,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		int maxConnections = message.getHeaderInt(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 		int portNr = message.getHeaderInt(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-		int keepAliveInterval = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
+		int keepAliveIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		String httpUrlFileQualifier = message.getHeader(SCMPHeaderAttributeKey.URL_PATH);
 
 		if (httpUrlFileQualifier == null) {
@@ -92,7 +92,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		String connectionType = listenerConfig.getConnectionType();
 
 		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.STATEFUL_SERVER, serverKey,
-				socketAddress.getHostName(), portNr, connectionType, keepAliveInterval, maxConnections, maxSessions,
+				socketAddress.getHostName(), portNr, connectionType, keepAliveIntervalSeconds, maxConnections, maxSessions,
 				httpUrlFileQualifier);
 		// create new server
 		StatefulServer server = new StatefulServer(remoteNodeConfiguration, serviceName, socketAddress);

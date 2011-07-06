@@ -39,6 +39,11 @@ public class BasicConfiguration {
 	private String dumpPath = null;
 
 	/**
+	 * Multiplier to calculate the server timeout.<br />
+	 * SC must adapt (extend) the timeout passed from server to get the right timeout.
+	 */
+	private double serverTimeoutMultiplier = Constants.DEFAULT_SERVER_TIMEOUT_MULTIPLIER;
+	/**
 	 * Multiplier to calculate the operation timeout.<br />
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
 	 */
@@ -121,14 +126,21 @@ public class BasicConfiguration {
 			this.dumpPath = dumpFile.getAbsolutePath();
 		}
 		LOGGER.info("dumpPath=" + this.dumpPath);
-	
+
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
 		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
 			this.operationTimeoutMultiplier = localOTIMultiplier;
 		}
 		LOGGER.info("operationTimeoutMultiplier=" + this.operationTimeoutMultiplier);
-		
+
+		// serverTimeoutMultiplier
+		Double localServerMultiplier = compositeConfiguration.getDouble(Constants.ROOT_SERVER_TIMEOUT_MULTIPLIER, null);
+		if (localServerMultiplier != null && this.serverTimeoutMultiplier != localServerMultiplier) {
+			this.serverTimeoutMultiplier = localServerMultiplier;
+		}
+		LOGGER.info("serverTimeoutMultiplier=" + this.serverTimeoutMultiplier);
+
 		// echoIntervalMultiplier
 		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
 		if (localECIMultiplier != null && this.echoIntervalMultiplier != localECIMultiplier) {
@@ -157,7 +169,7 @@ public class BasicConfiguration {
 			this.commandValidation = localCMDValidation;
 		}
 		LOGGER.info("commandValidation=" + this.commandValidation);
-		
+
 		// keepAliveTimeout in milliseconds
 		Integer localKeepAliveOTIMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_OTI_MILLIS, null);
 		if (localKeepAliveOTIMillis != null && this.keepAliveOTIMillis != localKeepAliveOTIMillis) {
@@ -175,29 +187,6 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Dump the basic configuration into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("configuration");
-		writer.writeElement("commandValidation", this.commandValidation);
-		writer.writeElement("dumpPath", this.dumpPath);
-		writer.writeElement("pidPath", this.pidPath);
-		writer.writeElement("writePID", this.writePID);
-		writer.writeElement("echoIntervalMultiplier", this.echoIntervalMultiplier);
-		writer.writeElement("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
-		writer.writeElement("connectionTimeoutMillis", this.connectionTimeoutMillis);
-		writer.writeElement("keepAliveOTIMillis", this.keepAliveOTIMillis);
-		writer.writeElement("srvAbortOTIMillis", this.srvAbortOTIMillis);
-		writer.writeElement("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
-		writer.writeEndElement(); // end of configuration
-	}
-	
-	/**
 	 * Checks if is write pid.
 	 * 
 	 * @return true, if is write pid
@@ -213,6 +202,15 @@ public class BasicConfiguration {
 	 */
 	public double getOperationTimeoutMultiplier() {
 		return operationTimeoutMultiplier;
+	}
+
+	/**
+	 * Gets the server timeout multiplier.
+	 * 
+	 * @return the server timeout multiplier
+	 */
+	public double getServerTimeoutMultiplier() {
+		return serverTimeoutMultiplier;
 	}
 
 	/**
@@ -285,6 +283,30 @@ public class BasicConfiguration {
 	 */
 	public String getDumpPath() {
 		return dumpPath;
+	}
+
+	/**
+	 * Dump the basic configuration into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("configuration");
+		writer.writeElement("commandValidation", this.commandValidation);
+		writer.writeElement("dumpPath", this.dumpPath);
+		writer.writeElement("pidPath", this.pidPath);
+		writer.writeElement("writePID", this.writePID);
+		writer.writeElement("echoIntervalMultiplier", this.echoIntervalMultiplier);
+		writer.writeElement("serverTimeoutMultiplier", this.serverTimeoutMultiplier);
+		writer.writeElement("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
+		writer.writeElement("connectionTimeoutMillis", this.connectionTimeoutMillis);
+		writer.writeElement("keepAliveOTIMillis", this.keepAliveOTIMillis);
+		writer.writeElement("srvAbortOTIMillis", this.srvAbortOTIMillis);
+		writer.writeElement("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
+		writer.writeEndElement(); // end of configuration
 	}
 
 }

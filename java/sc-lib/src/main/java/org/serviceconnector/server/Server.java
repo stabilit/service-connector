@@ -18,12 +18,15 @@ package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.ScheduledFuture;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
@@ -48,6 +51,12 @@ public abstract class Server implements IServer {
 	protected boolean destroyed;
 	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
+	/** The server timeout milliseconds. */
+	private double serverTimeoutMillis;
+	/** The server timeout. */
+	private ScheduledFuture<TimeoutWrapper> timeout;
+	/** The timeouter task. */
+	private TimeoutWrapper timeouterTask;
 
 	/**
 	 * Instantiates a new server.
@@ -63,15 +72,9 @@ public abstract class Server implements IServer {
 		this.serverKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.socketAddress = socketAddress;
 		this.destroyed = false;
-	}
-
-	/**
-	 * Gets the socket address.
-	 * 
-	 * @return the socket address
-	 */
-	public SocketAddress getSocketAddress() {
-		return socketAddress;
+		// calculate server timeout: multiply keep alive interval with serverTimeoutMultiplier!
+		this.serverTimeoutMillis = (remoteNodeConfiguration.getKeepAliveIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR * AppContext
+				.getBasicConfiguration().getServerTimeoutMultiplier());
 	}
 
 	/**
@@ -85,14 +88,50 @@ public abstract class Server implements IServer {
 	}
 
 	/**
-	 * Destroy server.
+	 * Gets the socket address.
+	 * 
+	 * @return the socket address
 	 */
-	public void destroy() {
-		LOGGER.info("server destroy " + this.serverKey);
-		this.destroyed = true;
-		this.requester.destroy();
-		AppContext.getServerRegistry().removeServer(this.getServerKey());
-		this.requester = null;
+	public SocketAddress getSocketAddress() {
+		return socketAddress;
+	}
+
+	/**
+	 * Gets the server timeout.
+	 * 
+	 * @return the server timeout
+	 */
+	public ScheduledFuture<TimeoutWrapper> getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * Sets the server timeout.
+	 * 
+	 * @param timeout
+	 *            the new server timeout
+	 */
+	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
+		this.timeout = timeout;
+	}
+
+	/**
+	 * Sets the timeouter task.
+	 * 
+	 * @param timeouterTask
+	 *            the new timeouter task
+	 */
+	public void setTimeouterTask(TimeoutWrapper timeouterTask) {
+		this.timeouterTask = timeouterTask;
+	}
+
+	/**
+	 * Gets the timeouter task.
+	 * 
+	 * @return the timeouter task
+	 */
+	public TimeoutWrapper getTimeouterTask() {
+		return this.timeouterTask;
 	}
 
 	/**
@@ -138,6 +177,15 @@ public abstract class Server implements IServer {
 	}
 
 	/**
+	 * Gets the server timeout milliseconds.
+	 * 
+	 * @return the server timeout milliseconds
+	 */
+	public double getServerTimeoutMillis() {
+		return this.serverTimeoutMillis;
+	}
+
+	/**
 	 * Gets the server key.
 	 * 
 	 * @return the server key
@@ -162,6 +210,17 @@ public abstract class Server implements IServer {
 	 */
 	public boolean isDestroyed() {
 		return this.destroyed;
+	}
+
+	/**
+	 * Destroy server.
+	 */
+	public void destroy() {
+		LOGGER.info("server destroy " + this.serverKey);
+		this.destroyed = true;
+		this.requester.destroy();
+		AppContext.getServerRegistry().removeServer(this.getServerKey());
+		this.requester = null;
 	}
 
 	/** {@inheritDoc} */
