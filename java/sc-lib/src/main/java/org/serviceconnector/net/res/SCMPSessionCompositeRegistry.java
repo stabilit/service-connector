@@ -200,7 +200,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		sessionComposite.setTimeout(null);
 	}
 
-	private void resetLargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
+	private synchronized void resetLargeMessageTimeout(SCMPSessionCompositeItem sessionComposite) {
 		this.cancelLargeMessageTimeout(sessionComposite);
 		this.scheduleLargeMessageTimeout(sessionComposite);
 	}

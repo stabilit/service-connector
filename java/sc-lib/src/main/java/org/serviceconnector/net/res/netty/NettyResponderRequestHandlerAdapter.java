@@ -51,7 +51,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	 */
 	public void messageReceived(IRequest request, IResponse response, Channel channel) {
 		// set up responderRequestHandlerTask to take care of the request
-		NettyResponderRequestHandlerTask responseHandlerTask = new NettyResponderRequestHandlerTask(request, response, channel);
+		NettyResponderRequestHandlerTask responseHandlerTask = new NettyResponderRequestHandlerTask(request, response);
 		AppContext.getThreadPool().submit(responseHandlerTask);
 	}
 

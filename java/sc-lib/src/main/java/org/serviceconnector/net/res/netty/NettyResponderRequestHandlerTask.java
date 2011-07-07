@@ -20,7 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.Channel;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.ctx.AppContext;
@@ -60,8 +59,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	private IRequest request;
 	/** The response. */
 	private IResponse response;
-	/** The channel. */
-	private Channel channel;
 
 	/**
 	 * Instantiates a new netty responder request handler task.
@@ -70,13 +67,10 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @param channel
-	 *            the channel
 	 */
-	public NettyResponderRequestHandlerTask(IRequest request, IResponse response, Channel channel) {
+	public NettyResponderRequestHandlerTask(IRequest request, IResponse response) {
 		this.request = request;
 		this.response = response;
-		this.channel = channel;
 	}
 
 	/** {@inheritDoc} */
@@ -93,7 +87,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			if (scmpReq.isKeepAlive()) {
 				if (AppContext.isScEnvironment()) {
 					// if in sc environment - reset server timeout
-					this.resetServerTimeout((InetSocketAddress) channel.getRemoteAddress());
+					this.resetServerTimeout(request.getRemoteSocketAddress());
 				}
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
@@ -110,7 +104,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
 			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+			int port = request.getLocalSocketAddress().getPort();
 			responderRegistry.setThreadLocal(port);
 
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
@@ -268,7 +262,8 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	 * @param socketAddress
 	 *            the socket address
 	 */
-	private void resetServerTimeout(InetSocketAddress socketAddress) {
+	@Override
+	public void resetServerTimeout(InetSocketAddress socketAddress) {
 		String wildKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();

@@ -194,7 +194,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * @param newTimeoutMillis
 	 *            the new timeout in milliseconds
 	 */
-	public void resetSessionTimeout(Session session, double newTimeoutMillis) {
+	public synchronized void resetSessionTimeout(Session session, double newTimeoutMillis) {
 		this.cancelSessionTimeout(session);
 		this.scheduleSessionTimeout(session, newTimeoutMillis);
 	}

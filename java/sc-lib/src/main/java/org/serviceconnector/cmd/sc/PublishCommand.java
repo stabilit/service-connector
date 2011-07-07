@@ -55,6 +55,10 @@ public class PublishCommand extends CommandAdapter {
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
+
+		// reset server timeout
+		responderCallback.resetServerTimeout(request.getRemoteSocketAddress());
+
 		PublishMessageQueue<SCMPMessage> queue = service.getMessageQueue();
 		// throws an exception if failed
 		queue.insert(message);
@@ -85,13 +89,15 @@ public class PublishCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// message info optional
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MESSAGE_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -172,7 +172,7 @@ public class ServerRegistry extends Registry<String, Server> {
 	 * @param newTimeoutMillis
 	 *            the new timeout in milliseconds
 	 */
-	public void resetServerTimeout(Server server, double newTimeoutMillis) {
+	public synchronized void resetServerTimeout(Server server, double newTimeoutMillis) {
 		this.cancelServerTimeout(server);
 		this.scheduleServerTimeout(server, newTimeoutMillis);
 	}

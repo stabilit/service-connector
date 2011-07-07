@@ -226,7 +226,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * @param key
 	 *            the key
 	 */
-	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
+	public synchronized void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		this.cancelSubscriptionTimeout(subscription);
 		this.scheduleSubscriptionTimeout(subscription, newTimeoutMillis);
 	}

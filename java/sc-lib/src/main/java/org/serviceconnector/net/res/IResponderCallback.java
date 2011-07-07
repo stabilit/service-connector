@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,13 +13,10 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.net.InetSocketAddress;
 import org.serviceconnector.net.req.IRequest;
 
 /**
@@ -39,4 +35,12 @@ public interface IResponderCallback {
 	 *            the response
 	 */
 	public abstract void responseCallback(IRequest request, IResponse response);
+
+	/**
+	 * Reset server timeout. Steps through the registry and refreshes server timeouts.
+	 * 
+	 * @param socketAddress
+	 *            the socket address
+	 */
+	public abstract void resetServerTimeout(InetSocketAddress socketAddress);
 }
