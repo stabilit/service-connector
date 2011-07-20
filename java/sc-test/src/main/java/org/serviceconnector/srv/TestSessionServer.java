@@ -90,8 +90,6 @@ public class TestSessionServer extends TestStatefulServer {
 				SCSessionServerCallback cbk = new SrvCallback(server);
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
-					Thread.sleep(5000);
-					server.checkRegistration();
 				} catch (Exception e) {
 					LOGGER.error("runSessionServer", e);
 					server.deregister();
