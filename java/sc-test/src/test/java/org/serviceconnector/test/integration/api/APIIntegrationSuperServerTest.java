@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
@@ -84,6 +85,9 @@ public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			return request;
 		}
+		@Override
+		public void exceptionCaught(SCServiceException ex) {			
+		}
 	}
 
 	protected class PubSrvCallback extends SCPublishServerCallback {
@@ -103,6 +107,9 @@ public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
+		}
+		@Override
+		public void exceptionCaught(SCServiceException ex) {		
 		}
 	}
 }

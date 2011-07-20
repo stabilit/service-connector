@@ -31,6 +31,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
@@ -220,6 +221,11 @@ public class TestPublishServer extends TestStatefulServer {
 		@Override
 		public void abortSubscription(SCSubscribeMessage request, int operationTimeoutMillis) {
 			LOGGER.log(Level.OFF, "Abort subscription with sid=" + request.getSessionId() + " mask=" + request.getMask());
+		}
+
+		@Override
+		public void exceptionCaught(SCServiceException ex) {
+			LOGGER.error("exception caught ex=" + ex.toString());
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.web.SCBaseSessionServlet;
 
 public class DemoSCSessionServlet extends SCBaseSessionServlet {
@@ -30,6 +31,10 @@ public class DemoSCSessionServlet extends SCBaseSessionServlet {
 	@Override
 	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 		LOGGER.info("Session aborted");
+	}
+
+	public void exceptionCaught(SCServiceException ex) {
+		LOGGER.error("exception caught");
 	}
 
 	@Override

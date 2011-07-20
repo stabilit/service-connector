@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
@@ -118,6 +119,11 @@ public class DemoSessionServer extends Thread {
 			}
 			System.out.println("DemoSessionServer.SrvCallback.execute() " + data);
 			return request;
+		}
+		
+		@Override
+		public void exceptionCaught(SCServiceException ex) {
+			LOGGER.error("exception caught");
 		}
 	}
 

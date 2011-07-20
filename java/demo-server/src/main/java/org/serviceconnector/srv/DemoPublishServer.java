@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
@@ -30,8 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishServer extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger
-			.getLogger(DemoPublishServer.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoPublishServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -47,8 +47,7 @@ public class DemoPublishServer extends Thread {
 		List<String> nics = new ArrayList<String>();
 		nics.add("localhost");
 
-		SCServer sc = new SCServer("localhost", 9000, nics, 9001,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
+		SCServer sc = new SCServer("localhost", 9000, nics, 9001, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 
 		try {
 			sc.setKeepAliveIntervalSeconds(10); // can be set before register
@@ -85,15 +84,13 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage message,
-				int operationTimeoutMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 			LOGGER.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCSubscribeMessage message,
-				int operationTimeoutMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 			LOGGER.info("PublishServer.SrvCallback.subscribe()");
 			PublishThread publish = new PublishThread(this.scPublishServer);
 			publish.start();
@@ -101,8 +98,7 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public void unsubscribe(SCSubscribeMessage message,
-				int operationTimeoutMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 			LOGGER.info("PublishServer.SrvCallback.unsubscribe()");
 			String sessionInfo = message.getSessionInfo();
 			// watch out for kill server message
@@ -116,6 +112,11 @@ public class DemoPublishServer extends Thread {
 					}
 				}
 			}
+		}
+
+		@Override
+		public void exceptionCaught(SCServiceException ex) {
+			LOGGER.error("exception caught");
 		}
 	}
 
@@ -135,8 +136,7 @@ public class DemoPublishServer extends Thread {
 				SCPublishMessage pubMessage = new SCPublishMessage();
 				for (int i = 0; i < 5; i++) {
 					pubMessage.setData("publish message nr : " + i);
-					pubMessage
-							.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
 					publishSrv.publish(pubMessage);
 					Thread.sleep(2000);
 				}

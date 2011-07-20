@@ -26,6 +26,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
@@ -161,6 +162,11 @@ public class TestSessionServer extends TestStatefulServer {
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 			LOGGER.info("abort session sid=" + request.getSessionId());
+		}
+
+		@Override
+		public void exceptionCaught(SCServiceException ex) {
+			LOGGER.error("exception caught ex=" + ex.toString());
 		}
 
 		@Override

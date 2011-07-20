@@ -3,6 +3,7 @@ package org.serviceconnector.web.example;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.web.SCBasePublishServlet;
 
@@ -38,6 +39,10 @@ public class DemoSCPublishServlet extends SCBasePublishServlet {
 	@Override
 	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {
 		LOGGER.info("Subscription aborted");
+	}
+
+	public void exceptionCaught(SCServiceException ex) {
+		LOGGER.error("exception caught");
 	}
 
 	private class PublishThread extends Thread {
