@@ -17,6 +17,7 @@
 package org.serviceconnector.scmp;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is
@@ -51,7 +52,7 @@ public class SCMPCacheId {
 	 *            the cache id
 	 */
 	public SCMPCacheId(String cacheId) {
-		String[] splitted = cacheId.split("/");
+		String[] splitted = cacheId.split(Constants.SLASH);
 		if (splitted.length == 2) {
 			this.cacheId = splitted[0];
 			this.sequenceNr = splitted[1];
@@ -100,7 +101,7 @@ public class SCMPCacheId {
 			return this.fullCacheId.toString();
 		}
 		this.fullCacheId.append(this.cacheId);
-		this.fullCacheId.append("/");
+		this.fullCacheId.append(Constants.SLASH);
 		this.fullCacheId.append(this.sequenceNr);
 		return this.fullCacheId.toString();
 	}
@@ -127,7 +128,7 @@ public class SCMPCacheId {
 		}
 		this.fullCacheId.setLength(0);
 		this.fullCacheId.append(this.cacheId);
-		this.fullCacheId.append("/");
+		this.fullCacheId.append(Constants.SLASH);
 		this.fullCacheId.append(this.sequenceNr);
 	}
 

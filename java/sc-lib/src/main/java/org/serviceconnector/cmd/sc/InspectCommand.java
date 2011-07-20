@@ -259,7 +259,7 @@ public class InspectCommand extends CommandAdapter {
 				sb.append(statefulService.getName());
 				sb.append(Constants.EQUAL_SIGN);
 				sb.append(statefulService.getCountAllocatedSessions());
-				sb.append("/");
+				sb.append(Constants.SLASH);
 				sb.append(statefulService.getCountAvailableSessions());
 				found = true;
 				break;

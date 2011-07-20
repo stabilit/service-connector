@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.net.InetSocketAddress;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -31,6 +34,8 @@ import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishService;
@@ -211,6 +216,26 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return (StatefulService) service;
+	}
+
+	/**
+	 * Reset server timeout. Gets server from the registry and refreshes server timeouts.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param socketAddress
+	 *            the socket address
+	 */
+	public void resetServerTimeout(String serviceName, InetSocketAddress socketAddress) {
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
+
+		Server server = this.serverRegistry.getServer(serverKey);
+		if (server instanceof StatefulServer) {
+			// reset server timeout for stateful servers.
+			LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)="
+					+ server.getServerTimeoutMillis());
+			serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
+		}
 	}
 
 	/** {@inheritDoc} */

@@ -86,13 +86,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
-		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		this.serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.service = null;
 		// set up separate remote node configuration for SRV_ABORT_SESSION request in case of busy connection pool
 		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
 				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
-				0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
+				0, 0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
 	}
 
 	/**
@@ -700,7 +700,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		writer.writeAttribute("key", this.serverKey);
 		writer.writeAttribute("serviceName", this.serviceName);
 		writer.writeAttribute("maxSessions", this.maxSessions);
-		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + Constants.SLASH + this.socketAddress.getPort());
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
 		writer.writeStartElement("sessions");

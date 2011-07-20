@@ -70,7 +70,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		// lookup service and checks properness
 		StatefulService service = this.getStatefulService(serviceName);
 
-		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
 		this.getServerByKeyAndValidateNotRegistered(serverKey);
 
@@ -79,11 +79,12 @@ public class RegisterServerCommand extends CommandAdapter {
 		int portNr = message.getHeaderInt(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
+		int checkRegistrationIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL);
 		String httpUrlFileQualifier = message.getHeader(SCMPHeaderAttributeKey.URL_PATH);
 
 		if (httpUrlFileQualifier == null) {
 			// httpUrlFileQualifier is an optional attribute
-			httpUrlFileQualifier = Constants.HTTP_FILE_QUALIFIER;
+			httpUrlFileQualifier = Constants.SLASH;
 		}
 
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
@@ -92,8 +93,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		String connectionType = listenerConfig.getConnectionType();
 
 		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.STATEFUL_SERVER, serverKey,
-				socketAddress.getHostName(), portNr, connectionType, keepAliveIntervalSeconds, maxConnections, maxSessions,
-				httpUrlFileQualifier);
+				socketAddress.getHostName(), portNr, connectionType, keepAliveIntervalSeconds, checkRegistrationIntervalSeconds,
+				maxConnections, maxSessions, httpUrlFileQualifier);
 		// create new server
 		StatefulServer server = new StatefulServer(remoteNodeConfiguration, serviceName, socketAddress);
 		try {
@@ -177,6 +178,10 @@ public class RegisterServerCommand extends CommandAdapter {
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 			ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, kpi, Constants.MAX_KPI_VALUE,
 					SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+			// checkRegistrationInterval mandatory
+			String cri = message.getHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_CRI_VALUE, cri, Constants.MAX_CRI_VALUE,
+					SCMPError.HV_WRONG_CHECK_REGISTRATION_INTERVAL);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

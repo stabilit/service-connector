@@ -105,8 +105,11 @@ public class ServerRegistry extends Registry<String, Server> {
 	 *            the key
 	 */
 	public void removeServer(String key) {
-		super.remove(key);
-		LOGGER.info("Removing Server from registry, server=" + key);
+		Server server = super.remove(key);
+		this.cancelServerTimeout(server);
+		if (server != null) {
+			LOGGER.info("Removing Server from registry, server=" + key);
+		}
 	}
 
 	/**
@@ -226,9 +229,9 @@ public class ServerRegistry extends Registry<String, Server> {
 			 */
 			if (this.server instanceof StatefulServer) {
 				((StatefulServer) this.server)
-						.abortSessionsAndDestroy("Server timeout - refreshing server by keep alive message failed. Clean up dead server.");
-				LOGGER.warn("Server timeout - refreshing server by keep alive message failed. Clean up dead server="
-						+ this.server.getServerKey() + " timeout(ms)=" + this.timeoutMillis);
+						.abortSessionsAndDestroy("Server timeout - refreshing server failed. Clean up dead server.");
+				LOGGER.warn("Server timeout - refreshing server failed. Clean up dead server=" + this.server.getServerKey()
+						+ " timeout(ms)=" + this.timeoutMillis);
 			}
 		}
 

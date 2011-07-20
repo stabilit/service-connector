@@ -19,6 +19,7 @@ package org.serviceconnector.cache;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is unique for every
@@ -69,7 +70,7 @@ public class CacheId implements Serializable {
 		if (cacheId == null) {
 			return;
 		}		
-		String[] splitted = cacheId.split("/");
+		String[] splitted = cacheId.split(Constants.SLASH);
 		if (splitted == null) {
 			return;
 		}
@@ -140,7 +141,7 @@ public class CacheId implements Serializable {
 			return this.fullCacheId.toString();
 		}
 		this.fullCacheId.append(this.cacheId);
-		this.fullCacheId.append("/");
+		this.fullCacheId.append(Constants.SLASH);
 		this.fullCacheId.append(this.sequenceNr);
 		return this.fullCacheId.toString();
 	}
@@ -186,7 +187,7 @@ public class CacheId implements Serializable {
 		}
 		this.fullCacheId.setLength(0);
 		this.fullCacheId.append(this.cacheId);
-		this.fullCacheId.append("/");
+		this.fullCacheId.append(Constants.SLASH);
 		this.fullCacheId.append(this.sequenceNr);
 	}
 

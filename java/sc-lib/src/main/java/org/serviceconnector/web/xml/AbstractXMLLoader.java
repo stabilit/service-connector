@@ -188,7 +188,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			// check if ajax content call
 			String id = request.getParameter("id");
 			if (id != null) {
-				url = "/" + id;
+				url = Constants.SLASH + id;
 			}
 			writer.writeStartElement("meta");
 			writer.writeAttribute("path", url);

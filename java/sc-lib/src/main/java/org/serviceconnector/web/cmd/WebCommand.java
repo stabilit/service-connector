@@ -98,7 +98,7 @@ public class WebCommand {
 		if (this.isLogoutAction(request)) {
 			try {
 				this.logout(request);
-				response.redirect("/");
+				response.redirect(Constants.SLASH);
 				return;
 			} catch (Exception e) {
 				xmlDocument.addException(e);
@@ -488,7 +488,7 @@ public class WebCommand {
 			if (splitted.length <= 0) {
 				return rootPath + "main.xsl";
 			}
-			if (splitted[0].startsWith("/")) {
+			if (splitted[0].startsWith(Constants.SLASH)) {
 				String name = splitted[0].substring(1);
 				return rootPath + name + ".xsl";
 			}

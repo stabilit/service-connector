@@ -23,6 +23,7 @@ package org.serviceconnector.call;
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -55,7 +56,7 @@ public class SCMPCscChangeSubscriptionCall extends SCMPCallAdapter {
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		ipList += "/" + localHost.getHostAddress();
+		ipList += Constants.SLASH + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		super.invoke(scmpCallback, timeoutMillis);
 	}

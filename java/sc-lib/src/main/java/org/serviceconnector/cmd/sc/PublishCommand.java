@@ -57,7 +57,7 @@ public class PublishCommand extends CommandAdapter {
 		PublishService service = this.validatePublishService(serviceName);
 
 		// reset server timeout
-		responderCallback.resetServerTimeout(request.getRemoteSocketAddress());
+		this.resetServerTimeout(serviceName, request.getRemoteSocketAddress());
 
 		PublishMessageQueue<SCMPMessage> queue = service.getMessageQueue();
 		// throws an exception if failed

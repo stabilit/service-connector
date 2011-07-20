@@ -51,7 +51,7 @@ public class SCMPMessage {
 	/** The message body. */
 	private Object body;
 	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
-	private String httpUrlFileQualifier = Constants.HTTP_FILE_QUALIFIER;
+	private String httpUrlFileQualifier = Constants.SLASH;
 
 	/**
 	 * Instantiates a new SCMP.

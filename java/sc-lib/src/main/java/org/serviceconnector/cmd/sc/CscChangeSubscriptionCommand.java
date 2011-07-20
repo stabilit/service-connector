@@ -65,7 +65,7 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 		String cascadedSCMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		// enhance ipAddressList
 		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		ipAddressList = ipAddressList + Constants.SLASH + request.getRemoteSocketAddress().getAddress().getHostAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 

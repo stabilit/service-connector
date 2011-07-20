@@ -57,7 +57,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
-		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 
 		// Check the presence of the server
 		Server server = this.serverRegistry.getServer(serverKey);
@@ -67,6 +67,10 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			cmdExc.setMessageType(getKey());
 			throw cmdExc;
 		}
+		// reset server timeout
+		LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)=" + server.getServerTimeoutMillis());
+		serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
+
 		// send back positive response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -84,7 +88,8 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
+					SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

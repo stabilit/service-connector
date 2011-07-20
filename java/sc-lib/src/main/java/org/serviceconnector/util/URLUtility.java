@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
+import org.serviceconnector.Constants;
+
 /**
  * The Class URLUtility.
  */
@@ -24,7 +26,7 @@ public final class URLUtility {
 	/** The Constant URL_SEPERATOR_CHAR. */
 	public static final char URL_SEPERATOR_CHAR = '/';
 	/** The Constant URL_SEPERATOR. */
-	public static final String URL_SEPERATOR = "/";
+	public static final String URL_SEPERATOR = Constants.SLASH;
 
 	/**
 	 * Instantiates a new uRL utility.

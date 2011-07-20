@@ -94,7 +94,7 @@ public class FileServer extends Server {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
 			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-					+ "/" + path + session.getUploadFileScriptName() + "?" + Constants.UPLOAD_FILE_PARAM_NAME + "="
+					+ Constants.SLASH + path + session.getUploadFileScriptName() + "?" + Constants.UPLOAD_FILE_PARAM_NAME + "="
 					+ remoteFileName + "&" + Constants.UPLOAD_SERVICE_PARAM_NAME + "=" + message.getServiceName());
 			LOGGER.debug("file upload url = " + url.toString());
 			httpCon = (HttpURLConnection) url.openConnection();
@@ -166,7 +166,7 @@ public class FileServer extends Server {
 			String path = session.getPath();
 			try {
 				URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-						+ "/" + path + remoteFileName);
+						+ Constants.SLASH + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
 				httpCon.connect();
 				in = httpCon.getInputStream();
@@ -333,7 +333,7 @@ public class FileServer extends Server {
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("file-server");
 		writer.writeAttribute("key", this.serverKey);
-		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + Constants.SLASH + this.socketAddress.getPort());
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		writer.writeAttribute("maxSessions", this.maxSessions);
 		this.requester.dump(writer);

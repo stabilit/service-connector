@@ -71,7 +71,7 @@ public final class Constants {
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 	/** File qualifier for Http requests. */
-	public static final String HTTP_FILE_QUALIFIER = "/";
+	public static final String SLASH = "/";
 	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent. */
 	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 	/** Protocol literal. */
@@ -111,8 +111,8 @@ public final class Constants {
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value used if no interval is passed in the API. */
 	public static final int DEFAULT_ECHO_INTERVAL_SECONDS = 60;
-	/** Default value if no SERVER_TIMEOUT_MULTIPLIER is configured. */
-	public static final double DEFAULT_SERVER_TIMEOUT_MULTIPLIER = 1.2;
+	/** Default value if no DEFAULT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER is configured. */
+	public static final double DEFAULT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/** Default value used if no timeout for operation is passed in the API. */
@@ -145,6 +145,8 @@ public final class Constants {
 	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 20000;
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
+	/** The default check registration interval, 0 = not active. */
+	public static final int DEFAULT_CHECK_REGISTRATION_INTERVAL_SECONDS = 0;
 	/** The default number of subsequent keep alive messages before the connection is closed. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_MILLIS is not configured. */
@@ -216,7 +218,7 @@ public final class Constants {
 	/** The Constant ROOT_WRITEPID. */
 	public static final String ROOT_WRITEPID = "root.writePID";
 	/** The Constant ROOT_SERVER_TIMEOUT_MULTIPLIER. */
-	public static final String ROOT_SERVER_TIMEOUT_MULTIPLIER = "root.serverTimeoutMultiplier";
+	public static final String ROOT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER = "root.checkRegistrationIntervalMultiplier";
 	/** The Constant ROOT_OPERATION_TIMEOUT_MULTIPLIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	/** The Constant ROOT_ECHO_INTERVAL_MULTIPLIER. */
@@ -402,6 +404,10 @@ public final class Constants {
 	public static final int MIN_KPI_VALUE = 0;
 	/** The Constant MAX_KPI_VALUE. */
 	public static final int MAX_KPI_VALUE = NUMBER_3600;
+	/** The Constant MIN_CRI_VALUE. */
+	public static final int MIN_CRI_VALUE = 0;
+	/** The Constant MAX_CRI_VALUE. */
+	public static final int MAX_CRI_VALUE = NUMBER_3600;
 	/** The Constant MAX_ECHO_TIMEOUT_VALUE. */
 	public static final int MAX_ECHO_TIMEOUT_VALUE = NUMBER_3600;
 	/** The Constant MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE. */

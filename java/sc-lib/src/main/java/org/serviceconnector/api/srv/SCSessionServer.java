@@ -17,6 +17,8 @@
 package org.serviceconnector.api.srv;
 
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -32,7 +34,9 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
@@ -53,6 +57,8 @@ public class SCSessionServer {
 	protected SCRequester requester;
 	/** The SC server. */
 	protected SCServer scServer;
+	/** The serverTimeout, timeout runs when server entry on SC need to be refreshed. */
+	protected ScheduledFuture<TimeoutWrapper> serverTimeout;
 
 	static {
 		// Initialize server command factory one time
@@ -84,6 +90,15 @@ public class SCSessionServer {
 	 */
 	public int getKeepAliveIntervalSeconds() {
 		return this.scServer.getKeepAliveIntervalSeconds();
+	}
+
+	/**
+	 * Gets the check registration interval seconds.
+	 * 
+	 * @return the check registration interval seconds
+	 */
+	public int getCheckRegistrationIntervalSeconds() {
+		return this.scServer.getCheckRegistrationIntervalSeconds();
 	}
 
 	/**
@@ -185,6 +200,7 @@ public class SCSessionServer {
 		// already validated
 		int listenerPort = this.scServer.getListenerPort();
 		int keepAliveIntervalSeconds = this.scServer.getKeepAliveIntervalSeconds();
+		int checkRegistrationIntervalSeconds = this.scServer.getCheckRegistrationIntervalSeconds();
 		boolean immediateConnect = this.scServer.isImmediateConnect();
 		synchronized (AppContext.communicatorsLock) {
 			// get communicator lock - avoids interference with other clients or scServers
@@ -197,7 +213,8 @@ public class SCSessionServer {
 			registerServerCall.setMaxConnections(maxConnections);
 			registerServerCall.setPortNumber(listenerPort);
 			registerServerCall.setImmediateConnect(immediateConnect);
-			registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
+			registerServerCall.setKeepAliveIntervalSeconds(keepAliveIntervalSeconds);
+			registerServerCall.setCheckRegistrationIntervalSeconds(checkRegistrationIntervalSeconds);
 			registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 			registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			SCServerCallback callback = new SCServerCallback(true);
@@ -215,6 +232,8 @@ public class SCSessionServer {
 			}
 			AppContext.attachedCommunicators.incrementAndGet();
 		}
+		// set up server timeout thread
+		this.triggerServerTimeout();
 	}
 
 	/**
@@ -244,6 +263,8 @@ public class SCSessionServer {
 		if (this.registered == false) {
 			throw new SCServiceException("Server is not registered for a service.");
 		}
+		// cancel server timeout not if its running already, you might interrupt current thread
+		this.cancelServerTimeout(false);
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
 			SCMPCheckRegistrationCall checkRegistrationCall = new SCMPCheckRegistrationCall(this.requester, this.serviceName);
@@ -261,6 +282,8 @@ public class SCSessionServer {
 				throw ex;
 			}
 		}
+		// set up server timeout thread
+		this.triggerServerTimeout();
 	}
 
 	/**
@@ -289,6 +312,8 @@ public class SCSessionServer {
 			// sc server not registered - deregister not necessary
 			return;
 		}
+		// cancel server timeout even if its running already
+		this.cancelServerTimeout(true);
 		synchronized (AppContext.communicatorsLock) {
 			// get communicator lock - avoids interference with other clients or scServers
 			try {
@@ -314,6 +339,38 @@ public class SCSessionServer {
 				AppContext.attachedCommunicators.decrementAndGet();
 			}
 		}
+	}
+
+	/**
+	 * Trigger server timeout.
+	 */
+	@SuppressWarnings("unchecked")
+	private void triggerServerTimeout() {
+		if (this.scServer.getCheckRegistrationIntervalSeconds() == 0) {
+			// check registration interval not active
+			return;
+		}
+		SCServerTimeout serverTimeout = new SCServerTimeout();
+		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(serverTimeout);
+		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
+				(int) (this.scServer.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR),
+				TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Cancel server timeout.
+	 * 
+	 * @param mayInterruptIfRunning
+	 *            the may interrupt if running
+	 */
+	private void cancelServerTimeout(boolean mayInterruptIfRunning) {
+		if (this.serverTimeout == null) {
+			// not timeout has been set up
+			return;
+		}
+		SCSessionServer.this.serverTimeout.cancel(mayInterruptIfRunning);
+		// removes canceled timeouts
+		AppContext.eciScheduler.purge();
 	}
 
 	/**
@@ -421,5 +478,32 @@ public class SCSessionServer {
 			this.synchronous = synchronous;
 		}
 		// nothing to implement in this case - everything is done by super-class
+	}
+
+	/**
+	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to
+	 * SC which gets the server entry on SC refreshed.
+	 */
+	private class SCServerTimeout implements ITimeout {
+
+		/**
+		 * Time run out, need to send a check registration to SC otherwise server gets destroyed on SC for dead server reason.
+		 */
+		@Override
+		public void timeout() {
+			// send echo to SC
+			try {
+				SCSessionServer.this.checkRegistration();
+			} catch (SCServiceException e) {
+				System.out.println("SCSessionServer.SCServerTimeout.timeout()");
+				// TODO jot .. who to inform?
+			}
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getTimeoutMillis() {
+			return SCSessionServer.this.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR;
+		}
 	}
 }

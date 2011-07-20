@@ -70,15 +70,16 @@ public abstract class Server implements IServer {
 	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		this.requester = new Requester(remoteNodeConfiguration);
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
-		this.serverKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		this.serverKey = "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		this.socketAddress = socketAddress;
 		this.destroyed = false;
 
 		// timeout observation only for stateful server necessary!
 		if (this instanceof StatefulServer) {
-			// calculate server timeout: multiply keep alive interval with serverTimeoutMultiplier!
-			this.serverTimeoutMillis = (remoteNodeConfiguration.getKeepAliveIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR * AppContext
-					.getBasicConfiguration().getServerTimeoutMultiplier());
+			// calculate server timeout: multiply check registration interval with checkRegistrationIntervalMultiplier!
+			this.serverTimeoutMillis = (remoteNodeConfiguration.getCheckRegistrationIntervalSeconds()
+					* Constants.SEC_TO_MILLISEC_FACTOR * AppContext.getBasicConfiguration()
+					.getCheckRegistrationIntervalMultiplier());
 		} else {
 			this.serverTimeoutMillis = 0;
 		}

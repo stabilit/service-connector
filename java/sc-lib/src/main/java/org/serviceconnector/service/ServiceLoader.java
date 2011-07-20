@@ -23,6 +23,7 @@ package org.serviceconnector.service;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.conf.ServiceConfiguration;
@@ -119,7 +120,7 @@ public final class ServiceLoader {
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-						"wrong serviceType, serviceName/serviceType=" + serviceName + "/" + serviceTypeString);
+						"wrong serviceType, serviceName/serviceType=" + serviceName + Constants.SLASH + serviceTypeString);
 			}
 			service.setEnabled(serviceConfiguration.getEnabled());
 			serviceRegistry.addService(service.getName(), service);

@@ -19,6 +19,7 @@ package org.serviceconnector.call;
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -72,7 +73,7 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 			ipList = localHost.getHostAddress();
 		} else {
 			// in case of cascaded echo, there is already an ip in list
-			ipList += "/" + localHost.getHostAddress();
+			ipList += Constants.SLASH + localHost.getHostAddress();
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		super.invoke(scmpCallback, timeoutMillis);

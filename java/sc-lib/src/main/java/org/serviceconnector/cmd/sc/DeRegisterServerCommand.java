@@ -59,7 +59,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		String serviceName = message.getServiceName();
 		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
 
-		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		// looks up server & validate server is registered
 		StatefulServer server = this.getStatefulServerByName(serverKey);
 		// deregister server from service

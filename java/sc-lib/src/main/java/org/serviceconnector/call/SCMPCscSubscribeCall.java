@@ -22,6 +22,7 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -49,7 +50,7 @@ public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		ipList += "/" + localHost.getHostAddress();
+		ipList += Constants.SLASH + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		super.invoke(scmpCallback, timeoutMillis);

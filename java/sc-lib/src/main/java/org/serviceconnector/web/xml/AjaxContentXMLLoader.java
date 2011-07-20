@@ -20,6 +20,7 @@ import java.security.InvalidParameterException;
 
 import javax.xml.stream.XMLStreamWriter;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.NotFoundException;
 import org.serviceconnector.web.ctx.WebContext;
@@ -42,7 +43,7 @@ public class AjaxContentXMLLoader extends AbstractXMLLoader {
 		if (id == null) {
 			throw new InvalidParameterException("id parameter missing");
 		}
-		IXMLLoader loader = WebContext.getXMLLoader("/" + id);
+		IXMLLoader loader = WebContext.getXMLLoader(Constants.SLASH + id);
 		if (loader == null) {
 			throw new NotFoundException();
 		}

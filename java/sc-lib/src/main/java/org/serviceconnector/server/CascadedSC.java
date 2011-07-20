@@ -765,7 +765,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("cascaded-sc");
 		writer.writeAttribute("key", this.serverKey);
-		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + "/" + this.socketAddress.getPort());
+		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + Constants.SLASH + this.socketAddress.getPort());
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
 		writer.writeEndElement(); // end of cascaded-sc

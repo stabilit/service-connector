@@ -62,6 +62,8 @@ public class SCServer {
 	private int keepAliveIntervalSeconds;
 	/** The keep alive timeout in seconds. Time to wait for the reply of a keep alive sent to the SC. Default = 10. */
 	private int keepAliveTimeoutSeconds;
+	/** The check registration interval seconds. Default = 0. */
+	private int checkRegistrationIntervalSeconds;
 	/** The responder. */
 	private IResponder responder;
 	/** The requester. */
@@ -121,6 +123,7 @@ public class SCServer {
 		this.connectionType = connectionType;
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
+		this.checkRegistrationIntervalSeconds = Constants.DEFAULT_CHECK_REGISTRATION_INTERVAL_SECONDS;
 		this.listening = false;
 	}
 
@@ -175,8 +178,13 @@ public class SCServer {
 	 * 
 	 * @param immediateConnect
 	 *            immediate connect
+	 * @throws SCServiceException
+	 *             listener is already started<br />
 	 */
-	public void setImmediateConnect(boolean immediateConnect) {
+	public void setImmediateConnect(boolean immediateConnect) throws SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
 		this.immediateConnect = immediateConnect;
 	}
 
@@ -214,8 +222,13 @@ public class SCServer {
 	 * 
 	 * @param keepAliveIntervalSeconds
 	 *            Example: 360
+	 * @throws SCServiceException
+	 *             listener is already started<br />
 	 */
-	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 
@@ -228,8 +241,13 @@ public class SCServer {
 	 *            Example: 10
 	 * @throws SCMPValidatorException
 	 *             keepAliveTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException
+	 *             listener is already started<br />
 	 */
-	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException {
+	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
 		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(1, keepAliveTimeoutSeconds, Constants.MAX_KP_TIMEOUT_VALUE,
 				SCMPError.HV_WRONG_KEEPALIVE_TIMEOUT);
@@ -243,6 +261,33 @@ public class SCServer {
 	 */
 	public int getKeepAliveTimeoutSeconds() {
 		return this.keepAliveTimeoutSeconds;
+	}
+
+	/**
+	 * Sets the check registration interval in seconds. Interval in seconds between two subsequent check registration requests
+	 * (CRG). The check registration message is used to refresh the server timeout on the SC. If the SC no check registration
+	 * message receives within the interval the server gets destroyed. The value = 0 means no observation will be active on SC.
+	 * Check registration message can be sent any time to verify SC is alive and Server is registered properly.
+	 * 
+	 * @param checkRegistrationIntervalSeconds
+	 *            Example: 360
+	 * @throws SCServiceException
+	 *             listener is already started<br />
+	 */
+	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) throws SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
+		this.checkRegistrationIntervalSeconds = checkRegistrationIntervalSeconds;
+	}
+
+	/**
+	 * Gets the check registration interval seconds.
+	 * 
+	 * @return the check registration interval seconds
+	 */
+	public int getCheckRegistrationIntervalSeconds() {
+		return checkRegistrationIntervalSeconds;
 	}
 
 	/**
@@ -314,7 +359,8 @@ public class SCServer {
 		}
 		this.listening = true;
 		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(this.listenerPort + "server", this.scHost,
-				this.scPort, this.connectionType.getValue(), this.keepAliveIntervalSeconds, 1);
+				this.scPort, this.connectionType.getValue(), this.keepAliveIntervalSeconds, this.checkRegistrationIntervalSeconds,
+				1);
 		// initialize requester, maxConnection = 1 only 1 connection allowed for register server
 		this.requester = new SCRequester(remoteNodeConf, this.keepAliveTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}

@@ -24,6 +24,7 @@ import java.net.InetSocketAddress;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.conf.RemoteNodeListConfiguration;
@@ -75,7 +76,7 @@ public final class ServerLoader {
 				continue;
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType="
-						+ remoteNodeConfiguration.getName() + "/" + serverType);
+						+ remoteNodeConfiguration.getName() + Constants.SLASH + serverType);
 			}
 			AppContext.getServerRegistry().addServer(server.getServerKey(), server);
 		}

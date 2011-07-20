@@ -96,11 +96,22 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	/**
 	 * Sets the keep alive interval.
 	 * 
-	 * @param keepAliveInterval
+	 * @param keepAliveIntervalSeconds
 	 *            the new keep alive interval
 	 */
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveInterval);
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveIntervalSeconds);
+	}
+
+	/**
+	 * Sets the check registration interval seconds.
+	 * 
+	 * @param checkRegistrationIntervalSeconds
+	 *            the new check registration interval seconds
+	 */
+	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) {
+		this.requestMessage
+				.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL, checkRegistrationIntervalSeconds);
 	}
 
 	/**

@@ -16,9 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import java.net.InetSocketAddress;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
@@ -29,7 +26,6 @@ import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
-import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
@@ -40,8 +36,6 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.server.Server;
-import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY
@@ -85,10 +79,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 					.getSCMPMsgSequenceNr(sessionId);
 
 			if (scmpReq.isKeepAlive()) {
-				if (AppContext.isScEnvironment()) {
-					// if in sc environment - reset server timeout
-					this.resetServerTimeout(request.getRemoteSocketAddress());
-				}
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
 				response.write();
@@ -253,31 +243,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			response.write();
 		} catch (Exception ex) {
 			LOGGER.error("send response failed", ex);
-		}
-	}
-
-	/**
-	 * Reset server timeout. Steps through the registry and refreshes server timeouts.
-	 * 
-	 * @param socketAddress
-	 *            the socket address
-	 */
-	@Override
-	public void resetServerTimeout(InetSocketAddress socketAddress) {
-		String wildKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
-		ServerRegistry serverRegistry = AppContext.getServerRegistry();
-		Set<String> keySet = serverRegistry.keySet();
-
-		for (String key : keySet) {
-			if (key.endsWith(wildKey)) {
-				Server server = serverRegistry.getServer(key);
-				if (server instanceof StatefulServer) {
-					// reset server timeout for stateful servers.
-					LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)="
-							+ server.getServerTimeoutMillis());
-					serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
-				}
-			}
 		}
 	}
 

@@ -39,10 +39,10 @@ public class BasicConfiguration {
 	private String dumpPath = null;
 
 	/**
-	 * Multiplier to calculate the server timeout.<br />
-	 * SC must adapt (extend) the timeout passed from server to get the right timeout.
+	 * Multiplier to calculate the check registration interval.<br />
+	 * SC must adapt (extend) the interval passed from server to get the right timeout.
 	 */
-	private double serverTimeoutMultiplier = Constants.DEFAULT_SERVER_TIMEOUT_MULTIPLIER;
+	private double checkRegistrationIntervalMultiplier = Constants.DEFAULT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER;
 	/**
 	 * Multiplier to calculate the operation timeout.<br />
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
@@ -134,12 +134,14 @@ public class BasicConfiguration {
 		}
 		LOGGER.info("operationTimeoutMultiplier=" + this.operationTimeoutMultiplier);
 
-		// serverTimeoutMultiplier
-		Double localServerMultiplier = compositeConfiguration.getDouble(Constants.ROOT_SERVER_TIMEOUT_MULTIPLIER, null);
-		if (localServerMultiplier != null && this.serverTimeoutMultiplier != localServerMultiplier) {
-			this.serverTimeoutMultiplier = localServerMultiplier;
+		// checkRegistrationIntervalMultiplier
+		Double localCheckRegistrationIntervalMultiplier = compositeConfiguration.getDouble(
+				Constants.ROOT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER, null);
+		if (localCheckRegistrationIntervalMultiplier != null
+				&& this.checkRegistrationIntervalMultiplier != localCheckRegistrationIntervalMultiplier) {
+			this.checkRegistrationIntervalMultiplier = localCheckRegistrationIntervalMultiplier;
 		}
-		LOGGER.info("serverTimeoutMultiplier=" + this.serverTimeoutMultiplier);
+		LOGGER.info("checkRegistrationIntervalMultiplier=" + this.checkRegistrationIntervalMultiplier);
 
 		// echoIntervalMultiplier
 		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
@@ -205,12 +207,12 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the server timeout multiplier.
+	 * Gets the check registration interval multiplier.
 	 * 
-	 * @return the server timeout multiplier
+	 * @return the check registration interval multiplier
 	 */
-	public double getServerTimeoutMultiplier() {
-		return serverTimeoutMultiplier;
+	public double getCheckRegistrationIntervalMultiplier() {
+		return checkRegistrationIntervalMultiplier;
 	}
 
 	/**
@@ -223,9 +225,9 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the connection timeout millis.
+	 * Gets the connection timeout milliseconds.
 	 * 
-	 * @return the connection timeout millis
+	 * @return the connection timeout milliseconds
 	 */
 	public int getConnectionTimeoutMillis() {
 		return connectionTimeoutMillis;
@@ -300,7 +302,7 @@ public class BasicConfiguration {
 		writer.writeElement("pidPath", this.pidPath);
 		writer.writeElement("writePID", this.writePID);
 		writer.writeElement("echoIntervalMultiplier", this.echoIntervalMultiplier);
-		writer.writeElement("serverTimeoutMultiplier", this.serverTimeoutMultiplier);
+		writer.writeElement("checkRegistrationIntervalMultiplier", this.checkRegistrationIntervalMultiplier);
 		writer.writeElement("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		writer.writeElement("connectionTimeoutMillis", this.connectionTimeoutMillis);
 		writer.writeElement("keepAliveOTIMillis", this.keepAliveOTIMillis);

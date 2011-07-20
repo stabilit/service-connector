@@ -44,10 +44,12 @@ public class RemoteNodeConfiguration {
 	private int maxPoolSize;
 	/** The keep alive interval. */
 	private int keepAliveIntervalSeconds;
+	/** The check registration interval seconds. */
+	private int checkRegistrationIntervalSeconds;
 	/** The maxSessions (for file servers). */
 	private int maxSessions;
 	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
-	private String httpUrlFileQualifier = Constants.HTTP_FILE_QUALIFIER;
+	private String httpUrlFileQualifier = Constants.SLASH;
 
 	/**
 	 * The Constructor.
@@ -57,7 +59,8 @@ public class RemoteNodeConfiguration {
 	 */
 	public RemoteNodeConfiguration(String name) {
 		this(ServerType.UNDEFINED, name, null, 0, null, Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE,
-				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, 0, Constants.HTTP_FILE_QUALIFIER);
+				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, Constants.DEFAULT_CHECK_REGISTRATION_INTERVAL_SECONDS, 0,
+				Constants.SLASH);
 	}
 
 	/**
@@ -81,7 +84,8 @@ public class RemoteNodeConfiguration {
 	 *            the max sessions
 	 */
 	public RemoteNodeConfiguration(ServerType serverType, String name, String host, int port, String connectionType,
-			int keepAliveIntervalSeconds, int maxConnections, int maxSessions, String httpUrlFileQualifier) {
+			int keepAliveIntervalSeconds, int checkRegistrationIntervalSeconds, int maxConnections, int maxSessions,
+			String httpUrlFileQualifier) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
@@ -91,6 +95,7 @@ public class RemoteNodeConfiguration {
 		this.maxSessions = maxSessions;
 		this.serverType = serverType;
 		this.httpUrlFileQualifier = httpUrlFileQualifier;
+		this.checkRegistrationIntervalSeconds = checkRegistrationIntervalSeconds;
 	}
 
 	/**
@@ -110,9 +115,9 @@ public class RemoteNodeConfiguration {
 	 *            the max connections
 	 */
 	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalSeconds,
-			int maxConnections) {
-		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0,
-				Constants.HTTP_FILE_QUALIFIER);
+			int checkRegistrationIntervalSeconds, int maxConnections) {
+		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, checkRegistrationIntervalSeconds,
+				maxConnections, 0, Constants.SLASH);
 	}
 
 	/**
@@ -260,6 +265,15 @@ public class RemoteNodeConfiguration {
 	 */
 	public int getKeepAliveIntervalSeconds() {
 		return keepAliveIntervalSeconds;
+	}
+
+	/**
+	 * Gets the check registration interval seconds.
+	 * 
+	 * @return the check registration interval seconds
+	 */
+	public int getCheckRegistrationIntervalSeconds() {
+		return checkRegistrationIntervalSeconds;
 	}
 
 	/**

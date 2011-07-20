@@ -24,6 +24,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
@@ -74,7 +75,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	 *            the port
 	 */
 	private void cleanUpDeadServer(String host, int port) {
-		String wildKey = "_" + host + "/" + port;
+		String wildKey = "_" + host + Constants.SLASH + port;
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 

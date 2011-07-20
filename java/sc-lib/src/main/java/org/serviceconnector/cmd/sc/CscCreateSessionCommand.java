@@ -73,10 +73,9 @@ public class CscCreateSessionCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-
 		// enhance ipAddressList
 		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		ipAddressList = ipAddressList + Constants.SLASH + request.getRemoteSocketAddress().getAddress().getHostAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int eciInSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);

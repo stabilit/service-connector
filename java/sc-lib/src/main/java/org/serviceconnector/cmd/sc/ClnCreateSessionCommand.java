@@ -75,7 +75,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// enhance ipAddressList
 		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		ipAddressList = ipAddressList + Constants.SLASH + request.getRemoteSocketAddress().getAddress().getHostAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);

@@ -43,7 +43,7 @@ public final class WildcardFileFilter implements FileFilter {
 		final String notStarPrefix = "(?<!\\*)";
 		final String notStarPostfix = "(?!\\*)";
 
-		if (!path.contains("/")) {
+		if (!path.contains(Constants.SLASH)) {
 			path = "**/" + path;
 		}
 		Pattern wildcardTokens = Pattern.compile("(" + slashPrefix + Pattern.quote("**") + slashPostfix + ")|" + "("
@@ -76,6 +76,6 @@ public final class WildcardFileFilter implements FileFilter {
 	 */
 	@Override
 	public boolean accept(File file) {
-		return pattern.matcher(file.getPath().replace(File.separator, "/")).matches();
+		return pattern.matcher(file.getPath().replace(File.separator, Constants.SLASH)).matches();
 	}
 }

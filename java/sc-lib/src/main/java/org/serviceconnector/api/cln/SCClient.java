@@ -164,7 +164,7 @@ public class SCClient {
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
 			RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(this.port + "client", this.host, this.port,
-					this.connectionType.getValue(), this.keepAliveIntervalSeconds, this.maxConnections);
+					this.connectionType.getValue(), this.keepAliveIntervalSeconds, 0, this.maxConnections);
 			this.requester = new SCRequester(remoteNodeConf, this.keepAliveTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
