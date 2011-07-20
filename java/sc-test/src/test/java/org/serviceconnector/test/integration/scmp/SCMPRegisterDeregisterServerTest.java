@@ -44,7 +44,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1), 0);
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 1), 0);
 	}
 
 	@After
@@ -69,6 +69,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setPortNumber(9100);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
@@ -90,8 +91,9 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setPortNumber(9100);
 		registerServerCall.setMaxSessions(0);
 		registerServerCall.setMaxConnections(10);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
@@ -111,9 +113,10 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
 		registerServerCall.setPortNumber(9100);
 		registerServerCall.setMaxSessions(10);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setMaxConnections(0);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
@@ -134,8 +137,9 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setPortNumber(910000);
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
@@ -155,9 +159,10 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setPortNumber(TestConstants.PORT_SES_SRV_TCP);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
@@ -165,6 +170,28 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
 		TestUtil.verifyError(reply, SCMPError.SERVICE_NOT_FOUND, SCMPMsgType.REGISTER_SERVER);
+	}
+
+	/**
+	 * Description: register server call - check registration interval not set<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t06_RegisterServerCallCheckRegistrationIntervalNotSet() throws Exception {
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.sesServerName1);
+		TestCallback cbk = new TestCallback();
+
+		registerServerCall.setMaxSessions(10);
+		registerServerCall.setMaxConnections(10);
+		registerServerCall.setPortNumber(9100);
+		registerServerCall.setKeepAliveIntervalSeconds(0);
+		registerServerCall.setImmediateConnect(true);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
+		registerServerCall.invoke(cbk, 1000);
+		SCMPMessage reply = cbk.getMessageSync(3000);
+		Assert.assertTrue(reply.isFault());
+		TestUtil.verifyError(reply, SCMPError.HV_WRONG_CHECK_REGISTRATION_INTERVAL, SCMPMsgType.REGISTER_SERVER);
 	}
 
 	/**
@@ -179,8 +206,9 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setPortNumber(51000);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
@@ -203,9 +231,10 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
+		registerServerCall.setCheckRegistrationIntervalSeconds(0);
 		registerServerCall.setPortNumber(51000);
 		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setKeepAliveIntervalSeconds(360);
 		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 

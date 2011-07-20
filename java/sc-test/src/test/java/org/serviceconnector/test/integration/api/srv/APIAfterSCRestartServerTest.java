@@ -71,8 +71,8 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 	@Test
 	public void t103_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
-		server.startListener();
 		server.setImmediateConnect(true);
+		server.startListener();
 		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
@@ -91,8 +91,8 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 	@Test
 	public void t104_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
-		server.startListener();
 		server.setImmediateConnect(false);
+		server.startListener();
 		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
@@ -164,8 +164,8 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 	@Test
 	public void t203_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
-		server.startListener();
 		server.setImmediateConnect(true);
+		server.startListener();
 		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
@@ -184,8 +184,8 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 	@Test
 	public void t204_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
-		server.startListener();
 		server.setImmediateConnect(false);
+		server.startListener();
 		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);

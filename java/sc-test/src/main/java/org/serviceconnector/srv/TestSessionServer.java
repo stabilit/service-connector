@@ -80,6 +80,7 @@ public class TestSessionServer extends TestStatefulServer {
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
+			sc.setCheckRegistrationIntervalSeconds(10);
 			sc.setImmediateConnect(true);
 			sc.startListener();
 
@@ -89,6 +90,8 @@ public class TestSessionServer extends TestStatefulServer {
 				SCSessionServerCallback cbk = new SrvCallback(server);
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
+					Thread.sleep(5000);
+					server.checkRegistration();
 				} catch (Exception e) {
 					LOGGER.error("runSessionServer", e);
 					server.deregister();

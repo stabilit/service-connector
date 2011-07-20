@@ -78,7 +78,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10), 0);
+				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 

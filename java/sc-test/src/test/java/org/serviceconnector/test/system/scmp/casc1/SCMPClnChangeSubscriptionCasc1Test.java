@@ -78,7 +78,7 @@ public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 		super.beforeOneTest();
 		if (cascadingLevel == 1) {
 			this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10), 0);
+					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		}
 		AppContext.init();
 	}

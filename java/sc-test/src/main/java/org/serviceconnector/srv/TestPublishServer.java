@@ -93,9 +93,10 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
-		sc.setKeepAliveIntervalSeconds(0);
 		try {
+			sc.setKeepAliveIntervalSeconds(0);
 			sc.setKeepAliveIntervalSeconds(10);
+			sc.setCheckRegistrationIntervalSeconds(10);
 			sc.setImmediateConnect(true);
 			sc.startListener();
 

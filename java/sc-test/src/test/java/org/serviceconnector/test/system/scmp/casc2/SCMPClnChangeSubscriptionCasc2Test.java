@@ -37,7 +37,7 @@ public class SCMPClnChangeSubscriptionCasc2Test extends SCMPClnChangeSubscriptio
 			this.requester.destroy();
 		}
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10), 0);
+				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 }
