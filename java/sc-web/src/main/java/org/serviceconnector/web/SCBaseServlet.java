@@ -88,6 +88,10 @@ import org.serviceconnector.util.ValidatorUtility;
  *		<param-value>10</param-value>
  *	</context-param>
  *	<context-param>
+ *		<param-name>checkRegistrationIntervalSeconds</param-name>
+ *		<param-value>300</param-value>
+ *	</context-param>
+ *	<context-param>
  *		<param-name>tomcatPort</param-name>
  *		<param-value>8080</param-value>
  *	</context-param>
@@ -140,6 +144,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 	int maxSessions;
 	/** The tomcat listening port. */
 	int tomcatPort;
+	/** The check registration interval seconds. */
+	int checkRegistrationIntervalSeconds;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -152,6 +158,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 		this.maxConnections = 0;
 		this.maxSessions = 0;
 		this.tomcatPort = 0;
+		this.checkRegistrationIntervalSeconds = Constants.DEFAULT_CHECK_REGISTRATION_INTERVAL_SECONDS;
 	}
 
 	@Override
@@ -200,6 +207,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 		int keepAliveIntervalToSCSeconds = Integer
 				.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_INTERVAL_TOSC));
 		int keepAliveOTISeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_OTI));
+		int checkRegistrationIntervalSeconds = Integer.parseInt(context
+				.getInitParameter(WebConstants.PROPERTY_CHECK_REGISTRATIONO_INTERVAL));
 
 		if (scHost == null) {
 			throw new SCMPValidatorException("Host must be set.");
@@ -212,7 +221,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 		}
 		// init the requester to communicate to SC
 		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(remotNodeName, scHost, scPort,
-				ConnectionType.NETTY_HTTP.getValue(), keepAliveIntervalToSCSeconds, 1);
+				ConnectionType.NETTY_HTTP.getValue(), keepAliveIntervalToSCSeconds, checkRegistrationIntervalSeconds, 1);
 		this.requester = new SCRequester(remoteNodeConf, keepAliveOTISeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
@@ -240,7 +249,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 			registerServerCall.setMaxConnections(this.maxConnections);
 			registerServerCall.setPortNumber(this.tomcatPort);
 			registerServerCall.setImmediateConnect(false);
-			registerServerCall.setKeepAliveInterval(keepAliveFromSCSeconds);
+			registerServerCall.setKeepAliveIntervalSeconds(keepAliveFromSCSeconds);
+			registerServerCall.setCheckRegistrationIntervalSeconds(this.checkRegistrationIntervalSeconds);
 			registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
 			registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			registerServerCall.setUrlPath(this.urlPath);

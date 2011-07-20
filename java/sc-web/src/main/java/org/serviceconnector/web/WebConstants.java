@@ -42,6 +42,8 @@ public final class WebConstants {
 	public static final String PROPERTY_SC_PORT = "scPort";
 	/** The Constant PROPERTY_KEEPALIVE_TOSC. */
 	public static final String PROPERTY_KEEPALIVE_INTERVAL_TOSC = "toSCKeepAliveIntervalSeconds";
+	/** The Constant PROPERTY_CHECK_REGISTRATIONO_INTERVAL. */
+	public static final String PROPERTY_CHECK_REGISTRATIONO_INTERVAL = "checkRegistrationIntervalSeconds";
 	/** The Constant PROPERTY_KEEPALIVE_OTI. */
 	public static final String PROPERTY_KEEPALIVE_OTI = "keepAliveTimeoutSeconds";
 	/** The Constant PROPERTY_TOMCAT_PORT. */
