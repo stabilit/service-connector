@@ -79,7 +79,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		int portNr = message.getHeaderInt(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-		int checkRegistrationIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL);
+		int checkRegistrationIntervalSeconds = message.getHeaderInt(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL);
 		String httpUrlFileQualifier = message.getHeader(SCMPHeaderAttributeKey.URL_PATH);
 
 		if (httpUrlFileQualifier == null) {
@@ -179,7 +179,7 @@ public class RegisterServerCommand extends CommandAdapter {
 			ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, kpi, Constants.MAX_KPI_VALUE,
 					SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 			// checkRegistrationInterval mandatory
-			String cri = message.getHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL);
+			String cri = message.getHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL);
 			ValidatorUtility.validateInt(Constants.MIN_CRI_VALUE, cri, Constants.MAX_CRI_VALUE,
 					SCMPError.HV_WRONG_CHECK_REGISTRATION_INTERVAL);
 		} catch (HasFaultResponseException ex) {

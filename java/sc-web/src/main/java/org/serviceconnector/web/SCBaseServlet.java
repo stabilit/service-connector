@@ -207,8 +207,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 		int keepAliveIntervalToSCSeconds = Integer
 				.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_INTERVAL_TOSC));
 		int keepAliveOTISeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_OTI));
-		int checkRegistrationIntervalSeconds = Integer.parseInt(context
-				.getInitParameter(WebConstants.PROPERTY_CHECK_REGISTRATIONO_INTERVAL));
+		this.checkRegistrationIntervalSeconds = Integer.parseInt(context
+				.getInitParameter(WebConstants.PROPERTY_CHECK_REGRISTRATION_INTERVAL));
 
 		if (scHost == null) {
 			throw new SCMPValidatorException("Host must be set.");

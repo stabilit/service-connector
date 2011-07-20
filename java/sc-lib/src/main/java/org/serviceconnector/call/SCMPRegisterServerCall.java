@@ -111,7 +111,7 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	 */
 	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) {
 		this.requestMessage
-				.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL_INTERVAL, checkRegistrationIntervalSeconds);
+				.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL, checkRegistrationIntervalSeconds);
 	}
 
 	/**
