@@ -77,6 +77,8 @@ public class ConnectionPool {
 	private List<IConnection> usedConnections;
 	/** The connection factory. */
 	private ConnectionFactory connectionFactory;
+	/** The destroyed, indicates that the pool got destroyed. */
+	private boolean destroyed;
 
 	/**
 	 * Instantiates a new connection pool.
@@ -105,6 +107,7 @@ public class ConnectionPool {
 		this.connectionFactory = AppContext.getConnectionFactory();
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 		this.keepAliveOTIMillis = keepAliveOTIMillis;
+		this.destroyed = false;
 	}
 
 	/**
@@ -178,6 +181,10 @@ public class ConnectionPool {
 	 *            the connection
 	 */
 	public synchronized void freeConnection(IConnection connection) {
+		if (this.destroyed == true) {
+			// stop operation pool already destroyed
+			return;
+		}
 		if (this.usedConnections.remove(connection) == false) {
 			LOGGER.warn("connection does not exist in pool - not possible to free");
 			return;
@@ -210,6 +217,7 @@ public class ConnectionPool {
 	public synchronized void destroy() {
 		this.destroyConnections(this.usedConnections);
 		this.destroyConnections(this.freeConnections);
+		this.destroyed = true;
 	}
 
 	/**
