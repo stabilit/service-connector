@@ -493,10 +493,17 @@ public class SCSessionServer {
 		public void timeout() {
 			// send echo to SC
 			try {
-				SCSessionServer.this.checkRegistration();
+				SCSessionServer.this.checkRegistration(SCSessionServer.this.scServer.getCheckRegistrationTimeoutSeconds());
 			} catch (SCServiceException e) {
-				System.out.println("SCSessionServer.SCServerTimeout.timeout()");
-				// TODO jot .. who to inform?
+				// check registration failed - inform callback
+				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+				SrvService srvService = srvServiceRegistry.getSrvService(SCSessionServer.this.serviceName + "_"
+						+ SCSessionServer.this.scServer.getListenerPort());
+				if (srvService instanceof SrvSessionService) {
+					((SrvSessionService) srvService).getCallback().exceptionCaught(e);
+				} else if (srvService instanceof SrvPublishService) {
+					((SrvPublishService) srvService).getCallback().exceptionCaught(e);
+				}
 			}
 		}
 

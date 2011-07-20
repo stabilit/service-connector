@@ -153,6 +153,8 @@ public final class Constants {
 	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 10000;
 	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_SECONDS is not configured. */
 	public static final int DEFAULT_KEEP_ALIVE_OTI_SECONDS = DEFAULT_KEEP_ALIVE_OTI_MILLIS / SEC_TO_MILLISEC_FACTOR;
+	/** The Constant DEFAULT_CHECK_REGISTRATION_OTI_SECONDS. */
+	public static final int DEFAULT_CHECK_REGISTRATION_OTI_SECONDS = 10000;
 	/** The default maximal connection pool size. */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
 
@@ -414,4 +416,6 @@ public final class Constants {
 	public static final int MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE = NUMBER_3600;
 	/** The Constant MAX_KP_TIMEOUT_VALUE. */
 	public static final int MAX_KP_TIMEOUT_VALUE = NUMBER_3600;
+	/** The Constant MAX_CRG_TIMEOUT_VALUE. */
+	public static final int MAX_CRG_TIMEOUT_VALUE = NUMBER_3600;
 }

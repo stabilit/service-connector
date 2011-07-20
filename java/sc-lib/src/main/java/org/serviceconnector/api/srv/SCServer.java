@@ -64,6 +64,8 @@ public class SCServer {
 	private int keepAliveTimeoutSeconds;
 	/** The check registration interval seconds. Default = 0. */
 	private int checkRegistrationIntervalSeconds;
+	/** The check registration timeout in seconds. Time to wait for the reply of a check registration sent to the SC. Default = 10. */
+	private int checkRegistraionTimeoutSeconds;
 	/** The responder. */
 	private IResponder responder;
 	/** The requester. */
@@ -124,6 +126,7 @@ public class SCServer {
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
 		this.checkRegistrationIntervalSeconds = Constants.DEFAULT_CHECK_REGISTRATION_INTERVAL_SECONDS;
+		this.checkRegistraionTimeoutSeconds = Constants.DEFAULT_CHECK_REGISTRATION_OTI_SECONDS;
 		this.listening = false;
 	}
 
@@ -261,6 +264,38 @@ public class SCServer {
 	 */
 	public int getKeepAliveTimeoutSeconds() {
 		return this.keepAliveTimeoutSeconds;
+	}
+
+	/**
+	 * Sets the check registration timeout in seconds. Time in seconds a check registration request waits to be confirmed. If no
+	 * confirmation is received server for specific service is dead.
+	 * 
+	 * @param checkRegistrationTimeoutSeconds
+	 *            time to wait for completion of a check registration request
+	 *            Example: 10
+	 * @throws SCMPValidatorException
+	 *             checkRegistrationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException
+	 *             listener is already started<br />
+	 */
+	public void setCheckRegistrationTimeoutSeconds(int checkRegistrationTimeoutSeconds) throws SCMPValidatorException,
+			SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
+		// validate in this case its a local needed information
+		ValidatorUtility.validateInt(1, checkRegistrationTimeoutSeconds, Constants.MAX_CRG_TIMEOUT_VALUE,
+				SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		this.checkRegistraionTimeoutSeconds = checkRegistrationTimeoutSeconds;
+	}
+
+	/**
+	 * Gets the check registration timeout seconds.
+	 * 
+	 * @return the check registration timeout seconds
+	 */
+	public int getCheckRegistrationTimeoutSeconds() {
+		return this.checkRegistraionTimeoutSeconds;
 	}
 
 	/**
