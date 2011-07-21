@@ -90,7 +90,7 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 
 	/**
 	 * Instantiate a CustodianDailyRollingFileAppender and open the file designated by filename. The opened filename will become the
-	 * ouput destination for this appender.
+	 * output destination for this appender.
 	 * 
 	 * @param layout
 	 *            the layout
