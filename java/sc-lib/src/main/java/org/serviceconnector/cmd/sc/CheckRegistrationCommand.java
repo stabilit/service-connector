@@ -68,7 +68,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			throw cmdExc;
 		}
 		// reset server timeout
-		LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)=" + server.getServerTimeoutMillis());
+		LOGGER.debug("refresh server timeout in CRG server=" + server.getServerKey() + " timeout(ms)=" + server.getServerTimeoutMillis());
 		serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
 
 		// send back positive response
