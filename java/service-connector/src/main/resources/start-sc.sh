@@ -10,4 +10,4 @@
 #  -server    enables server JVM
 #
 # start sc
-java -Xmx1024M -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
+$JAVA_HOME/bin/java -Xmx1024M -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
