@@ -289,7 +289,7 @@
       <center>
       <table border="0" cellspacing="0" cellpadding="2" style="position:relative; height:20px; top:-3px;">
         <tr>
-          <td style="padding-right:10px;"><xsl:value-of select="$title"/></td>
+          <td style="padding-right:10px;"><xsl:value-of select="$title"/>&#160;[<xsl:value-of select="$size"/>]&#160;</td>
           <xsl:if test="$siteSize &gt; 1 and $currentSite &gt; 1">
             <td style="border-left:1px solid white; padding:2px; width:12px;text-align:center;">        
               <xsl:choose>

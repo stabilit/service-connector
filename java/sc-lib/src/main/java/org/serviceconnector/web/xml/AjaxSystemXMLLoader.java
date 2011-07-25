@@ -56,7 +56,9 @@ import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.CircularByteBuffer;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
+import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
@@ -207,7 +209,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			}
 			if ("uploadLogFiles".equals(action)) {
 				XMLLoaderFactory.LOGGER.debug("upload current log files 1");
-				uploadCurrentLogFiles(writer, request);
+				uploadLogAndDumpFiles(writer, request);
 				XMLLoaderFactory.LOGGER.debug("upload current log files 2");
 				return;
 			}
@@ -365,10 +367,15 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void uploadCurrentLogFiles(XMLStreamWriter writer, IWebRequest request) throws Exception {
+	private void uploadLogAndDumpFiles(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			throw new WebCommandException("service is missing");
+		}
+		String sdate = request.getParameter("date");
+		Date date = DateTimeUtility.getCurrentDate();
+		if (sdate != null && sdate.isEmpty() == false) {
+			date = WebUtil.getXMLDateFromString(sdate);
 		}
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = serviceRegistry.getService(serviceName);
@@ -381,16 +388,19 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("service");
 		writer.writeCharacters(serviceName);
 		writer.writeEndElement();
+		writer.writeStartElement("date");
+		writer.writeCharacters(sdate);
+		writer.writeEndElement();
 		// get current log files and write them to the remote file server using a stream
 		try {
-			String logsFileName = this.uploadCurrentLogFiles(service, serviceName);
+			String logsFileName = this.uploadLogAndDumpFiles(service, serviceName, date);
 			// String logsFileName = fileServer.uploadCurrentLogFiles(fileService, serviceName);
 			writer.writeStartElement("status");
 			writer.writeCharacters("success");
 			writer.writeEndElement();
 			writer.writeStartElement("messages");
 			writer.writeStartElement("message");
-			writer.writeCharacters("logs file upload done!");
+			writer.writeCharacters("logs and dump file upload done!");
 			writer.writeEndElement();
 			writer.writeStartElement("message");
 			writer.writeCharacters("file name is " + logsFileName);
@@ -412,7 +422,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * Upload current log files.
+	 * Upload current log and dump files.
 	 * 
 	 * @param service
 	 *            the service
@@ -422,9 +432,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private String uploadCurrentLogFiles(Service service, String serviceName) throws Exception {
+	private String uploadLogAndDumpFiles(Service service, String serviceName, Date date) throws Exception {
 		if (!(service instanceof FileService || service instanceof CascadedFileService)) {
-			throw new WebCommandException("upload current log files, service is not a file or cascaded file service");
+			throw new WebCommandException("upload current log and dump files, service is not a file or cascaded file service");
 		}
 		SCClient client = null;
 		// try to connect client
@@ -432,14 +442,14 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		// client gets destroyed at the end of upload inside the uploadLogFiles method
 		// has to be inside because the upload works asynchronous
 		if (client == null) {
-			throw new WebCommandException("upload current log files, client cannot connect and attach to local responder");
+			throw new WebCommandException("upload current log and dump files, client cannot connect and attach to local responder");
 		}
-		String fileName = this.uploadLogFiles(client, service, serviceName);
+		String fileName = this.uploadLogAndDumpFiles(client, service, serviceName, date);
 		return fileName;
 	}
 
 	/**
-	 * Upload log files.
+	 * Upload log and dump files.
 	 * 
 	 * @param client
 	 *            the client
@@ -450,11 +460,11 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private String uploadLogFiles(SCClient client, Service service, String serviceName) throws Exception {
-		// get all log file names
-		List<String> logFiles = this.getCurrentLogFiles();
-		if (logFiles.isEmpty()) {
-			throw new FileServerException("upload log files failed, no logs files found");
+	private String uploadLogAndDumpFiles(SCClient client, Service service, String serviceName, Date date) throws Exception {
+		// get all log and dump file
+		List<File> logAndDumpFiles = this.getLogAndDumpFiles(date);
+		if (logAndDumpFiles.isEmpty()) {
+			throw new FileServerException("upload log and dump files failed, no log or dump files found");
 		}
 		OutputStream os = null;
 		ZipOutputStream zos = null;
@@ -468,8 +478,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		try {
 			os = uploadRunnable.getOutputStream();
 			zos = new ZipOutputStream(os);
-			for (String logFile : logFiles) {
-				String path = logFile.replace(File.separatorChar, '/');
+			for (File file : logAndDumpFiles) {
+				String name = file.getName();
+				String path = file.getPath();
 				// important:
 				// get current log file size and stop reading the file after the size reached,
 				// this prevents from an endless read when other logs were written in the meantime
@@ -478,8 +489,14 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				if (is == null) {
 					continue;
 				}
-				ZipEntry entry = new ZipEntry(logFile);
-				entry.setComment("log file " + logFile);
+				ZipEntry entry = null;
+				if (name.startsWith(Constants.DUMP_FILE_NAME)) {
+				   entry = new ZipEntry("dumps/" + name);
+				   entry.setComment("dump file " + name);
+				} else {
+				   entry = new ZipEntry("logs/" + name);
+				   entry.setComment("log file " + name);				
+				}
 				zos.putNextEntry(entry);
 				try {
 					long totalReadBytes = 0L;
@@ -525,20 +542,31 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @return the current log file in a list
 	 */
-	private List<String> getCurrentLogFiles() {
+	private List<File> getLogAndDumpFiles(Date date) {
+		Date today = DateTimeUtility.getCurrentDate();
 		Set<String> distinctLoggerSet = new HashSet<String>();
-		List<String> logFileList = new ArrayList<String>();
+		List<File> logAndDumpFileList = new ArrayList<File>();
+		// add log files
 		Logger rootLogger = LogManager.getRootLogger();
-		addLogFiles(rootLogger, logFileList, distinctLoggerSet);
+		addLogFiles(rootLogger, logAndDumpFileList, distinctLoggerSet, date, today);
 		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
 		while (currentLoggers.hasMoreElements()) {
 			Logger currentLogger = (Logger) currentLoggers.nextElement();
 			Enumeration<?> appenders = currentLogger.getAllAppenders();
 			if (appenders.hasMoreElements()) {
-				addLogFiles(currentLogger, logFileList, distinctLoggerSet);
+				addLogFiles(currentLogger, logAndDumpFileList, distinctLoggerSet, date, today);
 			}
 		}
-		return logFileList;
+		// add current dump files
+		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+		File[] files = DumpUtility.getDumpFiles(dumpPath);
+		for (File file : files) {
+			if (FileUtility.belongsToDate(file, date) == false) {
+				continue;
+			}
+			logAndDumpFileList.add(file);
+		}
+		return logAndDumpFileList;
 	}
 
 	/**
@@ -551,7 +579,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 * @param distinctLoggerSet
 	 *            the distinct LOGGER set
 	 */
-	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
+	private void addLogFiles(Logger logger, List<File> logFileList, Set<String> distinctLoggerSet, Date current, Date today) {
 		Enumeration<?> appenders = logger.getAllAppenders();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
@@ -563,9 +591,12 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			if (appender instanceof FileAppender) {
 				FileAppender fileAppender = (FileAppender) appender;
 				String sFile = fileAppender.getFile();
+				if (current.before(today)) {
+					sFile += "." + WebUtil.getXMLDateAsString(current);
+				}
 				File file = new File(sFile);
 				if (file.exists() && file.isFile()) {
-					logFileList.add(sFile);
+					logFileList.add(file);
 				}
 			}
 		}

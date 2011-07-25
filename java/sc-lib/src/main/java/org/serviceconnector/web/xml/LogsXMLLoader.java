@@ -34,6 +34,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
 
@@ -65,28 +66,15 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		writer.writeStartElement("logs");
-		String dateParameter = request.getParameter("date");
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		Date today = cal.getTime();
-		Date current = today;
-		if (dateParameter != null) {
-			current = WebUtil.getXMLDateFromString(dateParameter);
-		}
+		Date current = this.writeXMLDate(writer, request);
 		if (today.before(current)) {
 			current = today;
-		}
-		// get previous and next date
-		String next = WebUtil.getXMLNextDateAsString(current);
-		String previous = WebUtil.getXMLPreviousDateAsString(current);
-		// set selected date
-		writer.writeAttribute("previous", previous);
-		writer.writeAttribute("current", WebUtil.getXMLDateAsString(current));
-		if (current.before(today)) {
-			writer.writeAttribute("next", next);
 		}
 		// write available log levels
 		writeLogLevels(writer);
@@ -175,8 +163,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 				if (file.exists() && file.isFile()) {
 					long length = file.length();
 					writer.writeAttribute("size", String.valueOf(length));
-				}
-				if (sFile != null) {
+
 				   writer.writeCData(sFile);
 				}
 				writer.writeEndElement();

@@ -3,6 +3,7 @@
     <xsl:include href="maintenance.xsl"/>
     <xsl:variable name="action" select="$head/query/param/@action"/>
     <xsl:variable name="serviceParam" select="$head/query/param/@service"/>
+    <xsl:variable name="date" select="$head/query/param/@date"/>
     <xsl:template match="/">      
       <xsl:choose>
         <xsl:when test="$action = 'sc_dump_list'">
@@ -84,29 +85,57 @@
 	<xsl:template name="uploadLogFiles">
 	    <div class="sc_table">
 	        <div class="sc_table_title">
-	           Upload Current Logfiles to File Service [<xsl:value-of select="$serviceParam"/>]
+	           Upload Current Log- and Dump-Files to File Service [<xsl:value-of select="$serviceParam"/>]
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">Current Log Files</th>
+	            <th class="sc_table">Current Log-, Dump-Files
+	              <xsl:if test="$body/date/@previous">
+                    <a class="sc_table_header"  alt="{$body/date/@previous}" title="{$body/date/@previous}" href="javascript:maintenanceCall('{$urlencoded}', 'sc_logs_upload', '{$serviceParam}','date={$body/date/@previous}')">&lt;&lt;</a>
+                  </xsl:if>
+                  &#160;<xsl:value-of select="$body/date/@current"/>&#160;
+                  <xsl:if test="$body/date/@next">             
+                    <a class="sc_table_header" alt="{$body/date/@next}" title="{$body/date/@next}" href="javascript:maintenanceCall('{$urlencoded}', 'sc_logs_upload', '{$serviceParam}','date={$body/date/@next}')">&gt;&gt;</a>
+                  </xsl:if>	            
+	            </th>
 	            <th class="sc_table">&#160;</th>
-	            <th class="sc_table">File Service Logfiles (Remote)</th>
+	            <th class="sc_table">File Service Log-, Dump-Files (Remote)</th>
 	          </tr>
 	          <tr>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-left:1px solid #666666">
+	                <xsl:if test="count($body/logs/logger/appender[@type = 'file']/file[@size &gt;= 0]) = 0">
+	                  <tr>
+		                <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no logs files found</td>
+		              </tr>
+		            </xsl:if>
 	                <xsl:for-each select="$body/logs/logger/appender[@type = 'file']">
+	                  <xsl:if test="file/@size &gt;= 0">
+		                  <tr>
+		                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+		                    -
+		                    </td>
+		                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/>&#160;(<xsl:value-of select="file/@size"/>)</td>
+		                  </tr>
+	                  </xsl:if>
+	                </xsl:for-each>
+	                <xsl:if test="count($body/dumplist/files/file) = 0">
+	                  <tr>
+		                <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no dump files found</td>
+		              </tr>
+	                </xsl:if>
+	                <xsl:for-each select="$body/dumplist/files/file">
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
 	                    -
 	                    </td>
-	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/>&#160;(<xsl:value-of select="file/@size"/>)</td>
+	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="name"/>&#160;(<xsl:value-of select="length"/>)</td>
 	                  </tr>
 	                </xsl:for-each>
 	              </table>
 	            </td>
 	            <td valign="top" style="text-align:center;width:100px;">
-	              <input class="sc_form_button_download" name="Upload" type="button" value="&gt;&gt;" onclick="javascript:uploadLogFiles('{$serviceParam}')"></input>
+	              <input class="sc_form_button_download" name="Upload" type="button" value="&gt;&gt;" onclick="javascript:uploadLogAndDumpFiles('{$serviceParam}', '{$date}')"></input>
 	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">

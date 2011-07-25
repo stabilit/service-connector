@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.concurrent.TimeoutException;
 
@@ -64,6 +66,29 @@ public final class FileUtility {
 		return file.exists();
 	}
 
+	/**
+	 * Check if give file belongs to current date (day)
+	 * 
+	 * @param file
+	 * @param date
+	 * @return
+	 */
+	public static boolean belongsToDate(File file, Date date) {
+		long lastModified = file.lastModified();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
+		cal.set(Calendar.MINUTE, 0);                 // set minute in hour
+		cal.set(Calendar.SECOND, 0);                 // set second in minute
+		cal.set(Calendar.MILLISECOND, 0);
+		long startTS = cal.getTimeInMillis();
+		long endTS = startTS + (24 * 60 * 60 * 1000);
+		if (lastModified >= startTS && lastModified <= endTS) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Checks if is file locked.
 	 * 

@@ -174,8 +174,13 @@ function downloadAndReplaceSelected(service) {
 	ajaxSystem.ajaxCall('ajax/system?action=downloadAndReplace&service=' + service + query);	
 }
 
-function uploadLogFiles(service) {
-	var check = window.confirm("Upload current log files! Are you sure?");
+function uploadLogAndDumpFiles(service, date) {
+	var check = false;
+	if (date == null || date == '') {
+		check = window.confirm("Upload log and dump current files! Are you sure?");	
+	} else {
+		check = window.confirm("Upload log and dump files dated " + date + "! Are you sure?");	
+	}
 	if (check == false) {
 		return;
     }
@@ -187,7 +192,7 @@ function uploadLogFiles(service) {
        showLayer("DialogBox");
        centerLayer("DialogBox", 400, 400, 0, 0);
 	}
-	ajaxSystem.ajaxCall('ajax/system?action=uploadLogFiles&service=' + service);		
+	ajaxSystem.ajaxCall('ajax/system?action=uploadLogFiles&service=' + service + '&date=' + date);		
 }
 
 function systemCallback() {

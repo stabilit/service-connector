@@ -39,6 +39,7 @@ import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
+import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
@@ -59,6 +60,9 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 	@Override
 	public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String action = request.getParameter("action");
+		writer.writeStartElement("date");
+		Date current = this.writeXMLDate(writer, request);
+		writer.writeEndElement();
 		if (action == null) {
 			throw new InvalidParameterException("action parameter missing");
 		}
@@ -67,11 +71,11 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 			return;
 		}
 		if ("sc_logs_upload".equals(action)) {
-			loadLogfileUploadBody(writer, request);
+			loadLogfileUploadBody(writer, request, current);
 			return;
 		}
 		if ("sc_dump_list".equals(action)) {
-			loadDumpListBody(writer, request);
+			loadDumpListBody(writer, request, null); // load all dumps
 			return;
 		}
 		throw new InvalidParameterException("action parameter is invalid or unknown (action=" + action + ")");
@@ -157,7 +161,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void loadLogfileUploadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+	private void loadLogfileUploadBody(XMLStreamWriter writer, IWebRequest request, Date current) throws Exception {
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			throw new InvalidParameterException("service parameter missing");
@@ -197,21 +201,27 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		Date today = cal.getTime();
+		if (current == null) {
+			current = today;
+		}
 		Logger rootLogger = LogManager.getRootLogger();
-		logsXMLLoader.writeLogger(writer, rootLogger, today, today);
+		logsXMLLoader.writeLogger(writer, rootLogger, today, current);
 		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
 		while (currentLoggers.hasMoreElements()) {
 			Logger currentLogger = (Logger) currentLoggers.nextElement();
 			Enumeration<?> appenders = currentLogger.getAllAppenders();
 			if (appenders.hasMoreElements()) {
-				logsXMLLoader.writeLogger(writer, currentLogger, today, today);
+				logsXMLLoader.writeLogger(writer, currentLogger, today, current);
 			}
 		}
 		writer.writeEndElement(); // close logs tag
+		// load available dump files for current date
+		this.loadDumpListBody(writer, request, current);
 	}
 
 	/**
 	 * load body data for dump list action.
+	 * if date is not null, then load dumps for given date only
 	 * 
 	 * @param writer
 	 *            the writer
@@ -220,7 +230,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void loadDumpListBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+	private void loadDumpListBody(XMLStreamWriter writer, IWebRequest request, Date date) throws Exception {
 		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 		File[] files = DumpUtility.getDumpFiles(dumpPath);
 		writer.writeStartElement("dumplist");
@@ -233,6 +243,12 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 			writer.writeStartElement("files");
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isFile()) {
+					// check if file belongs to current date
+					if (date != null) {
+						if  (FileUtility.belongsToDate(files[i], date) == false) {
+						   continue;
+						}
+					}
 					writer.writeStartElement("file");
 					writer.writeStartElement("name");
 					String name = files[i].getName();

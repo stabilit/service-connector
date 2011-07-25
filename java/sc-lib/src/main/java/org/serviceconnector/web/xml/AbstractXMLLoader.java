@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +65,7 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebSession;
+import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
 
@@ -753,6 +755,33 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeAttribute("pageSize", String.valueOf(pageSize));
 		writer.writeAttribute("siteSize", String.valueOf(siteSize));
 		return paging;
+	}
+
+	protected Date writeXMLDate(XMLStreamWriter writer, IWebRequest request) throws XMLStreamException {
+		String dateParameter = request.getParameter("date");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date today = cal.getTime();
+		Date current = today;
+		if (dateParameter != null) {
+			current = WebUtil.getXMLDateFromString(dateParameter);
+		}
+		if (today.before(current)) {
+			current = today;
+		}
+		// get previous and next date
+		String next = WebUtil.getXMLNextDateAsString(current);
+		String previous = WebUtil.getXMLPreviousDateAsString(current);
+		// set selected date
+		writer.writeAttribute("previous", previous);
+		writer.writeAttribute("current", WebUtil.getXMLDateAsString(current));
+		if (current.before(today)) {
+			writer.writeAttribute("next", next);
+		}
+		return current;
 	}
 
 	/**
