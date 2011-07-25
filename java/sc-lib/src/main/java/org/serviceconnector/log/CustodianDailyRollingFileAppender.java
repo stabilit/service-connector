@@ -29,6 +29,7 @@ import java.util.TimeZone;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
@@ -81,6 +82,8 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 	private RollingCalendar rc = new RollingCalendar();
 	/** The Constant gmtTimeZone. */
 	private static final TimeZone gmtTimeZone = TimeZone.getTimeZone("GMT");
+	/** The timestamp in file name. */
+	private boolean timestampInFileName = false;
 
 	/**
 	 * The default constructor does nothing.
@@ -100,14 +103,17 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 	 *            the date pattern
 	 * @param maxNumberOfDays
 	 *            the max number of days
+	 * @param TimestampInFileName
+	 *            the timestamp in file name
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public CustodianDailyRollingFileAppender(Layout layout, String filename, String datePattern, int maxNumberOfDays)
-			throws IOException {
+	public CustodianDailyRollingFileAppender(Layout layout, String filename, String datePattern, int maxNumberOfDays,
+			boolean TimestampInFileName) throws IOException {
 		super(layout, filename, true);
 		this.datePattern = datePattern;
 		this.maxNumberOfDays = maxNumberOfDays;
+		this.timestampInFileName = TimestampInFileName;
 		activateOptions();
 	}
 
@@ -133,16 +139,23 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 
 	@Override
 	public void activateOptions() {
-		super.activateOptions();
 		if (datePattern != null && fileName != null) {
 			now.setTime(System.currentTimeMillis());
 			sdf = new SimpleDateFormat(datePattern);
 			int type = computeCheckPeriod();
 			printPeriodicity(type);
 			rc.setType(type);
+			try {
+				if (timestampInFileName == true) {
+					// adding timestamp to file name
+					fileName = fileName.replace(".log", "_" + new Date().getTime() + ".log");
+				}
+				setFile(fileName, fileAppend, bufferedIO, bufferSize);
+			} catch (java.io.IOException e) {
+				errorHandler.error("setFile(" + fileName + "," + fileAppend + ") call failed.", e, ErrorCode.FILE_OPEN_FAILURE);
+			}
 			File file = new File(fileName);
 			scheduledFilename = fileName + sdf.format(new Date(file.lastModified()));
-
 		} else {
 			LogLog.error("Either File or DatePattern options are not set for appender [" + name + "].");
 		}
@@ -294,6 +307,25 @@ public class CustodianDailyRollingFileAppender extends FileAppender {
 	 */
 	public void setMaxNumberOfDays(int maxNumberOfDays) {
 		this.maxNumberOfDays = maxNumberOfDays;
+	}
+
+	/**
+	 * Checks if is timestamp in file name.
+	 * 
+	 * @return true, if is timestamp in file name
+	 */
+	public boolean isTimestampInFileName() {
+		return timestampInFileName;
+	}
+
+	/**
+	 * Sets the timestamp in file name.
+	 * 
+	 * @param timestampInFileName
+	 *            the new timestamp in file name
+	 */
+	public void setTimestampInFileName(boolean timestampInFileName) {
+		this.timestampInFileName = timestampInFileName;
 	}
 
 	/**
