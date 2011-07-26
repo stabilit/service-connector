@@ -89,7 +89,7 @@ Service Connector - service oriented messaging middleware
 
  Pre-requisites:
  ---------------
-  Java 1.6.18 or later
+  Java 1.6.0_18 or later (1.6.0_26 is recommended)
   Apache 2.0 or later (on node running file services)
   PHP 4.0 or later (on node running file services)
   Tomcat 6.0 or later (for services running as servlet)
@@ -128,7 +128,7 @@ Service Connector - service oriented messaging middleware
  If you made changes to the SC configurations, then preserve these files before upgrade. 
  The upgrade is simply done by extracting the kit file into a directory of the 
  previous installation. 
- For compatibility rules see SC_0_SCMP_E.PDF Chapter 9.30 (scVersion) included in sc-src_V9.9-999.zip
+ For compatibility rules see SC_0_SCMP_E.PDF Chapter "scVersion" included in sc-src_V9.9-999.zip
 
 
  Software removal
