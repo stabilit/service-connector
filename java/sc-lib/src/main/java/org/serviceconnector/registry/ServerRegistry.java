@@ -61,7 +61,7 @@ public class ServerRegistry extends Registry<String, Server> {
 	 */
 	public void addServer(String key, Server server) {
 		this.put(key, server);
-		LOGGER.info("Adding Server to registry, server=" + server.toString());
+		LOGGER.debug("Adding Server to registry, server=" + server.toString());
 		this.scheduleServerTimeout(server, server.getServerTimeoutMillis());
 	}
 
@@ -108,7 +108,7 @@ public class ServerRegistry extends Registry<String, Server> {
 		Server server = super.remove(key);
 		this.cancelServerTimeout(server);
 		if (server != null) {
-			LOGGER.info("Removing Server from registry, server=" + key);
+			LOGGER.debug("Removing Server from registry, server=" + key);
 		}
 	}
 
