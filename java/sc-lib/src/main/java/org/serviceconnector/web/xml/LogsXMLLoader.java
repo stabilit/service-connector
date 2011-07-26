@@ -34,7 +34,6 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
 
