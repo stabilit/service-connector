@@ -106,7 +106,7 @@
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-left:1px solid #666666">
 	                <xsl:if test="count($body/logs/logger/appender[@type = 'file']/file[@size &gt;= 0]) = 0">
 	                  <tr>
-		                <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no logs files found</td>
+		                <td colspan="2" style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no logs files found</td>
 		              </tr>
 		            </xsl:if>
 	                <xsl:for-each select="$body/logs/logger/appender[@type = 'file']">
@@ -121,7 +121,7 @@
 	                </xsl:for-each>
 	                <xsl:if test="count($body/dumplist/files/file) = 0">
 	                  <tr>
-		                <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no dump files found</td>
+		                <td colspan="2" style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">no dump files found</td>
 		              </tr>
 	                </xsl:if>
 	                <xsl:for-each select="$body/dumplist/files/file">
