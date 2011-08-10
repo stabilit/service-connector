@@ -23,11 +23,6 @@ import org.serviceconnector.test.unit.api.APISCMessageTest;
 import org.serviceconnector.test.unit.api.APISCPublishMessageTest;
 import org.serviceconnector.test.unit.api.APISCServerTest;
 import org.serviceconnector.test.unit.api.APISCSubscribeMessageTest;
-import org.serviceconnector.test.unit.cache.CacheExpirationTest;
-import org.serviceconnector.test.unit.cache.CacheExpirationThreadRunTest;
-import org.serviceconnector.test.unit.cache.CacheManagerTest;
-import org.serviceconnector.test.unit.cache.CacheStatisticsTest;
-import org.serviceconnector.test.unit.cache.CacheTest;
 import org.serviceconnector.test.unit.scmp.SCMPLargeRequestTest;
 import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.scmp.SCMPMessageMaskTest;
@@ -42,13 +37,6 @@ import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 		APISCClientTest.class,
 		APISCServerTest.class,
 		APINewServerTest.class,
-		
-		// Cache unit tests
-		CacheExpirationTest.class, 
-		CacheExpirationThreadRunTest.class, 
-		CacheStatisticsTest.class,
-		CacheTest.class,
-		CacheManagerTest.class,
 		
 		// SCMP unit tests
 		SCMPVersionTest.class,

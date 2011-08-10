@@ -21,13 +21,16 @@ import org.serviceconnector.test.system.api.cln.APIAfterAbortOrRestartSessionTes
 import org.serviceconnector.test.system.api.cln.APIAfterSCAbortOrRestartSessionTest;
 import org.serviceconnector.test.system.api.cln.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.cln.APIExecuteAndSendTest;
+import org.serviceconnector.test.system.api.cln.APIExecuteCacheTest;
 import org.serviceconnector.test.system.api.cln.APIMultipleClientChangeSubscriptionTest;
 import org.serviceconnector.test.system.api.cln.APIMultipleClientSubscribeTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
 import org.serviceconnector.test.system.api.cln.APISubscribeUnsubscribeChangeTest;
 import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
+import org.serviceconnector.test.system.scmp.SCMPClnExecuteCacheTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
+import org.serviceconnector.test.system.scmp.SCMPClnSubscribeTest;
 import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 
 @RunWith(Suite.class)
@@ -44,11 +47,20 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		APIMultipleClientSubscribeTest.class,
 		APIMultipleClientChangeSubscriptionTest.class,
 
+		// API cache test
+		APIExecuteCacheTest.class,
+
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
 		SCMPClnExecuteTest.class,
 		SCMPGroupCallTest.class,
-		SCMPClnChangeSubscriptionTest.class
+		
+		// SCMP publish test
+		SCMPClnChangeSubscriptionTest.class,
+		SCMPClnSubscribeTest.class,
+		
+		// SCMP cache test
+		SCMPClnExecuteCacheTest.class
 		})
 public class AllSystemTests {
 }

@@ -46,7 +46,7 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 1), 0);
+				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 
@@ -62,24 +62,27 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
 		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk1 = new TestCallback(true);
 		subscribeCall.setRequestBody("3000");
 		subscribeCall.invoke(cbk, 5000);
-
+		subscribeCall.invoke(cbk1, 5000);
 		Thread.sleep(100);
 		subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk1 = new TestCallback(true);
-		subscribeCall.invoke(cbk1, 2000);
+		TestCallback cbk3 = new TestCallback(true);
+		subscribeCall.invoke(cbk3, 2000);
 
 		SCMPMessage reply = cbk.getMessageSync(5000);
 		SCMPMessage reply1 = cbk1.getMessageSync(4000);
+		SCMPMessage reply3 = cbk3.getMessageSync(4000);
 		String sessionId = reply.getSessionId();
 
 		TestUtil.checkReply(reply);
-		Assert.assertTrue(reply1.isFault());
-		TestUtil.verifyError(reply1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.checkReply(reply1);
+		Assert.assertTrue(reply3.isFault());
+		TestUtil.verifyError(reply3, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 4000);

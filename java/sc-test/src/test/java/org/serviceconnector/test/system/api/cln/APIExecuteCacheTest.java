@@ -15,6 +15,10 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
@@ -22,5 +26,27 @@ public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
 	
 	public APIExecuteCacheTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
+	}
+	
+	@Test
+	public void t25_cacheAMessageClearCacheAndGetMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		// request expired server message, cache should still be empty
+		request.setData("cacheFor1Hour");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheFor1Hour", response.getData());
+		client.clearCache();
+
+		request.setData("blabla");
+		response = sessionService1.execute(request);
+		Assert.assertEquals("blabla", response.getData());
+		sessionService1.deleteSession();
 	}
 }

@@ -33,10 +33,14 @@ import org.serviceconnector.test.system.api.cln.casc2.APIReceivePublicationCasc2
 import org.serviceconnector.test.system.api.cln.casc2.APISubscribeUnsubscribeChangeCasc2Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCacheCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnSubscribeCasc1Test;
 import org.serviceconnector.test.system.scmp.casc2.SCMPClnChangeSubscriptionCasc2Test;
 import org.serviceconnector.test.system.scmp.casc2.SCMPClnCreateSessionCasc2Test;
+import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCacheCasc2Test;
 import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
+import org.serviceconnector.test.system.scmp.casc2.SCMPClnSubscribeCasc2Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -60,6 +64,12 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		SCMPClnExecuteCasc1Test.class,
 		SCMPClnChangeSubscriptionCasc1Test.class,
 		
+		// SCMP publish test
+		SCMPClnSubscribeCasc1Test.class,
+		
+		// SCMP cache test
+		SCMPClnExecuteCacheCasc1Test.class,
+		
 		// API session tests for cascaded 2 mode
 		APICreateDeleteSessionCasc2Test.class,
 		APIExecuteAndSendCasc2Test.class,
@@ -72,7 +82,13 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		// SCMP session test for cascaded 2 mode
 		SCMPClnCreateSessionCasc2Test.class,
 		SCMPClnExecuteCasc2Test.class,
-		SCMPClnChangeSubscriptionCasc2Test.class
+		SCMPClnChangeSubscriptionCasc2Test.class,
+		
+		// SCMP publish test for cascaded 2 mode
+		SCMPClnSubscribeCasc2Test.class,
+		
+		// SCMP cache tests for cascaded 2 mode
+		SCMPClnExecuteCacheCasc2Test.class
 		})
 public class AllCascSystemTests {
 }

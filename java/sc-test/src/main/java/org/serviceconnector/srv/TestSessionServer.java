@@ -196,6 +196,7 @@ public class TestSessionServer extends TestStatefulServer {
 		// send back the same message
 		public SCMessage echoMessage(SCMessage request, int operationTimeoutMillis) {
 			// do not log! it is used for performance benchmarks
+			request.setCacheId(null);
 			return request;
 		}
 
@@ -268,7 +269,9 @@ public class TestSessionServer extends TestStatefulServer {
 			if (dataString.equals("cidNoCed")) {
 				LOGGER.info("cidNoCed");
 				// reply without setting CacheExpirationDateTime
-				return request;
+			} else if (dataString.startsWith("noCid")) {
+				LOGGER.info("noCid");
+				request.setCacheId(null);
 			} else if (dataString.startsWith("cacheFor2Sec")) {
 				LOGGER.info("cacheFor2Sec");
 				time.add(Calendar.SECOND, 2);
@@ -323,6 +326,18 @@ public class TestSessionServer extends TestStatefulServer {
 				} catch (InterruptedException e) {
 				}
 				request.setCacheExpirationDateTime(time.getTime());
+			} else if (request.getCacheId().equals("666")) {
+				LOGGER.info("large request large response - 666 is a key for that!");
+				// large request large response - 666 is a key for that!
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				request.setData(TestUtil.getLargeString());
+			} else if (request.getCacheId().equals("999")) {
+				LOGGER.info("large request small response - 999 is a key for that!");
+				// large request small response - 999 is a key for that!
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				request.setData("large request small response - 999 is a key for that!");
 			} else {
 				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache

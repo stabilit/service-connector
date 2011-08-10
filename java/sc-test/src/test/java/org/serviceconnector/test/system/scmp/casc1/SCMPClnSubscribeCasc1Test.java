@@ -69,7 +69,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_TCP, 2, 2, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
@@ -156,7 +156,9 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: subscribe - waits 2 seconds - another subscribe fails because no free server is available<br>
+	 * Description: subscribe - waits 2 seconds - another subscribe fails because operation times out. We are in cascaded mode means
+	 * only one client request can reach the server. The other client requests wait on proxy's and an get back with operation time
+	 * out. It differs from direct test.<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -168,7 +170,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall.setMask(TestConstants.mask);
 		TestCallback cbk = new TestCallback(true);
 		subscribeCall.setRequestBody("3000");
-		subscribeCall.invoke(cbk, 5000);
+		subscribeCall.invoke(cbk, 6000);
 
 		Thread.sleep(100);
 		subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
@@ -178,7 +180,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		TestCallback cbk1 = new TestCallback(true);
 		subscribeCall.invoke(cbk1, 2000);
 
-		SCMPMessage reply = cbk.getMessageSync(5000);
+		SCMPMessage reply = cbk.getMessageSync(6000);
 		SCMPMessage reply1 = cbk1.getMessageSync(4000);
 		String sessionId = reply.getSessionId();
 
