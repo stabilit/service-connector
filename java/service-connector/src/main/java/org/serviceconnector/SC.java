@@ -105,7 +105,7 @@ public final class SC {
 		AppContext.setSCEnvironment(true);
 		AppContext.initConfiguration(configFileName);
 		AppContext.getBasicConfiguration().load(AppContext.getApacheCompositeConfig());
-		AppContext.getCacheConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getSCCacheConfiguration().load(AppContext.getApacheCompositeConfig());		
 		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
 		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig(), AppContext.getRequesterConfiguration());
 		AppContext.getServiceConfiguration().load(AppContext.getApacheCompositeConfig());
@@ -114,7 +114,7 @@ public final class SC {
 		// load services
 		ServiceLoader.load(AppContext.getServiceConfiguration());
 		// load cache configuration in cache manager after service are loaded
-		AppContext.getCacheManager().load(AppContext.getCacheConfiguration());
+		AppContext.getCacheManager().load(AppContext.getSCCacheConfiguration());
 
 		// Initialize service connector command factory
 		AppContext.initCommands(new ServiceConnectorCommandFactory());
