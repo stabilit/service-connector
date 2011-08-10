@@ -27,16 +27,22 @@ public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
+	/** The try loading str. */
+	private static String tryLoadingStr = "try loading message from cache cacheKey=%s sid=%s";
+	/** The got message str. */
+	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s";
 	/** The start loading str. */
-	private static String startLoadingStr = "start loading cache message cid=%s sid=%s oti=%sms";
-	/** The put message str. */
-	private static String putMessageStr = "put message to cache cid=%s loading sid=%s expiration=%s parntNr=%s";
+	private static String startLoadingStr = "start loading cache message cacheKey=%s sid=%s oti=%sms";
 	/** The stop loading str. */
-	private static String stopLoadingStr = "stop loading message complete cid=%s sid=%s";
+	private static String stopLoadingStr = "stop loading message complete cacheKey=%s sid=%s";
 	/** The abort loading str. */
-	private static String abortLoadingStr = "abort loading message cid=%s sid=%s";
+	private static String abortLoadingStr = "abort loading message cacheKey=%s sid=%s";
+	/** The put message str. */
+	private static String putMessageStr = "put message to cache cacheKey=%s loading sid=%s expiration=%s";
 	/** The remove msg from cache str. */
-	private static String removeMsgFromCacheStr = "remove message from cache cid=%s sid=%s";
+	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s";
+	/** The clear cache str. */
+	private static String clearCacheStr = "cleared complete cache, all messages removed.";
 
 	/**
 	 * Private constructor for singleton use.
@@ -54,19 +60,53 @@ public final class CacheLogger {
 	}
 
 	/**
+	 * Try loading message from cache.
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 * @param sessionId
+	 *            the session id
+	 */
+	public static void tryLoadingMessageFromCache(String cacheKey, String sessionId) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(tryLoadingStr, cacheKey, sessionId);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Got message from cache.
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 * @param sessionId
+	 *            the session id
+	 */
+	public static void gotMessageFromCache(String cacheKey, String sessionId) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(gotMessageStr, cacheKey, sessionId);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
 	 * Start loading cache message.
 	 * 
-	 * @param cacheId
-	 *            the cache id
+	 * @param cacheKey
+	 *            the cache key
 	 * @param sessionId
 	 *            the session id
 	 * @param otiMillis
-	 *            the oti millis
+	 *            the operation timeout in milliseconds
 	 */
-	public static void startLoadingCacheMessage(String cacheId, String sessionId, int otiMillis) {
+	public static void startLoadingCacheMessage(String cacheKey, String sessionId, int otiMillis) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(startLoadingStr, cacheId, sessionId, otiMillis);
+			format.format(startLoadingStr, cacheKey, sessionId, otiMillis);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -75,15 +115,15 @@ public final class CacheLogger {
 	/**
 	 * Stop loading cache message.
 	 * 
-	 * @param cacheId
-	 *            the cache id
+	 * @param cacheKey
+	 *            the cache key
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void stopLoadingCacheMessage(String cacheId, String sessionId) {
+	public static void stopLoadingCacheMessage(String cacheKey, String sessionId) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(stopLoadingStr, cacheId, sessionId);
+			format.format(stopLoadingStr, cacheKey, sessionId);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -93,7 +133,7 @@ public final class CacheLogger {
 	 * Abort loading message.
 	 * 
 	 * @param cacheKey
-	 *            the cache id
+	 *            the cache key
 	 * @param sessionId
 	 *            the session id
 	 */
@@ -109,19 +149,17 @@ public final class CacheLogger {
 	/**
 	 * Put message to cache.
 	 * 
-	 * @param cacheId
-	 *            the cache id
+	 * @param cacheKey
+	 *            the cache key
 	 * @param loadingSessionId
 	 *            the loading session id
 	 * @param expiration
 	 *            the expiration
-	 * @param partNr
-	 *            the part nr
 	 */
-	public static void putMessageToCache(String cacheId, String loadingSessionId, String expiration, int partNr) {
+	public static void putMessageToCache(String cacheKey, String loadingSessionId, String expiration) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(putMessageStr, cacheId, loadingSessionId, expiration, partNr);
+			format.format(putMessageStr, cacheKey, loadingSessionId, expiration);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -130,17 +168,26 @@ public final class CacheLogger {
 	/**
 	 * Removes the message from cache.
 	 * 
-	 * @param cacheId
-	 *            the cache id
+	 * @param cacheKey
+	 *            the cache key
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void removeMessageFromCache(String cacheId, String sessionId) {
+	public static void removeMessageFromCache(String cacheKey, String sessionId) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(removeMsgFromCacheStr, cacheId, sessionId);
+			format.format(removeMsgFromCacheStr, cacheKey, sessionId);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
+		}
+	}
+
+	/**
+	 * Clear cache.
+	 */
+	public static void clearCache() {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			CACHE_LOGGER.trace(clearCacheStr);
 		}
 	}
 }

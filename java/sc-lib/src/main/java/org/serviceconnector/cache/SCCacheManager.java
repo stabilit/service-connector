@@ -107,6 +107,7 @@ public class SCCacheManager {
 	 *             requested message in loading state, gets already loaded by another client<br>
 	 */
 	public synchronized SCMPMessage tryGetMessageFromCacheOrLoad(SCMPMessage reqMessage) throws SCMPCommandException {
+		String sessionId = reqMessage.getSessionId();
 		String serviceName = reqMessage.getServiceName();
 		String cacheId = reqMessage.getCacheId();
 
@@ -116,8 +117,9 @@ public class SCCacheManager {
 			// no caching requested from client
 			return null;
 		}
+		CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
 		// lookup cache meta entry
-		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) metaDataCache.get(reqCacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
 			// meta entry for this message already in cache
@@ -128,7 +130,15 @@ public class SCCacheManager {
 					// partNr = null, set to 1 first request does may be not have a partNr
 					partNr = "1";
 				}
-				SCMPMessage cachedMessage = (SCMPMessage) dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + partNr);
+				SCMPMessage cachedMessage = dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + partNr);
+				if (cachedMessage != null) {
+					// message found adapt header fields for requester
+					cachedMessage.setServiceName(reqMessage.getServiceName());
+					cachedMessage.setMessageType(reqMessage.getMessageType());
+					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
+					cachedMessage.setSessionId(sessionId);
+					CacheLogger.gotMessageFromCache(reqCacheKey, sessionId);
+				}
 				return cachedMessage;
 			}
 
@@ -149,7 +159,6 @@ public class SCCacheManager {
 		} else {
 			// start loading message to cache
 			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			String sessionId = reqMessage.getSessionId();
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
 			newMetaEntry.setHeader(reqMessage.getHeader()); // save all header attributes
 			newMetaEntry.setLoadingSessionId(sessionId);
@@ -253,7 +262,7 @@ public class SCCacheManager {
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
 			CacheLogger.putMessageToCache(resCacheKey, metaEntry.getLoadingSessionId(),
-					DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)), partCounter);
+					DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)));
 
 			if (resMessage.isPart() == false) {
 				// large response ended
@@ -379,6 +388,7 @@ public class SCCacheManager {
 	 * Clear all caches.
 	 */
 	public synchronized void clearAll() {
+		CacheLogger.clearCache();
 		metaDataCache.removeAll();
 		dataCache.removeAll();
 	}
@@ -395,6 +405,7 @@ public class SCCacheManager {
 		AppContext.getCacheRegistry().removeCache(metaDataCache.getCacheName());
 		metaDataCache.removeAll();
 		metaDataCache.destroy();
+		CacheLogger.clearCache();
 
 		SCCacheFactory.destroy();
 		this.cleanUpCacheFiles();

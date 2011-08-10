@@ -75,9 +75,6 @@ public class ClnExecuteCommand extends CommandAdapter {
 				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
 					// message found in cache - hand it to the client
-					message.setServiceName(reqMessage.getServiceName());
-					message.setMessageType(reqMessage.getMessageType());
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					response.setSCMP(message);
 					responderCallback.responseCallback(request, response);
 					return;
@@ -113,17 +110,14 @@ public class ClnExecuteCommand extends CommandAdapter {
 				// try to load response from cache
 				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
-					// message found in cache - hand it to the client
-					message.setServiceName(reqMessage.getServiceName());
-					message.setMessageType(reqMessage.getMessageType());
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
-					response.setSCMP(message);
-					responderCallback.responseCallback(request, response);
 					synchronized (session) {
 						// reset session timeout to ECI
 						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
 						session.setPendingRequest(false); // IMPORTANT - set false after reset timeout - parallel echo call
 					}
+					// message found in cache - hand it to the client
+					response.setSCMP(message);
+					responderCallback.responseCallback(request, response);
 					return;
 				}
 			} catch (Exception e) {

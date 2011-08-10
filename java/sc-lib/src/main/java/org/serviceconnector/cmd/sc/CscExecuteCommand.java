@@ -64,18 +64,15 @@ public class CscExecuteCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// check service is present
 		Service abstractService = this.getService(serviceName);
-		
+
 		SCCacheManager cacheManager = AppContext.getCacheManager();
-		
+
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			if (cacheManager.isCacheEnabled()) {
 				// try to load response from cache
 				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
-					message.setServiceName(reqMessage.getServiceName());
-					message.setMessageType(reqMessage.getMessageType());
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					response.setSCMP(message);
 					responderCallback.responseCallback(request, response);
 					return;
@@ -106,21 +103,18 @@ public class CscExecuteCommand extends CommandAdapter {
 			this.sessionRegistry.resetSessionTimeout(session, (otiOnSCMillis + session.getSessionTimeoutMillis()));
 		}
 		if (cacheManager.isCacheEnabled()) {
-			// try to load response from cache
 			try {
+				// try to load response from cache
 				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
-					message.setServiceName(reqMessage.getServiceName());
-					message.setMessageType(reqMessage.getMessageType());
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
-					response.setSCMP(message);
-					responderCallback.responseCallback(request, response);
 					synchronized (session) {
 						// reset session timeout to ECI
 						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-						session.setPendingRequest(false); // IMPORTANT - set false after reset timeout - because of parallel echo
-															// call
+						session.setPendingRequest(false); // IMPORTANT - set false after reset timeout - parallel echo call
 					}
+					// message found in cache - hand it to the client
+					response.setSCMP(message);
+					responderCallback.responseCallback(request, response);
 					return;
 				}
 			} catch (Exception e) {
