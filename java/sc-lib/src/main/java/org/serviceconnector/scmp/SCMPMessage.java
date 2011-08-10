@@ -620,16 +620,6 @@ public class SCMPMessage implements Serializable {
 		return 0;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("SCMP [header=");
-		builder.append(this.header);
-		builder.append("]");
-		return builder.toString();
-	}
-
 	/**
 	 * Gets the internal status.
 	 * 
@@ -707,5 +697,15 @@ public class SCMPMessage implements Serializable {
 	 */
 	public void setHttpUrlFileQualifier(String httpUrlFileQualifier) {
 		this.httpUrlFileQualifier = httpUrlFileQualifier;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SCMP [header=");
+		builder.append(this.header);
+		builder.append("]");
+		return builder.toString();
 	}
 }
