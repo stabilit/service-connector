@@ -3,7 +3,7 @@
     <wb-module deploy-name="webapp">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/src/main/demo-web-server"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <dependent-module archiveName="sc-web-all.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sc-web/sc-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
