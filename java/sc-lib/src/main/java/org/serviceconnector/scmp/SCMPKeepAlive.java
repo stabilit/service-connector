@@ -21,12 +21,8 @@ package org.serviceconnector.scmp;
  */
 public class SCMPKeepAlive extends SCMPMessage {
 
-	/**
-	 * Instantiates a new SCMP.
-	 */
-	public SCMPKeepAlive() {
-		super();
-	}
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 6178848400686789871L;
 
 	@Override
 	public boolean isKeepAlive() {

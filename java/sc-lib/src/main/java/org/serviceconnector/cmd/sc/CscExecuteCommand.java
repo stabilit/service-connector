@@ -18,16 +18,11 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.Cache;
-import org.serviceconnector.cache.CacheComposite;
-import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.cache.CacheMessage;
+import org.serviceconnector.cache.SCCacheManager;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.ClnExecuteCommandCascCallback;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -37,7 +32,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedSessionService;
@@ -70,9 +64,23 @@ public class CscExecuteCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// check service is present
 		Service abstractService = this.getService(serviceName);
-
+		
+		SCCacheManager cacheManager = AppContext.getCacheManager();
+		
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
+			if (cacheManager.isCacheEnabled()) {
+				// try to load response from cache
+				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
+				if (message != null) {
+					message.setServiceName(reqMessage.getServiceName());
+					message.setMessageType(reqMessage.getMessageType());
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
+					response.setSCMP(message);
+					responderCallback.responseCallback(request, response);
+					return;
+				}
+			}
 			this.executeCascadedService(request, response, responderCallback);
 			return;
 		default:
@@ -97,25 +105,29 @@ public class CscExecuteCommand extends CommandAdapter {
 			// reset session timeout to OTI+ECI - during wait for server reply
 			this.sessionRegistry.resetSessionTimeout(session, (otiOnSCMillis + session.getSessionTimeoutMillis()));
 		}
-		CacheManager cacheManager = null;
-		if (reqMessage.getCacheId() != null) {
-			cacheManager = AppContext.getCacheManager();
-		}
-
-		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			CacheLogger.trace("csc execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
-					+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is "
-					+ reqMessage.isPollRequest());
+		if (cacheManager.isCacheEnabled()) {
+			// try to load response from cache
 			try {
-				// try to load response from cache
-				if (tryLoadingMessageFromCache(request, response, responderCallback, false)) {
+				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
+				if (message != null) {
+					message.setServiceName(reqMessage.getServiceName());
+					message.setMessageType(reqMessage.getMessageType());
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
+					response.setSCMP(message);
+					responderCallback.responseCallback(request, response);
+					synchronized (session) {
+						// reset session timeout to ECI
+						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
+						session.setPendingRequest(false); // IMPORTANT - set false after reset timeout - because of parallel echo
+															// call
+					}
 					return;
 				}
 			} catch (Exception e) {
-				// reset session timeout to ECI
 				synchronized (session) {
+					// reset session timeout to ECI
 					this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-					session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
+					session.setPendingRequest(false); // IMPORTANT - set false after reset timeout - because of parallel echo call
 				}
 				throw e;
 			}
@@ -171,18 +183,6 @@ public class CscExecuteCommand extends CommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		CacheManager cacheManager = null;
-		if (reqMessage.getCacheId() != null) {
-			cacheManager = AppContext.getCacheManager();
-		}
-		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			CacheLogger.info("csc execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
-					+ reqMessage.getCachePartNr());
-			// try to load response from cache
-			if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
-				return;
-			}
-		}
 		Service abstractService = this.getService(serviceName);
 		CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
 		ClnExecuteCommandCascCallback callback = new ClnExecuteCommandCascCallback(request, response, responderCallback);
@@ -227,212 +227,5 @@ public class CscExecuteCommand extends CommandAdapter {
 			validatorException.setMessageType(getKey());
 			throw validatorException;
 		}
-	}
-
-	/**
-	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message
-	 * is not full part of the
-	 * cache. In case of a successful cache load the method return true otherwise false.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
-	 * @param cascaded
-	 *            the cascaded
-	 * @return true, if successful
-	 * @throws Exception
-	 *             the exception
-	 */
-	private boolean tryLoadingMessageFromCache(IRequest request, IResponse response, IResponderCallback responderCallback,
-			boolean cascaded) throws Exception {
-		SCMPMessage message = request.getMessage();
-		if (message.getCacheId() == null) {
-			CacheLogger.trace("message has no cache id, isReply = " + message.isReply() + ", isPart = " + message.isPart()
-					+ ", message = " + message.isPollRequest());
-			return false;
-		}
-		CacheManager cacheManager = AppContext.getCacheManager();
-		String serviceName = message.getServiceName();
-		Cache scmpCache = cacheManager.getCache(serviceName);
-		if (scmpCache == null) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-					"no cache instance, service=" + message.getServiceName());
-			scmpCommandException.setMessageType(this.getKey());
-			throw scmpCommandException;
-		}
-		CacheId cacheId = message.getFullCacheId();
-		CacheLogger.trace("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString()
-				+ "), sessionId (" + message.getSessionId() + ")");
-		CacheComposite cacheComposite = scmpCache.getCompositeOrStartLoading(cacheId, message);
-		if (cacheComposite == null) {
-			CacheLogger.trace("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString()
-					+ "), sessionId (" + message.getSessionId() + "), cacheComposite = null, start loading, return false");
-			return false;
-		}
-		if (cacheComposite != null) {
-			boolean cacheIsLoading = false;
-			CacheLogger.trace("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString()
-					+ "), sessionId (" + message.getSessionId()
-					+ "), cacheComposite found, check if loading, start synchronized area");
-			synchronized (cacheComposite) {
-				// check if cache is loading
-				if (cacheComposite.isLoading()) {
-					cacheIsLoading = true;
-				}
-			}
-			CacheLogger.trace("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString()
-					+ "), sessionId (" + message.getSessionId()
-					+ "), cacheComposite found, check if loading, synchronized area leaved (done)");
-			if (cacheIsLoading) {
-				// check if it is a part request and sequence nr in cache equals cache composite size
-				CacheLogger.trace("cache is loading (" + cacheId + ") cacheComposite state=" + cacheComposite.getCacheState()
-						+ ", loadingSessionId=" + cacheComposite.getLoadingSessionId());
-				int size = cacheComposite.getSize();
-				int sequenceNr = cacheId.getSequenceNrInt();
-				if (!(message.isPart() && (sequenceNr == size)) && cacheComposite.isPartLoading() == false) {
-					CacheLogger.info("cache is loading, retry later, service=" + message.getServiceName() + " cacheId="
-							+ message.getCacheId());
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-							+ message.getServiceName() + " cacheId=" + message.getCacheId());
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				}
-				// check if this request belongs to same session id as loading cache session id
-				if (cacheComposite.isLoadingSessionId(message.getSessionId()) == false) {
-					CacheLogger.info("cache is loading (other sessionId), retry later, service=" + message.getServiceName()
-							+ " cacheId=" + message.getCacheId() + ", cache loadingSessionId="
-							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-							+ message.getServiceName() + " cacheId=" + message.getCacheId());
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				} else {
-					CacheLogger.trace("cache is loading (same sessionId) service=" + message.getServiceName() + " cacheId="
-							+ message.getCacheId() + ", loading sid=" + cacheComposite.getLoadingSessionId() + ", message sid="
-							+ message.getSessionId());
-				}
-			}
-			if (cacheComposite.isLoaded() && cacheComposite.isExpired()) {
-				// cache has been loaded but its content message is expired, in case of a full cache id we
-				// must abort this communication, because we do not exactly know the state of the cache content
-				// for given cache id
-				if (cacheId.isCompositeId() == false) {
-					CacheLogger.warn("cache is expired and has unknown state, retry later, service name = "
-							+ message.getServiceName());
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
-							"cache is expired and has unknown state, retry later, service name = " + message.getServiceName());
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				}
-			}
-			if (cacheComposite.isLoaded() && cacheComposite.isExpired() == false) {
-				// check if this request message belongs to a part message and is not poll
-				if (!(message.isPollRequest() == true || message.isPart() == false)) {
-					// this request belongs to a client large message part, do not reply with any content, just a PAC
-					CacheLogger.trace("cache composite (" + cacheId + ") found but ignored (part is=" + message.isPart()
-							+ ", poll is " + message.isPollRequest() + ", expiration time is " + cacheComposite.getExpiration());
-					SCMPPart scmpReply = null;
-					scmpReply = new SCMPPart(true);
-					scmpReply.setServiceName(message.getServiceName());
-					scmpReply.setMessageType(message.getMessageType());
-					scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
-					// scmpReply.setBody(message.getBody());
-					response.setSCMP(scmpReply);
-					// schedule session timeout
-					if (cascaded == false) {
-						String sessionId = message.getSessionId();
-						Session session = this.sessionRegistry.getSession(sessionId);
-						synchronized (session) {
-							this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-							session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
-						}
-					}
-					responderCallback.responseCallback(request, response);
-					return true;
-				}
-				CacheLogger.trace("cache composite (" + cacheId + ") found and loaded, expiration time is "
-						+ cacheComposite.getExpiration());
-				// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
-				// increment cache id sequence nr
-				cacheId = cacheId.nextSequence();
-				CacheMessage cacheMessage = scmpCache.getMessage(cacheId);
-				if (cacheMessage == null) {
-					// cache message is not part of this composite, check if message sequence number is valid or out of scope
-					if (cacheComposite.isValidCacheId(cacheId)) {
-						scmpCache.removeComposite(message.getSessionId(), cacheId.getCacheId());
-						// cache id sequence nr is valid, but message does not exist, cache is invalid
-						CacheLogger.error("cache has illegal state, loaded but message is not part of cache, cacheId="
-								+ message.getCacheId());
-						CacheLogger.error("cache has illegal state, cache composite [" + cacheId.getCacheId()
-								+ " will be removed, retry again");
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-								"cache has illegal state, cache composite [" + cacheId.getCacheId()
-										+ " will be removed, retry again");
-						scmpCommandException.setMessageType(this.getKey());
-						throw scmpCommandException;
-					}
-					CacheLogger.error("cache has illegal state, loaded but no message, cacheId=" + message.getCacheId());
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-							"cache has illegal state, loaded but no message, cacheId=" + message.getCacheId());
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				}
-				SCMPMessage scmpReply = null;
-				if (cacheComposite.isLastMessage(cacheMessage)) {
-					scmpReply = new SCMPMessage();
-				} else {
-					scmpReply = new SCMPPart();
-				}
-				// write cache composite header to scmp message, reply sessionId later
-				cacheComposite.writeHeaderToMessage(scmpReply);
-				scmpReply.setSessionId(message.getSessionId()); // replace session id
-				scmpReply.setMessageType(getKey());
-				cacheId = cacheMessage.getCacheId();
-				if (cacheId == null) {
-					CacheLogger.error("cache message has illegal state, cacheId=null");
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-							"cache message has illegal state, cacheId=null");
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				}
-				scmpReply.setFullCacheId(cacheId);
-				scmpReply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, cacheComposite.getExpiration());
-				// give message sequence nr back to requester
-				String messageSequenceNr = cacheMessage.getMessageSequenceNr();
-				if (messageSequenceNr == null) {
-					CacheLogger.error("cache message has illegal state, messageSequenceNr=null");
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-							"cache message has illegal state, messageSequenceNr=null");
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
-				}
-				scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, cacheMessage.getMessageSequenceNr());
-				CacheLogger.trace("cache reply, cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr
-						+ ", expirationDateTime=" + cacheComposite.getExpiration());
-				if (cacheMessage.isCompressed()) {
-					scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-				}
-				scmpReply.setBody(cacheMessage.getBody());
-
-				response.setSCMP(scmpReply);
-				// schedule session timeout
-				if (cascaded == false) {
-					String sessionId = message.getSessionId();
-					Session session = this.sessionRegistry.getSession(sessionId);
-					synchronized (session) {
-						this.sessionRegistry.resetSessionTimeout(session, session.getSessionTimeoutMillis());
-						session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
-					}
-				}
-				responderCallback.responseCallback(request, response);
-				CacheLogger.trace("Sent a cache message to the client cacheId=" + cacheId + ", messageSequenceNr="
-						+ messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
-				return true; // message loaded from cache
-			}
-		}
-		return false; // message not loaded from cache
 	}
 }

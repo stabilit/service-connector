@@ -35,13 +35,13 @@ import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Log4JLoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
-import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.SCCacheManager;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
-import org.serviceconnector.conf.CacheConfiguration;
 import org.serviceconnector.conf.ListenerListConfiguration;
 import org.serviceconnector.conf.RemoteNodeListConfiguration;
+import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.conf.ServiceListConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;
@@ -49,6 +49,7 @@ import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.res.EndpointFactory;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
+import org.serviceconnector.registry.CacheRegistry;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -86,7 +87,7 @@ public final class AppContext {
 	/** The basic configuration. */
 	private static BasicConfiguration basicConfiguration = new BasicConfiguration();
 	/** The cache configuration. */
-	private static CacheConfiguration cacheConfiguration = new CacheConfiguration();
+	private static SCCacheConfiguration scCacheConfiguration = new SCCacheConfiguration();
 	/** The responder configuration. */
 	private static ListenerListConfiguration responderConfiguration = new ListenerListConfiguration();
 	/** The requester configuration. */
@@ -121,8 +122,11 @@ public final class AppContext {
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
 	/** The Constant scmpSessionCompositeRegistry. */
 	private static final SCMPSessionCompositeRegistry SCMP_COMPOSITE_REGISTRY = new SCMPSessionCompositeRegistry();
-	/** The Constant cacheManager. */
-	private static final CacheManager CACHE_MANAGER = new CacheManager();
+	/** The Constant CACHE_MANAGER. */
+	private static final SCCacheManager CACHE_MANAGER = new SCCacheManager();
+	/** The cache registry. */
+	private static CacheRegistry cacheRegistry = null;
+
 	/**
 	 * The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI.
 	 */
@@ -133,7 +137,7 @@ public final class AppContext {
 		// configures NETTY logging to use log4j framework
 		InternalLoggerFactory.setDefaultFactory(new Log4JLoggerFactory());
 		AppContext.basicConfiguration = new BasicConfiguration();
-		AppContext.cacheConfiguration = new CacheConfiguration();
+		AppContext.scCacheConfiguration = new SCCacheConfiguration();
 		AppContext.responderConfiguration = new ListenerListConfiguration();
 		AppContext.requesterConfiguration = new RemoteNodeListConfiguration();
 		init();
@@ -268,11 +272,20 @@ public final class AppContext {
 	}
 
 	/**
+	 * Gets the cache registry.
+	 * 
+	 * @return the cache registry
+	 */
+	public static CacheRegistry getCacheRegistry() {
+		return AppContext.cacheRegistry;
+	}
+
+	/**
 	 * Gets the cache manager.
 	 * 
 	 * @return the cache manager
 	 */
-	public static CacheManager getCacheManager() {
+	public static SCCacheManager getCacheManager() {
 		return AppContext.CACHE_MANAGER;
 	}
 
@@ -316,12 +329,12 @@ public final class AppContext {
 	}
 
 	/**
-	 * Gets the cache configuration.
+	 * Gets the SC cache configuration.
 	 * 
-	 * @return the cache configuration
+	 * @return the SC cache configuration
 	 */
-	public static CacheConfiguration getCacheConfiguration() {
-		return cacheConfiguration;
+	public static SCCacheConfiguration getSCCacheConfiguration() {
+		return scCacheConfiguration;
 	}
 
 	/**
@@ -364,6 +377,7 @@ public final class AppContext {
 			AppContext.serviceRegistry = new ServiceRegistry();
 			AppContext.sessionRegistry = new SessionRegistry();
 			AppContext.subscriptionRegistry = new SubscriptionRegistry();
+			AppContext.cacheRegistry = new CacheRegistry();
 		}
 	}
 

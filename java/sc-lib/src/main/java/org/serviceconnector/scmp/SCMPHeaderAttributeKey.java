@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
-
 /**
  * The Enum SCMPHeaderAttributeKey. Defines possible header attributes in SCMP.
  * 
@@ -94,11 +92,9 @@ public enum SCMPHeaderAttributeKey {
 	/** The SESSION_INFO. */
 	SESSION_INFO("sin"),
 	/** The URL_PATH. */
-	URL_PATH("urp");
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPHeaderAttributeKey.class);
+	URL_PATH("urp"),
+	/** The UNDEFINED. */
+	UNDEFINED("undefined");
 
 	/** The value. */
 	private String value;

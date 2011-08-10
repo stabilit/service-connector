@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.SCCacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.server.FileServerException;
@@ -170,7 +170,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			}
 			if ("clearCache".equals(action)) {
 				XMLLoaderFactory.LOGGER.debug("clear cache by user interface");
-				CacheManager cacheManager = AppContext.getCacheManager();
+				SCCacheManager cacheManager = AppContext.getCacheManager();
 				cacheManager.clearAll();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -491,11 +491,11 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				}
 				ZipEntry entry = null;
 				if (name.startsWith(Constants.DUMP_FILE_NAME)) {
-				   entry = new ZipEntry("dumps/" + name);
-				   entry.setComment("dump file " + name);
+					entry = new ZipEntry("dumps/" + name);
+					entry.setComment("dump file " + name);
 				} else {
-				   entry = new ZipEntry("logs/" + name);
-				   entry.setComment("log file " + name);				
+					entry = new ZipEntry("logs/" + name);
+					entry.setComment("log file " + name);
 				}
 				zos.putNextEntry(entry);
 				try {

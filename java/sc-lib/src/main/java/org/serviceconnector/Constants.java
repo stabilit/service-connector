@@ -72,6 +72,8 @@ public final class Constants {
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 	/** File qualifier for Http requests. */
 	public static final String SLASH = "/";
+	/** The Constant UNDERLINE. */
+	public static final String UNDERLINE = "_";
 	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent. */
 	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 	/** Protocol literal. */

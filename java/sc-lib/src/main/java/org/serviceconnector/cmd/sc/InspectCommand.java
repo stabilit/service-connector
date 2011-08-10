@@ -18,17 +18,18 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.cache.Cache;
-import org.serviceconnector.cache.CacheComposite;
-import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
-import org.serviceconnector.cache.CacheException;
-import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.SCCacheMetaEntry;
+import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
+import org.serviceconnector.cache.SC_CACHE_TYPE;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -44,6 +45,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.web.NotFoundException;
@@ -129,7 +131,7 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String cacheId = urlRequestString.getParamValue("cacheId");
 			LOGGER.debug("cache inspect for serviceName=" + serviceName + ", cacheId=" + cacheId);
-			String cacheInspectString = this.getCacheInspectString(serviceName, cacheId);
+			String cacheInspectString = this.getCacheInspectString(serviceName, serviceName + Constants.UNDERLINE + cacheId);
 			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
@@ -178,51 +180,49 @@ public class InspectCommand extends CommandAdapter {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param cacheId
-	 *            the cache id
+	 * @param cacheKey
+	 *            the cache key
 	 * @return the cache inspect string
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
 	 * @throws UnsupportedEncodingException
 	 *             encoding response string failed
 	 */
-	private String getCacheInspectString(final String serviceName, final String cacheId) throws SCMPCommandException,
+	private String getCacheInspectString(final String serviceName, final String cacheKey) throws SCMPCommandException,
 			UnsupportedEncodingException {
-		CacheManager cacheManager = AppContext.getCacheManager();
+		SCCacheManager cacheManager = AppContext.getCacheManager();
 		if (cacheManager == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_MANAGER_ERROR,
 					"no cache manager (null)");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		Cache cache = cacheManager.getCache(serviceName);
-		if (cache == null) {
+		@SuppressWarnings("unchecked")
+		ISCCache<SCCacheMetaEntry> scCache = (ISCCache<SCCacheMetaEntry>) AppContext.getCacheRegistry().getCache(
+				SC_CACHE_TYPE.META_DATA_CACHE.name());
+		if (scCache == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		try {
-			CacheComposite cacheComposite = cache.getComposite(cacheId);
-			if (cacheComposite == null) {
-				return URLString.toURLResponseString(Constants.CACHE_ID, cacheId, "return", "notfound");
-			}
-			CACHE_STATE cacheState = cacheComposite.getCacheState();
-			// Date creationTime = cacheComposite.getCreationTime();
-			// Date lastModifiedTime = cacheComposite.getLastModifiedTime();
-			String expirationDateTime = cacheComposite.getExpiration();
-			int size = cacheComposite.getSize();
-			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("return", "success");
-			parameters.put(Constants.CACHE_ID, cacheId);
-			parameters.put("cacheState", cacheState.toString());
-			parameters.put("cacheSize", String.valueOf(size));
-			parameters.put("cacheExpiration", expirationDateTime);
-			return URLString.toURLResponseString(parameters);
-		} catch (CacheException e) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, e.toString());
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
+		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) scCache.get(cacheKey);
+		if (metaEntry == null) {
+			return URLString.toURLResponseString(Constants.CACHE_ID, cacheKey, "return", "notfound");
 		}
+		SC_CACHE_ENTRY_STATE cacheState = metaEntry.getSCCacheEntryState();
+		Date creationTime = metaEntry.getCreationTime();
+		Date lastModifiedTime = metaEntry.getLastModifiedTime();
+		String expirationDateTime = DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(cacheKey));
+		int size = metaEntry.getNumberOfParts();
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("return", "success");
+		parameters.put(Constants.CACHE_ID, metaEntry.getCacheId());
+		parameters.put("cacheState", cacheState.toString());
+		parameters.put("cacheSize", String.valueOf(size));
+		parameters.put("cacheExpiration", expirationDateTime);
+		parameters.put("creationTime", DateTimeUtility.getDateTimeAsString(creationTime));
+		parameters.put("lastModifiedTime", DateTimeUtility.getDateTimeAsString(lastModifiedTime));
+		return URLString.toURLResponseString(parameters);
 	}
 
 	/**

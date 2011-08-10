@@ -33,6 +33,8 @@ import org.apache.log4j.Logger;
  */
 public class SCMPCompositeReceiver extends SCMPMessage {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1735822027625330541L;
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SCMPCompositeReceiver.class);
 

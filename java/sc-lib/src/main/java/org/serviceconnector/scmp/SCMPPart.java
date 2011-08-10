@@ -18,19 +18,18 @@ package org.serviceconnector.scmp;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 /**
- * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at the time all parts
+ * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at the time all
+ * parts
  * are sent and put together.
  * 
  * @author JTraber
  */
 public class SCMPPart extends SCMPMessage {
 
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPPart.class);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -6783597447553148309L;
+
 	/** The poll request. */
 	private boolean pollRequest;
 

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
-import org.apache.log4j.Level;
+import java.util.Formatter;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -26,6 +27,16 @@ public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
+	/** The start loading str. */
+	private static String startLoadingStr = "start loading cache message cid=%s sid=%s oti=%sms";
+	/** The put message str. */
+	private static String putMessageStr = "put message to cache cid=%s loading sid=%s expiration=%s parntNr=%s";
+	/** The stop loading str. */
+	private static String stopLoadingStr = "stop loading message complete cid=%s sid=%s";
+	/** The abort loading str. */
+	private static String abortLoadingStr = "abort loading message cid=%s sid=%s";
+	/** The remove msg from cache str. */
+	private static String removeMsgFromCacheStr = "remove message from cache cid=%s sid=%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -43,64 +54,93 @@ public final class CacheLogger {
 	}
 
 	/**
-	 * Debug.
+	 * Start loading cache message.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param cacheId
+	 *            the cache id
+	 * @param sessionId
+	 *            the session id
+	 * @param otiMillis
+	 *            the oti millis
 	 */
-	public static void trace(String message) {
+	public static void startLoadingCacheMessage(String cacheId, String sessionId, int otiMillis) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
-			CACHE_LOGGER.trace(message);
+			Formatter format = new Formatter();
+			format.format(startLoadingStr, cacheId, sessionId, otiMillis);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 
 	/**
-	 * Warn.
+	 * Stop loading cache message.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param cacheId
+	 *            the cache id
+	 * @param sessionId
+	 *            the session id
 	 */
-	public static void warn(String message) {
-		if (CACHE_LOGGER.isEnabledFor(Level.WARN)) {
-			CACHE_LOGGER.warn(message);
+	public static void stopLoadingCacheMessage(String cacheId, String sessionId) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(stopLoadingStr, cacheId, sessionId);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 
 	/**
-	 * Info.
+	 * Abort loading message.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param cacheKey
+	 *            the cache id
+	 * @param sessionId
+	 *            the session id
 	 */
-	public static void info(String message) {
-		if (CACHE_LOGGER.isEnabledFor(Level.INFO)) {
-			CACHE_LOGGER.info(message);
+	public static void abortLoadingMessage(String cacheKey, String sessionId) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(abortLoadingStr, cacheKey, sessionId);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 
 	/**
-	 * Error.
+	 * Put message to cache.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param cacheId
+	 *            the cache id
+	 * @param loadingSessionId
+	 *            the loading session id
+	 * @param expiration
+	 *            the expiration
+	 * @param partNr
+	 *            the part nr
 	 */
-	public static void error(String message) {
-		if (CACHE_LOGGER.isEnabledFor(Level.ERROR)) {
-			CACHE_LOGGER.error(message);
+	public static void putMessageToCache(String cacheId, String loadingSessionId, String expiration, int partNr) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(putMessageStr, cacheId, loadingSessionId, expiration, partNr);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 
 	/**
-	 * Error.
+	 * Removes the message from cache.
 	 * 
-	 * @param message
-	 *            the message
-	 * @param e
-	 *            the e
+	 * @param cacheId
+	 *            the cache id
+	 * @param sessionId
+	 *            the session id
 	 */
-	public static void error(String message, Exception e) {
-		if (CACHE_LOGGER.isEnabledFor(Level.ERROR)) {
-			CACHE_LOGGER.error(message, e);
+	public static void removeMessageFromCache(String cacheId, String sessionId) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(removeMsgFromCacheStr, cacheId, sessionId);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
 		}
 	}
 }

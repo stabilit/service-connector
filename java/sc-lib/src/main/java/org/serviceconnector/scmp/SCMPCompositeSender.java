@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
 
 /**
  * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides functionality
@@ -25,10 +24,9 @@ import org.apache.log4j.Logger;
  * @author JTraber
  */
 public class SCMPCompositeSender extends SCMPMessage {
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCompositeSender.class);
+	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -2950569709505656293L;
 
 	/** The large scmp message. */
 	private SCMPMessage message;

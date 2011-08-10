@@ -12,12 +12,12 @@
     <xsl:variable name="query">page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;</xsl:variable>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>&amp;type=<xsl:value-of select="$type"/>&amp;page=<xsl:value-of select="$page"/>&amp;comp_page=<xsl:value-of select="$comp_page"/>&amp;msg_page=<xsl:value-of select="$msg_page"/>&amp;site=<xsl:value-of select="$site"/>&amp;comp_site=<xsl:value-of select="$comp_site"/>&amp;msg_site=<xsl:value-of select="$msg_site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;cacheMessage=<xsl:value-of select="$head/query/param/@cacheMessage"/>&amp;type=<xsl:value-of select="$type"/>&amp;page=<xsl:value-of select="$page"/>&amp;comp_page=<xsl:value-of select="$comp_page"/>&amp;msg_page=<xsl:value-of select="$msg_page"/>&amp;site=<xsl:value-of select="$site"/>&amp;comp_site=<xsl:value-of select="$comp_site"/>&amp;msg_site=<xsl:value-of select="$msg_site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
           <div class="sc_table_title">
-           Cache Manager Configuration
+           Cache Configuration
           </div>
         <xsl:call-template name="cache_config"/>
         <div class="sc_table_title">
@@ -36,11 +36,10 @@
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
-            <th class="sc_table">Service Name</th>
-            <th class="sc_table">Message Count</th> <!-- Composite Size -->
-            <th class="sc_table">Message Part (MP) Count</th>  <!-- Element Size -->
-            <th class="sc_table">MP in Memory</th> <!-- Memory Store Size -->
-            <th class="sc_table">MP on Disk</th> <!-- Disk Store Size -->
+            <th class="sc_table">Cache Name</th>
+            <th class="sc_table">Message Count</th>
+            <th class="sc_table">Messages in Memory</th>
+            <th class="sc_table">Messages on Disk</th>
           </tr>          
           <xsl:if test="not($body/caches/cache)">
             <tr class="sc_table_even"><td colspan="7" class="sc_table">no caches</td></tr>
@@ -82,20 +81,19 @@
 	<xsl:template name="cache_row">
 	    <xsl:param name="query"/>
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>
+	    <td class="{$class}"><xsl:value-of select="cacheName"/></td>
 	    <td class="{$class}">
 	      <xsl:choose>
-	        <xsl:when test="compositeSize &gt; 0">
-	         <a class="sc_table" href="cache{$urlencoded}?{$query}cache={serviceName}"><xsl:value-of select="compositeSize"/></a>
+	        <xsl:when test="cachedMessageCount &gt; 0">
+	         <a class="sc_table" href="cache{$urlencoded}?{$query}cache={cacheName}"><xsl:value-of select="cachedMessageCount"/></a>
             </xsl:when>
             <xsl:otherwise>	       
-	         <xsl:value-of select="compositeSize"/>
+	         <xsl:value-of select="cachedMessageCount"/>
 	        </xsl:otherwise>
           </xsl:choose>       	    
 	    </td>
-	    <td class="{$class}"><xsl:value-of select="elementSize"/></td>
-	    <td class="{$class}"><xsl:value-of select="memoryStoreSize"/></td>
-	    <td class="{$class}"><xsl:value-of select="diskStoreSize"/></td>
+	    <td class="{$class}"><xsl:value-of select="numberOfMessagesInMemoryStore"/></td>
+	    <td class="{$class}"><xsl:value-of select="numberOfMessagesInDiskStore"/></td>
 	</xsl:template>
 	<xsl:template name="cache_details">
 	  <td colspan="7">
@@ -104,7 +102,7 @@
 	           <xsl:choose>
 	             <xsl:when test="details/@size &gt; 0">
 	               <xsl:call-template name="pageArea">
-	                 <xsl:with-param name="title">List of Cached Messages</xsl:with-param> <!-- List of cache composites -->
+	                 <xsl:with-param name="title">List of Cached Messages</xsl:with-param>
 	                 <xsl:with-param name="prefix">comp_</xsl:with-param>
 	                 <xsl:with-param name="query"><xsl:value-of select="$query"/>cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;</xsl:with-param>
 	                 <xsl:with-param name="size" select="details/@size"/>
@@ -121,29 +119,29 @@
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">cid</th><!-- ID -->
+	            <th class="sc_table">Key</th><!-- ID -->
 	            <th class="sc_table">Status</th>
-	            <th class="sc_table">Header Field Count</th><!-- Headers -->
-	            <th class="sc_table">Message Parts</th><!-- Messages -->
-	            <th class="sc_table">Expiration</th>
-	            <th class="sc_table">Loading Timeout (ms)</th>            
+	            <th class="sc_table">Expiration Timeout (ms)</th>            
 	            <th class="sc_table">Creation</th>            
-	            <th class="sc_table">Last Modified</th>            
+	            <th class="sc_table">Last Access</th>
+	            <th class="sc_table">Header Field Count</th><!-- Headers -->
 	          </tr>          
-	          <xsl:apply-templates select="details/composite">
+	          <xsl:apply-templates select="details/cacheMessage">
 	            <xsl:with-param name="query"><xsl:value-of select="$query"/>cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;</xsl:with-param>
-	            <xsl:with-param name="subPagingQuery">comp_page=<xsl:value-of select="details/@page"/>&amp;comp_site=<xsl:value-of select="details/@site"/>&amp;</xsl:with-param>	          
+	            <xsl:with-param name="subPagingQuery">comp_page=<xsl:value-of select="details/@page"/>&amp;comp_site=<xsl:value-of select="details/@site"/>&amp;</xsl:with-param>       
+	          	<xsl:with-param name="cacheMessageKey"><xsl:value-of select="$head/query/param/@cacheMessageKey"/></xsl:with-param>       
 	          </xsl:apply-templates>
 	        </table>
         </div>
 	  </td>
-	</xsl:template>
-	<xsl:template match="composite">
+	</xsl:template>	
+	<xsl:template match="cacheMessage">
 	  <xsl:param name="query"/>
 	  <xsl:param name="subPagingQuery"/>
+	  <xsl:param name="cacheMessageKey"/>
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="composite_row">
+	        <xsl:call-template name="cacheMessage_row">
 	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
 	          <xsl:with-param name="query" select="$query"/>
 	          <xsl:with-param name="subPagingQuery" select="$subPagingQuery"/>
@@ -152,29 +150,24 @@
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="composite_row">
+	        <xsl:call-template name="cacheMessage_row">
 	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
               <xsl:with-param name="query" select="$query"/>               
 	          <xsl:with-param name="subPagingQuery" select="$subPagingQuery"/>
 	        </xsl:call-template>
-	     </tr>	    
-         <xsl:if test="messages/message and $type='message'">
-           <tr>
-             <xsl:call-template name="cache_message_details">
-               <xsl:with-param name="serviceName" select="key"/>
-             </xsl:call-template>
-           </tr>
-        </xsl:if>
-         <xsl:if test="messages/message and $type='header'">
-           <tr>
-             <xsl:call-template name="cache_header_details">
-               <xsl:with-param name="serviceName" select="key"/>
-             </xsl:call-template>
-           </tr>
-        </xsl:if>
+	     </tr>   
 	  </xsl:if>	  
+      <xsl:if test="$type='header'">
+	   	 <xsl:if test="key=$cacheMessageKey">
+       	 <tr>
+           	 <xsl:call-template name="cache_header_details">
+           		<xsl:with-param name="cacheKey" select="key"/>
+          	</xsl:call-template>
+       	</tr>
+       	</xsl:if>
+     </xsl:if>
 	</xsl:template>	
-    <xsl:template name="composite_row">
+    <xsl:template name="cacheMessage_row">
 	    <xsl:param name="class"/>
 	    <xsl:param name="query"/>
 	    <xsl:param name="subPagingQuery"/>	    
@@ -185,30 +178,19 @@
 	        &#160;(<xsl:value-of select="loadingSessionId"/>)
 	      </xsl:if>
 	    </td>
+	    <td class="{$class}"><xsl:value-of select="expirationTimeout"/></td>
+	    <td class="{$class}"><xsl:value-of select="creation"/></td>
+	    <td class="{$class}"><xsl:value-of select="lastAccess"/></td>
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="count(header/item) &gt; 0">
-	         <a class="sc_table" href="cache{$urlencoded}?{$query}{$subPagingQuery}composite={key}&amp;type=header"><xsl:value-of select="count(header/item)"/></a>
+	         <a class="sc_table" href="cache{$urlencoded}?{$query}{$subPagingQuery}cacheMessageKey={key}&amp;type=header"><xsl:value-of select="count(header/item)"/></a>
             </xsl:when>
             <xsl:otherwise>	       
 	         <xsl:value-of select="count(header/item)"/>
 	        </xsl:otherwise>
           </xsl:choose>       	    
 	    </td>
-	    <td class="{$class}">
-	      <xsl:choose>
-	        <xsl:when test="size &gt; 0">
-	         <a class="sc_table" href="cache{$urlencoded}?{$query}{$subPagingQuery}composite={key}&amp;type=message"><xsl:value-of select="size"/></a>
-            </xsl:when>
-            <xsl:otherwise>	       
-	         <xsl:value-of select="size"/>
-	        </xsl:otherwise>
-          </xsl:choose>       	    
-	    </td>
-	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="expiration"/></xsl:call-template></td>
-	    <td class="{$class}"><xsl:value-of select="loadingTimeout"/></td>
-	    <td class="{$class}"><xsl:value-of select="creation"/></td>
-	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>
 	</xsl:template>
 	<xsl:template name="cache_config">
 	  <xsl:variable name="config" select="$body/cache/config"/>
@@ -216,8 +198,8 @@
          <tr class="sc_table_header">
            <th class="sc_table">Status</th>
            <th class="sc_table">Disk Path</th>
-           <th class="sc_table">Max Message Parts in Memory</th><!-- maxElementsInMemory -->
-           <th class="sc_table">Max Message Parts on Disk</th><!-- maxElementsOnDisk -->
+           <th class="sc_table">Max Messages in Memory</th><!-- maxElementsInMemory -->
+           <th class="sc_table">Max Messages on Disk</th><!-- maxElementsOnDisk -->
            <th class="sc_table">Loading (Sessions/MP)</th>            
          </tr>          
          <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -234,77 +216,22 @@
 	  <div class="sc_separator"/>
 	  <div class="sc_separator"/>
 	</xsl:template>
-	<xsl:template name="cache_message_details">
-	  <xsl:param name="serviceName"/>
-	  <td colspan="8">
-	    <div class="sc_table_details">
-	        <div class="sc_table_title">
-	           <xsl:call-template name="pageArea">
-                 <xsl:with-param name="title">List of Cached Message Parts [<xsl:value-of select="$serviceName"/>]</xsl:with-param> <!-- List of cache messages (parts) -->
-                 <xsl:with-param name="prefix">msg_</xsl:with-param>
-                 <xsl:with-param name="query"><xsl:value-of select="$query"/>cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="key"/>&amp;comp_page=<xsl:value-of select="$comp_page"/>&amp;comp_site=<xsl:value-of select="$comp_site"/>&amp;type=message&amp;</xsl:with-param>
-                 <xsl:with-param name="size" select="messages/@size"/>
-                 <xsl:with-param name="currentSite" select="messages/@site"/>
-                 <xsl:with-param name="currentPage" select="messages/@page"/>
-                 <xsl:with-param name="lastPage" select="messages/@lastPage"/>
-                 <xsl:with-param name="lastSite" select="messages/@lastSite"/>
-                 <xsl:with-param name="siteSize" select="messages/@siteSize"/>
-                 <xsl:with-param name="pageSize" select="messages/@pageSize"/>
-	           </xsl:call-template>	               	           
-	        </div>             
-	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
-	          <tr class="sc_table_header">
-	            <th class="sc_table">cid/cpn</th><!-- ID -->
-	            <th class="sc_table">Sequence Nr</th>
-	            <th class="sc_table">Message Type</th>
-	            <th class="sc_table">Compression</th>
-	            <th class="sc_table">Length (Bytes)</th>            
-	          </tr>          
-	          <xsl:apply-templates select="messages/message"/>
-	        </table>
-        </div>
-	  </td>
-	</xsl:template>
-	<xsl:template match="message">
-	  <xsl:if test="position() mod 2 = 0">
-	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="message_row">
-	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
-	        </xsl:call-template>
-	     </tr>	    
-	  </xsl:if>
-	  <xsl:if test="position() mod 2 != 0">
-	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="message_row">
-	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
-	        </xsl:call-template>
-	     </tr>	    
-	  </xsl:if>
-	</xsl:template>
-	<xsl:template name="message_row">
-	  <xsl:param name="class"/>
-      <td class="{$class}"><xsl:value-of select="id"/></td>
-      <td class="{$class}"><xsl:value-of select="sequenceNr"/></td>
-      <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="messageType"/></xsl:call-template></td>
-      <td class="{$class}"><xsl:value-of select="compressed"/></td>
-      <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="bodyLength"/></xsl:call-template></td>
-	</xsl:template>
 	<xsl:template name="cache_header_details">
-	  <xsl:param name="serviceName"/>
+	  <xsl:param name="cacheKey" />
 	  <td colspan="8">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           Message headers [<xsl:value-of select="$serviceName"/>]<!-- composite headers -->
+	           Message header [<xsl:value-of select="$cacheKey" />]
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
 	            <xsl:for-each select="header/item">
-	               <th class="sc_table"><xsl:value-of select="@name"/></th>
+	               <th class="sc_table"><xsl:value-of select="@name" /></th>
 	            </xsl:for-each>
 	          </tr>          
 		      <tr class="sc_table_header">
 		         <xsl:for-each select="header/item">
-		           <td class="sc_table_odd"><xsl:value-of select="."/></td>
+		           <td class="sc_table_odd"><xsl:value-of select="." /></td>
 		         </xsl:for-each>
 		      </tr>          
 	        </table>

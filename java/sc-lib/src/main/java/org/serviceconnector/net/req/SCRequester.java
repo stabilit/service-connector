@@ -255,10 +255,15 @@ public class SCRequester implements IRequester {
 					// increment msgSequenceNr
 					this.msgSequenceNr.incrementAndGetMsgSequenceNr();
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-				}
+				}			
 				// updating cache part number for poll request
-				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER,
-						scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
+				Integer partNr = scmpReply.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
+				if (partNr == null) {
+					partNr = 1;
+				} else {
+					partNr++;
+				}
+				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, partNr);
 				LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
@@ -309,8 +314,13 @@ public class SCRequester implements IRequester {
 				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 			// updating cache part number for poll request
-			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER,
-					scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
+			Integer partNr = scmpReply.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
+			if (partNr == null) {
+				partNr = 1;
+			} else {
+				partNr++;
+			}
+			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, partNr);
 			LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 			// poll & exit
 			this.connectionCtx.getConnection().send(message, this);

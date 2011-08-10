@@ -64,7 +64,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setCacheId(reqMessage.getCacheId());
-		scMessage.setCachePartNr(reqMessage.getCachePartNr());
+		scMessage.setCachePartNr(reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
 		scMessage.setServiceName(reqMessage.getServiceName());
 		scMessage.setSessionId(reqMessage.getSessionId());
 

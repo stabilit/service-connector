@@ -17,21 +17,28 @@
 
 package org.serviceconnector.web.xml;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.cache.Cache;
-import org.serviceconnector.cache.CacheComposite;
-import org.serviceconnector.cache.CacheException;
-import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheKey;
-import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.cache.CacheManager.CacheLoadingSession;
-import org.serviceconnector.cache.CacheMessage;
-import org.serviceconnector.cache.ICacheConfiguration;
+import net.sf.ehcache.CacheException;
+
+import org.serviceconnector.Constants;
+import org.serviceconnector.cache.SCCacheMetaEntry;
+import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
+import org.serviceconnector.cache.SC_CACHE_TYPE;
+import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
 
@@ -53,25 +60,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		writer.writeStartElement("cache");
-		CacheManager cacheManager = AppContext.getCacheManager();
-		ICacheConfiguration cacheConfiguration = cacheManager.getCacheConfiguration();
+		org.serviceconnector.cache.SCCacheManager cacheManager = AppContext.getCacheManager();
+		SCCacheConfiguration cacheConfiguration = cacheManager.getCacheConfiguration();
 		this.writeCacheConfiguration(writer, cacheConfiguration);
 		writer.writeEndElement(); // close cache tag
 		writer.writeStartElement("cacheLoading");
 		this.writeCacheLoading(writer, cacheManager);
 		writer.writeEndElement();
 		writer.writeStartElement("caches");
-		Cache[] caches = cacheManager.getAllCaches();
-		int simulation = this.getParameterInt(request, "sim", 0);
-		if (simulation > 0 && caches.length > 0) {
-			Cache[] sim = new Cache[simulation + caches.length];
-			System.arraycopy(caches, 0, sim, 0, caches.length);
-			for (int i = caches.length; i < simulation + caches.length; i++) {
-				sim[i] = caches[0];
-			}
-			caches = sim;
-		}
-		this.writeCaches(writer, caches, request);
+		this.writeCaches(writer, request);
 		writer.writeEndElement(); // close caches tag
 	}
 
@@ -85,7 +82,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheConfiguration(XMLStreamWriter writer, ICacheConfiguration cacheConfiguration) throws XMLStreamException {
+	private void writeCacheConfiguration(XMLStreamWriter writer, SCCacheConfiguration cacheConfiguration) throws XMLStreamException {
 		writer.writeStartElement("config");
 		writer.writeStartElement("diskPath");
 		writer.writeCharacters(cacheConfiguration.getDiskPath());
@@ -107,62 +104,67 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param caches
+	 * @param cacheKeys
 	 *            the caches
 	 * @param request
 	 *            the request
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCaches(XMLStreamWriter writer, Object[] caches, IWebRequest request) throws Exception {
+	private void writeCaches(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String cacheParam = request.getParameter("cache");
 		int simulation = this.getParameterInt(request, "sim", 0);
-		Paging paging = this.writePagingAttributes(writer, request, caches.length, ""); // no prefix
+		List<String> cacheKeys = new ArrayList<String>();
+		cacheKeys.add(SC_CACHE_TYPE.META_DATA_CACHE.name());
+		cacheKeys.add(SC_CACHE_TYPE.DATA_CACHE.name());
+		Paging paging = this.writePagingAttributes(writer, request, cacheKeys.size(), ""); // no prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
+
 		for (int i = startIndex; i < endIndex; i++) {
-			Object obj = caches[i];
-			if (obj instanceof Cache == false) {
-				continue;
-			}
-			Cache cache = (Cache) obj;
+			String cacheKey = cacheKeys.get(i);
+			ISCCache<?> scCache = AppContext.getCacheRegistry().getCache(cacheKey);
 			writer.writeStartElement("cache");
-			writer.writeStartElement("serviceName");
-			writer.writeCharacters(cache.getServiceName());
-			writer.writeEndElement(); // close serviceName tag
-			writer.writeStartElement("compositeSize");
-			writer.writeCharacters(String.valueOf(cache.getCompositeSize() + simulation));
-			writer.writeEndElement(); // close compositeSize tag
-			writer.writeStartElement("elementSize");
-			writer.writeCharacters(String.valueOf(cache.getElementSize()));
-			writer.writeEndElement(); // close elementSize tag
-			writer.writeStartElement("memoryStoreSize");
-			writer.writeCharacters(String.valueOf(cache.getMemoryStoreSize()));
+			writer.writeStartElement("cacheName");
+			writer.writeCharacters(scCache.getCacheName());
+			writer.writeEndElement(); // close cacheName tag
+			writer.writeStartElement("cachedMessageCount");
+			writer.writeCharacters(String.valueOf(scCache.getKeysWithExpiryCheck().size() + simulation));
+			writer.writeEndElement(); // close cachedMessageCount tag
+			writer.writeStartElement("numberOfMessagesInMemoryStore");
+			writer.writeCharacters(String.valueOf(scCache.getNumberOfMessagesInStore()));
 			writer.writeEndElement(); // close memoryStoreSize tag
-			writer.writeStartElement("diskStoreSize");
-			writer.writeCharacters(String.valueOf(cache.getDiskStoreSize()));
+			writer.writeStartElement("numberOfMessagesInDiskStore");
+			writer.writeCharacters(String.valueOf(scCache.getNumberOfMessagesInDiskStore()));
 			writer.writeEndElement(); // close diskStoreSize tag
-			if (cache.getServiceName().equals(cacheParam)) {
-				writeCacheDetails(writer, cache, request);
+			if (scCache.getCacheName().equals(cacheParam)) {
+				writeCacheDetails(writer, scCache, request);
 			}
 			writer.writeEndElement(); // close cache tag
 		}
 	}
 
-	private void writeCacheLoading(XMLStreamWriter writer, CacheManager cacheManager) throws XMLStreamException {
-		CacheLoadingSession[] cacheLoadingSessions = cacheManager.getCacheLoadingSessions();
-		for (int i = 0; i < cacheLoadingSessions.length; i++) {
-			CacheLoadingSession cacheLoadingSession = cacheLoadingSessions[i];
+	/**
+	 * Write cache loading.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param cacheManager
+	 *            the cache manager
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
+	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCacheManager cacheManager)
+			throws XMLStreamException {
+		HashMap<String, String> loadingSessionIds = cacheManager.getLoadingSessionIds();
+		Set<String> sessionIds = loadingSessionIds.keySet();
+		for (String sid : sessionIds) {
 			writer.writeStartElement("session");
-			writer.writeAttribute("sessionId", cacheLoadingSession.getSessionId());
-			String[] cacheIds = cacheLoadingSession.getCacheIds();
-			for (int j = 0; j < cacheIds.length; j++) {
-				String cacheId = cacheIds[i];
-				writer.writeStartElement("cacheId");
-				writer.writeCharacters(cacheId);
-				writer.writeEndElement();
-			}
+			writer.writeAttribute("sessionId", sid);
+			writer.writeStartElement("cacheId");
+			writer.writeCharacters(loadingSessionIds.get(sid));
+			writer.writeEndElement();
 			writer.writeEndElement();
 		}
 	}
@@ -179,40 +181,53 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheDetails(XMLStreamWriter writer, Cache cache, IWebRequest request) throws Exception {
+	private void writeCacheDetails(XMLStreamWriter writer, ISCCache<?> cache, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
-		Object[] compositeKeys = cache.getCompositeKeys();
+		List<String> dataCacheKeys = cache.getKeysWithExpiryCheck();
+		Collections.sort(dataCacheKeys, new CacheKeyComparator());
 		int simulation = this.getParameterInt(request, "sim", 0);
 		if (simulation > 0) {
-			if (compositeKeys == null) {
-				compositeKeys = new Object[0];
+			if (dataCacheKeys == null) {
+				dataCacheKeys = new ArrayList<String>();
 			}
-			Object[] sim = new Object[simulation + compositeKeys.length];
-			System.arraycopy(compositeKeys, 0, sim, 0, compositeKeys.length);
-			for (int i = compositeKeys.length; i < simulation + compositeKeys.length; i++) {
-				sim[i] = new CacheKey("sim " + i);
+			List<String> sim = new ArrayList<String>();
+			;
+			System.arraycopy(dataCacheKeys, 0, sim, 0, dataCacheKeys.size());
+			for (int i = dataCacheKeys.size(); i < simulation + dataCacheKeys.size(); i++) {
+				sim.add("sim " + i);
 			}
-			compositeKeys = sim;
+			dataCacheKeys = sim;
 		}
-		if (compositeKeys == null) {
+		if (dataCacheKeys == null) {
 			writer.writeAttribute("size", "0");
 			writer.writeEndElement();
 			return;
 		}
-		Paging paging = this.writePagingAttributes(writer, request, compositeKeys.length, "comp_"); // no prefix
+		Paging paging = this.writePagingAttributes(writer, request, dataCacheKeys.size(), "comp_"); // no prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
+
 		for (int i = startIndex; i < endIndex; i++) {
-			Object obj = compositeKeys[i];
-			CacheKey cacheKey = (CacheKey) obj;
+			String key = dataCacheKeys.get(i);
 			try {
-				CacheComposite cacheComposite = cache.getComposite(cacheKey.getCacheId());
-				if (cacheComposite == null && simulation > 0) {
-					cacheComposite = new CacheComposite();
-				}
-				if (cacheComposite != null) {
-					writeCacheComposite(writer, cache, cacheKey, cacheComposite, request);
+
+				if (cache.getCacheName().equals(SC_CACHE_TYPE.META_DATA_CACHE.name())) {
+					SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) cache.get(key);
+					if (metaEntry == null && simulation > 0) {
+						metaEntry = new SCCacheMetaEntry("");
+					}
+					if (metaEntry != null) {
+						writeCacheMetaEntry(writer, cache, key, metaEntry, request);
+					}
+				} else {
+					SCMPMessage cachedMessage = (SCMPMessage) cache.get(key);
+					if (cachedMessage == null && simulation > 0) {
+						cachedMessage = new SCMPMessage("");
+					}
+					if (cachedMessage != null) {
+						writeCacheMessage(writer, cache, key, cachedMessage, request);
+					}
 				}
 			} catch (CacheException e) {
 			}
@@ -221,7 +236,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * Write cache composite.
+	 * Write cache meta entry.
 	 * 
 	 * @param writer
 	 *            the writer
@@ -229,85 +244,47 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 *            the cache
 	 * @param cacheKey
 	 *            the cache key
-	 * @param cacheComposite
+	 * @param metaEntry
 	 *            the cache composite
 	 * @param request
 	 *            the request
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite, IWebRequest request)
-			throws Exception {
-		String compositeParam = request.getParameter("composite");
+	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCache<?> cache, String cacheKey, SCCacheMetaEntry metaEntry,
+			IWebRequest request) throws Exception {
 		int simulation = this.getParameterInt(request, "sim", 0);
-		writer.writeStartElement("composite");
+		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
-		writer.writeCharacters(cacheKey.getCacheId());
+		writer.writeCharacters(cacheKey);
 		writer.writeEndElement();
+
 		writer.writeStartElement("state");
-		writer.writeCharacters(cacheComposite.getCacheState().toString());
+		writer.writeCharacters(metaEntry.getSCCacheEntryState().name());
 		writer.writeEndElement(); // end of state
-		writer.writeStartElement("size");
-		writer.writeCharacters(String.valueOf(cacheComposite.getSize() + simulation));
-		writer.writeEndElement(); // end of size
-		writer.writeStartElement("loadingTimeout");
-		writer.writeCharacters(String.valueOf(cacheComposite.getLoadingTimeout()));
-		writer.writeEndElement(); // end of loadingTimeout
 		writer.writeStartElement("loadingSessionId");
-		writer.writeCharacters(String.valueOf(cacheComposite.getLoadingSessionId()));
+		writer.writeCharacters(String.valueOf(metaEntry.getLoadingSessionId()));
 		writer.writeEndElement(); // end of loadingSessionId
-		writer.writeStartElement("expiration");
-		if (cacheComposite.getExpiration() != null) {
-			writer.writeCharacters(cacheComposite.getExpiration());
-		}
-		writer.writeEndElement(); // end of expiration
+		writer.writeStartElement("expirationTimeout");
+		Date expireDate = cache.getExpirationTime(cacheKey);
+		Date creationDate = cache.getCreationTime(cacheKey);
+		long expireTimeoutMillis = expireDate.getTime() - creationDate.getTime();
+		writer.writeCharacters(String.valueOf(expireTimeoutMillis));
+		writer.writeEndElement(); // end of expirationTimeout
 		writer.writeStartElement("creation");
-		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getCreationTime()));
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(creationDate));
 		writer.writeEndElement(); // end of creation
-		writer.writeStartElement("lastModified");
-		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getLastModifiedTime()));
-		writer.writeEndElement(); // end of lastModified
+		writer.writeStartElement("lastAccess");
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));
+		writer.writeEndElement(); // end of lastAccess
+		writer.writeStartElement("size");
+		writer.writeCharacters(String.valueOf(metaEntry.getNumberOfParts() + simulation));
+		writer.writeEndElement(); // end of size
 		writer.writeStartElement("header");
-		Map<String, String> compositeHeaderHeader = cacheComposite.getHeader();
-		this.writeHeaderMap(writer, compositeHeaderHeader);
+		Map<String, String> metaEntryHeader = metaEntry.getHeader();
+		this.writeHeaderMap(writer, metaEntryHeader);
 		writer.writeEndElement(); // end of header
-		if (simulation > 0 && compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
-			writer.writeStartElement("messages");
-			Paging paging = this.writePagingAttributes(writer, request, simulation, "msg_"); // use msg prefix
-			// String showSessionsParameter = request.getParameter("showsessions");
-			int startIndex = paging.getStartIndex();
-			int endIndex = paging.getEndIndex();
-			for (int i = startIndex; i < endIndex; i++) {
-				writer.writeStartElement("message");
-				CacheMessage cacheMessage = new CacheMessage("sim " + i, null);
-				cacheMessage.setCacheId("sim " + i);
-				writeCacheMessage(writer, cacheMessage);
-				writer.writeEndElement();
-			}
-			writer.writeEndElement(); // end of messages
-		} else {
-			if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
-				writer.writeStartElement("messages");
-				Paging paging = this.writePagingAttributes(writer, request, cacheComposite.getSize(), "msg_"); // use msg prefix
-				// String showSessionsParameter = request.getParameter("showsessions");
-				int startIndex = paging.getStartIndex();
-				int endIndex = paging.getEndIndex();
-				// get all messages
-				CacheId cacheId = new CacheId(cacheKey.getCacheId());
-				for (int i = startIndex; i < endIndex; i++) {
-					cacheId.setSequenceNr(String.valueOf(i + 1));
-					writer.writeStartElement("message");
-					try {
-						CacheMessage cacheMessage = cache.getMessage(cacheId.getFullCacheId());
-						writeCacheMessage(writer, cacheMessage);
-					} catch (CacheException e) {
-					}
-					writer.writeEndElement();
-				}
-				writer.writeEndElement(); // end of messages
-			}
-		}
-		writer.writeEndElement(); // end of composite
+		writer.writeEndElement(); // end of cacheMessage
 	}
 
 	/**
@@ -315,37 +292,77 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @param writer
 	 *            the writer
+	 * @param cache
+	 *            the cache
+	 * @param cacheKey
+	 *            the cache key
 	 * @param cacheMessage
 	 *            the cache message
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
-	private void writeCacheMessage(XMLStreamWriter writer, CacheMessage cacheMessage) throws XMLStreamException {
-		if (cacheMessage == null) {
-			return;
-		}
-		writer.writeStartElement("id");
-		writer.writeCharacters(cacheMessage.getCacheId().getFullCacheId());
+	private void writeCacheMessage(XMLStreamWriter writer, ISCCache<?> cache, String cacheKey, SCMPMessage cacheMessage,
+			IWebRequest request) throws Exception {
+		writer.writeStartElement("cacheMessage");
+		writer.writeStartElement("key");
+		writer.writeCharacters(cacheKey);
 		writer.writeEndElement();
-		writer.writeStartElement("sequenceNr");
-		writer.writeCharacters(cacheMessage.getCacheId().getSequenceNr());
-		writer.writeEndElement();
-		writer.writeStartElement("messageType");
-		writer.writeCharacters(cacheMessage.getMessageType());
-		writer.writeEndElement();
-		writer.writeStartElement("compressed");
-		writer.writeCharacters(String.valueOf(cacheMessage.isCompressed()));
-		writer.writeEndElement();
-		Object body = cacheMessage.getBody();
-		if (body != null && body instanceof byte[]) {
-			writer.writeStartElement("bodyLength");
-			writer.writeCharacters(String.valueOf(((byte[]) body).length));
-			writer.writeEndElement();
-		}
-		if (body != null && body instanceof String) {
-			writer.writeStartElement("bodyLength");
-			writer.writeCharacters(String.valueOf(((String) body).length()));
-			writer.writeEndElement();
+		writer.writeStartElement("state");
+		writer.writeCharacters(SC_CACHE_ENTRY_STATE.LOADED.name());
+		writer.writeEndElement(); // end of state
+		writer.writeStartElement("expirationTimeout");
+		Date expireDate = cache.getExpirationTime(cacheKey);
+		Date creationDate = cache.getCreationTime(cacheKey);
+		long expireTimeoutMillis = expireDate.getTime() - creationDate.getTime();
+		writer.writeCharacters(String.valueOf(expireTimeoutMillis));
+		writer.writeEndElement(); // end of expirationTimeout
+		writer.writeStartElement("loadingSessionId");
+		writer.writeCharacters(cacheMessage.getSessionId());
+		writer.writeEndElement(); // end of loadingSessionId
+		writer.writeStartElement("creation");
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(creationDate));
+		writer.writeEndElement(); // end of creation
+		writer.writeStartElement("lastAccess");
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cache.getLastAccessTime(cacheKey)));
+		writer.writeEndElement(); // end of lastAccess
+		writer.writeStartElement("header");
+		Map<String, String> cacheMessageHeader = cacheMessage.getHeader();
+		this.writeHeaderMap(writer, cacheMessageHeader);
+		writer.writeEndElement(); // end of header
+		writer.writeEndElement(); // end of cacheMessage
+	}
+
+	/**
+	 * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys.
+	 */
+	private class CacheKeyComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			// extract service names and compare
+			String serviceName1 = o1.substring(0, o1.indexOf(Constants.UNDERLINE));
+			String serviceName2 = o2.substring(0, o2.indexOf(Constants.UNDERLINE));
+			int stringResult = serviceName1.compareTo(serviceName2);
+
+			if (stringResult != 0) {
+				// service names are not equal
+				return stringResult;
+			}
+
+			// extract cache keys and compare
+			String cacheKey1 = o1.substring(o1.indexOf(Constants.UNDERLINE) + 1).replace(Constants.SLASH, "");
+			String cacheKey2 = o2.substring(o2.indexOf(Constants.UNDERLINE) + 1).replace(Constants.SLASH, "");
+
+			int o1Int = new Integer(cacheKey1);
+			int o2Int = new Integer(cacheKey2);
+
+			if (o1Int == o2Int)
+				return 0;
+			if (o1Int > o2Int)
+				return 1;
+			return -1;
 		}
 	}
 }

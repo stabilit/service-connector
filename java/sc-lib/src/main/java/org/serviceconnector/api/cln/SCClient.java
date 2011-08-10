@@ -400,7 +400,6 @@ public class SCClient {
 			}
 			return false;
 		} catch (SCServiceException e) {
-			// TODO JOT ::convert SCMPERROR to int
 			if (e.getSCErrorCode() == SCMPError.SERVICE_NOT_FOUND.getErrorCode()) {
 				return false;
 			}

@@ -139,16 +139,6 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 	}
 
 	/**
-	 * Gets the all session keys.
-	 * 
-	 * @return the all session keys
-	 */
-	public Object[] getAllSessionKeys() {
-		Object[] keys = this.keySetArray();
-		return keys;
-	}
-
-	/**
 	 * The Class WebSessionTimeout. Gets control when a session times out. Responsible for cleaning up when session gets broken.
 	 */
 	private class WebSessionTimeout implements ITimeout {

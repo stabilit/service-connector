@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.registry.jmx.IRegistryMXBean;
 import org.serviceconnector.registry.jmx.RegistryEntryWrapperJMX;
 
-
 /**
  * The Class Registry. Provides functionality for general registries.
  * 
@@ -123,16 +122,17 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	public Set<K> keySet() {
 		return this.registryMap.keySet();
 	}
-	
+
 	/**
 	 * Key set array.
-	 *
-	 * @return the object[]
+	 * 
+	 * @return the k[]
 	 */
-	public Object[] keySetArray() {
-		return this.registryMap.keySet().toArray();
+	@SuppressWarnings("unchecked")
+	public K[] keySetArray() {
+		return (K[]) this.registryMap.keySet().toArray();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {

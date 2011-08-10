@@ -17,6 +17,7 @@
 package org.serviceconnector.scmp;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,18 +25,17 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.cache.CacheId;
 
 /**
  * Service Connector Message Protocol. Data container for one message.
  * 
  * @author JTraber
  */
-public class SCMPMessage {
-
+public class SCMPMessage implements Serializable {
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 4620549763039638861L;
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SCMPMessage.class);
-
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
 	/** The actual SC_VERSION. */
@@ -113,43 +113,12 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Gets the full cache id (CacheId/PartNr).
-	 * 
-	 * @return the full cache id
-	 */
-	public CacheId getFullCacheId() {
-		String cacheId = this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
-		String cachePartNr = this.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
-		return new CacheId(cacheId, cachePartNr);
-	}
-
-	/**
-	 * Sets the full cache id.
-	 * 
-	 * @param cacheId
-	 *            the new full cache id
-	 */
-	public void setFullCacheId(CacheId cacheId) {
-		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId.getCacheId());
-		this.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, cacheId.getSequenceNr());
-	}
-
-	/**
 	 * Gets the cache id.
 	 * 
 	 * @return the cache id
 	 */
 	public String getCacheId() {
 		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
-	}
-
-	/**
-	 * Gets the cache part nr.
-	 * 
-	 * @return the cache part number
-	 */
-	public String getCachePartNr() {
-		return this.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 	}
 
 	/**
@@ -163,19 +132,6 @@ public class SCMPMessage {
 			return;
 		}
 		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
-	}
-
-	/**
-	 * Sets the cache part number.
-	 * 
-	 * @param cachePartNr
-	 *            the new cache part nr
-	 */
-	public void setCachePartNr(String cachePartNr) {
-		if (cachePartNr == null) {
-			return;
-		}
-		this.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, cachePartNr);
 	}
 
 	/**

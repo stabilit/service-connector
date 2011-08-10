@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
@@ -164,10 +163,6 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	CACHE_MANAGER_ERROR(610, "Cache Manager error."),
 	/** The CACHE_MANAGER_ERROR. */
 	PARALLEL_REQUEST(611, "Parallel client request rejected.");
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPError.class);
 
 	/** The error code. Should not be integer because it is transmitted over the line */
 	private int errorCode;

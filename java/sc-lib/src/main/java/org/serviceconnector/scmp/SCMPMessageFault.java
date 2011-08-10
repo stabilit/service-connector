@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
@@ -24,9 +23,8 @@ import org.serviceconnector.util.DateTimeUtility;
  */
 public class SCMPMessageFault extends SCMPMessage {
 
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPMessageFault.class);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1695597295852533538L;
 
 	/** The exception. */
 	private Exception exception;

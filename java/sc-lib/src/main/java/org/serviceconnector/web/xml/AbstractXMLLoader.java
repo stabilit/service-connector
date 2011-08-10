@@ -69,7 +69,6 @@ import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractXMLLoader.
  */

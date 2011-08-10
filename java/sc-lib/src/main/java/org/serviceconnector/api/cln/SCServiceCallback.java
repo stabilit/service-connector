@@ -106,8 +106,10 @@ public class SCServiceCallback extends SynchronousCallback {
 			super.receive(ex);
 			return;
 		}
-		// inform service request is completed
-		this.service.setRequestComplete();
+		if (this.service != null) {
+			// inform service request is completed
+			this.service.setRequestComplete();
+		}
 		this.messageCallback.receive(ex);
 	}
 }

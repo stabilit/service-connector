@@ -18,8 +18,6 @@ package org.serviceconnector.scmp;
 
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
-
 /**
  * The Class SCMPOffsetPart. Represents an outgoing part SCMP of a large message. Extends SCMPPart and adds information of current
  * body like offset, totalBodyLength.
@@ -28,9 +26,8 @@ import org.apache.log4j.Logger;
  */
 public class SCMPOffsetPart extends SCMPPart {
 
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPOffsetPart.class);
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1542392908180130094L;
 
 	/** The offset where body starts. */
 	private int offset;

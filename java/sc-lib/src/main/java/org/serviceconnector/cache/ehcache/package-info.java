@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,34 +13,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
-package org.serviceconnector.cache;
-
+ *-----------------------------------------------------------------------------*/
 /**
- * The Class CacheExpiredException.
+ * Concrete implementation of the cache. Abstracts the EhCache which takes place on lower architecture of the cache.
  */
-public class CacheExpiredException extends CacheException {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -16989349079433186L;
-
-	/**
-	 * Instantiates a new SCMP cache exception.
-	 */
-	public CacheExpiredException() {
-		super();
-	}
-
-	/**
-	 * Instantiates a new SCMP cache exception.
-	 *
-	 * @param message the message
-	 */
-	public CacheExpiredException(String message) {
-		super(message);
-	}
-
-	
-}
+package org.serviceconnector.cache.ehcache;

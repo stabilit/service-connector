@@ -20,7 +20,7 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.SCCacheManager;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
@@ -93,7 +93,7 @@ public class ManageCommand extends CommandAdapter {
 		}
 
 		if (Constants.CC_CMD_CLEAR_CACHE.equalsIgnoreCase(callKey)) {
-			CacheManager cacheManager = AppContext.getCacheManager();
+			SCCacheManager cacheManager = AppContext.getCacheManager();
 			cacheManager.clearAll();
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
