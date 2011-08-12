@@ -81,9 +81,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		SCCacheManager manager = AppContext.getCacheManager();
-		if (manager.isCacheEnabled() == true) {
-			manager.cacheMessage(this.requestMessage, reply);
+		SCCacheManager cacheManager = AppContext.getCacheManager();
+		if (cacheManager.isCacheEnabled() == true) {
+			cacheManager.cacheMessage(this.requestMessage, reply);
 		}
 		// forward server reply to client
 		reply.setIsReply(true);
@@ -116,9 +116,9 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + this.sid);
 		}
 		// caching
-		SCCacheManager manager = AppContext.getCacheManager();
-		if (manager.isCacheEnabled() == true) {
-			manager.cacheMessage(this.requestMessage, fault);
+		SCCacheManager cacheManager = AppContext.getCacheManager();
+		if (cacheManager.isCacheEnabled() == true) {
+			cacheManager.cacheMessage(this.requestMessage, fault);
 		}
 		// forward server reply to client
 		fault.setSessionId(this.sid);

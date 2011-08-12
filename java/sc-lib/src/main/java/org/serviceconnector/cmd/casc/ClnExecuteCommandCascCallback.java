@@ -59,9 +59,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	public void receive(SCMPMessage reply) {
 		String serviceName = this.requestMessage.getServiceName();
 		// caching
-		SCCacheManager manager = AppContext.getCacheManager();
-		if (manager.isCacheEnabled() == true) {
-			manager.cacheMessage(this.requestMessage, reply);
+		SCCacheManager cacheManager = AppContext.getCacheManager();
+		if (cacheManager.isCacheEnabled() == true) {
+			cacheManager.cacheMessage(this.requestMessage, reply);
 		}
 		// forward server reply to client
 		reply.setIsReply(true);
