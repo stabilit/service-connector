@@ -352,7 +352,7 @@ public class SCSessionServer {
 		}
 		SCServerTimeout serverTimeout = new SCServerTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(serverTimeout);
-		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
+		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
 				(int) (this.scServer.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR),
 				TimeUnit.MILLISECONDS);
 	}
@@ -370,7 +370,7 @@ public class SCSessionServer {
 		}
 		SCSessionServer.this.serverTimeout.cancel(mayInterruptIfRunning);
 		// removes canceled timeouts
-		AppContext.eciScheduler.purge();
+		AppContext.eci_cri_Scheduler.purge();
 	}
 
 	/**
@@ -497,7 +497,7 @@ public class SCSessionServer {
 			} catch (SCServiceException e) {
 				// check registration failed - inform callback
 				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-				SrvService srvService = srvServiceRegistry.getSrvService(SCSessionServer.this.serviceName + "_"
+				SrvService srvService = srvServiceRegistry.getSrvService(SCSessionServer.this.serviceName + Constants.UNDERLINE
 						+ SCSessionServer.this.scServer.getListenerPort());
 				if (srvService instanceof SrvSessionService) {
 					((SrvSessionService) srvService).getCallback().exceptionCaught(e);

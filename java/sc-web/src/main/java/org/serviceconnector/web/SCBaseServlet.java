@@ -18,6 +18,8 @@ package org.serviceconnector.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -29,6 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.api.srv.SrvPublishService;
+import org.serviceconnector.api.srv.SrvService;
+import org.serviceconnector.api.srv.SrvServiceRegistry;
+import org.serviceconnector.api.srv.SrvSessionService;
+import org.serviceconnector.call.SCMPCheckRegistrationCall;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -49,8 +56,10 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -139,13 +148,15 @@ public abstract class SCBaseServlet extends HttpServlet {
 	/** The URL path. Used by SC to call the servlet(URL). */
 	private String urlPath;
 	/** The max connections the servlet can handle. */
-	int maxConnections;
+	private int maxConnections;
 	/** The max sessions the servlet can handle. */
-	int maxSessions;
+	private int maxSessions;
 	/** The tomcat listening port. */
-	int tomcatPort;
+	private int tomcatPort;
 	/** The check registration interval seconds. */
-	int checkRegistrationIntervalSeconds;
+	private int checkRegistrationIntervalSeconds;
+	/** The serverTimeout, timeout runs when server entry on SC need to be refreshed. */
+	private ScheduledFuture<TimeoutWrapper> serverTimeout;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -270,6 +281,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 			}
 			AppContext.attachedCommunicators.incrementAndGet();
 		}
+		// set up server timeout thread
+		this.triggerServerTimeout();
 	}
 
 	/**
@@ -557,6 +570,130 @@ public abstract class SCBaseServlet extends HttpServlet {
 	}
 
 	/**
+	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to
+	 * check its registration.
+	 * 
+	 * @throws SCServiceException
+	 *             server is not registered for a service<br />
+	 *             check registration failed<br />
+	 *             error message received from SC <br />
+	 */
+	public synchronized void checkRegistration() throws SCServiceException {
+		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	/**
+	 * Check registration. This message can be sent from the registered server to SC in order to check its registration.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation
+	 * @throws SCServiceException
+	 *             server is not registered for a service<br />
+	 *             check registration failed<br />
+	 *             error message received from SC <br />
+	 */
+	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
+		if (this.registered == false) {
+			throw new SCServiceException("Server is not registered for a service.");
+		}
+		// cancel server timeout not if its running already, you might interrupt current thread
+		this.cancelServerTimeout(false);
+		SCMPCheckRegistrationCall checkRegistrationCall = new SCMPCheckRegistrationCall(this.requester, this.serviceName);
+		SCServerCallback callback = new SCServerCallback(true);
+		try {
+			checkRegistrationCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			throw new SCServiceException("Check registration failed. ", e);
+		}
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		if (reply.isFault()) {
+			SCServiceException ex = new SCServiceException("Check registration failed.");
+			ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			throw ex;
+		}
+		// set up server timeout thread
+		this.triggerServerTimeout();
+	}
+
+	/**
+	 * Trigger server timeout.
+	 */
+	@SuppressWarnings("unchecked")
+	private void triggerServerTimeout() {
+		if (this.checkRegistrationIntervalSeconds == 0) {
+			// check registration interval not active
+			return;
+		}
+		SCServerTimeout serverTimeout = new SCServerTimeout();
+		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(serverTimeout);
+		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
+				(int) (this.checkRegistrationIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Cancel server timeout.
+	 * 
+	 * @param mayInterruptIfRunning
+	 *            the may interrupt if running
+	 */
+	private void cancelServerTimeout(boolean mayInterruptIfRunning) {
+		if (this.serverTimeout == null) {
+			// not timeout has been set up
+			return;
+		}
+		SCBaseServlet.this.serverTimeout.cancel(mayInterruptIfRunning);
+		// removes canceled timeouts
+		AppContext.eci_cri_Scheduler.purge();
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		try {
+			this.deregisterServletFromSC();
+			this.requester.destroy();
+			AppContext.destroy();
+		} catch (Exception e) {
+			LOGGER.warn("Deregistering servlet from SC failed", e);
+		}
+	}
+
+	/**
+	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to
+	 * SC which gets the server entry on SC refreshed.
+	 */
+	private class SCServerTimeout implements ITimeout {
+
+		/**
+		 * Time run out, need to send a check registration to SC otherwise server gets destroyed on SC for dead server reason.
+		 */
+		@Override
+		public void timeout() {
+			// send echo to SC
+			try {
+				SCBaseServlet.this.checkRegistration(SCBaseServlet.this.checkRegistrationIntervalSeconds);
+			} catch (SCServiceException e) {
+				// check registration failed - inform callback
+				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+				SrvService srvService = srvServiceRegistry.getSrvService(SCBaseServlet.this.serviceName + Constants.UNDERLINE
+						+ SCBaseServlet.this.tomcatPort);
+				if (srvService instanceof SrvSessionService) {
+					((SrvSessionService) srvService).getCallback().exceptionCaught(e);
+				} else if (srvService instanceof SrvPublishService) {
+					((SrvPublishService) srvService).getCallback().exceptionCaught(e);
+				}
+			}
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getTimeoutMillis() {
+			return SCBaseServlet.this.checkRegistrationIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
+		}
+	}
+
+	/**
 	 * The Class SCServerCallback.
 	 */
 	protected class SCServerCallback extends SynchronousCallback {
@@ -571,17 +708,5 @@ public abstract class SCBaseServlet extends HttpServlet {
 			this.synchronous = synchronous;
 		}
 		// nothing to implement in this case - everything is done by super-class
-	}
-
-	@Override
-	public void destroy() {
-		super.destroy();
-		try {
-			this.deregisterServletFromSC();
-			this.requester.destroy();
-			AppContext.destroy();
-		} catch (Exception e) {
-			LOGGER.warn("Deregistering servlet from SC failed", e);
-		}
 	}
 }

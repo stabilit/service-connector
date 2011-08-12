@@ -78,8 +78,8 @@ public final class AppContext {
 	public static AtomicInteger attachedCommunicators = new AtomicInteger();
 	/** The executer, triggers all operation timeout for sending. */
 	public static ScheduledThreadPoolExecutor otiScheduler;
-	/** The executer observes the session timeout of service. */
-	public static ScheduledThreadPoolExecutor eciScheduler;
+	/** The executer observes timeouts of services(ECI)/servers(CRI). */
+	public static ScheduledThreadPoolExecutor eci_cri_Scheduler;
 
 	// configurations
 	/** The composite configuration. */
@@ -410,9 +410,9 @@ public final class AppContext {
 				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
 						Thread.MAX_PRIORITY));
 			}
-			if (AppContext.eciScheduler == null) {
+			if (AppContext.eci_cri_Scheduler == null) {
 				// set up new scheduler with high priority threads
-				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI",
+				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI",
 						Thread.MAX_PRIORITY));
 			}
 			if (AppContext.threadPool == null) {
@@ -439,9 +439,9 @@ public final class AppContext {
 					AppContext.otiScheduler.shutdownNow();
 					AppContext.otiScheduler = null;
 				}
-				if (AppContext.eciScheduler != null) {
-					AppContext.eciScheduler.shutdownNow();
-					AppContext.eciScheduler = null;
+				if (AppContext.eci_cri_Scheduler != null) {
+					AppContext.eci_cri_Scheduler.shutdownNow();
+					AppContext.eci_cri_Scheduler = null;
 				}
 				if (AppContext.threadPool != null) {
 					AppContext.threadPool.shutdownNow();
@@ -487,6 +487,7 @@ public final class AppContext {
 				AppContext.getServerRegistry().dump(writer);
 				AppContext.getSubscriptionRegistry().dump(writer);
 				AppContext.getCacheManager().dump(writer);
+				AppContext.getCacheRegistry().dump(writer);
 				// end dump
 				writer.writeEndElement(); // end of sc-dump
 				writer.endDocument();

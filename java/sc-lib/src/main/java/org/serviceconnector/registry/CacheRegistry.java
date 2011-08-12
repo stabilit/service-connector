@@ -16,7 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.SCCacheMetaEntry;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class CacheRegistry. Registries stores caches available in SC.
@@ -54,5 +62,56 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 	 */
 	public void removeCache(String key) {
 		this.remove(key);
+	}
+
+	/**
+	 * Dump.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("caches");
+		Set<Entry<String, ISCCache<?>>> entries = this.registryMap.entrySet();
+		for (Entry<String, ISCCache<?>> entry : entries) {
+			ISCCache<?> scCache = entry.getValue();
+			writer.writeAttribute("cacheName", scCache.getCacheName());
+			writer.writeAttribute("numberOfMessagesInDiskStore", scCache.getNumberOfMessagesInDiskStore());
+			writer.writeAttribute("numberOfMessagesInStore", scCache.getNumberOfMessagesInStore());
+			writer.writeAttribute("numberOfMessagesInCache", scCache.getKeysWithExpiryCheck().size());
+
+			List<String> keys = scCache.getKeysWithExpiryCheck();
+			writer.writeStartElement("cacheElements");
+			for (String key : keys) {
+				writer.writeStartElement("cacheElement");
+				Object cacheMessage = scCache.get(key);
+
+				if (cacheMessage instanceof SCMPMessage) {
+					SCMPMessage scmp = ((SCMPMessage) cacheMessage);
+					writer.writeAttribute("cacheKey", key);
+					writer.writeAttribute("serviceName", scmp.getServiceName());
+					writer.writeAttribute("sessionId", scmp.getSessionId());
+					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
+					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
+					writer.writeAttribute("lastAccessTime", DateTimeUtility.getDateTimeAsString(scCache.getLastAccessTime(key)));
+				} else if (cacheMessage instanceof SCCacheMetaEntry) {
+					SCCacheMetaEntry metaEntry = ((SCCacheMetaEntry) cacheMessage);
+					writer.writeAttribute("cacheKey", key);
+					writer.writeAttribute("loadingSessionId", metaEntry.getLoadingSessionId());
+					writer.writeAttribute("loadingtimeoutMillis", metaEntry.getLoadingTimeoutMillis());
+					writer.writeAttribute("scCacheEntryState", metaEntry.getSCCacheEntryState().name());
+					writer.writeAttribute("numberOfParts", metaEntry.getNumberOfParts());
+					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
+					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
+					writer.writeAttribute("lastModifiedTime", DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));
+					writer.writeAttribute("lastAccessTime", DateTimeUtility.getDateTimeAsString(scCache.getLastAccessTime(key)));
+				}
+				writer.writeEndElement(); // end of cacheElement
+			}
+			writer.writeEndElement(); // end of cacheElements
+		}
+		writer.writeEndElement(); // end of caches
 	}
 }

@@ -238,7 +238,7 @@ public class SCCacheManager {
 		String cacheExpirationDateTime = resMessage.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 		long expireMillis = 0;
 		try {
-			// validate expiration date time format
+			// validate expiration date time format, null is throwing an exception
 			ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
 			Date expirationDate = DateTimeUtility.parseDateString(cacheExpirationDateTime);
 			expireMillis = expirationDate.getTime();

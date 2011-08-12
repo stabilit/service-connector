@@ -18,6 +18,7 @@ package org.serviceconnector.web;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -50,6 +51,7 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#createSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
 		return message;
 	}
@@ -57,20 +59,30 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#deleteSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#abortSession(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#execute(org.serviceconnector.api.SCMessage, int)
 	 */
+	@Override
 	public SCMessage execute(SCMessage message, int operationTimeoutMillis) {
 		return message;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#exceptionCaught(org.serviceconnector.api.SCServiceException)
+	 */
+	@Override
+	public void exceptionCaught(SCServiceException ex) {
 	}
 
 	/**

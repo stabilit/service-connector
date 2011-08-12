@@ -54,6 +54,7 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#subscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
@@ -61,6 +62,7 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#changeSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
@@ -68,13 +70,22 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#unsubscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#abortSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
+	@Override
 	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#exceptionCaught(org.serviceconnector.api.SCServiceException)
+	 */
+	@Override
+	public void exceptionCaught(SCServiceException ex) {
 	}
 
 	/**

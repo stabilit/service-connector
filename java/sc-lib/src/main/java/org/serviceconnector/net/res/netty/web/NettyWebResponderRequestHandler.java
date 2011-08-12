@@ -37,7 +37,8 @@ import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
-import org.serviceconnector.net.res.netty.NettyHttpResponse;
+import org.serviceconnector.net.res.netty.NettyTcpResponse;
+import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -60,8 +61,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		// needs to set a key in thread local to identify thread later and get
-		// access to the responder
+		// needs to set a key in thread local to identify thread later and get access to the responder
 		Channel channel = ctx.getChannel();
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		InetSocketAddress localAddress = (InetSocketAddress) channel.getLocalAddress();
@@ -92,14 +92,24 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		LOGGER.debug(th.toString());
-		NettyHttpResponse response = new NettyHttpResponse(e);
+		NettyTcpResponse response = new NettyTcpResponse(e);
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
 		}
+		if (th instanceof java.io.IOException) {
+			LOGGER.warn(th); // regular disconnect causes this expected exception
+			return;
+		} else {
+			LOGGER.error("Response error", th);
+		}
+		if (th instanceof HasFaultResponseException) {
+			((HasFaultResponseException) th).setFaultResponse(response);
+			response.write();
+			return;
+		}
 		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage()
-				+ "caught exception in web responder request handler");
+				+ " caught exception in web responder request handler");
 		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();

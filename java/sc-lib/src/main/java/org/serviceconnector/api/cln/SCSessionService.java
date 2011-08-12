@@ -490,7 +490,7 @@ public class SCSessionService extends SCService {
 	private void triggerSessionTimeout() {
 		SCSessionTimeout sessTimeout = new SCSessionTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessTimeout);
-		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
+		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
 				(int) (echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}
 
@@ -503,7 +503,7 @@ public class SCSessionService extends SCService {
 	private void cancelSessionTimeout(boolean mayInterruptIfRunning) {
 		SCSessionService.this.sessionTimeout.cancel(mayInterruptIfRunning);
 		// removes canceled timeouts
-		AppContext.eciScheduler.purge();
+		AppContext.eci_cri_Scheduler.purge();
 	}
 
 	/**
