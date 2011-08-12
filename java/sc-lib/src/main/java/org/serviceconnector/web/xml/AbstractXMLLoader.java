@@ -483,9 +483,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					}
 					writer.writeStartElement(name);
 					if (value instanceof Date) {
-					    writer.writeCData(DateTimeUtility.getDateTimeAsString((Date) value));
+						writer.writeCData(DateTimeUtility.getDateTimeAsString((Date) value));
 					} else {
-					    writer.writeCData(value.toString());					
+						writer.writeCData(value.toString());
 					}
 					writer.writeEndElement();
 				} else {
@@ -517,7 +517,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			String value = entry.getValue();
 			writer.writeStartElement("item");
 			writer.writeAttribute("name", key);
-			writer.writeCData(value);
+			if (value == null) {
+				writer.writeCData("true");
+			} else {
+				writer.writeCData(value);
+				
+			}
 			writer.writeEndElement(); // end of item
 		}
 	}
@@ -614,7 +619,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	}
 
 	/**
-	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint if no netty tcp endpoint is available
+	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint if no netty tcp
+	 * endpoint is available
 	 * 
 	 * @param service
 	 *            the service
@@ -655,7 +661,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
-						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
+						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port
+								+ " failed", e);
 					}
 				}
 			}

@@ -77,6 +77,7 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 		Set<Entry<String, ISCCache<?>>> entries = this.registryMap.entrySet();
 		for (Entry<String, ISCCache<?>> entry : entries) {
 			ISCCache<?> scCache = entry.getValue();
+			writer.writeStartElement("cache");
 			writer.writeAttribute("cacheName", scCache.getCacheName());
 			writer.writeAttribute("numberOfMessagesInDiskStore", scCache.getNumberOfMessagesInDiskStore());
 			writer.writeAttribute("numberOfMessagesInStore", scCache.getNumberOfMessagesInStore());
@@ -111,6 +112,7 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 				writer.writeEndElement(); // end of cacheElement
 			}
 			writer.writeEndElement(); // end of cacheElements
+			writer.writeEndElement(); // end of cache
 		}
 		writer.writeEndElement(); // end of caches
 	}
