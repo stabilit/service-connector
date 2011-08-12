@@ -255,13 +255,11 @@ public class SCRequester implements IRequester {
 					// increment msgSequenceNr
 					this.msgSequenceNr.incrementAndGetMsgSequenceNr();
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-				}			
+				}
 				// updating cache part number for poll request
 				Integer partNr = scmpReply.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 				if (partNr == null) {
 					partNr = 1;
-				} else {
-					partNr++;
 				}
 				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, partNr);
 				LOGGER.debug("handling large response using cache id = " + message.getCacheId());
@@ -317,8 +315,6 @@ public class SCRequester implements IRequester {
 			Integer partNr = scmpReply.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 			if (partNr == null) {
 				partNr = 1;
-			} else {
-				partNr++;
 			}
 			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, partNr);
 			LOGGER.debug("handling large response using cache id = " + message.getCacheId());

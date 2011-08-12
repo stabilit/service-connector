@@ -256,8 +256,8 @@ public class SCCacheManager {
 			metaEntry.setNumberOfParts(partCounter + 1);
 			metaEntry.setLastModified();
 
-			// set the correct partNr for message to cache and cache it!
-			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts());
+			// set the correct partNr+1 for message to cache and cache it!
+			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
 			dataCache.put(reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts(), resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
