@@ -81,7 +81,7 @@ public class TestSessionServer extends TestStatefulServer {
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
-			sc.setCheckRegistrationIntervalSeconds(10);
+			sc.setCheckRegistrationIntervalSeconds(60);
 			sc.setImmediateConnect(true);
 			sc.startListener();
 
