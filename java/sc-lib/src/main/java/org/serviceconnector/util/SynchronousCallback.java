@@ -114,7 +114,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 				// time runs out before message got received
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_WAIT_ABORT, "");
 				fault.setMessageType(SCMPMsgType.UNDEFINED);
-				LOGGER.error("Operation did not complete in time, timeout=ms" + timeoutMillis + " aborting callback="
+				LOGGER.error("Operation did not complete in time, timeout=" + timeoutMillis + "ms aborting callback="
 						+ this.getClass().getName());
 				return fault;
 			}

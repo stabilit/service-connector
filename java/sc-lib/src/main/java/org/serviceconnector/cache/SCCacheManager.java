@@ -157,6 +157,10 @@ public class SCCacheManager {
 				return null;
 			}
 		} else {
+			if (reqMessage.isPollRequest()) {
+				// no caching - request already in process of large response but no meta entry in cache, ignore!
+				return null;
+			}
 			// start loading message to cache
 			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
@@ -200,6 +204,11 @@ public class SCCacheManager {
 		String reqCacheKey = reqServiceName + Constants.UNDERLINE + reqCacheId;
 		String resCacheKey = resServiceName + Constants.UNDERLINE + resCacheId;
 
+		if (resMessage.isPollRequest() == true) {
+			// no caching - large request in process
+			return;
+		}
+
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
 			this.removeMetaAndDataEntries(sid, reqCacheKey);
@@ -218,7 +227,7 @@ public class SCCacheManager {
 			return;
 		}
 		// lookup up meta entry
-		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) metaDataCache.get(resCacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCache.get(resCacheKey);
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up
@@ -256,8 +265,8 @@ public class SCCacheManager {
 			metaEntry.setNumberOfParts(partCounter + 1);
 			metaEntry.setLastModified();
 
-			// set the correct partNr+1 for message to cache and cache it!
-			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
+			// set the correct partNr for message to cache and cache it!
+			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts());
 			dataCache.put(reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts(), resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
@@ -294,7 +303,7 @@ public class SCCacheManager {
 			return;
 		}
 		// remove meta entry
-		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) metaDataCache.remove(cacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCache.remove(cacheKey);
 		if (metaEntry == null) {
 			// no entry found
 			return;
