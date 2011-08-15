@@ -231,7 +231,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		@Override
 		public void timeout() {
 			String sessionId = sessionComposite.getSessionId();
-			LOGGER.trace("Large message process times out sid=" + sessionId);
+			LOGGER.error("Large message process timed out sid=" + sessionId);
 			SCMPSessionCompositeRegistry.this.removeSCMPLargeRequest(sessionId);
 			SCMPSessionCompositeRegistry.this.removeSCMPLargeResponse(sessionId);
 		}
