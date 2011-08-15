@@ -403,7 +403,6 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Thread.sleep(10);
 		// session service2 starts getting large message from cache with cacheId 700
 		request.setData(TestConstants.pangram);
-		request.setMessageInfo(null);
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		try {

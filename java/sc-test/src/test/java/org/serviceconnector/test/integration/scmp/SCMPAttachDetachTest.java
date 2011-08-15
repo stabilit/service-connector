@@ -81,7 +81,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 2000);
-		SCMPMessage result = callback.getMessageSync(3000);
+		SCMPMessage result = callback.getMessageSync(5000);
 		TestUtil.checkReply(result);
 
 		Assert.assertNull(result.getBody());
@@ -91,7 +91,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 
 		SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
 		detachCall.invoke(callback, 2000);
-		result = callback.getMessageSync(3000);
+		result = callback.getMessageSync(5000);
 		TestUtil.checkReply(result);
 		Assert.assertNull(result.getBody());
 		Assert.assertNull(result.getMessageSequenceNr());
