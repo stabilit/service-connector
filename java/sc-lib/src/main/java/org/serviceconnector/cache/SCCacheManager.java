@@ -117,11 +117,11 @@ public class SCCacheManager {
 			// no caching requested from client
 			return null;
 		}
-		CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
 		// lookup cache meta entry
 		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
+			CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
 			// meta entry for this message already in cache
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
@@ -161,6 +161,8 @@ public class SCCacheManager {
 				// no caching - request already in process of large response but no meta entry in cache, ignore!
 				return null;
 			}
+			CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
+
 			// start loading message to cache
 			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
@@ -265,8 +267,8 @@ public class SCCacheManager {
 			metaEntry.setNumberOfParts(partCounter + 1);
 			metaEntry.setLastModified();
 
-			// set the correct partNr for message to cache and cache it!
-			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts());
+			// set the correct partNr+1 for message to cache and cache it!
+			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
 			dataCache.put(reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts(), resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
