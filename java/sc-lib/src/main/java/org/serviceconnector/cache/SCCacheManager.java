@@ -191,6 +191,10 @@ public class SCCacheManager {
 	 *            the response message
 	 */
 	public void cacheMessage(SCMPMessage reqMessage, SCMPMessage resMessage) {
+		if (resMessage.isPollRequest() == true) {
+			// no caching - large request in process
+			return;
+		}
 
 		String reqServiceName = reqMessage.getServiceName();
 		String resServiceName = resMessage.getServiceName();
@@ -205,11 +209,6 @@ public class SCCacheManager {
 
 		String reqCacheKey = reqServiceName + Constants.UNDERLINE + reqCacheId;
 		String resCacheKey = resServiceName + Constants.UNDERLINE + resCacheId;
-
-		if (resMessage.isPollRequest() == true) {
-			// no caching - large request in process
-			return;
-		}
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
