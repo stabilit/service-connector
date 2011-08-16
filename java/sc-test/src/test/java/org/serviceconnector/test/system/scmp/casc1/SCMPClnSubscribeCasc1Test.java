@@ -213,12 +213,14 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId);
+		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);
 		Assert.assertTrue(reply.isLargeMessage());
 		Assert.assertEquals(TestUtil.getLargeString(), reply.getBody());
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
+		cbk = new TestCallback();
 		unSubscribeCall.invoke(cbk, 3000);
 		TestUtil.checkReply(cbk.getMessageSync(3000));
 	}

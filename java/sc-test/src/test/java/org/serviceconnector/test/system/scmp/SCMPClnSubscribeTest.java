@@ -61,8 +61,8 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 		subscribeCall.setSessionInfo(TestConstants.sleepCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk = new TestCallback(true);
-		TestCallback cbk1 = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
+		TestCallback cbk1 = new TestCallback();
 		subscribeCall.setRequestBody("3000");
 		subscribeCall.invoke(cbk, 5000);
 		subscribeCall.invoke(cbk1, 5000);
@@ -71,7 +71,7 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk3 = new TestCallback(true);
+		TestCallback cbk3 = new TestCallback();
 		subscribeCall.invoke(cbk3, 2000);
 
 		SCMPMessage reply = cbk.getMessageSync(5000);
@@ -85,6 +85,7 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 		TestUtil.verifyError(reply3, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
+		cbk = new TestCallback();
 		unSubscribeCall.invoke(cbk, 4000);
 		TestUtil.checkReply(cbk.getMessageSync(4000));
 	}
@@ -111,22 +112,26 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 		// receive publication - get message
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId);
+		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);
 		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		Thread.sleep(55000);
+		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);
 		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		Thread.sleep(55000);
+		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);
 		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		Thread.sleep(55000);
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
+		cbk = new TestCallback();
 		unSubscribeCall.invoke(cbk, 3000);
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
