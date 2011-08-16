@@ -48,8 +48,20 @@ import org.serviceconnector.util.XMLDumpWriter;
  * serviceName_cachedId, cached messages in DATA_CACHE by the cacheKey serviceName_cacheId/partNr.
  * 
  * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
- * after, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
- * message completly.
+ * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
+ * message completly. Only the first client (session) is allowed to load the message. When the message is complete all parts
+ * transfered, it is ready to be loaded from the cache. As long as the message is not completly loaded the meta entry has an
+ * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
+ * of the expiration is done by the ISCCache implementation.
+ * 
+ * There are several circumstances they can stop the loading process and clear the message:
+ * - Server returns a fault message.
+ * - Server returns no cacheId.
+ * - Server returns a different cacheId than the requested one.
+ * - Server returns no expirationDate.
+ * - Server returns expirationDate with wrong format.
+ * - Server returns expirationDate in the past.
+ * - Caching of message fails for some reason.
  */
 public class SCCacheManager {
 
@@ -272,6 +284,7 @@ public class SCCacheManager {
 
 			// set the correct partNr+1 for message to cache and cache it!
 			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
+			// an negative timeToLiveSeconds (expirationDate in the past) will throw an exception, handled by the cache
 			dataCache.put(reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts(), resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
