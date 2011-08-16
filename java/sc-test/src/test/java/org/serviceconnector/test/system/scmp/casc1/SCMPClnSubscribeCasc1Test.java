@@ -291,8 +291,8 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		// receive publication - get message
 		SCMPReceivePublicationCall receivePublicationCall1 = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId1);
-		receivePublicationCall1.invoke(cbk1, 20000);
 		cbk1 = new TestCallback();
+		receivePublicationCall1.invoke(cbk1, 20000);
 		reply1 = cbk1.getMessageSync(15000);
 		TestUtil.checkReply(reply1);
 		Assert.assertFalse(reply1.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
@@ -301,6 +301,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		Thread.sleep(15000);
 		SCMPReceivePublicationCall receivePublicationCall2 = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId2);
+		cbk1 = new TestCallback();
 		receivePublicationCall2.invoke(cbk1, 2000);
 		reply1 = cbk1.getMessageSync(1000);
 		TestUtil.verifyError(reply1, SCMPError.SUBSCRIPTION_NOT_FOUND, SCMPMsgType.RECEIVE_PUBLICATION);
