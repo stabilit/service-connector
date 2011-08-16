@@ -261,7 +261,7 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 
 		// causes caching response message
-		public SCMessage cache(SCMessage request, int operationTimeoutMillis) {
+		public SCMessage cache(SCMessage request, int operationTimeoutMillis) throws InterruptedException {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 
@@ -326,6 +326,11 @@ public class TestSessionServer extends TestStatefulServer {
 				} catch (InterruptedException e) {
 				}
 				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("cacheWait15sec")) {
+				LOGGER.info("cacheWait15sec");
+				time.add(Calendar.HOUR_OF_DAY, -1);
+				request.setCacheExpirationDateTime(time.getTime());
+				Thread.sleep(15000);
 			} else if (request.getCacheId().equals("666")) {
 				LOGGER.info("large request large response - 666 is a key for that!");
 				// large request large response - 666 is a key for that!
