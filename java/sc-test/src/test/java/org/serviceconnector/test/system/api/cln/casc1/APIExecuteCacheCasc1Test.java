@@ -353,7 +353,6 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService2.createSession(request, msgCallback2);
 
 		// session service starts storing large message with cacheId 700
-		// request.setData(largeMessage);
 		request.setData("cache10MBStringFor1Hour");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
@@ -397,7 +396,6 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setData(largeMessage);
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
-		// System.out.println("sessionService1 sessionId=" + sessionService1.getSessionId());
 		sessionService1.send(request);
 		// to assure service1 started loading cache
 		Thread.sleep(10);
@@ -569,5 +567,53 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor2Hour", response.getData());
 		sessionService1.deleteSession();
+	}
+
+	/**
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service.
+	 * The second session gets a CACHE_LOADING exception. Procedure takes longer than session timeout!
+	 * instances, sessionService2 gets an exception<br>
+	 * Expectation: cache loading exception
+	 */
+	@Test
+	public void t28_2ClientsOneLargeRequestCacheAndTheOtherWaitsLongerThanECI() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+
+		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
+		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
+		sessionService2.setEchoIntervalSeconds(3);
+		response = sessionService2.createSession(request, msgCallback2);
+
+		// session service starts storing message with cacheId 700
+		request.setData("cacheWait15sec");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.send(60, request);
+		// to assure service1 started loading cache
+		Thread.sleep(10);
+		// session service2 starts getting large message from cache with cacheId 700
+		request.setData(TestConstants.pangram);
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		for (int i = 0; i < 10; i++) {
+			try {
+				response = sessionService2.execute(request);
+				Assert.fail("Should throw an exception but did not.");
+			} catch (SCServiceException e) {
+				Assert.assertEquals(SCMPError.CACHE_LOADING.getErrorCode(), e.getSCErrorCode());
+			}
+			Thread.sleep(1000);
+		}
+		Thread.sleep(5000);
+		// get response from sessionService1 request
+		msgCallback1.waitForMessage(60);
+		response = msgCallback1.getResponse();
+		SCMessage response2 = sessionService2.execute(request);
+		Assert.assertEquals(response.getData(), response2.getData());
 	}
 }
