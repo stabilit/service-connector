@@ -79,9 +79,9 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, this.port,
 				this.connectionType.getValue(), 0, 0, 1), 0);
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
-		TestCallback callback = new TestCallback();
-		attachCall.invoke(callback, 2000);
-		SCMPMessage result = callback.getMessageSync(5000);
+		TestCallback callback1 = new TestCallback();
+		attachCall.invoke(callback1, 10000);
+		SCMPMessage result = callback1.getMessageSync(10000);
 		TestUtil.checkReply(result);
 
 		Assert.assertNull(result.getBody());
@@ -89,9 +89,10 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		Assert.assertEquals(SCMPMsgType.ATTACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		ValidatorUtility.validateDateTime(result.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 
+		TestCallback callback2 = new TestCallback();
 		SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
-		detachCall.invoke(callback, 2000);
-		result = callback.getMessageSync(5000);
+		detachCall.invoke(callback2, 10000);
+		result = callback2.getMessageSync(10000);
 		TestUtil.checkReply(result);
 		Assert.assertNull(result.getBody());
 		Assert.assertNull(result.getMessageSequenceNr());

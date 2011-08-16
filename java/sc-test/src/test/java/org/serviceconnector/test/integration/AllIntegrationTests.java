@@ -38,6 +38,12 @@ import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
+		// Other tests - process them first
+		ConnectionPoolTest.class,
+		ConnectionTest.class,
+		MultipleNICTest.class,
+		SCConsoleTest.class,
+
 		// API client tests
 		APIAttachDetachClientTest.class,
 		APINewServiceTest.class,
@@ -54,19 +60,12 @@ import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 		APIMultipleSCsServerTest.class,
 		APIAfterSCAbortServerTest.class,
 		APIAfterSCRestartServerTest.class,
-
 		
 		// SCMP client test
 		SCMPAttachDetachTest.class,
 		SCMPManageTest.class,
 		SCMPRegisterDeregisterServerTest.class,
-		SCMPSCVersionTest.class,
-		
-		// Other tests
-		ConnectionPoolTest.class,
-		ConnectionTest.class,
-		MultipleNICTest.class,
-		SCConsoleTest.class
+		SCMPSCVersionTest.class
 })
 public class AllIntegrationTests {
 }

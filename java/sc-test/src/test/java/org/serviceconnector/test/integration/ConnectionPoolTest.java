@@ -144,7 +144,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		connectionPool.setMaxConnections(1);
 		connectionPool.setMinConnections(1);
 		connectionPool.initMinConnections();
-		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
+		Thread.sleep((long) ((this.keepAlivSeconds * 1.2) * Constants.SEC_TO_MILLISEC_FACTOR));
 		IConnection connection = connectionPool.getConnection();
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() > 0);
 		connectionPool.freeConnection(connection);
@@ -158,7 +158,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	public void t21_NoKeepAliveForUsedConnection() throws Exception {
 		connectionPool.setMaxConnections(1);
 		IConnection connection = connectionPool.getConnection();
-		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
+		Thread.sleep((long) ((this.keepAlivSeconds * 1.2) * Constants.SEC_TO_MILLISEC_FACTOR));
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() == 0);
 		Assert.assertTrue(connection.isConnected());
 	}
@@ -188,7 +188,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		connectionPool.setMinConnections(2);
 		connectionPool.setCloseAfterKeepAlive(false);
 		connectionPool.initMinConnections();
-		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR)
+		Thread.sleep((long) ((this.keepAlivSeconds * 1.2) * Constants.SEC_TO_MILLISEC_FACTOR)
 				* Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
 		IConnection connection = connectionPool.getConnection();
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
