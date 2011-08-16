@@ -586,7 +586,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 
 		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
 		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
-		sessionService2.setEchoIntervalSeconds(3);
+		sessionService2.setEchoIntervalSeconds(10);
 		response = sessionService2.createSession(request, msgCallback2);
 
 		// session service starts storing message with cacheId 700
@@ -600,7 +600,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setData(TestConstants.pangram);
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 12; i++) {
 			try {
 				response = sessionService2.execute(request);
 				Assert.fail("Should throw an exception but did not.");
@@ -614,6 +614,6 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		msgCallback1.waitForMessage(60);
 		response = msgCallback1.getResponse();
 		SCMessage response2 = sessionService2.execute(request);
-		Assert.assertEquals(response.getData(), response2.getData());
+		Assert.assertEquals("cacheWait15sec", response.getData());
 	}
 }
