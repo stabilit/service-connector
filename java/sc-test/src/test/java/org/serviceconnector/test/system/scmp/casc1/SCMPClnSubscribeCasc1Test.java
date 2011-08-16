@@ -102,7 +102,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
 		subscribeCall.invoke(cbk, 3000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
@@ -110,14 +110,14 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		// receive publication - no data
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId);
-		cbk = new TestCallback(true);
+		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(30000);
 		TestUtil.checkReply(reply);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
-		cbk = new TestCallback(true);
+		cbk = new TestCallback();
 		unSubscribeCall.invoke(cbk, 3000);
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
@@ -135,7 +135,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("5");
-		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
 		subscribeCall.invoke(cbk, 2000);
 		SCMPMessage reply = cbk.getMessageSync(2000);
 		TestUtil.checkReply(reply);
@@ -168,7 +168,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall.setSessionInfo(TestConstants.sleepCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
 		subscribeCall.setRequestBody("3000");
 		subscribeCall.invoke(cbk, 6000);
 
@@ -177,7 +177,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
-		TestCallback cbk1 = new TestCallback(true);
+		TestCallback cbk1 = new TestCallback();
 		subscribeCall.invoke(cbk1, 2000);
 
 		SCMPMessage reply = cbk.getMessageSync(6000);
@@ -235,7 +235,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("5");
-		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
 		subscribeCall.invoke(cbk, 2000);
 		SCMPMessage reply = cbk.getMessageSync(1000);
 		TestUtil.checkReply(reply);
@@ -268,7 +268,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall1.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		subscribeCall1.setMask(TestConstants.mask);
 		subscribeCall1.setRequestBody("5");
-		TestCallback cbk1 = new TestCallback(true);
+		TestCallback cbk1 = new TestCallback();
 		subscribeCall1.invoke(cbk1, 2000);
 		SCMPMessage reply1 = cbk1.getMessageSync(1000);
 		TestUtil.checkReply(reply1);
@@ -280,7 +280,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall2.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		subscribeCall2.setMask(TestConstants.mask);
 		subscribeCall2.setRequestBody("5");
-		TestCallback cbk2 = new TestCallback(true);
+		TestCallback cbk2 = new TestCallback();
 		subscribeCall2.invoke(cbk2, 2000);
 		SCMPMessage reply2 = cbk2.getMessageSync(2000);
 		TestUtil.checkReply(reply2);
@@ -292,6 +292,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		SCMPReceivePublicationCall receivePublicationCall1 = new SCMPReceivePublicationCall(this.requester,
 				TestConstants.pubServerName1, sessionId1);
 		receivePublicationCall1.invoke(cbk1, 20000);
+		cbk1 = new TestCallback();
 		reply1 = cbk1.getMessageSync(15000);
 		TestUtil.checkReply(reply1);
 		Assert.assertFalse(reply1.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
