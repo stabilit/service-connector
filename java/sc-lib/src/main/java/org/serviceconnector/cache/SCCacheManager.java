@@ -44,8 +44,12 @@ import org.serviceconnector.util.XMLDumpWriter;
  * <br>
  * Caching concept provides to physical caches (SC_CACHE_TYPE.DATA_CACHE, SC_CACHE_TYPE.META_DATA_CACHE). Whenever someone is
  * interested to insert or load from cache the META_DATA_CACHE gets accessed first. It contains a list of CacheMetaEntry instances,
- * which holds information about the stored SCMPMessage in DATA_CACHE. CacheMetaEntry are identified by the cachedId, cached
- * messages in DATA_CACHE by cachId/partNr.
+ * which holds information about the stored SCMPMessage in DATA_CACHE. CacheMetaEntry are identified by the cacheKey
+ * serviceName_cachedId, cached messages in DATA_CACHE by the cacheKey serviceName_cacheId/partNr.
+ * 
+ * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
+ * after, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
+ * message completly.
  */
 public class SCCacheManager {
 
@@ -275,14 +279,16 @@ public class SCCacheManager {
 					DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)));
 
 			if (resMessage.isPart() == false) {
-				// large response ended
-				// last message of message received - refresh meta entry state
+				// large response ended, last message of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
+				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds);
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.stopLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId());
+			} else {
+				// refresh meta entry state
+				metaDataCache.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis());
 			}
-			metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds);
 		} catch (Exception e) {
 			LOGGER.error("Caching message failed", e);
 			this.removeMetaAndDataEntries(sid, reqCacheKey);

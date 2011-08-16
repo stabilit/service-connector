@@ -46,7 +46,7 @@ public class SCCacheMetaEntry implements Serializable {
 	/** The loading session id. */
 	private String loadingSessionId;
 	/** The loading timeout (ms). This timeout tells, how long we can stay in the loading state. */
-	private long loadingTimeoutMillis;
+	private int loadingTimeoutMillis;
 	/** The header containing any header attributes of request SCMP message. */
 	private Map<String, String> header;
 	/** The cache key. */
@@ -68,7 +68,7 @@ public class SCCacheMetaEntry implements Serializable {
 		this.lastModifiedTime = this.creationTime;
 		this.loadingSessionId = null;
 		this.cacheId = null;
-		this.loadingTimeoutMillis = -1L;
+		this.loadingTimeoutMillis = -1;
 		this.header = new HashMap<String, String>();
 	}
 
@@ -225,7 +225,7 @@ public class SCCacheMetaEntry implements Serializable {
 	 * 
 	 * @return the loading timeout milliseconds
 	 */
-	public long getLoadingTimeoutMillis() {
+	public int getLoadingTimeoutMillis() {
 		return loadingTimeoutMillis;
 	}
 
