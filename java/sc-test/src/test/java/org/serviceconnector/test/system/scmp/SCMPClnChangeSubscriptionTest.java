@@ -64,7 +64,7 @@ public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("100");
-		TestCallback cbk = new TestCallback(true);
+		TestCallback cbk = new TestCallback();
 		subscribeCall.invoke(cbk, 1300);
 		SCMPMessage reply = cbk.getMessageSync(1300);
 		TestUtil.checkReply(reply);
@@ -76,12 +76,12 @@ public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		changeSubscriptionCall.setSessionInfo(TestConstants.sleepCmd);
 		changeSubscriptionCall.setRequestBody("2000");
-		cbk = new TestCallback(true);
+		cbk = new TestCallback();
 		changeSubscriptionCall.invoke(cbk, 4000);
 
 		changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, TestConstants.pubServerName1, sessionId);
 		changeSubscriptionCall.setMask(TestConstants.mask);
-		TestCallback cbk1 = new TestCallback(true);
+		TestCallback cbk1 = new TestCallback();
 		changeSubscriptionCall.invoke(cbk1, 1300);
 
 		TestUtil.checkReply(cbk.getMessageSync(4000));
@@ -90,7 +90,7 @@ public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc
 		TestUtil.verifyError(reply, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
-		cbk = new TestCallback(true);
+		cbk = new TestCallback();
 		unSubscribeCall.invoke(cbk, 1300);
 		reply = cbk.getMessageSync(1300);
 		TestUtil.checkReply(reply);
