@@ -264,6 +264,26 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("52", inspectResponse.get("cacheSize"));
 		sessionService1.deleteSession();
 	}
+	
+	/**
+	 * Description: exchange message with cacheId, server reply with cacheExpirationTime + 1 day<br>
+	 * Expectation: cached message stays
+	 */
+	@Test
+	public void t09_cacheFor1Day() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setData("cacheFor1Day");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheFor1Day", response.getData());
+		sessionService1.deleteSession();
+	}
 
 	/**
 	 * Description: sessionService exchange a message, sessionService1 exchange a message, with different cacheId's on two service
