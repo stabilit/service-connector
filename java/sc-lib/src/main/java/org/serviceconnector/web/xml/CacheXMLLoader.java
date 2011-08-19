@@ -32,8 +32,8 @@ import javax.xml.stream.XMLStreamWriter;
 import net.sf.ehcache.CacheException;
 
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
 import org.serviceconnector.cache.SC_CACHE_TYPE;
 import org.serviceconnector.conf.SCCacheConfiguration;
@@ -335,32 +335,29 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys.
+	 * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys. It compares serviceName + cacheId.
+	 * If both are the same value partNr is considered.
 	 */
 	private class CacheKeyComparator implements Comparator<String> {
 
 		@Override
-		public int compare(String o1, String o2) {
-			// extract service names and compare
-			String serviceName1 = o1.substring(0, o1.indexOf(Constants.UNDERLINE));
-			String serviceName2 = o2.substring(0, o2.indexOf(Constants.UNDERLINE));
-			int stringResult = serviceName1.compareTo(serviceName2);
-
+		public int compare(String cacheKey1, String cacheKey2) {
+			String serviceNameCacheId1 = cacheKey1.substring(0, cacheKey1.lastIndexOf(Constants.SLASH));
+			String serviceNameCacheId2 = cacheKey2.substring(0, cacheKey2.lastIndexOf(Constants.SLASH));
+			int stringResult = serviceNameCacheId1.compareTo(serviceNameCacheId2);
 			if (stringResult != 0) {
-				// service names are not equal
+				// // service names are not equal
 				return stringResult;
 			}
 
-			// extract cache keys and compare
-			String cacheKey1 = o1.substring(o1.indexOf(Constants.UNDERLINE) + 1).replace(Constants.SLASH, "");
-			String cacheKey2 = o2.substring(o2.indexOf(Constants.UNDERLINE) + 1).replace(Constants.SLASH, "");
+			String partNr1 = cacheKey1.substring(cacheKey1.lastIndexOf(Constants.SLASH) + 1);
+			String partNr2 = cacheKey2.substring(cacheKey2.lastIndexOf(Constants.SLASH) + 1);
+			int partNr1Int = new Integer(partNr1);
+			int partNr2Int = new Integer(partNr2);
 
-			int o1Int = new Integer(cacheKey1);
-			int o2Int = new Integer(cacheKey2);
-
-			if (o1Int == o2Int)
+			if (partNr1Int == partNr2Int)
 				return 0;
-			if (o1Int > o2Int)
+			if (partNr1Int > partNr2Int)
 				return 1;
 			return -1;
 		}
