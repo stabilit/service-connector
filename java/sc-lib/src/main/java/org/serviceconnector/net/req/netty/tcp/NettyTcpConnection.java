@@ -102,12 +102,4 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 					this.remotSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
 	}
-
-	@Override
-	public void disconnect() throws Exception {
-		// this avoids receiving messages (outstanding replies) in disconnecting procedure
-		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
-		handler.connectionDisconnect();
-		super.disconnect();
-	}
 }
