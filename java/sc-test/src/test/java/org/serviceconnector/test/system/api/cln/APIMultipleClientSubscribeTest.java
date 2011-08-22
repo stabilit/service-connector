@@ -23,11 +23,11 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 
 public class APIMultipleClientSubscribeTest extends APIMultipleClientSubscribeCasc1Test {
-	
+
 	public APIMultipleClientSubscribeTest() {
 		APIMultipleClientSubscribeCasc1Test.setUpServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: 2 clients Subscribe, receive 10000 message and unsubscribe<br>
 	 * Expectation: passes
@@ -140,14 +140,14 @@ public class APIMultipleClientSubscribeTest extends APIMultipleClientSubscribeCa
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
-	
+
 	/**
 	 * Description: 100 clients Subscribe, receive 10000 message and unsubscribe<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t12_500CslientsReceiving10000Messages() throws Exception {
-		int numberOfClients = 500;
+	public void t12_100CslientsReceiving10000Messages() throws Exception {
+		int numberOfClients = 100;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length - 1; i++) {
@@ -157,12 +157,12 @@ public class APIMultipleClientSubscribeTest extends APIMultipleClientSubscribeCa
 			clientCtxs[i] = clientCtx;
 			Thread.sleep(10);
 		}
-		ProcessCtx clientCtx100 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client100", TestConstants.HOST,
+		ProcessCtx lastClientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "lastClient", TestConstants.HOST,
 				TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 				"f_subscribeReceive10000Unsubscribe");
-		clientCtxs[numberOfClients-1] = clientCtx100;
+		clientCtxs[numberOfClients - 1] = lastClientCtx;
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
-//		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		// TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
 	}
 }
