@@ -109,7 +109,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setRequestBody(TestConstants.stringLength257);
 		clnExecuteCall.setCompressed(false);
 		clnExecuteCall.setCacheId("700");
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", TestConstants.stringLength257);
@@ -124,7 +124,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.raiseExceptionCmd);
 		clnExecuteCall.setCacheId("700");
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", "checkCacheContent");
@@ -141,7 +141,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cacheLargeMessageFor1Hour");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", TestUtil.getLargeString());
@@ -159,7 +159,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.cacheCmd);
 		clnExecuteCall.setCacheId("999");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("999", "large request small response - 999 is a key for that!");
@@ -177,7 +177,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("666");
 		clnExecuteCall.setRequestBody(largeString);
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("666", largeString);
@@ -194,7 +194,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cache10MBStringFor1Hour");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 30000);
 		cbk.getMessageSync(30000);
 		this.checkCacheContent("700", TestUtil.get10MBString());
@@ -211,7 +211,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("noCid");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", "checkCacheContent");
@@ -228,7 +228,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cacheServerReplyOther");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", "checkCacheContent");
@@ -245,7 +245,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cidNoCed");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		this.checkCacheContent("700", "checkCacheContent");
@@ -262,7 +262,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cacheFor2Sec");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		Thread.sleep(2000);
@@ -280,7 +280,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId("700");
 		clnExecuteCall.setRequestBody("cacheFor2Sec");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
 		Thread.sleep(3000);
@@ -379,7 +379,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setCacheId(cacheId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody("checkCacheContent");
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 30000);
 		SCMPMessage scmpReply = cbk.getMessageSync(30000);
 

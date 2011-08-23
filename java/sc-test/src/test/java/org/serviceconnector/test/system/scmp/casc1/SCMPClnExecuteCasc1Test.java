@@ -114,7 +114,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.stringLength257);
 		clnExecuteCall.setCompressed(true);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertEquals(TestConstants.stringLength257, scmpReply.getBody());
@@ -132,7 +132,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString.getBytes());
 		clnExecuteCall.setCompressed(true);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertEquals(largeString, new String((byte[]) scmpReply.getBody()));
@@ -150,7 +150,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		String largeString = TestUtil.getLargeString();
 		ByteArrayInputStream in = new ByteArrayInputStream(largeString.getBytes());
 		clnExecuteCall.setRequestBody(in);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 300000);
 		SCMPMessage scmpReply = cbk.getMessageSync(300000);
 		Assert.assertEquals(new String(largeString.getBytes()), new String((byte[]) scmpReply.getBody()));
@@ -210,7 +210,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	public void t20_EXCOnServer() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.raiseExceptionCmd);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertTrue(scmpReply.isFault());
@@ -227,7 +227,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	public void t30_AppErrorCodeText() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoAppErrorCmd);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(scmpReply);
@@ -245,7 +245,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody("test body");
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 
@@ -270,7 +270,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertNotNull(scmpReply.getSessionId());
@@ -289,7 +289,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody(largeString);
 		clnExecuteCall.setCompressed(false);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertEquals(largeString.length() + "", scmpReply.getBodyLength() + "");
@@ -311,7 +311,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody("test body");
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 
@@ -336,7 +336,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponse10MBCmd);
 		clnExecuteCall.setRequestBody("test body");
 		clnExecuteCall.setCompressed(true);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 300000);
 		SCMPMessage scmpReply = cbk.getMessageSync(300000);
 
@@ -360,7 +360,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertNotNull(scmpReply.getSessionId());
@@ -378,7 +378,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody(largeString);
-		TestCallback cbk = new TestCallback(false);
+		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertEquals(largeString.length() + "", scmpReply.getBodyLength() + "");
