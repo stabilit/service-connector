@@ -135,4 +135,12 @@ public interface IConnection {
 	 * @return the nr of idles in sequence
 	 */
 	public abstract int getNrOfIdlesInSequence();
+
+	/**
+	 * Sets the quiet disconnect. Disconnect is not logged or does not reply any answer to higher layer.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public abstract void setQuietDisconnect() throws Exception;
 }

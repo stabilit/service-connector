@@ -271,13 +271,19 @@ public class ConnectionPool {
 	 * 
 	 * @param connection
 	 *            the connection
+	 * @param quietClose
+	 *            the quiet close
 	 */
-	public synchronized void forceClosingConnection(IConnection connection) {
+	public synchronized void forceClosingConnection(IConnection connection, boolean quietClose) {
 		// make sure connection is not registered
 		this.usedConnections.remove(connection);
 		this.freeConnections.remove(connection);
 
 		try {
+			if (quietClose == true) {
+				// quiet close requested
+				connection.setQuietDisconnect();
+			}
 			connection.disconnect();
 		} catch (Exception ex) {
 			LOGGER.error("force disconnect", ex);
@@ -414,7 +420,7 @@ public class ConnectionPool {
 				LOGGER.error("send keepalive failed - connection gets destroyed, scErrorText="
 						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT) + " scErrorCode="
 						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				this.forceClosingConnection(connection);
+				this.forceClosingConnection(connection, false);
 				return;
 			}
 			synchronized (this) {
@@ -423,7 +429,7 @@ public class ConnectionPool {
 			}
 		} catch (Exception ex) {
 			LOGGER.error("send keepalive failed - connection gets destroyed", ex);
-			this.forceClosingConnection(connection);
+			this.forceClosingConnection(connection, false);
 		}
 	}
 

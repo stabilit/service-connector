@@ -149,7 +149,7 @@ public class Requester implements IRequester {
 			// first handle connection - that user has a connection to work, if he has only 1
 			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException || ex instanceof DisconnectException) {
 				// operation stopped - delete this specific connection, prevents race conditions
-				this.disconnectConnection();
+				this.disconnectConnection(false);
 			} else {
 				// another exception occurred - just free the connection
 				this.freeConnection();
@@ -172,10 +172,13 @@ public class Requester implements IRequester {
 		/**
 		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
 		 * state.
+		 * 
+		 * @param quietDisconnect
+		 *            the quiet disconnect
 		 */
-		private void disconnectConnection() {
+		private void disconnectConnection(boolean quietDisconnect) {
 			try {
-				Requester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection());
+				Requester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection(), quietDisconnect);
 			} catch (Exception ex) {
 				LOGGER.error("disconnect", ex);
 			}
@@ -213,7 +216,7 @@ public class Requester implements IRequester {
 		@Override
 		public void timeout() {
 			LOGGER.warn("oti timeout expiration on SC oti=" + this.timeoutMillis);
-			this.disconnectConnection();
+			this.disconnectConnection(true);
 			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed on SC."));
 		}
 	}

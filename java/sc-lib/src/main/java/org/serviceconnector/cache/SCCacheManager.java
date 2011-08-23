@@ -46,14 +46,12 @@ import org.serviceconnector.util.XMLDumpWriter;
  * interested to insert or load from cache the META_DATA_CACHE gets accessed first. It contains a list of CacheMetaEntry instances,
  * which holds information about the stored SCMPMessage in DATA_CACHE. CacheMetaEntry are identified by the cacheKey
  * serviceName_cachedId, cached messages in DATA_CACHE by the cacheKey serviceName_cacheId/partNr.
- * 
  * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
  * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
  * message completly. Only the first client (session) is allowed to load the message. When the message is complete all parts
  * transfered, it is ready to be loaded from the cache. As long as the message is not completly loaded the meta entry has an
  * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
  * of the expiration is done by the ISCCache implementation.
- * 
  * There are several circumstances they can stop the loading process and clear the message:
  * - Server returns a fault message.
  * - Server returns no cacheId.
@@ -214,17 +212,10 @@ public class SCCacheManager {
 
 		String reqServiceName = reqMessage.getServiceName();
 		String resServiceName = resMessage.getServiceName();
-		if (resServiceName == null) {
-			LOGGER.error("server did not reply service name (null), response service name set to request serviceName="
-					+ reqServiceName);
-			resServiceName = reqServiceName;
-		}
 		String reqCacheId = reqMessage.getCacheId();
 		String resCacheId = resMessage.getCacheId();
 		String sid = reqMessage.getSessionId();
-
 		String reqCacheKey = reqServiceName + Constants.UNDERLINE + reqCacheId;
-		String resCacheKey = resServiceName + Constants.UNDERLINE + resCacheId;
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
@@ -236,6 +227,14 @@ public class SCCacheManager {
 			// no cache id replied no caching requested
 			return;
 		}
+		// this happens here because fault replies doesn't have serviceName set.
+		if (resServiceName == null) {
+			LOGGER.error("server did not reply service name (null), response service name set to request serviceName="
+					+ reqServiceName);
+			resServiceName = reqServiceName;
+		}
+		String resCacheKey = resServiceName + Constants.UNDERLINE + resCacheId;
+
 		if (resCacheKey.equals(reqCacheKey) == false) {
 			// requested cache id differs replied cache id, clean up
 			LOGGER.error("cache message (" + reqCacheKey + ") removed, server did reply different cache key, cache (" + resCacheKey

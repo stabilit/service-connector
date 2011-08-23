@@ -375,7 +375,7 @@ public class SCRequester implements IRequester {
 			this.scmpCallback.receive(ex);
 			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException || ex instanceof DisconnectException) {
 				// operation stopped - delete this specific connection, prevents race conditions
-				this.disconnectConnection();
+				this.disconnectConnection(false);
 			} else {
 				// another exception occurred - just free the connection
 				this.freeConnection();
@@ -398,10 +398,13 @@ public class SCRequester implements IRequester {
 		/**
 		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
 		 * state.
+		 * 
+		 * @param quietDisconnect
+		 *            the quiet disconnect
 		 */
-		private void disconnectConnection() {
+		private void disconnectConnection(boolean quietDisconnect) {
 			try {
-				SCRequester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection());
+				SCRequester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection(), quietDisconnect);
 			} catch (Exception e) {
 				LOGGER.error("disconnectConnection", e);
 			}
@@ -439,7 +442,7 @@ public class SCRequester implements IRequester {
 		@Override
 		public void timeout() {
 			LOGGER.warn("oti timeout expiration in sc client API oti=" + this.timeoutMillis);
-			this.disconnectConnection();
+			this.disconnectConnection(true);
 			try {
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
 				fault.setMessageType(requestMsg.getMessageType());
