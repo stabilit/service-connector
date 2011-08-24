@@ -124,6 +124,10 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public void disconnect() throws Exception {
+		if (this.isConnected() == false) {
+			// not disconnected anymore - do not continue!
+			return;
+		}
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(this.operationListener);
 		try {
