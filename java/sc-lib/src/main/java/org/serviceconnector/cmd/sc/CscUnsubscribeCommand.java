@@ -171,10 +171,17 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		} while (++i < tries);
 
 		if (cascadedSCMask == null) {
+			// unsubscribe made by cascaded SC on behalf of his last client, abort subscriptions in relation if there are left
 			this.abortCascSubscriptions(cascSubscription);
 		}
 	}
 
+	/**
+	 * Abort casc subscriptions.
+	 * 
+	 * @param cascSubscription
+	 *            the casc subscription
+	 */
 	private void abortCascSubscriptions(Subscription cascSubscription) {
 		if (cascSubscription.isCascaded() == true) {
 			// XAB procedure for casc subscriptions
