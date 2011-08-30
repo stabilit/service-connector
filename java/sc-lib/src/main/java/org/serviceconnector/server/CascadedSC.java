@@ -425,6 +425,12 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 */
 	public void cascadedSCAbortSubscription(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
 			int timeoutMillis) {
+
+		if (cascClient.getSubscriptionId() == null) {
+			// it happens when cascaded client got destroyed in meantime, no need to continue XAB message
+			return;
+		}
+
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
 		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
@@ -653,7 +659,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			cascClient.removeClientSubscriptionId(subscription.getId());
 
 			if (cascClient.isDestroyed() == true) {
-				// cascaced client got destroyed - do not continue
+				// cascaded client got destroyed - do not continue
 				return;
 			}
 
@@ -672,7 +678,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				for (String id : subscriptionIds) {
 					abortMessage.setSessionId(id);
 					this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallbackForCasc(request,
-							subscription), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+							subscription), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 				}
 				subscription.getCscSubscriptionIds().clear();
 			} else {
@@ -680,7 +686,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				abortMessage.setSessionId(subscription.getId());
 				SubscriptionLogger.logAbortSubscription((Subscription) session, reason);
 				this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallbackForCasc(request,
-						subscription), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+						subscription), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 			}
 		} else {
 			LOGGER.error("session which is in relation with a cascadedSC timed out - should nerver occur");

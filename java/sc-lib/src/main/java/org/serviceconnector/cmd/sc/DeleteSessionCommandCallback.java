@@ -70,8 +70,8 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 		this.response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
 		if (reply.isFault()) {
-			// delete session failed destroy server
-			server.abortSessionsAndDestroy("deleting session failed, fault reply in callback received");
+			// delete session failed destroy server abort!
+			server.abortSession(session, "deleting session failed, fault reply in callback received");
 		}
 	}
 
@@ -99,7 +99,7 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 		fault.setMessageType(this.msgType);
 		this.response.setSCMP(fault);
 		this.responderCallback.responseCallback(request, response);
-		// delete session failed destroy server
-		server.abortSessionsAndDestroy("deleting session failed, exception received in callback");
+		// delete session failed destroy server abort!
+		server.abortSession(session, "deleting session failed, exception received in callback");
 	}
 }

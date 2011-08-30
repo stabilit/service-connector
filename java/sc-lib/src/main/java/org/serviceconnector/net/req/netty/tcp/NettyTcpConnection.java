@@ -64,6 +64,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext, NettyTcpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
+		this.bootstrap.setOption("tcpNoDelay", true);
 		// Start the connection attempt.
 		this.remotSocketAddress = new InetSocketAddress(host, port);
 		ChannelFuture future = bootstrap.connect(this.remotSocketAddress);

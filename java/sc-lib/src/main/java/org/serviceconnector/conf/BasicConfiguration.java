@@ -71,7 +71,7 @@ public class BasicConfiguration {
 	 * Used to observe the reply of a abort session. <br />
 	 * If server does not reply within this time, the server will be cleaned up.
 	 */
-	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
+	private int srvAbortOTIMillis = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR;
 
 	/**
 	 * Instantiates a new basic configuration.

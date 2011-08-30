@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CscAbortSubscriptionCommandCallback;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -131,16 +132,23 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 		// delete unreferenced nodes in queue
 		publishMessageQueue.removeNonreferencedNodes();
 		if (cascadedSCMask == null) {
+			// unsubscribe made by cascaded SC on behalf of his last client, abort subscriptions in relation if there are left
 			this.abortCascSubscriptions(cascSubscription);
 		}
 	}
 
+	/**
+	 * Abort casc subscriptions.
+	 * 
+	 * @param cascSubscription
+	 *            the casc subscription
+	 */
 	private void abortCascSubscriptions(Subscription cascSubscription) {
 		if (cascSubscription.isCascaded() == true) {
 			// XAB procedure for casc subscriptions
 			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
 
-			int oti = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR;
+			int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
 			// set up abort message
 			SCMPMessage abortMessage = new SCMPMessage();
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());

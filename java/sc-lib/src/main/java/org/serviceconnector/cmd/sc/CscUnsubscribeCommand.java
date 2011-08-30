@@ -24,6 +24,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CscUnsubscribeCallbackForCasc;
 import org.serviceconnector.cmd.casc.CscUnsubscribeCommandCallback;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequest;
@@ -157,8 +158,11 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of csc unsubscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
+					if (cascadedSCMask == null) {
+						// unsubscribe by cascSC on behalf of his last client, abort subscriptions in relation if there are left
+						this.abortCascSubscriptions(cascSubscription);
+					}
 					// only one loop outstanding - don't continue throw current exception
-					server.abortSessionsAndDestroy("csc unsubscribe subscription failed, connection pool to server busy");
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
@@ -187,7 +191,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// XAB procedure for casc subscriptions
 			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
 
-			int oti = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR;
+			int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
 			// set up abort message
 			SCMPMessage abortMessage = new SCMPMessage();
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());

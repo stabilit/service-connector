@@ -107,7 +107,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of unsubscribe, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					server.abortSessionsAndDestroy("unsubscribe subscription failed, connection pool to server busy");
+					server.abortSession(subscription, "unsubscribe subscription failed, connection pool to server busy");
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());

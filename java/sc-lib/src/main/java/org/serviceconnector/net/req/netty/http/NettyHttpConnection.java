@@ -74,6 +74,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
+		this.bootstrap.setOption("tcpNoDelay", true);
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyConnectionAdpater.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.

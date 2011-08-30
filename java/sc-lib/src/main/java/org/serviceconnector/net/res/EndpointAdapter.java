@@ -81,6 +81,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	@Override
 	public void create() {
 		this.bootstrap = new ServerBootstrap(this.endpointChannelFactory);
+		this.bootstrap.setOption("tcpNoDelay", true);
 	}
 
 	/** {@inheritDoc} */
@@ -204,7 +205,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {

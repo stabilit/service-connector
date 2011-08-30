@@ -131,7 +131,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of delete session, tries left=" + tries);
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
+					statefulServer.abortSession(session, "deleting session failed, connection pool to server busy");
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());

@@ -119,8 +119,6 @@ public final class Constants {
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/** Default value used if no timeout for operation is passed in the API. */
 	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
-	/** Default value used if no ABORT_SERVER_OTI_MILLIS is configured. */
-	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
 	/** Default timeout for file session creation. */
 	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
 	/** Default timeout for creation of a connection to peer. */
