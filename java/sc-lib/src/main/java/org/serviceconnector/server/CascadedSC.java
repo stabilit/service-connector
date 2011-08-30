@@ -488,8 +488,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 			message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 			SCMPCscUnsubscribeCall unsubscribeCall = new SCMPCscUnsubscribeCall(this.requester, message);
-			unsubscribeCall.invoke(new CommandCallback(false), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
+			unsubscribeCall.invoke(new CommandCallback(false), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 		} catch (Exception e) {
 			LOGGER.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName(), e);
 		}
