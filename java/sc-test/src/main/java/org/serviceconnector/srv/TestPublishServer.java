@@ -97,7 +97,7 @@ public class TestPublishServer extends TestStatefulServer {
 		try {
 			sc.setKeepAliveIntervalSeconds(0);
 			sc.setKeepAliveIntervalSeconds(10);
-			sc.setCheckRegistrationIntervalSeconds(60);
+			sc.setCheckRegistrationIntervalSeconds(40);
 			sc.setImmediateConnect(true);
 			sc.startListener();
 
