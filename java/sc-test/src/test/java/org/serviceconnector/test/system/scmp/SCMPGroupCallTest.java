@@ -75,17 +75,17 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 		ISCMPCall groupCall = executeCall.openGroup();
 
 		TestCallback cbk = new TestCallback(true);
-		groupCall.invoke(cbk, 1000);
-		TestUtil.checkReply(cbk.getMessageSync(1000));
+		groupCall.invoke(cbk, 3000);
+		TestUtil.checkReply(cbk.getMessageSync(3000));
 
 		for (int i = 0; i < TestConstants.pangram.length(); i++) {
 			cbk = new TestCallback(true);
 			groupCall.setRequestBody(TestConstants.pangram.subSequence(i, i + 1));
-			groupCall.invoke(cbk, 1000);
-			TestUtil.checkReply(cbk.getMessageSync(1000));
+			groupCall.invoke(cbk, 3000);
+			TestUtil.checkReply(cbk.getMessageSync(3000));
 		}
-		groupCall.closeGroup(cbk, 1000); // send REQ (no body content)
-		SCMPMessage res = cbk.getMessageSync(1000);
+		groupCall.closeGroup(cbk, 3000); // send REQ (no body content)
+		SCMPMessage res = cbk.getMessageSync(3000);
 
 		Assert.assertEquals(TestConstants.pangram, res.getBody());
 		Assert.assertNotNull(res.getMessageSequenceNr());
