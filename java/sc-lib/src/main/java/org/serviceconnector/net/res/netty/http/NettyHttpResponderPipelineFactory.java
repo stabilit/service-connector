@@ -41,14 +41,14 @@ public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// logging handler
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for decoding requests - Netty
 		pipeline.addLast("decoder", new HttpRequestDecoder());
 		// responsible for encoding responses - Netty
 		pipeline.addLast("encoder", new HttpResponseEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
-		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyHttpResponderRequestHandler());
 		return pipeline;

@@ -81,7 +81,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	@Override
 	public void create() {
 		this.bootstrap = new ServerBootstrap(this.endpointChannelFactory);
-		this.bootstrap.setOption("tcpNoDelay", true);
+		this.bootstrap.setOption("child.tcpNoDelay", true);
 	}
 
 	/** {@inheritDoc} */

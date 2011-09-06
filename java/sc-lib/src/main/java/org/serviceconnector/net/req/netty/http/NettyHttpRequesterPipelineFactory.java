@@ -62,6 +62,8 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// logging handler
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
 				.getIdleTimeoutSeconds()));
@@ -71,8 +73,6 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("encoder", new HttpRequestEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
-		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handle responses - Stabilit
 		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 		return pipeline;

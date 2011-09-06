@@ -59,13 +59,13 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// logging handler
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
 				.getIdleTimeoutSeconds()));
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
-		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handling response
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;
