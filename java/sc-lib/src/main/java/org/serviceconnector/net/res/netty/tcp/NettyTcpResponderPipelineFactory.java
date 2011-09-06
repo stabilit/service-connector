@@ -38,10 +38,10 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// logging handler
+		pipeline.addFirst("logger", new LoggingHandler());
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
-		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handling request
 		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
 		return pipeline;
