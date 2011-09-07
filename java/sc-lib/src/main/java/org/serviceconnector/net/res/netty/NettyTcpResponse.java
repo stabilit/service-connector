@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.ChannelEvent;
+import org.jboss.netty.channel.Channel;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
@@ -37,11 +37,11 @@ public class NettyTcpResponse extends ResponseAdapter {
 	/**
 	 * Instantiates a new netty tcp response.
 	 * 
-	 * @param event
-	 *            the event
+	 * @param channel
+	 *            the channel
 	 */
-	public NettyTcpResponse(ChannelEvent event) {
-		super(event);
+	public NettyTcpResponse(Channel channel) {
+		super(channel);
 	}
 
 	/** {@inheritDoc} */
@@ -49,11 +49,11 @@ public class NettyTcpResponse extends ResponseAdapter {
 	public void write() throws Exception {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
-		event.getChannel().write(buffer);
+		channel.write(buffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
-					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
-					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getLocalAddress())
+					.getHostName(), ((InetSocketAddress) this.channel.getLocalAddress()).getPort(), buffer.toByteBuffer().array(),
+					0, buffer.toByteBuffer().array().length);
 		}
 	}
 }

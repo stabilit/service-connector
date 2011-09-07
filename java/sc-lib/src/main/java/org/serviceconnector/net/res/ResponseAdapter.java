@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelEvent;
+import org.jboss.netty.channel.Channel;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -42,17 +42,17 @@ public abstract class ResponseAdapter implements IResponse {
 	/** The scmp. */
 	protected SCMPMessage scmp;
 	/** The event from Netty framework. */
-	protected ChannelEvent event;
+	protected Channel channel;
 
 	/**
 	 * Instantiates a new response adapter.
 	 * 
-	 * @param event
+	 * @param channel
 	 *            the event
 	 */
-	public ResponseAdapter(ChannelEvent event) {
+	public ResponseAdapter(Channel channel) {
 		this.scmp = null;
-		this.event = event;
+		this.channel = channel;
 	}
 	
 	/** {@inheritDoc} */
@@ -83,15 +83,6 @@ public abstract class ResponseAdapter implements IResponse {
 		}
 		scmp.setIsReply(true);
 		this.scmp = scmp;
-	}
-	
-	/**
-	 * Gets the event.
-	 * 
-	 * @return the event
-	 */
-	public ChannelEvent getEvent() {
-		return event;
 	}
 
 	/** {@inheritDoc} */

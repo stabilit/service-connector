@@ -16,52 +16,70 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 
 /**
- * The Class DefaultFrameDecoder.
+ * The Class SCMPFrameDecoder.
  * 
  * @author JTraber
  */
-public class DefaultFrameDecoder implements IFrameDecoder {
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(DefaultFrameDecoder.class);
+public class SCMPFrameDecoder {
 
 	/**
-	 * Instantiates a new default frame decoder.
+	 * Instantiates a new scmp frame decoder.
 	 */
-	protected DefaultFrameDecoder() {
+	protected SCMPFrameDecoder() {
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
-
-		if (buffer == null || buffer.length < Constants.SCMP_HEADLINE_SIZE) {
-			return 0; // don't throw exception it is the case if client disconnects
+	/**
+	 * Parses the frame size.
+	 * 
+	 * @param buffer
+	 *            the buffer to parse
+	 * @return the frame size
+	 * @throws Exception
+	 *             the exception
+	 */
+	public static int parseFrameSize(byte[] buffer) throws FrameDecoderException {
+		try {
+			// check headerKey
+			SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(buffer);
+			if (headerKey == SCMPHeaderKey.UNDEF) {
+				throw new FrameDecoderException("invalid scmp header line:" + new String(buffer, 0, Constants.SCMP_HEADLINE_SIZE));
+			}
+			// parse frame size
+			int scmpLength = SCMPFrameDecoder.parseMessageSize(buffer);
+			return Constants.SCMP_HEADLINE_SIZE + scmpLength;
+		} catch (Exception e) {
+			throw new FrameDecoderException("error when parsing frame size", e);
 		}
-		// check headerKey
-		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(buffer);
-		if (headerKey == SCMPHeaderKey.UNDEF) {
-			throw new FrameDecoderException("invalid scmp header line:" + new String(buffer, 0, Constants.SCMP_HEADLINE_SIZE));
-		}
-		// parse frame size
-		int scmpLength = this.parseMessageSize(buffer);
-		return Constants.SCMP_HEADLINE_SIZE + scmpLength;
 	}
 
-	@Override
-	public int parseMessageSize(byte[] buffer) throws FrameDecoderException {
-		return this.readInt(buffer, Constants.SCMP_MSG_SIZE_START, Constants.SCMP_MSG_SIZE_END);
+	/**
+	 * Parses the message size.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @return the int
+	 * @throws Exception
+	 *             the exception
+	 */
+	public static int parseMessageSize(byte[] buffer) throws Exception {
+		return SCMPFrameDecoder.readInt(buffer, Constants.SCMP_MSG_SIZE_START, Constants.SCMP_MSG_SIZE_END);
 	}
 
-	@Override
-	public int parseHeaderSize(byte[] buffer) throws Exception {
-		return this.readInt(buffer, Constants.SCMP_HEADER_SIZE_START, Constants.SCMP_HEADER_SIZE_END);
+	/**
+	 * Parses the header size.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @return the int
+	 * @throws Exception
+	 *             the exception
+	 */
+	public static int parseHeaderSize(byte[] buffer) throws Exception {
+		return SCMPFrameDecoder.readInt(buffer, Constants.SCMP_HEADER_SIZE_START, Constants.SCMP_HEADER_SIZE_END);
 	}
 
 	/**
@@ -77,7 +95,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	 * @throws FrameDecoderException
 	 *             the frame decoder exception
 	 */
-	public int readInt(byte[] b, int startOffset, int endOffset) throws FrameDecoderException {
+	public static int readInt(byte[] b, int startOffset, int endOffset) throws Exception {
 
 		if (b == null) {
 			throw new FrameDecoderException("invalid scmp message length");
@@ -94,7 +112,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 				scmpLength += ((int) b[i] - Constants.SCMP_ZERO) * factor;
 				factor *= Constants.NUMBER_10;
 			} else {
-				throw new FrameDecoderException("invalid scmp message length");
+				throw new Exception("invalid scmp message length");
 			}
 		}
 		return scmpLength;

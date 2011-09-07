@@ -16,12 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.tcp;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.logging.LoggingHandler;
-import org.serviceconnector.net.res.netty.SCMPBasedFrameDecoder;
+import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
 
 /**
  * A factory for creating NettyTcpResponderPipelineFactory objects.
@@ -30,10 +29,6 @@ import org.serviceconnector.net.res.netty.SCMPBasedFrameDecoder;
  */
 public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
 
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
-
 	/** {@inheritDoc} */
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
@@ -41,7 +36,7 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 		// logging handler
 		pipeline.addFirst("logger", new LoggingHandler());
 		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
+		pipeline.addLast("framer", new NettySCMPFrameDecoder());
 		// responsible for handling request
 		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
 		return pipeline;

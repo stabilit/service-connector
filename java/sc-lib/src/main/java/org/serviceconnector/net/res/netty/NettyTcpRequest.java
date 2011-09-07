@@ -20,8 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.MessageEvent;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
@@ -30,7 +28,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
 /**
- * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame. Based on JBoss
+ * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame. Based on
+ * JBoss
  * Netty.
  */
 public class NettyTcpRequest extends RequestAdapter {
@@ -39,24 +38,26 @@ public class NettyTcpRequest extends RequestAdapter {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyTcpRequest.class);
 	/** The request. */
-	private ChannelBuffer channelBuf;
+	private byte[] buffer;
 
 	/**
 	 * Instantiates a new netty tcp request.
-	 *
-	 * @param event the event from Netty framework
-	 * @param localAddress the local address
-	 * @param remoteAddress the remote address
+	 * 
+	 * @param event
+	 *            the event from Netty framework
+	 * @param localAddress
+	 *            the local address
+	 * @param remoteAddress
+	 *            the remote address
 	 */
-	public NettyTcpRequest(MessageEvent event, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+	public NettyTcpRequest(byte[] buffer, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
-		this.channelBuf = (ChannelBuffer) event.getMessage();
+		this.buffer = buffer;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void load() throws Exception {
-		byte[] buffer = new byte[channelBuf.readableBytes()];
-		channelBuf.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this

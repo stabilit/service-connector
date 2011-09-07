@@ -53,8 +53,6 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	private static final DecimalFormat FORMAT_MSG_SIZE_IN_HEADER = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	/** The Constant FORMAT_HEADER_SIZE_IN_HEADER. */
 	private static final DecimalFormat FORMAT_HEADER_SIZE_IN_HEADER = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
-	/** The default frame decoder. */
-	protected IFrameDecoder defaultFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 
 	/** {@inheritDoc} */
 	@Override
@@ -95,8 +93,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		}
 
 		// parse headerSize & bodySize
-		int scmpHeaderSize = defaultFrameDecoder.parseHeaderSize(headline);
-		int scmpBodySize = defaultFrameDecoder.parseMessageSize(headline) - scmpHeaderSize;
+		int scmpHeaderSize = SCMPFrameDecoder.parseHeaderSize(headline);
+		int scmpBodySize = SCMPFrameDecoder.parseMessageSize(headline) - scmpHeaderSize;
 
 		// storing header fields in meta map
 		Map<String, String> metaMap = new HashMap<String, String>();

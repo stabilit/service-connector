@@ -48,7 +48,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		NettyHttpResponse response = new NettyHttpResponse(event);
+		NettyHttpResponse response = new NettyHttpResponse(event.getChannel());
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		Channel channel = ctx.getChannel();
 		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
@@ -62,7 +62,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		NettyHttpResponse response = new NettyHttpResponse(e);
+		NettyHttpResponse response = new NettyHttpResponse(e.getChannel());
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;

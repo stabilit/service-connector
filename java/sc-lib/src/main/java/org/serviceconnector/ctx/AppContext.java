@@ -44,7 +44,6 @@ import org.serviceconnector.conf.RemoteNodeListConfiguration;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.conf.ServiceListConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
-import org.serviceconnector.net.FlyweightFrameDecoderFactory;
 import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.res.EndpointFactory;
 import org.serviceconnector.net.res.ResponderRegistry;
@@ -104,8 +103,6 @@ public final class AppContext {
 	private static final ConnectionFactory CONNECTION_FACTORY = new ConnectionFactory();
 	/** The Constant endpointFactory. */
 	private static final EndpointFactory ENDPOINT_FACTORY = new EndpointFactory();
-	/** The Constant frameDecoderFactory. */
-	private static final FlyweightFrameDecoderFactory FRAME_DECODER_FACTORY = new FlyweightFrameDecoderFactory();
 	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory ENCODER_DECODER_FACTORY = new FlyweightEncoderDecoderFactory();
 
@@ -188,15 +185,6 @@ public final class AppContext {
 	 */
 	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
 		return AppContext.ENCODER_DECODER_FACTORY;
-	}
-
-	/**
-	 * Gets the frame decoder factory.
-	 * 
-	 * @return the frame decoder factory
-	 */
-	public static FlyweightFrameDecoderFactory getFrameDecoderFactory() {
-		return AppContext.FRAME_DECODER_FACTORY;
 	}
 
 	/**

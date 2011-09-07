@@ -24,7 +24,7 @@ import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
-import org.serviceconnector.net.res.netty.SCMPBasedFrameDecoder;
+import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
 
 
 /**
@@ -65,7 +65,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
 				.getIdleTimeoutSeconds()));
 		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
+		pipeline.addLast("framer", new NettySCMPFrameDecoder());
 		// responsible for handling response
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;

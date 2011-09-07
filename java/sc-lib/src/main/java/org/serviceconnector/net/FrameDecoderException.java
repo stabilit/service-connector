@@ -35,4 +35,16 @@ public class FrameDecoderException extends Exception {
 	public FrameDecoderException(String message) {
 		super(message);
 	}
+
+	/**
+	 * Instantiates a new frame decoder exception.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 */
+	public FrameDecoderException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

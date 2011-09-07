@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
 import org.apache.log4j.Logger;
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -47,11 +48,14 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		NettyTcpResponse response = new NettyTcpResponse(event);
+		NettyTcpResponse response = new NettyTcpResponse(event.getChannel());
 		Channel channel = ctx.getChannel();
 		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
 		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-		IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
+		ChannelBuffer channelBuffer = (ChannelBuffer) event.getMessage();
+		byte[] buffer = new byte[channelBuffer.readableBytes()];
+		channelBuffer.readBytes(buffer);
+		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
 		// process request in super class
 		super.messageReceived(request, response, channel);
 	}
@@ -60,7 +64,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		NettyTcpResponse response = new NettyTcpResponse(e);
+		NettyTcpResponse response = new NettyTcpResponse(e.getChannel());
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
