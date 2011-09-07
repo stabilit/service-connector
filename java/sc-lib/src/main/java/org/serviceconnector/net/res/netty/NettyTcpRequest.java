@@ -39,7 +39,7 @@ public class NettyTcpRequest extends RequestAdapter {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyTcpRequest.class);
 	/** The request. */
-	private ChannelBuffer request;
+	private ChannelBuffer channelBuf;
 
 	/**
 	 * Instantiates a new netty tcp request.
@@ -50,13 +50,13 @@ public class NettyTcpRequest extends RequestAdapter {
 	 */
 	public NettyTcpRequest(MessageEvent event, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
-		this.request = (ChannelBuffer) event.getMessage();
+		this.channelBuf = (ChannelBuffer) event.getMessage();
 	}
 
 	/** {@inheritDoc} */
 	public void load() throws Exception {
-		byte[] buffer = new byte[request.readableBytes()];
-		request.readBytes(buffer);
+		byte[] buffer = new byte[channelBuf.readableBytes()];
+		channelBuf.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
