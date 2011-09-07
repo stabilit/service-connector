@@ -18,10 +18,8 @@ package org.serviceconnector.test.unit;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.serviceconnector.Constants;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FrameDecoderException;
-import org.serviceconnector.net.IFrameDecoder;
+import org.serviceconnector.net.SCMPFrameDecoder;
 
 /**
  * The Class DefaultFrameDecoderTest.
@@ -30,9 +28,6 @@ import org.serviceconnector.net.IFrameDecoder;
  */
 public class DefaultFrameDecoderTest extends SuperUnitTest {
 
-	/** The decoder. */
-	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
-
 	/**
 	 * Description: Parses frame size fail test<br>
 	 * Expectation: passes
@@ -40,12 +35,14 @@ public class DefaultFrameDecoderTest extends SuperUnitTest {
 	@Test
 	public void t01_ParseFrameSizeFailTest() throws Exception {
 		try {
-			int frameSize = decoder.parseFrameSize(null);
-			Assert.assertEquals("0", frameSize + "");
-			frameSize = decoder.parseFrameSize(new byte[0]);
-			Assert.assertEquals("0", frameSize + "");
+			SCMPFrameDecoder.parseFrameSize(null);
+			Assert.fail("Should throw Exception!");
 		} catch (FrameDecoderException e) {
-			Assert.fail("Should not throw Exception!");
+		}
+		try {
+			SCMPFrameDecoder.parseFrameSize(new byte[0]);
+			Assert.fail("Should throw Exception!");
+		} catch (FrameDecoderException e) {
 		}
 	}
 
@@ -60,7 +57,7 @@ public class DefaultFrameDecoderTest extends SuperUnitTest {
 		String headline = "REQ 0000078 00043 1.0\n";
 		try {
 			b = headline.getBytes();
-			frameSize = decoder.parseFrameSize(b);
+			frameSize = SCMPFrameDecoder.parseFrameSize(b);
 			Assert.assertEquals("100", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
@@ -69,7 +66,7 @@ public class DefaultFrameDecoderTest extends SuperUnitTest {
 		headline = "REQ 0011178 00043 1.0\n";
 		try {
 			b = headline.getBytes();
-			frameSize = decoder.parseFrameSize(b);
+			frameSize = SCMPFrameDecoder.parseFrameSize(b);
 			Assert.assertEquals("11200", frameSize + "");
 		} catch (Exception e) {
 			Assert.fail("Should not throw Exception!");
@@ -86,10 +83,10 @@ public class DefaultFrameDecoderTest extends SuperUnitTest {
 		String headline = "REQ  008700 00000 1.0\n";
 		try {
 			b = headline.getBytes();
-			decoder.parseFrameSize(b);
+			SCMPFrameDecoder.parseFrameSize(b);
 			Assert.fail("Should throw Exception!");
 		} catch (Exception e) {
-			Assert.assertEquals("invalid scmp message length", e.getMessage());
+			Assert.assertEquals("invalid scmp message length", e.getCause().getMessage());
 		}
 	}
 }

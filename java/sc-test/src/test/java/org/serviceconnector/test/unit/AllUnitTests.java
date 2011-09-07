@@ -46,7 +46,6 @@ import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 		
 		// other unit tests
 		DefaultFrameDecoderTest.class,
-		HttpFrameDecoderTest.class,
 		LargeMessageEncoderDecoderTest.class,
 		KeepAliveMessageEncoderDecoderTest.class,
 		DefaultEncoderDecoderTest.class,
