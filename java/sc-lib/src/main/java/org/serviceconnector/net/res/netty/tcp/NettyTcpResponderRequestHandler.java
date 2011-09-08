@@ -73,7 +73,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			LOGGER.warn(th); // regular disconnect causes this expected exception
 			return;
 		} else {
-			LOGGER.error("Response error", th);
+			LOGGER.error("Responder error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) th).setFaultResponse(response);

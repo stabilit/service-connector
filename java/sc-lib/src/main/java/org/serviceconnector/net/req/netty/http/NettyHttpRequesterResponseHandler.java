@@ -127,7 +127,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		if (th instanceof java.io.IOException) {
 			LOGGER.warn(th); // regular disconnect causes this expected exception
 		} else {
-			LOGGER.error("Response error", th);
+			LOGGER.error("Requester error", th);
 		}
 	}
 	

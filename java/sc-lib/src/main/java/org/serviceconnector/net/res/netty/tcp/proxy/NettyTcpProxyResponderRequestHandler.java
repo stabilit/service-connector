@@ -138,7 +138,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Throwable th = e.getCause();
+		Throwable th = e.getCause(); 	// TODO TRN why is this different to e.g. NettyTcpResponderRequestHandler?
 		LOGGER.warn(th.toString());
 	}
 
