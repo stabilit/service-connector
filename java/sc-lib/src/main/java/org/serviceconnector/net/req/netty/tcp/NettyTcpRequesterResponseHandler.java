@@ -73,10 +73,32 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			// set up responderRequestHandlerTask to take care of the request
-			NettyTcpRequesterResponseHandlerTask responseHandlerTask = new NettyTcpRequesterResponseHandlerTask(
-					(ChannelBuffer) e.getMessage(), (InetSocketAddress) ctx.getChannel().getRemoteAddress());
-			AppContext.getThreadPool().submit(responseHandlerTask);
+			SCMPMessage ret = null;
+			try {
+				ChannelBuffer channelBuffer = (ChannelBuffer) e.getMessage();
+				byte[] buffer = new byte[channelBuffer.readableBytes()];
+				channelBuffer.readBytes(buffer);
+				Statistics.getInstance().incrementTotalMessages(buffer.length);
+				if (ConnectionLogger.isEnabledFull()) {
+					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
+							remoteAddress.getPort(), buffer, 0, buffer.length);
+				}
+				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+				ret = (SCMPMessage) encoderDecoder.decode(bais);
+				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
+			} catch (Throwable th) {
+				LOGGER.error("receive message", th);
+				if ((th instanceof Exception) == false) {
+					try {
+						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
+						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
+					} catch (Throwable th1) {
+						LOGGER.error("receive exception", th);
+					}
+				}
+			}
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -85,7 +107,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 
 	@Override
 	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-		super.channelDisconnected(ctx, e);
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
@@ -95,8 +116,11 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 						remoteSocketAddress.getPort());
 			}
 			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
-			NettyTcpRequesterErrorHandlerTask errorHandler = new NettyTcpRequesterErrorHandlerTask(ex);
-			AppContext.getThreadPool().submit(errorHandler);
+			try {
+				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
+			} catch (Throwable throwable) {
+				LOGGER.error("receive exception", throwable);
+			}
 			return;
 		}
 		if (ConnectionLogger.isEnabled()) {
@@ -114,8 +138,11 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
 				LOGGER.warn("connection exception in pending request state, stop operation.", ex);
-				NettyTcpRequesterErrorHandlerTask errorHandler = new NettyTcpRequesterErrorHandlerTask(ex);
-				AppContext.getThreadPool().submit(errorHandler);
+				try {
+					NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
+				} catch (Throwable throwable) {
+					LOGGER.error("receive exception", throwable);
+				}
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
@@ -126,100 +153,15 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		if (th instanceof java.io.IOException) {
 			LOGGER.warn(th); // regular disconnect causes this expected exception
 		} else {
-			LOGGER.error("Requester error", th);
+			LOGGER.error("Response error", th);
 		}
 	}
-	
+
 	/**
 	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in
 	 * disconnect procedure.
 	 */
 	public void connectionDisconnect() {
 		this.pendingRequest = false;
-	}
-
-
-	/**
-	 * The Class NettyTcpRequesterResponseHandlerTask. Is responsible for processing a response. It has to be a new thread because
-	 * of NETTY threading concept.
-	 * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.
-	 * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
-	 */
-	private class NettyTcpRequesterResponseHandlerTask implements Runnable {
-
-		/** The channel buffer. */
-		private ChannelBuffer channelBuffer;
-		/** The socket address. */
-		private InetSocketAddress socketAddress;
-
-		/**
-		 * Instantiates a new netty tcp requester response handler task.
-		 * 
-		 * @param channelBuffer
-		 *            the channel buffer
-		 * @param socketAddress
-		 *            the socket address
-		 */
-		public NettyTcpRequesterResponseHandlerTask(ChannelBuffer channelBuffer, InetSocketAddress socketAddress) {
-			this.channelBuffer = channelBuffer;
-			this.socketAddress = socketAddress;
-		}
-
-		@Override
-		public void run() {
-			SCMPMessage ret = null;
-			try {
-				byte[] buffer = new byte[channelBuffer.readableBytes()];
-				channelBuffer.readBytes(buffer);
-				Statistics.getInstance().incrementTotalMessages(buffer.length);
-				if (ConnectionLogger.isEnabledFull()) {
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), socketAddress.getHostName(),
-							socketAddress.getPort(), buffer, 0, buffer.length);
-				}
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-				ret = (SCMPMessage) encoderDecoder.decode(bais);
-				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
-			} catch (Throwable th) {
-				LOGGER.error("receive message", th);
-				if ((th instanceof Exception) == false) {
-					try {
-						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
-						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
-					} catch (Throwable th1) {
-						LOGGER.error("receive exception", th);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * The Class NettyTcpRequesterErrorHandlerTask.
-	 */
-	private class NettyTcpRequesterErrorHandlerTask implements Runnable {
-
-		/** The exception. */
-		private Exception exception;
-
-		/**
-		 * Instantiates a new netty tcp requester error handler task.
-		 * 
-		 * @param exception
-		 *            the exception
-		 */
-		public NettyTcpRequesterErrorHandlerTask(Exception exception) {
-			this.exception = exception;
-		}
-
-		@Override
-		public void run() {
-			LOGGER.error("receive exception", exception);
-			try {
-				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(exception);
-			} catch (Throwable th) {
-				LOGGER.error("receive exception", th);
-			}
-		}
 	}
 }
