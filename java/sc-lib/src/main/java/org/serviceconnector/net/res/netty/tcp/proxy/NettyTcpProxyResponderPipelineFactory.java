@@ -21,7 +21,9 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
+import org.jboss.netty.handler.execution.ExecutionHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating NettyTcpProxyResponderPipeline objects.
@@ -66,6 +68,8 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler
 		pipeline.addLast("logger", new LoggingHandler());
+		// executer to run NettyTcpProxyResponderRequestHandler in own thread
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getThreadPool()));
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;

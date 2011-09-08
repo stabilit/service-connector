@@ -19,7 +19,9 @@ package org.serviceconnector.net.res.netty.tcp;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.execution.ExecutionHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
 
 /**
@@ -37,6 +39,8 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 		pipeline.addFirst("logger", new LoggingHandler());
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new NettySCMPFrameDecoder());
+		// executer to run NettyTcpResponderRequestHandler in own thread
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getThreadPool()));
 		// responsible for handling request
 		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
 		return pipeline;

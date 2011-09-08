@@ -43,7 +43,7 @@ import org.serviceconnector.scmp.SCMPPart;
  * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.
  * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
  */
-public class NettyResponderRequestHandlerTask implements IResponderCallback, Runnable {
+public class NettyResponderRequestHandlerTask implements IResponderCallback {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
 	/** The composite registry. */
@@ -67,9 +67,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 		this.response = response;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void run() {
+	public void process() {
 		try {
 			// loading message
 			request.load();

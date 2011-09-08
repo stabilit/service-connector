@@ -23,9 +23,10 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.jboss.netty.handler.execution.ExecutionHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.Constants;
-
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating NettyHttpServerPipeline objects.
@@ -37,7 +38,7 @@ public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
-	
+
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
@@ -49,6 +50,8 @@ public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("encoder", new HttpResponseEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
+		// executer to run NettyHttpResponderRequestHandler in own thread
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getThreadPool()));
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyHttpResponderRequestHandler());
 		return pipeline;
