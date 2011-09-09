@@ -41,7 +41,7 @@ public class SCMPPart extends SCMPMessage {
 	}
 
 	/**
-	 * Instantiates a new sCMP part.
+	 * Instantiates a new SCMP part.
 	 * 
 	 * @param pollRequest
 	 *            the poll request

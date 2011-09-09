@@ -94,7 +94,8 @@ public class EHCacheImpl<T> implements ISCCache<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getKeysWithExpiryCheck() {
+	public List<String> getKeyList() {
+		// EHCache returns list of keys whis did not expire yet
 		return this.ehCache.getKeysWithExpiryCheck();
 	}
 

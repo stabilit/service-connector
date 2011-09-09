@@ -58,11 +58,11 @@ public interface ISCCache<T> {
 	public abstract void replace(Object key, T value, int timeToLiveSeconds);
 
 	/**
-	 * Gets the keys with expiry check.
+	 * Gets the list of keys in the cache.
 	 * 
 	 * @return the keys with expiry check
 	 */
-	public abstract List<String> getKeysWithExpiryCheck();
+	public abstract List<String> getKeyList();
 
 	/**
 	 * Gets the expiration time.

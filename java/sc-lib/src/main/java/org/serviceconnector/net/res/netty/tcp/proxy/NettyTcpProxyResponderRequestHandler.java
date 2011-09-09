@@ -17,6 +17,7 @@
 package org.serviceconnector.net.res.netty.tcp.proxy;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedChannelException;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
@@ -138,8 +139,17 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Throwable th = e.getCause(); 	// TODO TRN why is this different to e.g. NettyTcpResponderRequestHandler?
-		LOGGER.warn(th.toString());
+		Throwable th = e.getCause();
+		if (th instanceof ClosedChannelException) {
+			// never reply in case of channel closed exception
+			return;
+		}
+		if (th instanceof java.io.IOException) {
+			LOGGER.warn(th); // regular disconnect causes this expected exception
+			return;
+		} else {
+			LOGGER.error("Responder error", th);
+		}
 	}
 
 	/**

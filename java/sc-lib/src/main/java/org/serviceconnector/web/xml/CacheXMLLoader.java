@@ -130,7 +130,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			writer.writeCharacters(scCache.getCacheName());
 			writer.writeEndElement(); // close cacheName tag
 			writer.writeStartElement("cachedMessageCount");
-			writer.writeCharacters(String.valueOf(scCache.getKeysWithExpiryCheck().size() + simulation));
+			writer.writeCharacters(String.valueOf(scCache.getKeyList().size() + simulation));
 			writer.writeEndElement(); // close cachedMessageCount tag
 			writer.writeStartElement("numberOfMessagesInMemoryStore");
 			writer.writeCharacters(String.valueOf(scCache.getNumberOfMessagesInStore()));
@@ -183,7 +183,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 */
 	private void writeCacheDetails(XMLStreamWriter writer, ISCCache<?> cache, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
-		List<String> dataCacheKeys = cache.getKeysWithExpiryCheck();
+		List<String> dataCacheKeys = cache.getKeyList();
 		Collections.sort(dataCacheKeys, new CacheKeyComparator());
 		int simulation = this.getParameterInt(request, "sim", 0);
 		if (simulation > 0) {

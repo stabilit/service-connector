@@ -121,27 +121,27 @@ public class SCCacheManager {
 	 *             requested message in loading state, gets already loaded by another client<br>
 	 */
 	public synchronized SCMPMessage tryGetMessageFromCacheOrLoad(SCMPMessage reqMessage) throws SCMPCommandException {
-		String sessionId = reqMessage.getSessionId();
-		String serviceName = reqMessage.getServiceName();
+		
+		// get and check cache-id
 		String cacheId = reqMessage.getCacheId();
-
-		String reqCacheKey = serviceName + Constants.UNDERLINE + cacheId;
-
 		if (cacheId == null) {
 			// no caching requested from client
 			return null;
 		}
 		// lookup cache meta entry
+		String sessionId = reqMessage.getSessionId();
+		String serviceName = reqMessage.getServiceName();
+		String reqCacheKey = serviceName + Constants.UNDERLINE + cacheId;
 		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
-			CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
-			// meta entry for this message already in cache
+			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId);
+			// meta entry exists 
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
 				String partNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 				if (partNr == null) {
-					// partNr = null, set to 1 first request does may be not have a partNr
+					// set default partNr = 1 when it is missing in the request
 					partNr = "1";
 				}
 				SCMPMessage cachedMessage = dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + partNr);
@@ -153,13 +153,17 @@ public class SCCacheManager {
 					cachedMessage.setSessionId(sessionId);
 					CacheLogger.gotMessageFromCache(reqCacheKey, sessionId);
 				}
+				else {
+					//TODO TRN else case added, detect inconsistet cache! should throw exception here?
+					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + reqCacheKey+ Constants.SLASH + partNr);
+				}
 				return cachedMessage;
 			}
 
 			if (metaEntry.isLoading() == true) {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(reqMessage.getSessionId()) == true) {
-					// requested message gets loaded by current session - continue loading
+					// requested message is beeing loaded by current session - continue loading
 					return null;
 				}
 				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
@@ -172,10 +176,10 @@ public class SCCacheManager {
 			}
 		} else {
 			if (reqMessage.isPollRequest()) {
-				// no caching - request already in process of large response but no meta entry in cache, ignore!
+				// request for large message, but no meta entry in cache yet, ignore!
 				return null;
 			}
-			CacheLogger.tryLoadingMessageFromCache(reqCacheKey, sessionId);
+			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId);
 
 			// start loading message to cache
 			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -448,6 +452,8 @@ public class SCCacheManager {
 	 *             the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
+		
+		// dump cache manager
 		writer.writeStartElement("cache-manager");
 		writer.writeAttribute("enabled", this.isCacheEnabled());
 		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());

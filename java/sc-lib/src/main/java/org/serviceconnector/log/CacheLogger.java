@@ -28,21 +28,21 @@ public final class CacheLogger {
 	/** The Constant cacheLogger. */
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
 	/** The try loading str. */
-	private static String tryLoadingStr = "try loading message from cache cacheKey=%s sid=%s";
+	private static String tryGetMsgStr = "try to get message from cache cacheKey=%s sid=%s";
 	/** The got message str. */
 	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s";
 	/** The start loading str. */
-	private static String startLoadingStr = "start loading cache message cacheKey=%s sid=%s oti=%sms";
+	private static String startLoadingStr = "start loading message cacheKey=%s sid=%s oti=%sms";
 	/** The stop loading str. */
-	private static String stopLoadingStr = "stop loading message complete cacheKey=%s sid=%s";
+	private static String stopLoadingStr = "finish loading message cacheKey=%s sid=%s";
 	/** The abort loading str. */
 	private static String abortLoadingStr = "abort loading message cacheKey=%s sid=%s";
 	/** The put message str. */
-	private static String putMessageStr = "put message to cache cacheKey=%s loading sid=%s expiration=%s";
+	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s";
 	/** The remove msg from cache str. */
 	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s";
 	/** The clear cache str. */
-	private static String clearCacheStr = "cleared complete cache, all messages removed.";
+	private static String clearCacheStr = "clear cache, all messages removed.";
 
 	/**
 	 * Private constructor for singleton use.
@@ -60,17 +60,17 @@ public final class CacheLogger {
 	}
 
 	/**
-	 * Try loading message from cache.
+	 * Try to get message from cache.
 	 * 
 	 * @param cacheKey
 	 *            the cache key
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void tryLoadingMessageFromCache(String cacheKey, String sessionId) {
+	public static void tryGetMessageFromCache(String cacheKey, String sessionId) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(tryLoadingStr, cacheKey, sessionId);
+			format.format(tryGetMsgStr, cacheKey, sessionId);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

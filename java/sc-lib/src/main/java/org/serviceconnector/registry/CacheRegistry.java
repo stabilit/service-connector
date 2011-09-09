@@ -81,9 +81,9 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 			writer.writeAttribute("cacheName", scCache.getCacheName());
 			writer.writeAttribute("numberOfMessagesInDiskStore", scCache.getNumberOfMessagesInDiskStore());
 			writer.writeAttribute("numberOfMessagesInStore", scCache.getNumberOfMessagesInStore());
-			writer.writeAttribute("numberOfMessagesInCache", scCache.getKeysWithExpiryCheck().size());
+			writer.writeAttribute("numberOfMessagesInCache", scCache.getKeyList().size());
 
-			List<String> keys = scCache.getKeysWithExpiryCheck();
+			List<String> keys = scCache.getKeyList();
 			writer.writeStartElement("cacheElements");
 			for (String key : keys) {
 				writer.writeStartElement("cacheElement");
@@ -94,6 +94,7 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 					writer.writeAttribute("cacheKey", key);
 					writer.writeAttribute("serviceName", scmp.getServiceName());
 					writer.writeAttribute("sessionId", scmp.getSessionId());
+					writer.writeAttribute("bodyLength", scmp.getBodyLength());
 					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
 					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
 					writer.writeAttribute("lastAccessTime", DateTimeUtility.getDateTimeAsString(scCache.getLastAccessTime(key)));
@@ -101,7 +102,7 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 					SCCacheMetaEntry metaEntry = ((SCCacheMetaEntry) cacheMessage);
 					writer.writeAttribute("cacheKey", key);
 					writer.writeAttribute("loadingSessionId", metaEntry.getLoadingSessionId());
-					writer.writeAttribute("loadingtimeoutMillis", metaEntry.getLoadingTimeoutMillis());
+					writer.writeAttribute("loadingTimeoutMillis", metaEntry.getLoadingTimeoutMillis());
 					writer.writeAttribute("scCacheEntryState", metaEntry.getSCCacheEntryState().name());
 					writer.writeAttribute("numberOfParts", metaEntry.getNumberOfParts());
 					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
