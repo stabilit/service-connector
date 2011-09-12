@@ -76,13 +76,13 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 		}
 	}
 
-	private ChannelBuffer aggregateFrame(ChannelBuffer buffer) {
+	private byte[] aggregateFrame(ChannelBuffer buffer) {
 		if (buffer.readableBytes() < scmpFrameSize) {
 			return null;
 		}
 		ChannelBuffer channelBuffer = buffer.readBytes(scmpFrameSize);
 		// reset the frame size
 		this.scmpFrameSize = 0;
-		return channelBuffer;
+		return channelBuffer.array();
 	}
 }

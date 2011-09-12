@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -75,9 +74,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			this.pendingRequest = false;
 			SCMPMessage ret = null;
 			try {
-				ChannelBuffer channelBuffer = (ChannelBuffer) e.getMessage();
-				byte[] buffer = new byte[channelBuffer.readableBytes()];
-				channelBuffer.readBytes(buffer);
+				byte[] buffer = (byte[]) e.getMessage();
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
 					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();

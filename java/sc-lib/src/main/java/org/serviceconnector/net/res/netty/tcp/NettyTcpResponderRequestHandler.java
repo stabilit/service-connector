@@ -20,7 +20,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -52,9 +51,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 		Channel channel = ctx.getChannel();
 		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
 		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-		ChannelBuffer channelBuffer = (ChannelBuffer) event.getMessage();
-		byte[] buffer = new byte[channelBuffer.readableBytes()];
-		channelBuffer.readBytes(buffer);
+		byte[] buffer = (byte[]) event.getMessage();
 		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
 		// process request in super class
 		super.messageReceived(request, response, channel);
