@@ -48,8 +48,8 @@ import org.serviceconnector.util.XMLDumpWriter;
  * serviceName_cachedId, cached messages in DATA_CACHE by the cacheKey serviceName_cacheId/partNr.
  * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
  * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
- * message completly. Only the first client (session) is allowed to load the message. When the message is complete all parts
- * transfered, it is ready to be loaded from the cache. As long as the message is not completly loaded the meta entry has an
+ * message completely. Only the first client (session) is allowed to load the message. When the message is complete all parts
+ * transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an
  * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
  * of the expiration is done by the ISCCache implementation.
  * There are several circumstances they can stop the loading process and clear the message:
@@ -121,7 +121,7 @@ public class SCCacheManager {
 	 *             requested message in loading state, gets already loaded by another client<br>
 	 */
 	public synchronized SCMPMessage tryGetMessageFromCacheOrLoad(SCMPMessage reqMessage) throws SCMPCommandException {
-		
+
 		// get and check cache-id
 		String cacheId = reqMessage.getCacheId();
 		if (cacheId == null) {
@@ -136,7 +136,7 @@ public class SCCacheManager {
 
 		if (metaEntry != null) {
 			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId);
-			// meta entry exists 
+			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
 				String partNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
@@ -152,10 +152,9 @@ public class SCCacheManager {
 					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					cachedMessage.setSessionId(sessionId);
 					CacheLogger.gotMessageFromCache(reqCacheKey, sessionId);
-				}
-				else {
-					//TODO TRN else case added, detect inconsistet cache! should throw exception here?
-					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + reqCacheKey+ Constants.SLASH + partNr);
+				} else {
+					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + reqCacheKey
+							+ Constants.SLASH + partNr);
 				}
 				return cachedMessage;
 			}
@@ -163,7 +162,7 @@ public class SCCacheManager {
 			if (metaEntry.isLoading() == true) {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(reqMessage.getSessionId()) == true) {
-					// requested message is beeing loaded by current session - continue loading
+					// requested message is being loaded by current session - continue loading
 					return null;
 				}
 				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
@@ -452,7 +451,7 @@ public class SCCacheManager {
 	 *             the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
-		
+
 		// dump cache manager
 		writer.writeStartElement("cache-manager");
 		writer.writeAttribute("enabled", this.isCacheEnabled());

@@ -67,6 +67,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 		this.response = response;
 	}
 
+	/**
+	 * Process the request.
+	 */
 	public void process() {
 		try {
 			// loading message
