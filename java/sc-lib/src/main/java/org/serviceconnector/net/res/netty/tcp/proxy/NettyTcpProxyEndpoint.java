@@ -23,16 +23,16 @@ import net.sf.ehcache.config.InvalidConfigurationException;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.serviceconnector.Constants;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.IResponder;
 
 /**
  * The Class NettyTcpProxyEndpoint.
  */
-public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
+public class NettyTcpProxyEndpoint extends EndpointAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyEndpoint.class);
@@ -40,12 +40,10 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	private String remoteHost;
 	/** The port. */
 	private int remotePort;
-	/** The max connection pool size. */
-	private int maxConnectionPoolSize;
 
 	/** The client channel factory. */
 	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-			Executors.newCachedThreadPool());
+			Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
 
 	/**
 	 * Instantiates a new NettyTcpProxyEndpoint.
@@ -54,7 +52,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		super();
 		this.remoteHost = null;
 		this.remotePort = 0;
-		this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.endpointChannelFactory = null;
 	}
 
@@ -78,14 +75,12 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		}
 		this.remoteHost = remoteNodeConfig.getHost();
 		this.remotePort = remoteNodeConfig.getPort();
-		this.maxConnectionPoolSize = remoteNodeConfig.getMaxPoolSize();
 		try {
-			// limit threads
-			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors
-					.newFixedThreadPool(this.maxConnectionPoolSize), Executors.newFixedThreadPool(this.maxConnectionPoolSize));
-			// no thread limit required
-			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
-					.newCachedThreadPool());
+			// limit threads to maxIOThreads
+			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+					Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+					Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
 		} catch (Exception e) {
 			LOGGER.error("setResponder", e);
 		}

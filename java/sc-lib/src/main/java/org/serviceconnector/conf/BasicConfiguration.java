@@ -39,6 +39,10 @@ public class BasicConfiguration {
 	private String dumpPath = null;
 
 	/**
+	 * defines the maximum of I/O threads are going to be acquired to handle incoming/outgoing messages.
+	 */
+	private int maxIOThreads = Constants.DEFAULT_MAX_IO_THREADS;
+	/**
 	 * Multiplier to calculate the check registration interval.<br />
 	 * SC must adapt (extend) the interval passed from server to get the right timeout.
 	 */
@@ -127,6 +131,15 @@ public class BasicConfiguration {
 		}
 		LOGGER.info("dumpPath=" + this.dumpPath);
 
+		// maxIOThreads
+		Integer localMaxIOThreads = compositeConfiguration.getInteger(Constants.ROOT_MAX_IO_THREADS, null);
+		if (localMaxIOThreads == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+					+ Constants.ROOT_MAX_IO_THREADS + " is missing");
+		}
+		this.maxIOThreads = localMaxIOThreads;
+		LOGGER.info("maxIOThreads=" + this.maxIOThreads);
+
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
 		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
@@ -195,6 +208,15 @@ public class BasicConfiguration {
 	 */
 	public boolean isWritePID() {
 		return writePID;
+	}
+
+	/**
+	 * Gets the max io threads.
+	 * 
+	 * @return the max io threads
+	 */
+	public int getMaxIOThreads() {
+		return maxIOThreads;
 	}
 
 	/**

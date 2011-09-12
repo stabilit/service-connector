@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
@@ -90,8 +91,8 @@ public class ConnectionFactory {
 	 */
 	public static void init() {
 		if (ConnectionFactory.channelFactory == null) {
-			ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
-					.newCachedThreadPool());
+			ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+					Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
 		}
 		if (ConnectionFactory.timer == null) {
 			ConnectionFactory.timer = new HashedWheelTimer();

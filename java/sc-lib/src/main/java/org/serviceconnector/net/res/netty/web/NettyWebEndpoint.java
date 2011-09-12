@@ -19,6 +19,7 @@ package org.serviceconnector.net.res.netty.web;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 
 /**
@@ -30,8 +31,8 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	 * Instantiates a new netty web endpoint.
 	 */
 	public NettyWebEndpoint() {
-		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors
-				.newCachedThreadPool());
+		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+				Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
 	}
 
 	/** {@inheritDoc} */

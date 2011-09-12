@@ -109,6 +109,8 @@ public final class Constants {
 	/*
 	 * Defaults ********
 	 */
+	/** Default value used if no DEFAULT_MAX_IO_THREADS is configured. */
+	public static final int DEFAULT_MAX_IO_THREADS = 200;
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value used if no interval is passed in the API. */
@@ -227,6 +229,8 @@ public final class Constants {
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
 	/** The Constant ROOT_COMMAND_VALIDATION_ENABLED. */
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
+	/** The Constant ROOT_MAX_IO_THREADS. */
+	public static final String ROOT_MAX_IO_THREADS = "root.maxIOThreads";
 	/** The Constant ROOT_CONNECTION_TIMEOUT_MILLIS. */
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
 	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_MILLIS. */
