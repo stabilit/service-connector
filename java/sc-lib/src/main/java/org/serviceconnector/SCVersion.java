@@ -59,7 +59,7 @@ import org.serviceconnector.scmp.SCMPError;
 public enum SCVersion {
 
 	/** The current version. */
-	CURRENT(1, 3, 18),
+	CURRENT(1, 3, 19),
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 
