@@ -319,7 +319,7 @@ public class SCCacheManager {
 	 * @param cacheKey
 	 *            the cache id
 	 */
-	public synchronized void removeMetaAndDataEntries(String sessionId, String cacheKey) {
+	private synchronized void removeMetaAndDataEntries(String sessionId, String cacheKey) {
 		if (cacheKey == null) {
 			// cacheId null no remove possible
 			return;
