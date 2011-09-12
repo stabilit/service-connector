@@ -110,7 +110,7 @@ public final class Constants {
 	 * Defaults ********
 	 */
 	/** Default value used if no DEFAULT_MAX_IO_THREADS is configured. */
-	public static final int DEFAULT_MAX_IO_THREADS = 200;
+	public static final int DEFAULT_MAX_IO_THREADS = 30;
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value used if no interval is passed in the API. */
