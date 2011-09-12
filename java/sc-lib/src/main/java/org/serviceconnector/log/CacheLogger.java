@@ -40,7 +40,7 @@ public final class CacheLogger {
 	/** The put message str. */
 	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s";
 	/** The remove msg from cache str. */
-	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s";
+	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s reason=%s";
 	/** The clear cache str. */
 	private static String clearCacheStr = "clear cache, all messages removed.";
 
@@ -172,11 +172,13 @@ public final class CacheLogger {
 	 *            the cache key
 	 * @param sessionId
 	 *            the session id
+	 * @param removeReason
+	 *            the remove reason
 	 */
-	public static void removeMessageFromCache(String cacheKey, String sessionId) {
+	public static void removeMessageFromCache(String cacheKey, String sessionId, String removeReason) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(removeMsgFromCacheStr, cacheKey, sessionId);
+			format.format(removeMsgFromCacheStr, cacheKey, sessionId, removeReason);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

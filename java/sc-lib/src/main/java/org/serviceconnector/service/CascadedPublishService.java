@@ -101,7 +101,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 	 * Renew cascaded client. Synchronization avoids returning the client in renew process.
 	 */
 	public synchronized void renewCascadedClient() {
-		LOGGER.warn("cascaded publish service renew cascaded client service=" + this.getName());
+		LOGGER.trace("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
 	}
 }

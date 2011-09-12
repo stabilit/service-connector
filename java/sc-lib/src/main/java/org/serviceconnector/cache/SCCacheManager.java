@@ -222,7 +222,9 @@ public class SCCacheManager {
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			String scErrorCode = reqMessage.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
+			this.removeMetaAndDataEntries(sid, reqCacheKey, "Reply faulty (" + scErrorCode + ") or resCacheId=null and reqCacheId="
+					+ reqCacheId);
 			return;
 
 		}
@@ -242,7 +244,8 @@ public class SCCacheManager {
 			// requested cache id differs replied cache id, clean up
 			LOGGER.error("cache message (" + reqCacheKey + ") removed, server did reply different cache key, cache (" + resCacheKey
 					+ ")");
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			this.removeMetaAndDataEntries(sid, reqCacheKey, "cache message (" + reqCacheKey
+					+ ") removed, server did reply different cache key, cache (" + resCacheKey + ")");
 			return;
 		}
 		// lookup up meta entry
@@ -251,7 +254,7 @@ public class SCCacheManager {
 		if (metaEntry == null) {
 			// no meta entry found, clean up
 			LOGGER.error("Missing metaEntry message can not be cached.");
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			this.removeMetaAndDataEntries(sid, reqCacheKey, "Missing metaEntry message can not be cached.");
 			return;
 		}
 
@@ -259,7 +262,8 @@ public class SCCacheManager {
 			// meta entry gets loaded by another sessionId, not allowed clean up
 			LOGGER.error("MetaEntry gets loaded by wrong session, not allowed expected sid=" + metaEntry.getLoadingSessionId()
 					+ " loading sid= " + sid);
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			this.removeMetaAndDataEntries(sid, reqCacheKey,
+					"Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid= " + sid);
 			return;
 		}
 
@@ -272,7 +276,7 @@ public class SCCacheManager {
 			expireMillis = expirationDate.getTime();
 		} catch (Exception e) {
 			LOGGER.error("Parsing of expirationDate failed", e);
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			this.removeMetaAndDataEntries(sid, reqCacheKey, "Parsing of expirationDate failed");
 			return;
 		}
 		int timeToLiveSeconds = (int) ((expireMillis - System.currentTimeMillis()) / Constants.SEC_TO_MILLISEC_FACTOR);
@@ -306,7 +310,7 @@ public class SCCacheManager {
 			}
 		} catch (Exception e) {
 			LOGGER.error("Caching message failed", e);
-			this.removeMetaAndDataEntries(sid, reqCacheKey);
+			this.removeMetaAndDataEntries(sid, reqCacheKey, "Caching message failed");
 			return;
 		}
 	}
@@ -318,8 +322,10 @@ public class SCCacheManager {
 	 *            the session id
 	 * @param cacheKey
 	 *            the cache id
+	 * @param removeReason
+	 *            the remove reason
 	 */
-	private synchronized void removeMetaAndDataEntries(String sessionId, String cacheKey) {
+	private synchronized void removeMetaAndDataEntries(String sessionId, String cacheKey, String removeReason) {
 		if (cacheKey == null) {
 			// cacheId null no remove possible
 			return;
@@ -330,7 +336,7 @@ public class SCCacheManager {
 			// no entry found
 			return;
 		}
-		CacheLogger.removeMessageFromCache(cacheKey, sessionId);
+		CacheLogger.removeMessageFromCache(cacheKey, sessionId, removeReason);
 		int size = metaEntry.getNumberOfParts();
 
 		// remove data entries
@@ -411,7 +417,7 @@ public class SCCacheManager {
 		String cachekey = this.loadingSessionIds.remove(sessionId);
 		if (cachekey != null) {
 			CacheLogger.abortLoadingMessage(cachekey, sessionId);
-			this.removeMetaAndDataEntries(sessionId, cachekey);
+			this.removeMetaAndDataEntries(sessionId, cachekey, "ClearLoading requested for sid=" + sessionId);
 		}
 	}
 

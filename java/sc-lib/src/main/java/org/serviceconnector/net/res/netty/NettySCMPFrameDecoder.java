@@ -60,6 +60,14 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 		return null;
 	}
 
+	/**
+	 * Decode frame size from headline.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @throws SCMPFrameDecoderException
+	 *             the sCMP frame decoder exception
+	 */
 	private void decodeFrameSizeFromHeadline(ChannelBuffer buffer) throws SCMPFrameDecoderException {
 		if (buffer.readableBytes() < Constants.SCMP_HEADLINE_SIZE) {
 			// not enough bytes in buffer to decode the SCMP headline
@@ -76,6 +84,13 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 		}
 	}
 
+	/**
+	 * Aggregate frame.
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @return the byte[]
+	 */
 	private byte[] aggregateFrame(ChannelBuffer buffer) {
 		if (buffer.readableBytes() < scmpFrameSize) {
 			return null;

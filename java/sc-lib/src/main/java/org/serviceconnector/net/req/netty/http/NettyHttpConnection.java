@@ -86,7 +86,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 			// waits until operation is done
 			this.channel = this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
 			// complete localSocketAdress
-			this.remotSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
+			this.remotSocketAddress = (InetSocketAddress) this.channel.getRemoteAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="

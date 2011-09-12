@@ -49,6 +49,10 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) throws Exception {
+		if (this.cascClient.isDestroyed() == true) {
+			// cascaded client already destroyed ignore reply
+			return;
+		}
 		CascadedSC cascSC = this.cascClient.getCascadedSC();
 		if (cascSC.tryAcquirePermitOnCascClientSemaphore(cascClient, Constants.WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS, this) == false) {
 			// could not get permit to process - response done inside method

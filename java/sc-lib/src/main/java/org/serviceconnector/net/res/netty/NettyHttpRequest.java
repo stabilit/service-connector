@@ -65,8 +65,8 @@ public class NettyHttpRequest extends RequestAdapter {
 		channelBuffer.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
-					.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
+			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getRemoteSocketAddress().getHostName(), this
+					.getRemoteSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
 		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

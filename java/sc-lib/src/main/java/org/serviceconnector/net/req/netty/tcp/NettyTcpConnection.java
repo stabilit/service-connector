@@ -73,7 +73,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		try {
 			this.channel = operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
 			// complete remotSocketAddress
-			this.remotSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
+			this.remotSocketAddress = (InetSocketAddress) this.channel.getRemoteAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect failed to " + this.remotSocketAddress.toString(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
@@ -103,7 +103,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 					this.remotSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
 	}
-	
+
 	@Override
 	public void setQuietDisconnect() throws Exception {
 		// this avoids receiving messages (outstanding replies) in disconnecting procedure

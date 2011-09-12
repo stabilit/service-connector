@@ -51,8 +51,8 @@ public class NettyTcpResponse extends ResponseAdapter {
 		// Write the response.
 		channel.write(buffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getLocalAddress())
-					.getHostName(), ((InetSocketAddress) this.channel.getLocalAddress()).getPort(), buffer.toByteBuffer().array(),
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress())
+					.getHostName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(),
 					0, buffer.toByteBuffer().array().length);
 		}
 	}
