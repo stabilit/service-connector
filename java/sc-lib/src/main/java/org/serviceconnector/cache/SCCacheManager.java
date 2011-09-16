@@ -428,6 +428,7 @@ public class SCCacheManager {
 		CacheLogger.clearCache();
 		metaDataCache.removeAll();
 		dataCache.removeAll();
+		this.loadingSessionIds.clear();
 	}
 
 	/**
