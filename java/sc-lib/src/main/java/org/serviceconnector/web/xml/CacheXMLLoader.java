@@ -183,33 +183,38 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 */
 	private void writeCacheDetails(XMLStreamWriter writer, ISCCache<?> cache, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
-		List<String> dataCacheKeys = cache.getKeyList();
-		Collections.sort(dataCacheKeys, new CacheKeyComparator());
+		List<String> cacheKeys = cache.getKeyList();
+		// sort cacheKeys
+		if (cache.getCacheName().equals(SC_CACHE_TYPE.DATA_CACHE.name())) {
+			Collections.sort(cacheKeys, new DataCacheKeyComparator());
+		} else {
+			Collections.sort(cacheKeys);
+		}
 		int simulation = this.getParameterInt(request, "sim", 0);
 		if (simulation > 0) {
-			if (dataCacheKeys == null) {
-				dataCacheKeys = new ArrayList<String>();
+			if (cacheKeys == null) {
+				cacheKeys = new ArrayList<String>();
 			}
 			List<String> sim = new ArrayList<String>();
 			;
-			System.arraycopy(dataCacheKeys, 0, sim, 0, dataCacheKeys.size());
-			for (int i = dataCacheKeys.size(); i < simulation + dataCacheKeys.size(); i++) {
+			System.arraycopy(cacheKeys, 0, sim, 0, cacheKeys.size());
+			for (int i = cacheKeys.size(); i < simulation + cacheKeys.size(); i++) {
 				sim.add("sim " + i);
 			}
-			dataCacheKeys = sim;
+			cacheKeys = sim;
 		}
-		if (dataCacheKeys == null) {
+		if (cacheKeys == null) {
 			writer.writeAttribute("size", "0");
 			writer.writeEndElement();
 			return;
 		}
-		Paging paging = this.writePagingAttributes(writer, request, dataCacheKeys.size(), "comp_"); // no prefix
+		Paging paging = this.writePagingAttributes(writer, request, cacheKeys.size(), "comp_"); // no prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
 
 		for (int i = startIndex; i < endIndex; i++) {
-			String key = dataCacheKeys.get(i);
+			String key = cacheKeys.get(i);
 			try {
 
 				if (cache.getCacheName().equals(SC_CACHE_TYPE.META_DATA_CACHE.name())) {
@@ -338,7 +343,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys. It compares serviceName + cacheId.
 	 * If both are the same value partNr is considered.
 	 */
-	private class CacheKeyComparator implements Comparator<String> {
+	private class DataCacheKeyComparator implements Comparator<String> {
 
 		@Override
 		public int compare(String cacheKey1, String cacheKey2) {

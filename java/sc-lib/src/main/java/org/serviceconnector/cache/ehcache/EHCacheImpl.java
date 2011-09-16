@@ -57,7 +57,7 @@ public class EHCacheImpl<T> implements ISCCache<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void put(Object key, T value, int timeToLiveSeconds) {
+	public void putOrUpdate(Object key, T value, int timeToLiveSeconds) {
 		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive
 		Element element = new Element(key, value, false, 0, timeToLiveSeconds);
 		this.ehCache.put(element);

@@ -34,7 +34,7 @@ public interface ISCCache<T> {
 	public abstract T get(Object key);
 
 	/**
-	 * Put the object in cache.
+	 * Put the object in cache. Updates if element is already in cache.
 	 * 
 	 * @param key
 	 *            the key
@@ -43,10 +43,10 @@ public interface ISCCache<T> {
 	 * @param timeToLiveSeconds
 	 *            seconds the object has to stay in cache from now on
 	 */
-	public abstract void put(Object key, T value, int timeToLiveSeconds);
+	public abstract void putOrUpdate(Object key, T value, int timeToLiveSeconds);
 
 	/**
-	 * Replace the object in cache.
+	 * Replace the object in cache. Element has to be in place otherwise replace fails.
 	 * 
 	 * @param key
 	 *            the key

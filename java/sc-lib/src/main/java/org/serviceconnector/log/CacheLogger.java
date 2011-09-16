@@ -27,18 +27,18 @@ public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
-	/** The try loading str. */
-	private static String tryGetMsgStr = "try to get message from cache cacheKey=%s sid=%s";
-	/** The got message str. */
-	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s";
 	/** The start loading str. */
-	private static String startLoadingStr = "start loading message cacheKey=%s sid=%s oti=%sms";
-	/** The stop loading str. */
-	private static String stopLoadingStr = "finish loading message cacheKey=%s sid=%s";
+	private static String startLoadingStr = "start loading message cacheKey=%s sid=%s timeout=%sms";
+	/** The try loading str. */
+	private static String tryGetMsgStr = "try to get message from cache cacheKey=%s sid=%s cpn=%s";
+	/** The got message str. */
+	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s length=%s";
+	/** The finish loading str. */
+	private static String finishLoadingStr = "finish loading message cacheKey=%s sid=%s partCounter=%s";
 	/** The abort loading str. */
 	private static String abortLoadingStr = "abort loading message cacheKey=%s sid=%s";
 	/** The put message str. */
-	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s";
+	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s length=%s";
 	/** The remove msg from cache str. */
 	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s reason=%s";
 	/** The clear cache str. */
@@ -66,11 +66,13 @@ public final class CacheLogger {
 	 *            the cache key
 	 * @param sessionId
 	 *            the session id
+	 * @param requestedPart
+	 *            the requested part
 	 */
-	public static void tryGetMessageFromCache(String cacheKey, String sessionId) {
+	public static void tryGetMessageFromCache(String cacheKey, String sessionId, String requestedPart) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(tryGetMsgStr, cacheKey, sessionId);
+			format.format(tryGetMsgStr, cacheKey, sessionId, requestedPart);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -84,10 +86,10 @@ public final class CacheLogger {
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void gotMessageFromCache(String cacheKey, String sessionId) {
+	public static void gotMessageFromCache(String cacheKey, String sessionId, int length) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(gotMessageStr, cacheKey, sessionId);
+			format.format(gotMessageStr, cacheKey, sessionId, length);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -100,30 +102,32 @@ public final class CacheLogger {
 	 *            the cache key
 	 * @param sessionId
 	 *            the session id
-	 * @param otiMillis
-	 *            the operation timeout in milliseconds
+	 * @param timeout
+	 *            the loading timeout in milliseconds
 	 */
-	public static void startLoadingCacheMessage(String cacheKey, String sessionId, int otiMillis) {
+	public static void startLoadingCacheMessage(String cacheKey, String sessionId, int timeout) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(startLoadingStr, cacheKey, sessionId, otiMillis);
+			format.format(startLoadingStr, cacheKey, sessionId, timeout);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
 
 	/**
-	 * Stop loading cache message.
+	 * Finish loading cache message.
 	 * 
 	 * @param cacheKey
 	 *            the cache key
 	 * @param sessionId
 	 *            the session id
+	 * @param numberOfParts
+	 *            the number of parts
 	 */
-	public static void stopLoadingCacheMessage(String cacheKey, String sessionId) {
+	public static void finishLoadingCacheMessage(String cacheKey, String sessionId, int numberOfParts) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(stopLoadingStr, cacheKey, sessionId);
+			format.format(finishLoadingStr, cacheKey, sessionId, numberOfParts);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -156,10 +160,10 @@ public final class CacheLogger {
 	 * @param expiration
 	 *            the expiration
 	 */
-	public static void putMessageToCache(String cacheKey, String loadingSessionId, String expiration) {
+	public static void putMessageToCache(String cacheKey, String loadingSessionId, String expiration, int length) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(putMessageStr, cacheKey, loadingSessionId, expiration);
+			format.format(putMessageStr, cacheKey, loadingSessionId, expiration, length);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

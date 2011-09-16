@@ -135,11 +135,11 @@ public class SCCacheManager {
 		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
-			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId);
+			String partNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
+			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId, partNr);
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
-				String partNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 				if (partNr == null) {
 					// set default partNr = 1 when it is missing in the request
 					partNr = "1";
@@ -151,7 +151,9 @@ public class SCCacheManager {
 					cachedMessage.setMessageType(reqMessage.getMessageType());
 					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					cachedMessage.setSessionId(sessionId);
-					CacheLogger.gotMessageFromCache(reqCacheKey, sessionId);
+					if (CacheLogger.isEnabled()) {
+						CacheLogger.gotMessageFromCache(reqCacheKey, sessionId, cachedMessage.getBodyLength());
+					}
 				} else {
 					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + reqCacheKey
 							+ Constants.SLASH + partNr);
@@ -162,6 +164,9 @@ public class SCCacheManager {
 			if (metaEntry.isLoading() == true) {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(reqMessage.getSessionId()) == true) {
+					// TODO JOT get requested cpn and compare with current cpn in metaDataCache
+					// cpn has to be the same!! otherwise delete all and return error!
+
 					// requested message is being loaded by current session - continue loading
 					return null;
 				}
@@ -178,11 +183,10 @@ public class SCCacheManager {
 				// request for large message, but no meta entry in cache yet, ignore!
 				return null;
 			}
-			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId);
-
 			// start loading message to cache
-			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
+			// take original OTI so transporting message would stop before metaEntry expires!
+			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			newMetaEntry.setHeader(reqMessage.getHeader()); // save all header attributes
 			newMetaEntry.setLoadingSessionId(sessionId);
 			newMetaEntry.setNumberOfParts(0);
@@ -191,7 +195,7 @@ public class SCCacheManager {
 			newMetaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADING);
 
 			// put meta entry to cache
-			metaDataCache.put(reqCacheKey, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
+			metaDataCache.putOrUpdate(reqCacheKey, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
 			loadingSessionIds.put(sessionId, reqCacheKey);
 			CacheLogger.startLoadingCacheMessage(reqCacheKey, sessionId, otiMillis);
 			return null;
@@ -291,11 +295,15 @@ public class SCCacheManager {
 			// set the correct partNr+1 for message to cache and cache it!
 			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
 			// an negative timeToLiveSeconds (expirationDate in the past) will throw an exception, handled by the cache
-			dataCache.put(reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts(), resMessage, timeToLiveSeconds);
+			String cacheKey = reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts();
+			dataCache.putOrUpdate(cacheKey, resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
-			CacheLogger.putMessageToCache(resCacheKey, metaEntry.getLoadingSessionId(),
-					DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)));
+			if (CacheLogger.isEnabled()) {
+				CacheLogger.putMessageToCache(cacheKey, metaEntry.getLoadingSessionId(),
+						DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)),
+						resMessage.getBodyLength());
+			}
 
 			if (resMessage.isPart() == false) {
 				// large response ended, last message of message received - refresh meta entry state and expire time
@@ -303,7 +311,8 @@ public class SCCacheManager {
 				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds);
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
-				CacheLogger.stopLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId());
+				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId(),
+						metaEntry.getNumberOfParts());
 			} else {
 				// refresh meta entry state
 				metaDataCache.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis());
@@ -343,7 +352,7 @@ public class SCCacheManager {
 		for (int i = 1; i < size; i++) {
 			dataCache.remove(cacheKey + "/" + size);
 		}
-		loadingSessionIds.remove(sessionId);
+		this.loadingSessionIds.remove(sessionId);
 	}
 
 	/**
