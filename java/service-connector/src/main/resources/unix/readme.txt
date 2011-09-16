@@ -4,7 +4,7 @@ Run Service Connector as deamon on unix
 1) install sc files to the directory of your choice usually /home/sc/
 	The required files are:
 	bin\sc.jar
-	bin\sc-lib-final.jar
+	bin\sc-lib-all.jar
 	bin\start-sc.sh
 	bin\stop-sc.sh
 
