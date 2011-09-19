@@ -74,7 +74,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		this.bootstrap = null;
 		this.channel = null;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
-		this.serverThread = new Thread(this);
+		this.serverThread = new Thread(this, this.getClass().getSimpleName());
 	}
 
 	/** {@inheritDoc} */

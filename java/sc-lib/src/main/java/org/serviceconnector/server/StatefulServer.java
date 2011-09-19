@@ -580,8 +580,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.destroyed = true;
 		// deregister server from service
 		this.getService().removeServer(this);
+		AbstractSession[] sessionsArr = this.sessions.toArray(new AbstractSession[0]);
 
-		for (AbstractSession session : this.sessions) {
+		for (AbstractSession session : sessionsArr) {
 			// first of all delete sessions from registries
 			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
 			AppContext.getSessionRegistry().removeSession(session.getId());
@@ -592,7 +593,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 
-		for (AbstractSession session : this.sessions) {
+		for (AbstractSession session : sessionsArr) {
 			abortMessage.setSessionId(session.getId());
 			abortMessage.setServiceName(this.getServiceName());
 			// delete session in global registries
@@ -709,8 +710,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
 		writer.writeStartElement("sessions");
-		List<AbstractSession> sessionList = this.sessions;
-		for (AbstractSession session : sessionList) {
+		AbstractSession[] sessionArr = this.sessions.toArray(new AbstractSession[0]);
+		for (AbstractSession session : sessionArr) {
 			session.dump(writer);
 		}
 		writer.writeEndElement(); // end of sessions

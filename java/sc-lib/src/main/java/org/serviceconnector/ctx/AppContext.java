@@ -147,6 +147,28 @@ public final class AppContext {
 	}
 
 	/**
+	 * Initialize the application context.
+	 */
+	public static void init() {
+		synchronized (AppContext.communicatorsLock) {
+			ConnectionFactory.init();
+			if (AppContext.otiScheduler == null) {
+				// set up new scheduler with high priority threads
+				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
+						Thread.MAX_PRIORITY));
+			}
+			if (AppContext.eci_cri_Scheduler == null) {
+				// set up new scheduler with high priority threads
+				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI",
+						Thread.MAX_PRIORITY));
+			}
+			if (AppContext.threadPool == null) {
+				AppContext.threadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
+			}
+		}
+	}
+
+	/**
 	 * Initializes the commands.
 	 * 
 	 * @param commandFactory
@@ -385,28 +407,6 @@ public final class AppContext {
 	 */
 	public static ExecutorService getThreadPool() {
 		return AppContext.threadPool;
-	}
-
-	/**
-	 * Initialize the application context.
-	 */
-	public static void init() {
-		synchronized (AppContext.communicatorsLock) {
-			ConnectionFactory.init();
-			if (AppContext.otiScheduler == null) {
-				// set up new scheduler with high priority threads
-				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
-						Thread.MAX_PRIORITY));
-			}
-			if (AppContext.eci_cri_Scheduler == null) {
-				// set up new scheduler with high priority threads
-				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI",
-						Thread.MAX_PRIORITY));
-			}
-			if (AppContext.threadPool == null) {
-				AppContext.threadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC"));
-			}
-		}
 	}
 
 	/**

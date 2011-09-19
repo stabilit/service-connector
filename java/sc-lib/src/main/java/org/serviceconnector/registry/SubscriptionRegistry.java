@@ -142,7 +142,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			return this.getSubscriptions();
 		}
 		try {
-			Subscription[] sa = new Subscription[0];
 			List<Subscription> subscriptionList = new ArrayList<Subscription>();
 			Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
 			for (Entry<String, Subscription> entry : entries) {
@@ -153,6 +152,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 					subscriptionList.add(subscription);
 				}
 			}
+			Subscription[] sa = new Subscription[0];
 			return subscriptionList.toArray(sa);
 		} catch (Exception e) {
 			LOGGER.error("getSubscriptions", e);

@@ -32,6 +32,7 @@ import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
+import org.serviceconnector.util.NamedPriorityThreadFactory;
 
 /**
  * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform
@@ -61,7 +62,7 @@ public class PublishMessageQueue<E> {
 	public PublishMessageQueue() {
 		this.dataQueue = new LinkedQueue<E>();
 		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
-		this.timeoutScheduler = new ScheduledThreadPoolExecutor(5);
+		this.timeoutScheduler = new ScheduledThreadPoolExecutor(5, new NamedPriorityThreadFactory("CRPTimeout"));
 	}
 
 	/**
