@@ -174,7 +174,7 @@ public class SCCacheManager {
 								"Requested partNr does not match current loading state (numberOfParts).");
 						// TODO JOT remove this exception throw ASAP Member of SIX have newer version than SC V1.3-019
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
-								"cache got cleared invalid partNr in request service=" + serviceName + " cacheId=" + cacheId);
+								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId=" + cacheId);
 						scmpCommandException.setMessageType(reqMessage.getMessageType());
 						throw scmpCommandException;
 					}
