@@ -49,7 +49,7 @@ public abstract class Server implements IServer {
 	/** The server key. */
 	protected String serverKey;
 	/** The destroyed, marks if server has been destroyed. */
-	protected boolean destroyed;
+	protected volatile boolean destroyed;
 	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 	/** The server timeout milliseconds. */

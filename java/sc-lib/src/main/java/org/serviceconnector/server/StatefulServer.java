@@ -96,6 +96,20 @@ public class StatefulServer extends Server implements IStatefulServer {
 	}
 
 	/**
+	 * Checks for free session.
+	 * 
+	 * @return true, if successful {@inheritDoc}
+	 */
+	@Override
+	public boolean hasFreeSession() {
+		if (this.destroyed == true) {
+			// server already destroyed no sessions available
+			return false;
+		}
+		return this.sessions.size() < this.maxSessions;
+	}
+
+	/**
 	 * Adds the session.
 	 * 
 	 * @param session
@@ -114,7 +128,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	@Override
 	public void removeSession(AbstractSession session) {
-		if (this.sessions == null) {
+		if (this.sessions == null || this.destroyed == true) {
 			// might be the case if server got already destroyed
 			return;
 		}
@@ -129,16 +143,6 @@ public class StatefulServer extends Server implements IStatefulServer {
 	@Override
 	public List<AbstractSession> getSessions() {
 		return this.sessions;
-	}
-
-	/**
-	 * Checks for free session.
-	 * 
-	 * @return true, if successful {@inheritDoc}
-	 */
-	@Override
-	public boolean hasFreeSession() {
-		return this.sessions.size() < this.maxSessions;
 	}
 
 	/**
@@ -573,6 +577,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			// server got already destroyed - no need to continue.
 			return;
 		}
+		this.destroyed = true;
 		// deregister server from service
 		this.getService().removeServer(this);
 
