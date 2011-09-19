@@ -313,8 +313,8 @@ public class SCCacheManager {
 			if (resMessage.isPart() == false) {
 				// large response ended, last message of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
-				// reduce TTL for meta entry 2 seconds this assures meta entry expires first
-				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds - 2);
+				// reduce TTL for meta entry 1 seconds this assures meta entry expires first
+				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds - 1);
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId(),
