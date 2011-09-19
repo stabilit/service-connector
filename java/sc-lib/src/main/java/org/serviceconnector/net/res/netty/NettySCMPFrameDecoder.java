@@ -36,6 +36,8 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 	private static final Logger LOGGER = Logger.getLogger(NettySCMPFrameDecoder.class);
 	/** The scmp frame size. */
 	private int scmpFrameSize;
+	/** The headline. */
+	private byte[] headline = new byte[Constants.SCMP_HEADLINE_SIZE];
 
 	/**
 	 * Instantiates a new NettySCMPFrameDecoder.
@@ -74,10 +76,9 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 			return;
 		}
 		try {
-			byte[] headline = new byte[Constants.SCMP_HEADLINE_SIZE];
-			buffer.getBytes(0, headline);
+			buffer.getBytes(0, this.headline);
 			// parse headline
-			scmpFrameSize = SCMPFrameDecoder.parseFrameSize(headline);
+			this.scmpFrameSize = SCMPFrameDecoder.parseFrameSize(this.headline);
 		} catch (Exception ex) {
 			LOGGER.warn("decode " + ex.getMessage());
 			throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);

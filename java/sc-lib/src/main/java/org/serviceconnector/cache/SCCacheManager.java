@@ -135,19 +135,19 @@ public class SCCacheManager {
 		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
-			String partNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
-			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId, partNr);
+			String reqPartNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
+			if (reqPartNr == null) {
+				// set default partNr = 1 when it is missing in the request
+				reqPartNr = "1";
+			}
+			CacheLogger.tryGetMessageFromCache(reqCacheKey, sessionId, reqPartNr);
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
-				if (partNr == null) {
-					// set default partNr = 1 when it is missing in the request
-					partNr = "1";
-				}
-				SCMPMessage cachedMessage = dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + partNr);
+				SCMPMessage cachedMessage = dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + reqPartNr);
 				if (cachedMessage != null) {
 					// message found adapt header fields for requester
-					cachedMessage.setServiceName(reqMessage.getServiceName());
+					cachedMessage.setServiceName(serviceName);
 					cachedMessage.setMessageType(reqMessage.getMessageType());
 					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					cachedMessage.setSessionId(sessionId);
@@ -156,22 +156,27 @@ public class SCCacheManager {
 					}
 				} else {
 					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + reqCacheKey
-							+ Constants.SLASH + partNr);
+							+ Constants.SLASH + reqPartNr);
 				}
 				return cachedMessage;
 			}
 
 			if (metaEntry.isLoading() == true) {
 				// requested message is loading
-				if (metaEntry.isLoadingSessionId(reqMessage.getSessionId()) == true) {
-					// TODO JOT get requested cpn and compare with current cpn in metaDataCache
-					// cpn has to be the same!! otherwise delete all and return error!
-
+				if (metaEntry.isLoadingSessionId(sessionId) == true) {
 					// requested message is being loaded by current session - continue loading
+					int nextPartNrToLoad = metaEntry.getNumberOfParts() + 1;
+					int reqPartNrInt = Integer.parseInt(reqPartNr);
+					if (reqPartNrInt != nextPartNrToLoad) {
+						// requested partNr does not match current loading state - remove message from cache
+						LOGGER.error("Requested partNr does not match current loading state (numberOfParts).");
+						this.removeMetaAndDataEntries(sessionId, reqCacheKey,
+								"Requested partNr does not match current loading state (numberOfParts).");
+					}
 					return null;
 				}
 				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-						+ reqMessage.getServiceName() + " cacheId=" + reqMessage.getCacheId());
+						+ serviceName + " cacheId=" + cacheId);
 				scmpCommandException.setMessageType(reqMessage.getMessageType());
 				throw scmpCommandException;
 			} else {
@@ -308,14 +313,16 @@ public class SCCacheManager {
 			if (resMessage.isPart() == false) {
 				// large response ended, last message of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
-				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds);
+				// reduce TTL for meta entry 2 seconds this assures meta entry expires first
+				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds - 2);
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId(),
 						metaEntry.getNumberOfParts());
 			} else {
 				// refresh meta entry state
-				metaDataCache.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis());
+				metaDataCache.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis()
+						/ Constants.SEC_TO_MILLISEC_FACTOR);
 			}
 		} catch (Exception e) {
 			LOGGER.error("Caching message failed", e);
@@ -349,8 +356,8 @@ public class SCCacheManager {
 		int size = metaEntry.getNumberOfParts();
 
 		// remove data entries
-		for (int i = 1; i < size; i++) {
-			dataCache.remove(cacheKey + "/" + size);
+		for (int i = 1; i <= size; i++) {
+			dataCache.remove(cacheKey + Constants.SLASH + i);
 		}
 		this.loadingSessionIds.remove(sessionId);
 	}

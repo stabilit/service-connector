@@ -98,7 +98,6 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
 					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
 					writer.writeAttribute("lastAccessTime", DateTimeUtility.getDateTimeAsString(scCache.getLastAccessTime(key)));
-					writer.writeAttribute("bodyLength", scmp.getBodyLength());
 				} else if (cacheMessage instanceof SCCacheMetaEntry) {
 					SCCacheMetaEntry metaEntry = ((SCCacheMetaEntry) cacheMessage);
 					writer.writeAttribute("cacheKey", key);
