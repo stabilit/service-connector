@@ -1,18 +1,15 @@
-Run Service Connector as Windows service on Win64
+Run Service Connector as Windows service on Win32
 =================================================
 
 1) install sc files to the directory of your choice usually C:\Program Files\sc\
 	The required files are:
 	bin\sc.jar
+	bin\sc-console.jar
 	bin\sc-lib-all.jar
-	bin\start-SC.bat
-	bin\stop-SC.bat
-	bin\win64\jbosssvc.exe
-	bin\win64\service.bat
-	bin\win64\shutdown.bat
-	bin\win64\shutdown.jar
-	bin\win64\start.bat
-	bin\win64\stop.bat
+	bin\win32\jbosssvc.exe
+	bin\win32\service.bat
+	bin\win32\start.bat
+	bin\win32\stop.bat
 
 2) install SC as service by invoking the service.bat as follows
 		service install
@@ -29,3 +26,4 @@ Run Service Connector as Windows service on Win64
 
 5) If you want to uninstall SC as windows service by invoking the service.bat as follows
 		service uninstall
+

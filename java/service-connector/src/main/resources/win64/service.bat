@@ -72,29 +72,32 @@ if not errorlevel 1 (
 )
 echo Y > .r.lock
 echo Starting %SVCDISP%
-jbosssvc.exe -p 1 "Starting %SVCDISP%" > run.log
-echo Running %SVCDISP%
-call ..\start-sc.bat < .r.lock >> run.log 2>&1
-echo Shutdown %SVCDISP%
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
+java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 
 :cmdStop
 REM Executed on service stop
+del .s.lock 2>&1 | findstr /C:"being used" > nul
+if not errorlevel 1 (
+  echo Could not continue. Locking file already in use.
+  goto cmdEnd
+)
 echo Y > .s.lock
-jbosssvc.exe -p 1 "Shutting down %SVCDISP%" > shutdown.log
-call shutdown -S < .s.lock >> shutdown.log 2>&1
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> shutdown.log
+java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
 del .s.lock
 goto cmdEnd
 
 :cmdRestart
 REM Executed manually from command line
 REM Note: We can only stop and start
+del .s.lock 2>&1 | findstr /C:"being used" > nul
+if not errorlevel 1 (
+  echo Could not continue. Locking file already in use.
+  goto cmdEnd
+)
 echo Y > .s.lock
-jbosssvc.exe -p 1 "Shutting down %SVCDISP%" >> shutdown.log
-call shutdown -S < .s.lock >> shutdown.log 2>&1
+java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
 del .s.lock
 :waitRun
 REM Delete lock file
@@ -103,9 +106,8 @@ REM Wait one second if lock file exist
 jbosssvc.exe -s 1
 if exist ".r.lock" goto waitRun
 echo Y > .r.lock
-jbosssvc.exe -p 1 "Restarting %SVCDISP%" >> run.log
-call ..\start-sc.bat < .r.lock >> run.log 2>&1
-jbosssvc.exe -p 1 "Shutdown %SVCDISP% service" >> run.log
+echo Starting %SVCDISP%
+java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 
