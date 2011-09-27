@@ -181,7 +181,7 @@ public class ServerRegistry extends Registry<String, Server> {
 	}
 
 	/**
-	 * Dump the responders into the xml writer.
+	 * Dump the servers into the xml writer.
 	 * 
 	 * @param writer
 	 *            the writer
