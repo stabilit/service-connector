@@ -71,12 +71,12 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Iterator.
-	 *
+	 * Node iterator.
+	 * 
 	 * @return the iterator
 	 */
-	public Iterator<E> iterator() {
-		return new LinkedQueueIterator<E>();
+	public Iterator<LinkedNode<E>> nodeIterator() {
+		return new LinkedQueueNodeIterator<E>();
 	}
 
 	/**
@@ -154,12 +154,13 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * The Class LinkedQueueIterator.
-	 *
-	 * @param <E> the element type
+	 * The Class LinkedQueueNodeIterator.
+	 * 
+	 * @param <E>
+	 *            the element type
 	 */
 	@SuppressWarnings("hiding")
-	private class LinkedQueueIterator<E> implements Iterator<E> {
+	private class LinkedQueueNodeIterator<E> implements Iterator<LinkedNode<E>> {
 
 		/** The node. */
 		private LinkedNode<E> node;
@@ -168,7 +169,7 @@ public class LinkedQueue<E> {
 		 * Instantiates a new linked queue iterator.
 		 */
 		@SuppressWarnings("unchecked")
-		public LinkedQueueIterator() {
+		public LinkedQueueNodeIterator() {
 			this.node = (LinkedNode<E>) LinkedQueue.this.getFirst();
 		}
 
@@ -184,11 +185,11 @@ public class LinkedQueue<E> {
 		 * @see java.util.Iterator#next()
 		 */
 		@Override
-		public E next() {
+		public LinkedNode<E> next() {
 			LinkedNode<E> next = this.node.getNext();
-			E value = this.node.getValue();
+			LinkedNode<E> ret = this.node;
 			this.node = next;
-			return value;
+			return ret;
 		}
 
 		/* (non-Javadoc)
