@@ -34,6 +34,7 @@ import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.web.IWebRequest;
 
 /**
@@ -69,7 +70,7 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 				IPublishService publishService = (IPublishService) service;
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 				writer.writeStartElement("publishMessageQueueSize");
-				writer.writeCData(String.valueOf(publishMessageQueue.getSize() + simulation));
+				writer.writeCData(String.valueOf(publishMessageQueue.getReferencedNodesCount() + simulation));
 				writer.writeEndElement(); // end of publishMessageQueueSize
 			}
 			if (service.getName().equals(serviceParameter)) {
@@ -89,9 +90,21 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 					IPublishService publishService = (IPublishService) service;
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("publishMessageQueue");
-					Iterator<SCMPMessage> sqIter = publishMessageQueue.iterator();
+					Iterator<LinkedNode<SCMPMessage>> sqIter = publishMessageQueue.nodeIterator();
+					boolean firstFound = false;
 					while (sqIter.hasNext()) {
-						SCMPMessage scmpMessage = sqIter.next();
+						LinkedNode<SCMPMessage> node = sqIter.next();
+						if (firstFound == false) {
+							// first referenced node has not yet been found
+							if (node.isReferenced() == false) {
+								// current node is not referenced by anyone - continue
+								continue;
+							} else {
+								// first referenced node found print the rest
+								firstFound = true;
+							}
+						}
+						SCMPMessage scmpMessage = node.getValue();
 						writer.writeStartElement("scmpMessage");
 						writer.writeStartElement("header");
 						Map<String, String> header = scmpMessage.getHeader();
@@ -104,6 +117,9 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 							writer.writeEndElement();
 						}
 						writer.writeEndElement(); // end of header
+						writer.writeStartElement("references");
+						writer.writeCData(String.valueOf(node.getReferenceCount()));
+						writer.writeEndElement(); // end of references
 						writer.writeEndElement(); // end of scmpMessage
 					}
 					for (int j = 0; j < simulation; j++) {
