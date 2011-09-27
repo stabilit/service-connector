@@ -29,7 +29,7 @@ public class LinkedNode<T> {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(LinkedNode.class);
-	
+
 	/** The value of the node. */
 	public T value;
 	/** The next node in queue. */
@@ -99,5 +99,14 @@ public class LinkedNode<T> {
 	 */
 	public synchronized void dereference() {
 		this.referenced--;
+	}
+
+	/**
+	 * Gets the reference count.
+	 * 
+	 * @return the reference count
+	 */
+	public synchronized int getReferenceCount() {
+		return this.referenced;
 	}
 }
