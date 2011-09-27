@@ -60,7 +60,7 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 					IPublishService publishService = (IPublishService) service;
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("publishMessageQueueSize");
-					writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
+					writer.writeCData(String.valueOf(publishMessageQueue.getTotalSize()));
 					writer.writeEndElement(); // end of publishMessageQueueSize
 				}
 				this.writeBean(writer, service);
