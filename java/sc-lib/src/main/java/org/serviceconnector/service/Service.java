@@ -87,11 +87,6 @@ public abstract class Service {
 		this.enabled = enabled;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return this.name + ":" + this.enabled + ":" + this.type.getValue();
