@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class StatefulService.
@@ -124,5 +125,19 @@ public abstract class StatefulService extends Service {
 			sb.append(server);
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("enabled", this.enabled);
+		writer.writeAttribute("serverIndex", this.serverIndex);
+		StatefulServer[] servers = listOfServers.toArray(new StatefulServer[0]);
+		for (StatefulServer statefulServer : servers) {
+			statefulServer.dump(writer);
+		}
+		writer.writeEndElement(); // service
 	}
 }

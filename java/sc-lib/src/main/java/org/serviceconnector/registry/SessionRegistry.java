@@ -29,6 +29,7 @@ import org.serviceconnector.server.IServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the
@@ -241,5 +242,23 @@ public class SessionRegistry extends Registry<String, Session> {
 		public int getTimeoutMillis() {
 			return (int) this.timeoutMillis;
 		}
+	}
+
+	/**
+	 * Dump the sessions into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("sessions");
+		Set<Entry<String, Session>> sessionEntries = this.registryMap.entrySet();
+		for (Entry<String, Session> sessionEntry : sessionEntries) {
+			Session session = sessionEntry.getValue();
+			session.dump(writer);
+		}
+		writer.writeEndElement(); // end of sessions
 	}
 }

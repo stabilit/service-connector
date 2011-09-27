@@ -154,6 +154,7 @@ public class Subscription extends AbstractSession {
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("subscription");
 		writer.writeAttribute("id", this.getId());
+		writer.writeAttribute("serviceName", this.getService().getName());
 		writer.writeAttribute("sessionInfo", this.getSessionInfo());
 		writer.writeAttribute("isCascaded", this.isCascaded());
 		writer.writeAttribute("mask", this.getMask().getValue());
@@ -175,7 +176,6 @@ public class Subscription extends AbstractSession {
 			}
 			writer.writeEndElement(); // cscSubscriptions
 		}
-		this.getService().dump(writer);
 		writer.writeEndElement(); // subscription
 	}
 }

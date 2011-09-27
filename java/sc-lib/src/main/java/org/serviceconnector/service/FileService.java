@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
@@ -30,7 +31,7 @@ public class FileService extends Service {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(FileService.class);
-	
+
 	/** The server. */
 	private FileServer server;
 	/** The path. */
@@ -116,5 +117,18 @@ public class FileService extends Service {
 		NoFreeServerException noFreeSereverExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service=" + this.getName());
 		noFreeSereverExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
 		throw noFreeSereverExc;
+	}
+
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("enabled", this.enabled);
+		writer.writeAttribute("path", this.path);
+		writer.writeAttribute("scUploadScript", this.scUploadScript);
+		writer.writeAttribute("scGetFileListScript", this.scGetFileListScript);
+		this.server.dump(writer);
+		writer.writeEndElement(); // service
 	}
 }

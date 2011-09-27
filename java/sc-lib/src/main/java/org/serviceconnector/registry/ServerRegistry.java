@@ -27,7 +27,6 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
-import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ServerRegistry. Stores an entry for every registered server in system. Server registry is also responsible for
@@ -178,24 +177,6 @@ public class ServerRegistry extends Registry<String, Server> {
 	public synchronized void resetServerTimeout(Server server, double newTimeoutMillis) {
 		this.cancelServerTimeout(server);
 		this.scheduleServerTimeout(server, newTimeoutMillis);
-	}
-
-	/**
-	 * Dump the servers into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("servers");
-		Set<Entry<String, Server>> entries = this.registryMap.entrySet();
-		for (Entry<String, Server> entry : entries) {
-			Server server = entry.getValue();
-			server.dump(writer);
-		}
-		writer.writeEndElement(); // end of servers
 	}
 
 	/**

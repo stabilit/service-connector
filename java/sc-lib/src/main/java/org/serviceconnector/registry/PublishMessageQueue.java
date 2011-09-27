@@ -33,6 +33,7 @@ import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 import org.serviceconnector.util.NamedPriorityThreadFactory;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform
@@ -567,5 +568,52 @@ public class PublishMessageQueue<E> {
 				this.target.timeout();
 			}
 		}
+	}
+
+	/**
+	 * Dump publish message queue.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("publishMessageQueue");
+		writer.writeAttribute("totalSize", this.dataQueue.getSize());
+		writer.writeAttribute("referencedNodesCount", this.getReferencedNodesCount());
+		writer.writeAttribute("peak", this.peak);
+		writer.writeAttribute("timeoutScheduler_activeCount", this.timeoutScheduler.getActiveCount());
+		writer.writeAttribute("timeoutScheduler_corePoolSize", this.timeoutScheduler.getCorePoolSize());
+		writer.writeAttribute("timeoutScheduler_largestPoolSize", this.timeoutScheduler.getLargestPoolSize());
+
+		String[] keys = this.pointerMap.keySet().toArray(new String[0]);
+		writer.writeStartElement("dataPointerMap");
+		for (String key : keys) {
+			TimeAwareDataPointer dataPointer = this.pointerMap.get(key);
+			if (dataPointer != null) {
+				writer.writeStartElement("dataPointer");
+				if (dataPointer.node != null) {
+					writer.writeAttribute("linkedNodeHashCode", dataPointer.node.hashCode());
+				} else {
+					writer.writeAttribute("remainingDelayMillis", dataPointer.timeout.getDelay(TimeUnit.MILLISECONDS));
+				}
+				writer.writeAttribute("listening", dataPointer.listening);
+				writer.writeAttribute("mask", dataPointer.mask.getValue());
+				writer.writeAttribute("sid", key);
+				writer.writeEndElement(); // dataPointer
+			}
+		}
+		writer.writeEndElement(); // dataPointerMap
+		Iterator<LinkedNode<E>> iter = this.nodeIterator();
+		while (iter.hasNext()) {
+			LinkedNode<E> linkedNode = (LinkedNode<E>) iter.next();
+			writer.writeStartElement("linkedNode");
+			writer.writeAttribute("hashCode", linkedNode.hashCode());
+			writer.writeAttribute("referenceCounter", linkedNode.getReferenceCount());
+			writer.writeAttribute("content", linkedNode.getValue().toString());
+			writer.writeEndElement(); // linkedNode
+		}
+		writer.writeEndElement(); // publishMessageQueue
 	}
 }

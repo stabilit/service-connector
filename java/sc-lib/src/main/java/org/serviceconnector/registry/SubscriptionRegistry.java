@@ -232,34 +232,16 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	}
 
 	/**
-	 * Dump the su8bscriptions into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("subscriptions");
-		Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
-		for (Entry<String, Subscription> entry : entries) {
-			Subscription subscriptions = entry.getValue();
-			subscriptions.dump(writer);
-		}
-		writer.writeEndElement(); // end of subscriptions
-	}
-
-	/**
 	 * The Class SubscriptionTimeout. Gets control when a subscription times out. Responsible for cleaning up when subscription gets
 	 * broken.
 	 */
 	private class SubscriptionTimeout implements ITimeout {
-
+	
 		/** The session. */
 		private Subscription subscription;
-
+	
 		/** The callback, callback to send abort subscription. */
-
+	
 		/**
 		 * Instantiates a new subscription timer run.
 		 * 
@@ -269,7 +251,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		public SubscriptionTimeout(Subscription subscription) {
 			this.subscription = subscription;
 		}
-
+	
 		/**
 		 * Timeout. Subscription timeout run out.
 		 */
@@ -286,11 +268,29 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			server.abortSession(subscription, "subscription timed out in registry");
 			SubscriptionLogger.logTimeoutSubscription(subscription);
 		}
-
+	
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
 			return (int) this.subscription.getSubscriptionTimeoutMillis();
 		}
+	}
+
+	/**
+	 * Dump the su8bscriptions into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("subscriptions");
+		Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
+		for (Entry<String, Subscription> entry : entries) {
+			Subscription subscriptions = entry.getValue();
+			subscriptions.dump(writer);
+		}
+		writer.writeEndElement(); // end of subscriptions
 	}
 }

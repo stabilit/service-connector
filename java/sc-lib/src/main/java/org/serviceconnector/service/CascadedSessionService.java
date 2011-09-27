@@ -17,6 +17,7 @@
 package org.serviceconnector.service;
 
 import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class CascadedSessionService.
@@ -56,5 +57,15 @@ public class CascadedSessionService extends Service {
 	 */
 	public CascadedSC getCascadedSC() {
 		return cascadedSC;
+	}
+	
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("enabled", this.enabled);
+		this.cascadedSC.dump(writer);
+		writer.writeEndElement(); // service
 	}
 }

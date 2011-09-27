@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly configured services.
@@ -95,5 +96,23 @@ public final class ServiceRegistry extends Registry<String, Service> {
 	 */
 	public Service removeService(String key) {
 		return super.remove(key);
+	}
+
+	/**
+	 * Dump the services into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("services");
+		Set<Entry<String, Service>> serviceEntries = this.registryMap.entrySet();
+		for (Entry<String, Service> serviceEntry : serviceEntries) {
+			Service service = serviceEntry.getValue();
+			service.dump(writer);
+		}
+		writer.writeEndElement(); // end of services
 	}
 }

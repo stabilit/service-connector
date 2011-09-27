@@ -709,12 +709,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 		writer.writeAttribute("socketAddress", this.socketAddress.getHostName() + Constants.SLASH + this.socketAddress.getPort());
 		writer.writeAttribute("operationTimeoutMultiplier", this.operationTimeoutMultiplier);
 		this.requester.dump(writer);
-		writer.writeStartElement("sessions");
+		writer.writeStartElement("sessionIds");
 		AbstractSession[] sessionArr = this.sessions.toArray(new AbstractSession[0]);
 		for (AbstractSession session : sessionArr) {
-			session.dump(writer);
+			writer.writeElement("sid", session.getId());
 		}
-		writer.writeEndElement(); // end of sessions
+		writer.writeEndElement(); // end of sessionIds
 		writer.writeEndElement(); // end of stateful-server
 	}
 }

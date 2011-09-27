@@ -479,29 +479,6 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Dump the connection pool into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("connection-pool");
-		writer.writeAttribute("host", this.host);
-		writer.writeAttribute("port", this.port);
-		writer.writeAttribute("connectionType", this.connectionType);
-		writer.writeAttribute("maxConnections", this.maxConnections);
-		writer.writeAttribute("minConnections", this.minConnections);
-		writer.writeAttribute("closeOnFree", this.closeOnFree);
-		writer.writeAttribute("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
-		writer.writeAttribute("keepAliveOTIMillis", this.keepAliveOTIMillis);
-		writer.writeElement("freeConnections", this.freeConnections.toString());
-		writer.writeElement("usedConnections", this.usedConnections.toString());
-		writer.writeEndElement(); // end of connection-pool
-	}
-
-	/**
 	 * The Class IdleCallback. Gets informed when connection runs into an idle timeout.
 	 */
 	private class IdleCallback implements IIdleConnectionCallback {
@@ -534,5 +511,28 @@ public class ConnectionPool {
 	@Override
 	protected void finalize() throws Throwable {
 		this.destroy();
+	}
+
+	/**
+	 * Dump the connection pool into the xml writer.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("connection-pool");
+		writer.writeAttribute("host", this.host);
+		writer.writeAttribute("port", this.port);
+		writer.writeAttribute("connectionType", this.connectionType);
+		writer.writeAttribute("maxConnections", this.maxConnections);
+		writer.writeAttribute("minConnections", this.minConnections);
+		writer.writeAttribute("closeOnFree", this.closeOnFree);
+		writer.writeAttribute("keepAliveIntervalSeconds", this.keepAliveIntervalSeconds);
+		writer.writeAttribute("keepAliveOTIMillis", this.keepAliveOTIMillis);
+		writer.writeElement("freeConnections", this.freeConnections.toString());
+		writer.writeElement("usedConnections", this.usedConnections.toString());
+		writer.writeEndElement(); // end of connection-pool
 	}
 }

@@ -23,6 +23,7 @@ import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
@@ -105,5 +106,20 @@ public class PublishService extends StatefulService implements IPublishService {
 				+ msgToForward.getServiceName());
 		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
 		throw noFreeSessionExc;
+	}
+	
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("enabled", this.enabled);
+		writer.writeAttribute("serverIndex", this.serverIndex);
+		StatefulServer[] servers = listOfServers.toArray(new StatefulServer[0]);
+		for (StatefulServer statefulServer : servers) {
+			statefulServer.dump(writer);
+		}
+		this.publishMessageQueue.dump(writer);
+		writer.writeEndElement(); // service
 	}
 }

@@ -480,7 +480,8 @@ public final class AppContext {
 				writer.writeStartElement("sc-dump");
 				AppContext.getBasicConfiguration().dump(writer);
 				AppContext.getResponderRegistry().dump(writer);
-				AppContext.getServerRegistry().dump(writer);
+				AppContext.getServiceRegistry().dump(writer);
+				AppContext.getSessionRegistry().dump(writer);
 				AppContext.getSubscriptionRegistry().dump(writer);
 				AppContext.getCacheManager().dump(writer);
 				AppContext.getCacheRegistry().dump(writer);

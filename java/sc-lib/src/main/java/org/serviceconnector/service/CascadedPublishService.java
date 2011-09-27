@@ -21,6 +21,7 @@ import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class CascadedPublishService.
@@ -103,5 +104,17 @@ public class CascadedPublishService extends Service implements IPublishService {
 	public synchronized void renewCascadedClient() {
 		LOGGER.trace("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
+	}
+	
+	@Override
+	public void dump(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("service");
+		writer.writeAttribute("name", this.name);
+		writer.writeAttribute("type", this.type.getValue());
+		writer.writeAttribute("enabled", this.enabled);
+		writer.writeAttribute("noiInSeconds", this.noDataIntervalSeconds);
+		this.cascadedSC.dump(writer);
+		this.publishMessageQueue.dump(writer);
+		writer.writeEndElement(); // service
 	}
 }
