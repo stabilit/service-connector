@@ -151,7 +151,6 @@ public final class AppContext {
 	 */
 	public static void init() {
 		synchronized (AppContext.communicatorsLock) {
-			ConnectionFactory.init();
 			if (AppContext.otiScheduler == null) {
 				// set up new scheduler with high priority threads
 				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
@@ -490,5 +489,14 @@ public final class AppContext {
 			LOGGER.error("Creating SC dump file =" + dumpPath + " failed.", e);
 			throw e;
 		}
+	}
+
+	/**
+	 * Initialize after configuration load. Some things we need to set up new. Loaded configuration may have affects.
+	 */
+	public static void initAfterConfigurationLoad() {
+		// Set up connection factory again
+		ConnectionFactory.shutdownConnectionFactory();
+		ConnectionFactory.init();
 	}
 }
