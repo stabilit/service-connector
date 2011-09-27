@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
@@ -36,11 +31,11 @@ public abstract class Service {
 	private static final Logger LOGGER = Logger.getLogger(Service.class);
 
 	/** The type. */
-	private ServiceType type;
+	ServiceType type;
 	/** The state. */
-	private boolean enabled;
+	boolean enabled;
 	/** The name. */
-	private String name;
+	String name;
 
 	/**
 	 * Instantiates a new service.
@@ -75,7 +70,7 @@ public abstract class Service {
 
 	/**
 	 * Gets the current service state.
-	 *
+	 * 
 	 * @return the state
 	 */
 	public boolean isEnabled() {
@@ -92,12 +87,16 @@ public abstract class Service {
 		this.enabled = enabled;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return this.name + ":" + this.enabled + ":" + this.type.getValue();
 	}
-	
+
 	/**
 	 * Dump the service into the xml writer.
 	 * 
@@ -106,11 +105,5 @@ public abstract class Service {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void dump(XMLDumpWriter writer) throws Exception {
-		writer.writeStartElement("service");
-		writer.writeAttribute("name", this.name);
-		writer.writeAttribute("type", this.type.getValue());
-		writer.writeAttribute("enabled", this.enabled);
-		writer.writeEndElement(); // service
-	}
+	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }
