@@ -62,6 +62,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.NO_DATA, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
@@ -79,9 +80,11 @@ public final class MessageLogger {
 
 	/**
 	 * produce the log for an output message.
-	 *
-	 * @param headlineKey the headline key
-	 * @param message the message
+	 * 
+	 * @param headlineKey
+	 *            the headline key
+	 * @param message
+	 *            the message
 	 */
 	public static synchronized void logOutputMessage(SCMPHeaderKey headlineKey, SCMPMessage message) {
 		if (MESSAGE_LOGGER.isTraceEnabled()) {
@@ -96,6 +99,7 @@ public final class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.NO_DATA, message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
