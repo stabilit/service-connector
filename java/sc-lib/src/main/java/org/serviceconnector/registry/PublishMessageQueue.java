@@ -36,9 +36,8 @@ import org.serviceconnector.util.NamedPriorityThreadFactory;
 
 /**
  * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform
- * subscriptions
- * about new arrived messages, to observe there timeouts and to know there current position in queue (TimeAwareDataPointer). The
- * queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
+ * subscriptions about new arrived messages, to observe there timeouts and to know there current position in queue
+ * (TimeAwareDataPointer). The queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
  * 
  * @param <E>
  *            the element type to handle in the queue
