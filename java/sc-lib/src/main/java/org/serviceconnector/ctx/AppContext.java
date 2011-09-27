@@ -441,6 +441,15 @@ public final class AppContext {
 	}
 
 	/**
+	 * Initialize after configuration load. Some things we need to set up new. Loaded configuration may have affects.
+	 */
+	public static void initAfterConfigurationLoad() {
+		// Set up connection factory again
+		ConnectionFactory.shutdownConnectionFactory();
+		ConnectionFactory.init();
+	}
+
+	/**
 	 * dumps the entire application context.
 	 * 
 	 * @return the string
@@ -489,14 +498,5 @@ public final class AppContext {
 			LOGGER.error("Creating SC dump file =" + dumpPath + " failed.", e);
 			throw e;
 		}
-	}
-
-	/**
-	 * Initialize after configuration load. Some things we need to set up new. Loaded configuration may have affects.
-	 */
-	public static void initAfterConfigurationLoad() {
-		// Set up connection factory again
-		ConnectionFactory.shutdownConnectionFactory();
-		ConnectionFactory.init();
 	}
 }
