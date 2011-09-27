@@ -223,6 +223,7 @@
 	          <tr class="sc_table_header">
 	            <th class="sc_table">msk</th>
 	            <th class="sc_table">msn</th>
+	            <th class="sc_table">references</th>
 	          </tr>          
 	          <xsl:apply-templates select="scmpMessage"/>
 	        </table>
@@ -248,6 +249,7 @@
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="header/msk"/></td>
 	    <td class="{$class}"><xsl:value-of select="header/msn"/></td>
+	    <td class="{$class}"><xsl:value-of select="references"/></td>	    
 	</xsl:template>
 	<xsl:template name="subscription_details">
 	  <td colspan="7">
@@ -289,7 +291,7 @@
 	    <td class="sc_table"><xsl:value-of select="subscriptionMask"/></td>
 	    <td class="sc_table"><xsl:value-of select="ipAddressList"/></td>
 	    <td class="sc_table"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
-	    <td class="sc_table"><xsl:value-of select="noDataInterval"/></td>
+	    <td class="sc_table"><xsl:value-of select="noDataIntervalMillis"/></td>
         <td class="sc_table"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></td>
 	</xsl:template>
 </xsl:stylesheet>
