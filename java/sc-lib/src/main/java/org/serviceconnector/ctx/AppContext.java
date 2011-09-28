@@ -151,6 +151,7 @@ public final class AppContext {
 	 */
 	public static void init() {
 		synchronized (AppContext.communicatorsLock) {
+			ConnectionFactory.init();
 			if (AppContext.otiScheduler == null) {
 				// set up new scheduler with high priority threads
 				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",

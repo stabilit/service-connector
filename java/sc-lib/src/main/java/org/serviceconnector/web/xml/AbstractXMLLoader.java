@@ -377,12 +377,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof List<?>) {
 						writer.writeStartElement(name);
 						List<?> list = (List<?>) value;
-						for (Object listObj : list) {
-							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
-							if (listObj instanceof String) {
-								writer.writeCData(listObj.toString());
+						Object[] objects = list.toArray(new Object[0]);
+						for (Object object : objects) {
+							writer.writeStartElement(object.getClass().getSimpleName().toLowerCase());
+							if (object instanceof String) {
+								writer.writeCData(object.toString());
 							} else {
-								this.writeBean(writer, listObj);
+								this.writeBean(writer, object);
 							}
 							writer.writeEndElement();
 						}
@@ -521,7 +522,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				writer.writeCData("true");
 			} else {
 				writer.writeCData(value);
-				
+
 			}
 			writer.writeEndElement(); // end of item
 		}
