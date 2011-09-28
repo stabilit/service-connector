@@ -402,7 +402,8 @@ public class PublishMessageQueue<E> {
 				// current node matches new mask keep current position
 				return;
 			} else {
-				// TODO JOT this.node.dereference();
+				// dereference current node!
+				this.node.dereference();
 				// move to next matching node
 				this.moveNext();
 			}
