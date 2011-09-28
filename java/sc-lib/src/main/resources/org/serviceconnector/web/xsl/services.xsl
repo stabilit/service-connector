@@ -99,7 +99,7 @@
 	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a>/<xsl:value-of select="publishMessageQueueReferencedNodeCount"/></td>
 	      </xsl:when>
 	      <xsl:otherwise>
-	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/>/<xsl:value-of select="publishMessageQueueReferencedNodeCount"/></xsl:call-template></td>
+	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/></xsl:call-template>/<xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueReferencedNodeCount"/></xsl:call-template></td>
 	      </xsl:otherwise>
 	    </xsl:choose>
 	    <xsl:choose>
