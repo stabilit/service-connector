@@ -479,12 +479,19 @@ public final class AppContext {
 				XMLDumpWriter writer = new XMLDumpWriter(fos);
 				writer.startDocument();
 				writer.writeStartElement("sc-dump");
+				writer.writeComment(" *************** CONFIGURATION *************** ");
 				AppContext.getBasicConfiguration().dump(writer);
+				writer.writeComment(" *************** RESPONDERS ****************** ");
 				AppContext.getResponderRegistry().dump(writer);
+				writer.writeComment(" *************** SERVICES ******************** ");
 				AppContext.getServiceRegistry().dump(writer);
+				writer.writeComment(" *************** SESSIONS ******************** ");
 				AppContext.getSessionRegistry().dump(writer);
+				writer.writeComment(" *************** SUBSCRIPTIONS *************** ");
 				AppContext.getSubscriptionRegistry().dump(writer);
+				writer.writeComment(" *************** CACHE MANAGER *************** ");
 				AppContext.getCacheManager().dump(writer);
+				writer.writeComment(" *************** CACHES ********************** ");
 				AppContext.getCacheRegistry().dump(writer);
 				// end dump
 				writer.writeEndElement(); // end of sc-dump

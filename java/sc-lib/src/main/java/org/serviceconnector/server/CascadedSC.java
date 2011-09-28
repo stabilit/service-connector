@@ -739,6 +739,12 @@ public class CascadedSC extends Server implements IStatefulServer {
 		return this.subscriptions;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int getSessionCount() {
+		return this.subscriptions.size();
+	}
+
 	/**
 	 * Checks for free session.
 	 * 

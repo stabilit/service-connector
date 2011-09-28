@@ -25,8 +25,7 @@
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
-            <th class="sc_table">Host</th>
-            <th class="sc_table">Port</th>
+            <th class="sc_table">Host:Port</th>
             <th class="sc_table">Name</th>
             <th class="sc_table">Connection Type</th>
             <th class="sc_table">Interfaces</th>
@@ -71,10 +70,10 @@
 	    <xsl:param name="class"/>
 	    <td class="{$class}">
 	      <xsl:for-each select="responderConfig/interfaces">
-	         <xsl:value-of select="string"/><br/>
+	      	<xsl:value-of select="string"/>
 	      </xsl:for-each>	    
+	      :<xsl:value-of select="responderConfig/port"/><br/>
 	    </td>
-	    <td class="{$class}"><xsl:value-of select="responderConfig/port"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/name"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/connectionType"/></td>
 	    <td class="{$class}">

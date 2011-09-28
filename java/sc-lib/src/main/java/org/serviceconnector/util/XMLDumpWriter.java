@@ -53,9 +53,20 @@ public class XMLDumpWriter {
 	 */
 	public void startDocument() throws XMLStreamException {
 		writer.writeStartDocument();
-		writer.writeComment("SC version=" + SCVersion.CURRENT.toString());
-		writer.writeComment("Dump created at=" + DateTimeUtility.getCurrentTimeZoneMillis());
+		this.writeComment(" SC version=" + SCVersion.CURRENT.toString() + " ");
+		this.writeComment(" Dump created at=" + DateTimeUtility.getCurrentTimeZoneMillis() + " ");
+	}
 
+	/**
+	 * Write comment.
+	 * 
+	 * @param comment
+	 *            the comment
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
+	public void writeComment(String comment) throws XMLStreamException {
+		writer.writeComment(comment);
 	}
 
 	/**
@@ -156,7 +167,7 @@ public class XMLDumpWriter {
 		writer.writeCharacters(String.valueOf(value));
 		writer.writeEndElement();
 	}
-	
+
 	/**
 	 * Write element converting boolean value to String.
 	 * 
@@ -234,9 +245,9 @@ public class XMLDumpWriter {
 			writer.writeAttribute(attributeName, String.valueOf(value));
 		}
 	}
-	
+
 	/**
-	 * Write double attribute value converting it to string 
+	 * Write double attribute value converting it to string
 	 * 
 	 * @param attributeName
 	 *            the name of the attribute

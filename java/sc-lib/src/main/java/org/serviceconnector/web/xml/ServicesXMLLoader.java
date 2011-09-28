@@ -70,8 +70,11 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 				IPublishService publishService = (IPublishService) service;
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 				writer.writeStartElement("publishMessageQueueSize");
-				writer.writeCData(String.valueOf(publishMessageQueue.getReferencedNodesCount() + simulation));
+				writer.writeCData(String.valueOf(publishMessageQueue.getTotalSize() + simulation));
 				writer.writeEndElement(); // end of publishMessageQueueSize
+				writer.writeStartElement("publishMessageQueueReferencedNodeCount");
+				writer.writeCData(String.valueOf(publishMessageQueue.getReferencedNodesCount() + simulation));
+				writer.writeEndElement(); // end of publishMessageQueueReferencedNodeCount
 			}
 			if (service.getName().equals(serviceParameter)) {
 				// take a look into
@@ -91,19 +94,8 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("publishMessageQueue");
 					Iterator<LinkedNode<SCMPMessage>> sqIter = publishMessageQueue.nodeIterator();
-					boolean firstFound = false;
 					while (sqIter.hasNext()) {
 						LinkedNode<SCMPMessage> node = sqIter.next();
-						if (firstFound == false) {
-							// first referenced node has not yet been found
-							if (node.isReferenced() == false) {
-								// current node is not referenced by anyone - continue
-								continue;
-							} else {
-								// first referenced node found print the rest
-								firstFound = true;
-							}
-						}
 						SCMPMessage scmpMessage = node.getValue();
 						writer.writeStartElement("scmpMessage");
 						writer.writeStartElement("header");

@@ -31,7 +31,7 @@
             <th class="sc_table">Service Name</th>
             <th class="sc_table">Service Type</th>
             <th class="sc_table">Servers</th>
-            <th class="sc_table">Message Queue</th>
+            <th class="sc_table">Message Queue (Total Size / To Deliver)</th>
             <th class="sc_table">Allocated Sessions / Subscriptions</th>
             <th class="sc_table">Available Sessions</th>
           </tr>          
@@ -96,10 +96,10 @@
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>
 	    <xsl:choose>
 	       <xsl:when test="publishMessageQueueSize &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a></td>
+	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a>/<xsl:value-of select="publishMessageQueueReferencedNodeCount"/></td>
 	      </xsl:when>
 	      <xsl:otherwise>
-	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/></xsl:call-template></td>
+	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/>/<xsl:value-of select="publishMessageQueueReferencedNodeCount"/></xsl:call-template></td>
 	      </xsl:otherwise>
 	    </xsl:choose>
 	    <xsl:choose>
@@ -133,8 +133,15 @@
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">Host</th>
-	            <th class="sc_table">Port</th>
+	            <th class="sc_table">Host:Port</th>
+	            <th class="sc_table">
+	            	<xsl:if test="server/sessions/session">Session Count</xsl:if>
+	            	<xsl:if test="server/sessions/subscription">Subscription Count</xsl:if>
+	            </th>
+	            <th class="sc_table">
+	            	<xsl:if test="server/sessions/session">Max Sessions</xsl:if>
+	            	<xsl:if test="server/sessions/subscription">Max Subscriptions</xsl:if>
+	           </th>         
 	            <th class="sc_table">Max Connections</th>            
 	            <th class="sc_table">
 	               <xsl:if test="server/sessions/session">Sessions</xsl:if>
@@ -163,8 +170,9 @@
 	</xsl:template>
 	<xsl:template name="server_row">
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="host"/>&#160;</td>
-	    <td class="{$class}"><xsl:value-of select="portNr"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="host"/>:<xsl:value-of select="portNr"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="sessionCount"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="maxSessions"/>&#160;</td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/>&#160;</td>
 	    <xsl:choose>
 	       <xsl:when test="sessions/session">

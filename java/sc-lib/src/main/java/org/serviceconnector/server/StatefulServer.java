@@ -144,6 +144,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 	public List<AbstractSession> getSessions() {
 		return this.sessions;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public int getSessionCount() {
+		return this.sessions.size();
+	}
 
 	/**
 	 * Gets the max sessions.

@@ -26,10 +26,11 @@
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
-            <th class="sc_table">Host</th>
-            <th class="sc_table">Port</th>
+            <th class="sc_table">Host:Port</th>
             <th class="sc_table">Server Key</th>
             <th class="sc_table">Server Type</th>
+            <th class="sc_table">Connection Type</th>
+            <th class="sc_table">Session Count</th>
             <th class="sc_table">Max Sessions</th>
             <th class="sc_table">Max Connections</th>
           </tr>          
@@ -70,10 +71,18 @@
 	</xsl:template>
 	<xsl:template name="server_row">
 	    <xsl:param name="class"/> 
-	    <td class="{$class}"><xsl:value-of select="host"/></td>
-	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
+	    <td class="{$class}"><xsl:value-of select="host"/>:<xsl:value-of select="portNr"/></td>
 	    <td class="{$class}"><xsl:value-of select="serverKey"/></td>
 	    <td class="{$class}"><xsl:value-of select="type"/></td>
+	    <td class="{$class}"><xsl:value-of select="connectionType"/></td>
+	    <td class="{$class}">
+	      <xsl:choose>
+	        <xsl:when test="contains(type,'STATEFUL_SERVER')">
+	        	<xsl:call-template name="fieldValue"><xsl:with-param name="value" select="sessionCount"/></xsl:call-template>
+	        </xsl:when>
+	        <xsl:otherwise>-</xsl:otherwise>
+	      </xsl:choose>
+	    </td>
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="contains(type,'CASCADED')">-</xsl:when>

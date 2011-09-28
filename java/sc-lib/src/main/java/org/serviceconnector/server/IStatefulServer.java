@@ -57,6 +57,13 @@ public interface IStatefulServer extends IServer {
 	public abstract List<AbstractSession> getSessions();
 
 	/**
+	 * Gets the session count.
+	 * 
+	 * @return the session count
+	 */
+	public abstract int getSessionCount();
+
+	/**
 	 * Checks for free session.
 	 * 
 	 * @return true, if successful
