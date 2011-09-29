@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -479,6 +480,8 @@ public final class AppContext {
 				XMLDumpWriter writer = new XMLDumpWriter(fos);
 				writer.startDocument();
 				writer.writeStartElement("sc-dump");
+				writer.writeComment(" *************** APPCONTEXT INFOS ************ ");
+				AppContext.dumpAppContextInfos(writer);
 				writer.writeComment(" *************** CONFIGURATION *************** ");
 				AppContext.getBasicConfiguration().dump(writer);
 				writer.writeComment(" *************** RESPONDERS ****************** ");
@@ -507,5 +510,26 @@ public final class AppContext {
 			LOGGER.error("Creating SC dump file =" + dumpPath + " failed.", e);
 			throw e;
 		}
+	}
+
+	/**
+	 * Dump app context infos.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws Exception
+	 *             the exception
+	 */
+	private static void dumpAppContextInfos(XMLDumpWriter writer) throws Exception {
+		writer.writeStartElement("sc-worker-threadpool");
+		if (AppContext.threadPool instanceof ThreadPoolExecutor) {
+			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.threadPool;
+			writer.writeAttribute("scworker_poolSize", threadPoolEx.getPoolSize());
+			writer.writeAttribute("scworker_maximumPoolSize", threadPoolEx.getMaximumPoolSize());
+			writer.writeAttribute("scworker_corePoolSize", threadPoolEx.getCorePoolSize());
+			writer.writeAttribute("scworker_largestPoolSize", threadPoolEx.getLargestPoolSize());
+			writer.writeAttribute("scworker_activeCount", threadPoolEx.getActiveCount());
+		}
+		writer.writeEndElement(); // end of sc-worker-threadpool
 	}
 }

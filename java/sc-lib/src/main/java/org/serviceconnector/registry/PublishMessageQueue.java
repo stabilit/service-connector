@@ -584,9 +584,11 @@ public class PublishMessageQueue<E> {
 		writer.writeAttribute("totalSize", this.dataQueue.getSize());
 		writer.writeAttribute("referencedNodesCount", this.getReferencedNodesCount());
 		writer.writeAttribute("peak", this.peak);
-		writer.writeAttribute("timeoutScheduler_activeCount", this.timeoutScheduler.getActiveCount());
+		writer.writeAttribute("timeoutScheduler_poolSize", this.timeoutScheduler.getPoolSize());
+		writer.writeAttribute("timeoutScheduler_maximumPoolSize", this.timeoutScheduler.getMaximumPoolSize());
 		writer.writeAttribute("timeoutScheduler_corePoolSize", this.timeoutScheduler.getCorePoolSize());
 		writer.writeAttribute("timeoutScheduler_largestPoolSize", this.timeoutScheduler.getLargestPoolSize());
+		writer.writeAttribute("timeoutScheduler_activeCount", this.timeoutScheduler.getActiveCount());
 
 		String[] keys = this.pointerMap.keySet().toArray(new String[0]);
 		writer.writeStartElement("dataPointerMap");

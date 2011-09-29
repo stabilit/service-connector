@@ -21,6 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -65,9 +66,12 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		String serviceName = reqMessage.getServiceName();
 		// check service is present
 		Service abstractService = this.getService(serviceName);
+		String sessionId = reqMessage.getSessionId();
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
+			// clears message in cache if in loading state
+			AppContext.getCacheManager().clearLoading(sessionId);
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
 			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.deleteSession(reqMessage, callback, oti);
@@ -82,7 +86,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			break;
 		}
 
-		String sessionId = reqMessage.getSessionId();
 		// lookup session and checks properness
 		Session session = this.getSessionById(sessionId);
 		synchronized (session) {

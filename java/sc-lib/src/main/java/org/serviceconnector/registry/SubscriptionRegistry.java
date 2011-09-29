@@ -294,6 +294,12 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("subscriptions");
+		writer.writeAttribute("subscriptionScheduler_poolSize", this.subscriptionScheduler.getPoolSize());
+		writer.writeAttribute("subscriptionScheduler_maximumPoolSize", this.subscriptionScheduler.getMaximumPoolSize());
+		writer.writeAttribute("subscriptionScheduler_corePoolSize", this.subscriptionScheduler.getCorePoolSize());
+		writer.writeAttribute("subscriptionScheduler_largestPoolSize", this.subscriptionScheduler.getLargestPoolSize());
+		writer.writeAttribute("subscriptionScheduler_activeCount", this.subscriptionScheduler.getActiveCount());
+
 		Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
 		for (Entry<String, Subscription> entry : entries) {
 			Subscription subscriptions = entry.getValue();

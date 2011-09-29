@@ -264,6 +264,12 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("sessions");
+		writer.writeAttribute("sessionScheduler_poolSize", this.sessionScheduler.getPoolSize());
+		writer.writeAttribute("sessionScheduler_maximumPoolSize", this.sessionScheduler.getMaximumPoolSize());
+		writer.writeAttribute("sessionScheduler_corePoolSize", this.sessionScheduler.getCorePoolSize());
+		writer.writeAttribute("sessionScheduler_largestPoolSize", this.sessionScheduler.getLargestPoolSize());
+		writer.writeAttribute("sessionScheduler_activeCount", this.sessionScheduler.getActiveCount());
+
 		Set<Entry<String, Session>> sessionEntries = this.registryMap.entrySet();
 		for (Entry<String, Session> sessionEntry : sessionEntries) {
 			Session session = sessionEntry.getValue();
