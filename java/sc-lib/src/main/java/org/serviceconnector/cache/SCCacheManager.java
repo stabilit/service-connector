@@ -190,7 +190,7 @@ public class SCCacheManager {
 			}
 		} else {
 			if (reqMessage.isPollRequest()) {
-				// request for large message, but no meta entry in cache yet, ignore!
+				// request for large message, but no meta entry in cache, ignore!
 				return null;
 			}
 			// start loading message to cache
