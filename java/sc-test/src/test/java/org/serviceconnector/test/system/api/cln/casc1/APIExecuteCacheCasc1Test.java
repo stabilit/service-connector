@@ -228,6 +228,36 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		}
 		sessionService1.deleteSession();
 	}
+	
+	/**
+	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime, part size 64KB<br>
+	 * Expectation: get large message from cache
+	 */
+	@Test
+	public void t07_3_cacheLargerMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		request.setPartSize(1 << 16); // 64KB
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		String largeMessage = TestUtil.get10MBString();
+		request.setData(largeMessage); // internal cache timeout on server one hour
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		request.setData("cacheFor1Hour");
+		response = sessionService1.execute(request);
+		Assert.assertEquals(largeMessage, response.getData());
+		// inspect cache entry
+		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Assert.assertEquals("success", inspectResponse.get("return"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals("700", inspectResponse.get("cacheId"));
+		Assert.assertEquals("52", inspectResponse.get("cacheSize"));
+		sessionService1.deleteSession();
+	}
 
 	/**
 	 * Description: exchange 10MB large message with cacheId, server reply with cacheExpirationTime, part size 64KB<br>
