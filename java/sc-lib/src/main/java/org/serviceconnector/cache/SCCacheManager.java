@@ -173,6 +173,7 @@ public class SCCacheManager {
 								+ nextPartNrToLoad + ").");
 						this.removeMetaAndDataEntries(sessionId, reqCacheKey, "Requested partNr=" + reqPartNr
 								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
+						// do return an error here to stop current request loading this message and avoid parallel loading problems
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId=" + cacheId);
 						scmpCommandException.setMessageType(reqMessage.getMessageType());
