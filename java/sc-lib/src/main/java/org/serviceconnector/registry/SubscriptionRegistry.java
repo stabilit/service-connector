@@ -29,6 +29,7 @@ import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
@@ -49,7 +50,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * Instantiates a new subscription registry.
 	 */
 	public SubscriptionRegistry() {
-		this.subscriptionScheduler = new ScheduledThreadPoolExecutor(1);
+		this.subscriptionScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("SubscriptionTimeout"));
 	}
 
 	/**
@@ -77,8 +78,11 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		if (subscription == null) {
 			return;
 		}
-		this.cancelSubscriptionTimeout(subscription);
-		super.remove(subscription.getId());
+		synchronized (subscription) {
+			// sync on subscription avoids timer schedule and removing race condition
+			this.cancelSubscriptionTimeout(subscription);
+			super.remove(subscription.getId());
+		}
 		SubscriptionLogger.logDeleteSubscription(subscription.getId());
 	}
 
@@ -89,9 +93,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the key
 	 */
 	public void removeSubscription(String key) {
-		if (key == null) {
-			return;
-		}
 		Subscription subscription = this.getSubscription(key);
 		this.removeSubscription(subscription);
 	}
@@ -226,9 +227,16 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * @param key
 	 *            the key
 	 */
-	public synchronized void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
-		this.cancelSubscriptionTimeout(subscription);
-		this.scheduleSubscriptionTimeout(subscription, newTimeoutMillis);
+	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
+		synchronized (subscription) {
+			// sync on subscription avoids removing race condition
+			if (this.containsKey(subscription.getId()) == false) {
+				// subscription got deleted in meantime - don't schedule timer again
+				return;
+			}
+			this.cancelSubscriptionTimeout(subscription);
+			this.scheduleSubscriptionTimeout(subscription, newTimeoutMillis);
+		}
 	}
 
 	/**
@@ -236,12 +244,12 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 * broken.
 	 */
 	private class SubscriptionTimeout implements ITimeout {
-	
+
 		/** The session. */
 		private Subscription subscription;
-	
+
 		/** The callback, callback to send abort subscription. */
-	
+
 		/**
 		 * Instantiates a new subscription timer run.
 		 * 
@@ -251,7 +259,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		public SubscriptionTimeout(Subscription subscription) {
 			this.subscription = subscription;
 		}
-	
+
 		/**
 		 * Timeout. Subscription timeout run out.
 		 */
@@ -268,7 +276,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			server.abortSession(subscription, "subscription timed out in registry");
 			SubscriptionLogger.logTimeoutSubscription(subscription);
 		}
-	
+
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {

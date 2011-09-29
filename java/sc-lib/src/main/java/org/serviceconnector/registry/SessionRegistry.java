@@ -28,6 +28,7 @@ import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.IServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
@@ -50,7 +51,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * Instantiates a SessionRegistry.
 	 */
 	public SessionRegistry() {
-		this.sessionScheduler = new ScheduledThreadPoolExecutor(1);
+		this.sessionScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("SessionTimeout"));
 	}
 
 	/**
@@ -74,7 +75,17 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void removeSession(Session session) {
-		this.removeSession(session.getId());
+		if (session == null) {
+			return;
+		}
+		synchronized (session) {
+			// sync on session avoids timer schedule and removing race condition
+			this.cancelSessionTimeout(session);
+			// clears message in cache if in loading state
+			AppContext.getCacheManager().clearLoading(session.getId());
+			super.remove(session.getId());
+		}
+		SessionLogger.logDeleteSession(session.getId());
 	}
 
 	/**
@@ -84,15 +95,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the key
 	 */
 	public void removeSession(String key) {
-		Session session = super.get(key);
-		if (session == null) {
-			return;
-		}
-		// clears message in cache if in loading state
-		AppContext.getCacheManager().clearLoading(session.getId());
-		this.cancelSessionTimeout(session);
-		super.remove(key);
-		SessionLogger.logDeleteSession(session.getId());
+		this.removeSession(this.getSession(key));
 	}
 
 	/**
@@ -188,16 +191,23 @@ public class SessionRegistry extends Registry<String, Session> {
 	}
 
 	/**
-	 * Reset session timeout. Careful in use - take care of synchronization when parallel request possible.
+	 * Reset session timeout.
 	 * 
 	 * @param session
 	 *            the session
 	 * @param newTimeoutMillis
 	 *            the new timeout in milliseconds
 	 */
-	public synchronized void resetSessionTimeout(Session session, double newTimeoutMillis) {
-		this.cancelSessionTimeout(session);
-		this.scheduleSessionTimeout(session, newTimeoutMillis);
+	public void resetSessionTimeout(Session session, double newTimeoutMillis) {
+		synchronized (session) {
+			// sync on session avoids removing race condition
+			if (this.containsKey(session.getId()) == false) {
+				// session got deleted in meantime - don't schedule timer again
+				return;
+			}
+			this.cancelSessionTimeout(session);
+			this.scheduleSessionTimeout(session, newTimeoutMillis);
+		}
 	}
 
 	/**

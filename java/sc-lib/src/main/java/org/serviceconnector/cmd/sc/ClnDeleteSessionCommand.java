@@ -85,8 +85,11 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 		// lookup session and checks properness
 		Session session = this.getSessionById(sessionId);
-		// delete entry from session registry
-		this.sessionRegistry.removeSession(session);
+		synchronized (session) {
+			session.setPendingRequest(true); // IMPORTANT - set true because of parallel echo call
+			// delete entry from session registry
+			this.sessionRegistry.removeSession(session);
+		}
 
 		IServer abstractServer = session.getServer();
 
