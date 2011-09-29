@@ -169,7 +169,7 @@ public class SCCacheManager {
 					int reqPartNrInt = Integer.parseInt(reqPartNr);
 					if (reqPartNrInt != nextPartNrToLoad) {
 						// requested partNr does not match current loading state - remove message from cache
-						LOGGER.error("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
+						LOGGER.warn("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
 								+ nextPartNrToLoad + ").");
 						this.removeMetaAndDataEntries(sessionId, reqCacheKey, "Requested partNr=" + reqPartNr
 								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
@@ -191,7 +191,7 @@ public class SCCacheManager {
 		} else {
 			if (reqMessage.isPollRequest()) {
 				// poll large response and no meta entry: Cache got destroyed in meantime, stop operation!
-				LOGGER.error("Poll large response with cacheId=" + cacheId
+				LOGGER.warn("Poll large response with cacheId=" + cacheId
 						+ " but no meta entry: Has to be after clearing cache, stop operation!");
 				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 						"Poll large response with cacheId=" + cacheId
