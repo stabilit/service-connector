@@ -169,11 +169,11 @@ public class SCCacheManager {
 					int reqPartNrInt = Integer.parseInt(reqPartNr);
 					if (reqPartNrInt != nextPartNrToLoad) {
 						// requested partNr does not match current loading state - remove message from cache
-						LOGGER.error("Requested partNr does not match current loading state (numberOfParts).");
-						this.removeMetaAndDataEntries(sessionId, reqCacheKey,
-								"Requested partNr does not match current loading state (numberOfParts).");
-						// TODO JOT remove this exception throw ASAP Member of SIX have newer version than SC V1.3-019
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+						LOGGER.error("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
+								+ nextPartNrToLoad + ").");
+						this.removeMetaAndDataEntries(sessionId, reqCacheKey, "Requested partNr=" + reqPartNr
+								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId=" + cacheId);
 						scmpCommandException.setMessageType(reqMessage.getMessageType());
 						throw scmpCommandException;
@@ -190,7 +190,17 @@ public class SCCacheManager {
 			}
 		} else {
 			if (reqMessage.isPollRequest()) {
-				// request for large message, but no meta entry in cache, ignore!
+				// poll large response and no meta entry: Cache got destroyed in meantime, stop operation!
+				LOGGER.error("Poll large response with cacheId=" + cacheId
+						+ " but no meta entry: Has to be after clearing cache, stop operation!");
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
+						"Poll large response with cacheId=" + cacheId
+								+ " but no meta entry: Has to be after clearing cache, stop operation!");
+				scmpCommandException.setMessageType(reqMessage.getMessageType());
+				throw scmpCommandException;
+			}
+			if (reqMessage.isPart()) {
+				// large request and no meta entry in cache yet, ignore!
 				return null;
 			}
 			// start loading message to cache
