@@ -135,6 +135,12 @@ public class SCCacheManager {
 		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
 
 		if (metaEntry != null) {
+
+			if (reqMessage.isPart() && reqMessage.isPollRequest() == false) {
+				// part but no poll - large request and meta entry in cache, ignore now!
+				return null;
+			}
+
 			String reqPartNr = reqMessage.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 			if (reqPartNr == null) {
 				// set default partNr = 1 when it is missing in the request
@@ -199,10 +205,6 @@ public class SCCacheManager {
 								+ " but no meta entry: Has to be after clearing cache, stop operation!");
 				scmpCommandException.setMessageType(reqMessage.getMessageType());
 				throw scmpCommandException;
-			}
-			if (reqMessage.isPart()) {
-				// large request and no meta entry in cache yet, ignore!
-				return null;
 			}
 			// start loading message to cache
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
