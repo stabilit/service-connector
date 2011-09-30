@@ -103,18 +103,18 @@
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">          
-            <th class="sc_table">Host</th>
-            <th class="sc_table">Port</th>
+            <th class="sc_table">Host:Port</th>
             <th class="sc_table">Server Key</th>
             <th class="sc_table">Service Name</th>
+            <th class="sc_table">Session Count</th>
             <th class="sc_table">Max Sessions</th>
             <th class="sc_table">Max Connections</th>
           </tr>
           <tr>
-            <td class="sc_table"><xsl:value-of select="$server/host"/></td>
-            <td class="sc_table"><xsl:value-of select="$server/portNr"/></td>
+            <td class="sc_table"><xsl:value-of select="$server/host"/>:<xsl:value-of select="$server/portNr"/></td>
             <td class="sc_table"><xsl:value-of select="$server/serverKey"/></td>
             <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$server/serviceName"/></xsl:call-template></td>
+            <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$server/sessionCount"/></xsl:call-template></td>
             <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$server/maxSessions"/></xsl:call-template></td>
             <td class="sc_table"><xsl:value-of select="$server/maxConnections"/></td>                        
           </tr>          
