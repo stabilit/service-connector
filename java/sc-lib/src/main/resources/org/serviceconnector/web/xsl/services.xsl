@@ -135,17 +135,26 @@
 	          <tr class="sc_table_header">
 	            <th class="sc_table">Host:Port</th>
 	            <th class="sc_table">
-	            	<xsl:if test="server/sessions/session">Session Count</xsl:if>
-	            	<xsl:if test="server/sessions/subscription">Subscription Count</xsl:if>
+		            <xsl:choose>
+		       			<xsl:when test="server/sessions/session">Session Count</xsl:when>
+		       			<xsl:when test="server/sessions/subscription">Subscription Count</xsl:when>
+		        		<xsl:otherwise>Session/Subscription Count</xsl:otherwise>
+		      		</xsl:choose>
 	            </th>
 	            <th class="sc_table">
-	            	<xsl:if test="server/sessions/session">Max Sessions</xsl:if>
-	            	<xsl:if test="server/sessions/subscription">Max Subscriptions</xsl:if>
+	            	 <xsl:choose>
+		       			<xsl:when test="server/sessions/session">Max Sessions</xsl:when>
+		       			<xsl:when test="server/sessions/subscription">Max Subscriptions</xsl:when>
+		        		<xsl:otherwise>Max Sessions/Subscriptions</xsl:otherwise>
+		      		</xsl:choose>
 	           </th>         
 	            <th class="sc_table">Max Connections</th>            
 	            <th class="sc_table">
-	               <xsl:if test="server/sessions/session">Sessions</xsl:if>
-	               <xsl:if test="server/sessions/subscription">Subscriptions</xsl:if>
+	            	<xsl:choose>
+		       			<xsl:when test="server/sessions/session">Sessions</xsl:when>
+		       			<xsl:when test="server/sessions/subscription">Subscriptions</xsl:when>
+		        		<xsl:otherwise>Sessions/Subscriptions</xsl:otherwise>
+		      		</xsl:choose>
 	            </th>            
 	          </tr>          
 	          <xsl:apply-templates select="server"/>
