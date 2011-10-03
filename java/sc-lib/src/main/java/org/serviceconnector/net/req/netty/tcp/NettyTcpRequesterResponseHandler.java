@@ -92,7 +92,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
 						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
 					} catch (Throwable th1) {
-						LOGGER.error("receive exception", th);
+						LOGGER.error("receive exception", th1);
 					}
 				}
 			}
