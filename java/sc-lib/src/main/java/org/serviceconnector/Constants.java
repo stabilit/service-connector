@@ -231,6 +231,8 @@ public final class Constants {
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
 	/** The Constant ROOT_MAX_IO_THREADS. */
 	public static final String ROOT_MAX_IO_THREADS = "root.maxIOThreads";
+	/** The Constant ROOT_TCP_KEEPALIVE. */
+	public static final String ROOT_TCP_KEEPALIVE = "root.tcpKeepAlive";
 	/** The Constant ROOT_CONNECTION_TIMEOUT_MILLIS. */
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
 	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_MILLIS. */

@@ -176,7 +176,7 @@ public class BasicConfiguration {
 		LOGGER.info("connectionTimeoutMillis=" + this.connectionTimeoutMillis);
 
 		// TCPKeepAlive
-		Boolean localTCPKeepAlive = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
+		Boolean localTCPKeepAlive = compositeConfiguration.getBoolean(Constants.ROOT_TCP_KEEPALIVE, null);
 		if (localTCPKeepAlive != null && this.tcpKeepAlive != localTCPKeepAlive) {
 			this.tcpKeepAlive = localTCPKeepAlive;
 		}
