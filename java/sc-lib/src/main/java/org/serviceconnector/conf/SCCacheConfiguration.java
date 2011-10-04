@@ -81,7 +81,7 @@ public class SCCacheConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.CACHE_DISK_PATH
 					+ " is missing");
 		}
-		if (sDiskPath != null && sDiskPath != this.diskPath) {
+		if (sDiskPath != null && sDiskPath.equals(this.diskPath) == false) {
 			this.diskPath = sDiskPath;
 		}
 		LOGGER.info(Constants.CACHE_DISK_PATH + "=" + this.diskPath);

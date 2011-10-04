@@ -150,7 +150,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 			try {
 				response.write();
 			} catch (Exception e) {
-				LOGGER.error("Sending a response failed.", ex);
+				LOGGER.error("Sending a response failed.", e);
 			}
 		} catch (Exception e2) {
 			LOGGER.error("run ", e2);
@@ -190,7 +190,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 				return null;
 			}
 			// first part of a large request received - create large request
-			largeRequest = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
+			largeRequest = new SCMPCompositeReceiver(scmpReq, scmpReq);
 			int oti = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			// add largeResponse to the registry
 			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeRequest(sessionId, largeRequest, oti);

@@ -353,8 +353,7 @@ public class SCSessionServer {
 		SCServerTimeout serverTimeout = new SCServerTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(serverTimeout);
 		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
-				(int) (this.scServer.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR),
-				TimeUnit.MILLISECONDS);
+				(this.scServer.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}
 
 	/**

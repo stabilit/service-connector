@@ -53,7 +53,7 @@ public abstract class Server implements IServer {
 	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 	/** The server timeout milliseconds. */
-	private double serverTimeoutMillis;
+	protected double serverTimeoutMillis;
 	/** The server timeout. */
 	private ScheduledFuture<TimeoutWrapper> timeout;
 	/** The timeouter task. */
@@ -73,16 +73,8 @@ public abstract class Server implements IServer {
 		this.serverKey = "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		this.socketAddress = socketAddress;
 		this.destroyed = false;
-
-		// timeout observation only for stateful server necessary!
-		if (this instanceof StatefulServer) {
-			// calculate server timeout: multiply check registration interval with checkRegistrationIntervalMultiplier!
-			this.serverTimeoutMillis = (remoteNodeConfiguration.getCheckRegistrationIntervalSeconds()
-					* Constants.SEC_TO_MILLISEC_FACTOR * AppContext.getBasicConfiguration()
-					.getCheckRegistrationIntervalMultiplier());
-		} else {
-			this.serverTimeoutMillis = 0;
-		}
+		// timeout observation not necessary for server except stateful servers!
+		this.serverTimeoutMillis = 0;
 	}
 
 	/**

@@ -37,7 +37,11 @@ public class BasicConfiguration {
 	private String pidPath = null;
 	/** The dump file path. */
 	private String dumpPath = null;
-
+	/**
+	 * The TCP keep alive. True enables sending TCP keep alive. False disables sending. Null means the setting of underlying OS
+	 * takes place.
+	 */
+	private Boolean tcpKeepAlive = null;
 	/**
 	 * defines the maximum of I/O threads are going to be acquired to handle incoming/outgoing messages.
 	 */
@@ -105,7 +109,7 @@ public class BasicConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_PID_PATH
 					+ " is missing");
 		}
-		if (this.pidPath != localPidPath) {
+		if (localPidPath != null && localPidPath.equals(this.pidPath) == false) {
 			File configFile = new File(localPidPath);
 			if (configFile.exists() == true && configFile.isDirectory() == false) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
@@ -121,7 +125,7 @@ public class BasicConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_DUMP_PATH
 					+ " is missing");
 		}
-		if (this.dumpPath != localdumpPath) {
+		if (localdumpPath.equals(this.dumpPath) == false) {
 			File dumpFile = new File(localdumpPath);
 			if (dumpFile.exists() == true && dumpFile.isDirectory() == false) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
@@ -170,6 +174,13 @@ public class BasicConfiguration {
 			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
 		}
 		LOGGER.info("connectionTimeoutMillis=" + this.connectionTimeoutMillis);
+
+		// TCPKeepAlive
+		Boolean localTCPKeepAlive = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
+		if (localTCPKeepAlive != null && this.tcpKeepAlive != localTCPKeepAlive) {
+			this.tcpKeepAlive = localTCPKeepAlive;
+		}
+		LOGGER.info("tcpKeepAlive=" + this.tcpKeepAlive);
 
 		// subscriptionTimeout
 		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
@@ -310,6 +321,25 @@ public class BasicConfiguration {
 	}
 
 	/**
+	 * Gets the tcp keep alive.
+	 * 
+	 * @return the tcp keep alive
+	 */
+	public Boolean getTcpKeepAlive() {
+		return tcpKeepAlive;
+	}
+
+	/**
+	 * Sets the TCP keep alive. SC Client API is allowed to set this property.
+	 * 
+	 * @param tcpKeepAlive
+	 *            the new TCP keep alive
+	 */
+	public void setTCPKeepAlive(boolean tcpKeepAlive) {
+		this.tcpKeepAlive = tcpKeepAlive;
+	}
+
+	/**
 	 * Dump the basic configuration into the xml writer.
 	 * 
 	 * @param writer
@@ -332,5 +362,4 @@ public class BasicConfiguration {
 		writer.writeElement("subscriptionTimeoutMillis", this.subscriptionTimeoutMillis);
 		writer.writeEndElement(); // end of configuration
 	}
-
 }

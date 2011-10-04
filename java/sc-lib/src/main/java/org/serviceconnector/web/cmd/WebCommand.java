@@ -45,7 +45,8 @@ import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.xml.IXMLLoader;
 
 /**
- * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based model and the view is built using
+ * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based model
+ * and the view is built using
  * xsl transformation.
  * 
  * @author JTraber
@@ -538,8 +539,8 @@ public class WebCommand {
 	}
 
 	public WebSession login(IWebRequest request, IWebResponse response) throws Exception {
-		String userid = (String) request.getParameter("userid");
-		String password = (String) request.getParameter("password");
+		String userid = request.getParameter("userid");
+		String password = request.getParameter("password");
 		String contextUserid = WebContext.getWebSCContextCredentials().getUserId();
 		String contextPassword = WebContext.getWebSCContextCredentials().getPassword();
 		if (contextUserid == null || contextPassword == null) {

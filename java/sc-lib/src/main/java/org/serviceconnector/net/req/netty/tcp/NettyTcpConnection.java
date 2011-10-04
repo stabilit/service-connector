@@ -65,6 +65,10 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
 		this.bootstrap.setOption("tcpNoDelay", true);
+		if (baseConf.getTcpKeepAlive() != null) {
+			// TCP keep alive is configured - set it!
+			this.bootstrap.setOption("keepAlive", baseConf.getTcpKeepAlive());
+		}
 		// Start the connection attempt.
 		this.remotSocketAddress = new InetSocketAddress(host, port);
 		ChannelFuture future = bootstrap.connect(this.remotSocketAddress);

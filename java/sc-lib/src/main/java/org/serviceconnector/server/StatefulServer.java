@@ -93,6 +93,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
 				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
 				0, 0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
+		// calculate server timeout: multiply check registration interval with checkRegistrationIntervalMultiplier!
+		this.serverTimeoutMillis = (remoteNodeConfiguration.getCheckRegistrationIntervalSeconds()
+				* Constants.SEC_TO_MILLISEC_FACTOR * AppContext.getBasicConfiguration().getCheckRegistrationIntervalMultiplier());
 	}
 
 	/**
@@ -144,7 +147,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	public List<AbstractSession> getSessions() {
 		return this.sessions;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public int getSessionCount() {
@@ -541,7 +544,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
 		} catch (SCMPCommandException scmpCommandException) {
-			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec");
+			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec", scmpCommandException);
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 
 			// RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
@@ -551,7 +554,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.serverAbortSessionWithExtraRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
 				sasRequester.destroy();
-				LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
+				LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec over special connection", e);
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
@@ -627,9 +630,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 							this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext
 									.getBasicConfiguration().getSrvAbortOTIMillis());
 						} catch (ConnectionPoolBusyException e) {
-							LOGGER.warn("aborting subscription failed because of busy connection pool");
+							LOGGER.warn("aborting subscription failed because of busy connection pool", e);
 						} catch (Exception e) {
-							LOGGER.warn("aborting subscription failed");
+							LOGGER.warn("aborting subscription failed", e);
 						}
 					}
 					subscription.getCscSubscriptionIds().clear();
@@ -640,9 +643,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
-					LOGGER.warn("aborting subscription failed because of busy connection pool");
+					LOGGER.warn("aborting subscription failed because of busy connection pool", e);
 				} catch (Exception e) {
-					LOGGER.warn("aborting subscription failed");
+					LOGGER.warn("aborting subscription failed", e);
 				}
 			} else {
 				SessionLogger.logAbortSession((Session) session, reason);
@@ -650,9 +653,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
-					LOGGER.warn("aborting session failed because of busy connection pool");
+					LOGGER.warn("aborting session failed because of busy connection pool", e);
 				} catch (Exception e) {
-					LOGGER.warn("aborting session failed");
+					LOGGER.warn("aborting session failed", e);
 				}
 			}
 		}

@@ -29,8 +29,6 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import net.sf.ehcache.CacheException;
-
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.ISCCache;
 import org.serviceconnector.cache.SCCacheMetaEntry;
@@ -196,7 +194,6 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 				cacheKeys = new ArrayList<String>();
 			}
 			List<String> sim = new ArrayList<String>();
-			;
 			System.arraycopy(cacheKeys, 0, sim, 0, cacheKeys.size());
 			for (int i = cacheKeys.size(); i < simulation + cacheKeys.size(); i++) {
 				sim.add("sim " + i);
@@ -215,26 +212,22 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 		for (int i = startIndex; i < endIndex; i++) {
 			String key = cacheKeys.get(i);
-			try {
-
-				if (cache.getCacheName().equals(SC_CACHE_TYPE.META_DATA_CACHE.name())) {
-					SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) cache.get(key);
-					if (metaEntry == null && simulation > 0) {
-						metaEntry = new SCCacheMetaEntry("");
-					}
-					if (metaEntry != null) {
-						writeCacheMetaEntry(writer, cache, key, metaEntry, request);
-					}
-				} else {
-					SCMPMessage cachedMessage = (SCMPMessage) cache.get(key);
-					if (cachedMessage == null && simulation > 0) {
-						cachedMessage = new SCMPMessage("");
-					}
-					if (cachedMessage != null) {
-						writeCacheMessage(writer, cache, key, cachedMessage, request);
-					}
+			if (cache.getCacheName().equals(SC_CACHE_TYPE.META_DATA_CACHE.name())) {
+				SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) cache.get(key);
+				if (metaEntry == null && simulation > 0) {
+					metaEntry = new SCCacheMetaEntry("");
 				}
-			} catch (CacheException e) {
+				if (metaEntry != null) {
+					writeCacheMetaEntry(writer, cache, key, metaEntry, request);
+				}
+			} else {
+				SCMPMessage cachedMessage = (SCMPMessage) cache.get(key);
+				if (cachedMessage == null && simulation > 0) {
+					cachedMessage = new SCMPMessage("");
+				}
+				if (cachedMessage != null) {
+					writeCacheMessage(writer, cache, key, cachedMessage, request);
+				}
 			}
 		}
 		writer.writeEndElement(); // end of details

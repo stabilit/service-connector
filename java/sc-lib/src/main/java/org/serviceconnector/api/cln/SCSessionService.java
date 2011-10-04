@@ -491,7 +491,7 @@ public class SCSessionService extends SCService {
 		SCSessionTimeout sessTimeout = new SCSessionTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessTimeout);
 		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
-				(int) (echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
+				(echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}
 
 	/**
