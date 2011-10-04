@@ -758,8 +758,13 @@ public class SCClient {
 	 * 
 	 * @param tcpKeepAlive
 	 *            the new TCP keep alive
+	 * @throws SCServiceException
+	 *             called method after attach
 	 */
-	public void setTCPKeepAlive(boolean tcpKeepAlive) {
+	public void setTCPKeepAlive(boolean tcpKeepAlive) throws SCServiceException {
+		if (this.attached) {
+			throw new SCServiceException("Can not set property, client is already attached.");
+		}
 		// sets the TCP keep alive in basic configuration
 		AppContext.getBasicConfiguration().setTCPKeepAlive(tcpKeepAlive);
 	}
