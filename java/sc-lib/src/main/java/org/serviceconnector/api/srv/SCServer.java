@@ -265,6 +265,37 @@ public class SCServer {
 	public int getKeepAliveTimeoutSeconds() {
 		return this.keepAliveTimeoutSeconds;
 	}
+	
+
+	/**
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive. False to disable sending. If the method is not called the
+	 * default value from underlying OS is taken.
+	 * 
+	 * @param tcpKeepAlive
+	 *            the new TCP keep alive
+	 * @throws SCServiceException
+	 *             called method after attach
+	 */
+	public void setTCPKeepAlive(boolean tcpKeepAlive) throws SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
+		// sets the TCP keep alive in basic configuration
+		AppContext.getBasicConfiguration().setTCPKeepAlive(tcpKeepAlive);
+	}
+
+	/**
+	 * Gets the TCP keep alive.
+	 * 
+	 * @return the TCP keep alive
+	 *         TRUE - TCP keep alive is enabled
+	 *         FALSE - TCP keep alive is disabled
+	 *         NULL - not specified, underlying OS setting takes place
+	 */
+	public Boolean getTCPKeepAlive() {
+		// returns TCP keep alive from basic configuration
+		return AppContext.getBasicConfiguration().getTcpKeepAlive();
+	}
 
 	/**
 	 * Sets the check registration timeout in seconds. Time in seconds a check registration request waits to be confirmed. If no
