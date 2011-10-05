@@ -73,7 +73,7 @@ public class SCMPClnCreateSessionTest extends SCMPClnCreateSessionCasc1Test {
 		createSessionCall.setEchoIntervalSeconds(0);
 		createSessionCall.getRequest().setServiceName("session-1");
 		TestCallback cbk = new TestCallback();
-		createSessionCall.invoke(cbk, 1000);
+		createSessionCall.invoke(cbk, 3000);
 		SCMPMessage fault = cbk.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
 		TestUtil.verifyError(fault, SCMPError.HV_WRONG_ECHO_INTERVAL, SCMPMsgType.CLN_CREATE_SESSION);
