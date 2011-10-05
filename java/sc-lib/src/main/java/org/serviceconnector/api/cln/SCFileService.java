@@ -296,7 +296,7 @@ public class SCFileService extends SCService {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				// only logging the failure no further action
-				LOGGER.warn("deleting file session on SC failed sid=" + sessionId, e);
+				LOGGER.warn("deleting file session on SC failed sid=" + sessionId + " " + e.toString());
 				return;
 			}
 			// 3. receiving reply and error handling

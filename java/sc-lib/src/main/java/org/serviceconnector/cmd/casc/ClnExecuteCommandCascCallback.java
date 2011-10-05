@@ -74,7 +74,7 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	@Override
 	public void receive(Exception ex) {
 		String sid = this.requestMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling

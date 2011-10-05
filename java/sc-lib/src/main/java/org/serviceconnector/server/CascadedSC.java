@@ -257,7 +257,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 		} catch (InterruptedException ex) {
 			// thread interrupted during acquire a permit on semaphore
 			callback.receive(ex);
-			LOGGER.warn("thread interrupted during acquire a permit on semaphore service=" + cascClient.getServiceName(), ex);
+			LOGGER.warn("thread interrupted during acquire a permit on semaphore service=" + cascClient.getServiceName() + " "
+					+ ex.toString());
 			return false;
 		}
 		if (permit == false) {
@@ -490,7 +491,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			SCMPCscUnsubscribeCall unsubscribeCall = new SCMPCscUnsubscribeCall(this.requester, message);
 			unsubscribeCall.invoke(new CommandCallback(false), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 		} catch (Exception e) {
-			LOGGER.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName(), e);
+			LOGGER.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName() + " " + e.toString());
 		}
 	}
 

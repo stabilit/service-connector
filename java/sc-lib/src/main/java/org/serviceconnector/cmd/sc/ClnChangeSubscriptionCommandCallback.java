@@ -103,7 +103,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	@Override
 	public void receive(Exception ex) {
 		String sid = subscription.getId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

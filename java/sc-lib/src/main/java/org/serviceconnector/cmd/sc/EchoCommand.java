@@ -106,7 +106,7 @@ public class EchoCommand extends CommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 		} catch (HasFaultResponseException ex) {
-			LOGGER.warn("validation error", ex);
+			LOGGER.warn("validation error " + ex.toString());
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;

@@ -93,7 +93,7 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 		try {
 			this.commandCallback.receive(reply);
 		} catch (Exception e) {
-			LOGGER.warn("receive rejected or fault reply failed", e);
+			LOGGER.warn("receive rejected or fault reply failed " + e.toString());
 		}
 	}
 

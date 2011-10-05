@@ -80,7 +80,7 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		// free server from session
 		server.removeSession(session);
 		SCMPMessage fault = null;

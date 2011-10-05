@@ -645,7 +645,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
-						LOGGER.warn("upload current log files, connect to network interface " + host + " failed", e);
+						LOGGER.warn("upload current log files, connect to network interface " + host + " failed. " + e.toString());
 					}
 				}
 			}
@@ -663,7 +663,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						return localClient;
 					} catch (Exception e) {
 						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port
-								+ " failed", e);
+								+ " failed. " + e.toString());
 					}
 				}
 			}
@@ -680,7 +680,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				localClient.attach();
 				return localClient;
 			} catch (Exception e) {
-				LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed", e);
+				LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed. "
+						+ e.toString());
 			}
 		}
 		return null;

@@ -105,7 +105,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn("receive exception sid=" + this.sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling

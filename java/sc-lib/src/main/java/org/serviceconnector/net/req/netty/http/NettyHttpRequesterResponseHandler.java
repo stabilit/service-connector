@@ -139,7 +139,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			Exception ex = (Exception) th;
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
-				LOGGER.warn("connection exception in pending request state, stop operation.", ex);
+				LOGGER.warn("connection exception in pending request state, stop operation. " + ex.toString());
 				try {
 					NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
 				} catch (Throwable throwable) {

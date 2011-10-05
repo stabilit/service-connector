@@ -115,7 +115,7 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		server.removeSession(session);
 		SCMPMessage fault = null;
 		String serviceName = reqMessage.getServiceName();

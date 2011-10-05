@@ -80,7 +80,7 @@ public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallbac
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		String serviceName = reqMessage.getServiceName();
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {

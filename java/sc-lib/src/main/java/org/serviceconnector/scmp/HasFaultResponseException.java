@@ -115,7 +115,7 @@ public abstract class HasFaultResponseException extends Exception {
 			fault.setHeader(message, SCMPHeaderAttributeKey.SERVICE_NAME);
 			fault.setHeader(message, SCMPHeaderAttributeKey.SESSION_ID);
 		} catch (Exception e) {
-			LOGGER.warn("not possible to set service name in EXC of execute command.", e);
+			LOGGER.warn("not possible to set service name in EXC of execute command. " + e.toString());
 		}
 	}
 

@@ -544,7 +544,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
 		} catch (SCMPCommandException scmpCommandException) {
-			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec", scmpCommandException);
+			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec " + scmpCommandException.toString());
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 
 			// RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
@@ -554,7 +554,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.serverAbortSessionWithExtraRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
 				sasRequester.destroy();
-				LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec over special connection", e);
+				LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec over special connection. " + e.toString());
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
@@ -630,9 +630,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 							this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext
 									.getBasicConfiguration().getSrvAbortOTIMillis());
 						} catch (ConnectionPoolBusyException e) {
-							LOGGER.warn("aborting subscription failed because of busy connection pool", e);
+							LOGGER.warn("aborting subscription failed because of busy connection pool. " + e.toString());
 						} catch (Exception e) {
-							LOGGER.warn("aborting subscription failed", e);
+							LOGGER.warn("aborting subscription failed. " + e.toString());
 						}
 					}
 					subscription.getCscSubscriptionIds().clear();
@@ -643,9 +643,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
-					LOGGER.warn("aborting subscription failed because of busy connection pool", e);
+					LOGGER.warn("aborting subscription failed because of busy connection pool. " + e.toString());
 				} catch (Exception e) {
-					LOGGER.warn("aborting subscription failed", e);
+					LOGGER.warn("aborting subscription failed. " + e.toString());
 				}
 			} else {
 				SessionLogger.logAbortSession((Session) session, reason);
@@ -653,9 +653,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 							.getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
-					LOGGER.warn("aborting session failed because of busy connection pool", e);
+					LOGGER.warn("aborting session failed because of busy connection pool. " + e.toString());
 				} catch (Exception e) {
-					LOGGER.warn("aborting session failed", e);
+					LOGGER.warn("aborting session failed. " + e.toString());
 				}
 			}
 		}

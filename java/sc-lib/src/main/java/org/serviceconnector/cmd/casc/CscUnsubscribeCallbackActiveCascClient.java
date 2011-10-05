@@ -73,7 +73,7 @@ public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallb
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

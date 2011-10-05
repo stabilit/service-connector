@@ -92,7 +92,8 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 		try {
 			this.commandCallback.receive(reply);
 		} catch (Exception e) {
-			LOGGER.warn("receive rejected or fault reply failed, sid=" + this.request.getMessage().getSessionId(), e);
+			LOGGER.warn("receive rejected or fault reply failed, sid=" + this.request.getMessage().getSessionId() + " "
+					+ e.toString());
 		}
 	}
 
@@ -101,7 +102,7 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 	public void receive(Exception ex) {
 		SCMPMessage reqMessage = this.request.getMessage();
 		String sid = reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

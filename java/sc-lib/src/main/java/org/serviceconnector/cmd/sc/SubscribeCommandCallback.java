@@ -130,7 +130,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	@Override
 	public void receive(Exception ex) {
 		String sid = this.reqMessage.getSessionId();
-		LOGGER.warn("receive exception sid=" + sid, ex);
+		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		// creation failed remove from server
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
