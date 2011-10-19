@@ -197,14 +197,9 @@ public class SCCacheManager {
 			}
 		} else {
 			if (reqMessage.isPollRequest()) {
-				// poll large response and no meta entry: Cache got destroyed in meantime, stop operation!
-				LOGGER.warn("Poll large response with cacheId=" + cacheId
-						+ " but no meta entry: Has to be after clearing cache, stop operation!");
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-						"Poll large response with cacheId=" + cacheId
-								+ " but no meta entry: Has to be after clearing cache, stop operation!");
-				scmpCommandException.setMessageType(reqMessage.getMessageType());
-				throw scmpCommandException;
+				// poll large response and no meta entry: Cache got destroyed in meantime or no caching required!
+				LOGGER.trace("Poll large response with cacheId=" + cacheId + " but no meta entry.");
+				return null;
 			}
 			// start loading message to cache
 			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(reqCacheKey);
