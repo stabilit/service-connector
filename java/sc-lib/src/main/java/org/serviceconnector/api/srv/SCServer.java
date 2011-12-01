@@ -265,36 +265,63 @@ public class SCServer {
 	public int getKeepAliveTimeoutSeconds() {
 		return this.keepAliveTimeoutSeconds;
 	}
-	
 
 	/**
-	 * Sets the TCP keep alive. True to enable sending of TCP keep alive. False to disable sending. If the method is not called the
-	 * default value from underlying OS is taken.
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on initiated connections (if underlying OS properly
+	 * configures keep alive). False to disable sending.
 	 * 
-	 * @param tcpKeepAlive
+	 * @param tcpKeepAliveInitiator
 	 *            the new TCP keep alive
 	 * @throws SCServiceException
 	 *             called method after attach
 	 */
-	public void setTCPKeepAlive(boolean tcpKeepAlive) throws SCServiceException {
+	public void setTCPKeepAliveInitiator(boolean tcpKeepAliveInitiator) throws SCServiceException {
 		if (this.listening == true) {
 			throw new SCServiceException("Listener is already started not allowed to set property.");
 		}
-		// sets the TCP keep alive in basic configuration
-		AppContext.getBasicConfiguration().setTCPKeepAlive(tcpKeepAlive);
+		// sets the TCP keep alive for initiating connections in basic configuration
+		AppContext.getBasicConfiguration().setTcpKeepAliveInitiator(tcpKeepAliveInitiator);
 	}
 
 	/**
-	 * Gets the TCP keep alive.
+	 * Gets the TCP keep alive setting for initiated connections.
 	 * 
 	 * @return the TCP keep alive
 	 *         TRUE - TCP keep alive is enabled
 	 *         FALSE - TCP keep alive is disabled
-	 *         NULL - not specified, underlying OS setting takes place
 	 */
-	public Boolean getTCPKeepAlive() {
-		// returns TCP keep alive from basic configuration
-		return AppContext.getBasicConfiguration().getTcpKeepAlive();
+	public Boolean getTCPKeepAliveInitiator() {
+		// returns TCP keep alive for initiating connections from basic configuration
+		return AppContext.getBasicConfiguration().getTcpKeepAliveInitiator();
+	}
+
+	/**
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on incoming connections (if underlying OS properly
+	 * configures keep alive). False to disable sending.
+	 * 
+	 * @param tcpKeepAliveListener
+	 *            the new TCP keep alive
+	 * @throws SCServiceException
+	 *             called method after attach
+	 */
+	public void setTCPKeepAliveListener(boolean tcpKeepAliveListener) throws SCServiceException {
+		if (this.listening == true) {
+			throw new SCServiceException("Listener is already started not allowed to set property.");
+		}
+		// sets the TCP keep alive for incoming connections in basic configuration
+		AppContext.getBasicConfiguration().setTcpKeepAliveListener(tcpKeepAliveListener);
+	}
+
+	/**
+	 * Gets the TCP keep alive setting for incoming connections.
+	 * 
+	 * @return the TCP keep alive
+	 *         TRUE - TCP keep alive is enabled
+	 *         FALSE - TCP keep alive is disabled
+	 */
+	public Boolean getTCPKeepAliveListener() {
+		// returns TCP keep alive for initiating connections from basic configuration
+		return AppContext.getBasicConfiguration().getTcpKeepAliveInitiator();
 	}
 
 	/**

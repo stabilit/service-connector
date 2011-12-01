@@ -75,9 +75,9 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		this.bootstrap = new ClientBootstrap(channelFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
 		this.bootstrap.setOption("tcpNoDelay", true);
-		if (baseConf.getTcpKeepAlive() != null) {
+		if (baseConf.getTcpKeepAliveInitiator() != null) {
 			// TCP keep alive is configured - set it!
-			this.bootstrap.setOption("keepAlive", baseConf.getTcpKeepAlive());
+			this.bootstrap.setOption("keepAlive", baseConf.getTcpKeepAliveInitiator());
 		}
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyConnectionAdpater.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);

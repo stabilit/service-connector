@@ -82,6 +82,10 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	public void create() {
 		this.bootstrap = new ServerBootstrap(this.endpointChannelFactory);
 		this.bootstrap.setOption("child.tcpNoDelay", true);
+		if (baseConf.getTcpKeepAliveListener() != null) {
+			// TCP keep alive for incoming connections is configured - set it!
+			this.bootstrap.setOption("child.keepAlive", baseConf.getTcpKeepAliveListener());
+		}
 	}
 
 	/** {@inheritDoc} */

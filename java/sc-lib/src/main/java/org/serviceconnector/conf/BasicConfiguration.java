@@ -38,10 +38,15 @@ public class BasicConfiguration {
 	/** The dump file path. */
 	private String dumpPath = null;
 	/**
-	 * The TCP keep alive. True enables sending TCP keep alive. False disables sending. Null means the setting of underlying OS
-	 * takes place.
+	 * The TCP keep alive initiator. True enables sending TCP keep alive (if underlying OS properly configures KA) on initiated
+	 * connections. False disables sending.
 	 */
-	private Boolean tcpKeepAlive = null;
+	private Boolean tcpKeepAliveInitiator = null;
+	/**
+	 * The TCP keep alive listener. True enables sending TCP keep alive (if underlying OS properly configures KA) on incoming
+	 * connections. False disables sending.
+	 */
+	private Boolean tcpKeepAliveListener = null;
 	/**
 	 * defines the maximum of I/O threads are going to be acquired to handle incoming/outgoing messages.
 	 */
@@ -175,12 +180,19 @@ public class BasicConfiguration {
 		}
 		LOGGER.info("connectionTimeoutMillis=" + this.connectionTimeoutMillis);
 
-		// TCPKeepAlive
-		Boolean localTCPKeepAlive = compositeConfiguration.getBoolean(Constants.ROOT_TCP_KEEPALIVE, null);
-		if (localTCPKeepAlive != null && this.tcpKeepAlive != localTCPKeepAlive) {
-			this.tcpKeepAlive = localTCPKeepAlive;
+		// tcpKeepAliveInitiator
+		Boolean localTCPKeepAliveInitiator = compositeConfiguration.getBoolean(Constants.ROOT_TCP_KEEPALIVE_INITIATOR, null);
+		if (localTCPKeepAliveInitiator != null && this.tcpKeepAliveInitiator != localTCPKeepAliveInitiator) {
+			this.tcpKeepAliveInitiator = localTCPKeepAliveInitiator;
 		}
-		LOGGER.info("tcpKeepAlive=" + this.tcpKeepAlive);
+		LOGGER.info("tcpKeepAliveInitiator=" + this.tcpKeepAliveInitiator);
+
+		// tcpKeepAliveListener
+		Boolean localTCPKeepAliveListener = compositeConfiguration.getBoolean(Constants.ROOT_TCP_KEEPALIVE_LISTENER, null);
+		if (localTCPKeepAliveListener != null && this.tcpKeepAliveListener != localTCPKeepAliveListener) {
+			this.tcpKeepAliveListener = localTCPKeepAliveListener;
+		}
+		LOGGER.info("tcpKeepAliveListener=" + this.tcpKeepAliveListener);
 
 		// subscriptionTimeout
 		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
@@ -321,22 +333,41 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the tcp keep alive.
+	 * Gets the TCP keep alive listener.
 	 * 
-	 * @return the tcp keep alive
+	 * @return the TCP keep alive listener
 	 */
-	public Boolean getTcpKeepAlive() {
-		return tcpKeepAlive;
+	public Boolean getTcpKeepAliveListener() {
+		return tcpKeepAliveListener;
 	}
 
 	/**
-	 * Sets the TCP keep alive. SC Client API is allowed to set this property.
+	 * Sets the TCP keep alive listener. SC Server API is allowed to set this property.
 	 * 
-	 * @param tcpKeepAlive
-	 *            the new TCP keep alive
+	 * @param tcpKeepAliveListener
+	 *            the new TCP keep alive listener
 	 */
-	public void setTCPKeepAlive(boolean tcpKeepAlive) {
-		this.tcpKeepAlive = tcpKeepAlive;
+	public void setTcpKeepAliveListener(boolean tcpKeepAliveListener) {
+		this.tcpKeepAliveListener = tcpKeepAliveListener;
+	}
+
+	/**
+	 * Gets the tcp keep alive initiator.
+	 * 
+	 * @return the tcp keep alive initiator
+	 */
+	public Boolean getTcpKeepAliveInitiator() {
+		return tcpKeepAliveInitiator;
+	}
+
+	/**
+	 * Sets the TCP keep alive initiator. SC Client/Server API is allowed to set this property.
+	 * 
+	 * @param tcpKeepAliveInitiator
+	 *            the new TCP keep alive initiator
+	 */
+	public void setTcpKeepAliveInitiator(boolean tcpKeepAliveInitiator) {
+		this.tcpKeepAliveInitiator = tcpKeepAliveInitiator;
 	}
 
 	/**

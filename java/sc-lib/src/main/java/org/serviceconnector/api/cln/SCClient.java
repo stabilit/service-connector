@@ -753,8 +753,8 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the TCP keep alive. True to enable sending of TCP keep alive. False to disable sending. If the method is not called the
-	 * default value from underlying OS is taken.
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive (if underlying OS properly configures keep alive). False to
+	 * disable sending.
 	 * 
 	 * @param tcpKeepAlive
 	 *            the new TCP keep alive
@@ -765,8 +765,8 @@ public class SCClient {
 		if (this.attached) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}
-		// sets the TCP keep alive in basic configuration
-		AppContext.getBasicConfiguration().setTCPKeepAlive(tcpKeepAlive);
+		// sets the TCP keep alive for initiating connections in basic configuration
+		AppContext.getBasicConfiguration().setTcpKeepAliveInitiator(tcpKeepAlive);
 	}
 
 	/**
@@ -775,11 +775,10 @@ public class SCClient {
 	 * @return the TCP keep alive
 	 *         TRUE - TCP keep alive is enabled
 	 *         FALSE - TCP keep alive is disabled
-	 *         NULL - not specified, underlying OS setting takes place
 	 */
 	public Boolean getTCPKeepAlive() {
-		// returns TCP keep alive from basic configuration
-		return AppContext.getBasicConfiguration().getTcpKeepAlive();
+		// returns TCP keep alive for initiating connections from basic configuration
+		return AppContext.getBasicConfiguration().getTcpKeepAliveInitiator();
 	}
 
 	/**
