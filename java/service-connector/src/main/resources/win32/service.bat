@@ -22,9 +22,6 @@ set SVCDISP=Service Connector
 set SVCDESC=Service Connector Middleware
 set NOPAUSE=Y
 
-REM Suppress killing service on logoff event
-set JAVA_OPTS=-Xrs
-
 REM Figure out the running mode
 
 if /I "%1" == "install"   goto cmdInstall
@@ -58,6 +55,17 @@ echo Service %SVCDISP% installed
 goto cmdEnd
 
 :cmdUninstall
+if not exist ".r.lock" goto uninst
+del .s.lock 2>&1 | findstr /C:"being used" > nul
+if not errorlevel 1 (
+  echo Could not continue. Locking file already in use.
+  goto cmdEnd
+)
+echo Y > .s.lock
+call ..\stop-sc.bat
+del .s.lock
+ping 127.0.0.1 -n 10 -w 3000 > NUL
+:uninst
 jbosssvc.exe -u %SVCNAME%
 if not errorlevel 0 goto errExplain
 echo Service %SVCDISP% removed
@@ -72,7 +80,7 @@ if not errorlevel 1 (
 )
 echo Y > .r.lock
 echo Starting %SVCDISP%
-java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
+call ..\start-sc.bat < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 
@@ -84,7 +92,7 @@ if not errorlevel 1 (
   goto cmdEnd
 )
 echo Y > .s.lock
-java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
+call ..\stop-sc.bat < .s.lock >> stop.log 2>&1
 del .s.lock
 goto cmdEnd
 
@@ -97,7 +105,7 @@ if not errorlevel 1 (
   goto cmdEnd
 )
 echo Y > .s.lock
-java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
+call ..\stop-sc.bat < .s.lock >> stop.log 2>&1
 del .s.lock
 :waitRun
 REM Delete lock file
@@ -107,7 +115,7 @@ jbosssvc.exe -s 1
 if exist ".r.lock" goto waitRun
 echo Y > .r.lock
 echo Starting %SVCDISP%
-java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
+call ..\start-sc.bat < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 

@@ -12,10 +12,13 @@ rem			-DlogDirectory=%OS_VARIABLE%
 rem and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 rem
 rem Adapt this script to optimize JVM parameters for SC
-rem  -Xmx512M  allow 512GB memory
-rem  -server    enables server JVM
+rem  -Xmx512M	allow 512GB memory
+rem  -server	enables server JVM
+rem	 -Xrs		Reduces use of operating-system signals by the Java virtual machine (JVM).	
 rem
 rem set default directory
+set DIRNAME=%CD%
 cd "%~dp0"
 rem start sc
-java -Xmx512M -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
+java -Xmx512M -Xrs -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
+cd %DIRNAME%
