@@ -191,7 +191,7 @@ public class ConnectionPool {
 		}
 		if (closeOnFree && (this.freeConnections.size() + this.usedConnections.size() >= this.minConnections)) {
 			// do not add the connection to free pool array - just close it immediately! Keep minimum connections alive
-			// don't forget current connection is not included in above size calculation "=>"
+			// don't forget current connection is not included in above size calculation ">=" after removing it 4 lines before!
 			this.disconnectConnection(connection);
 			return;
 		}
@@ -399,8 +399,9 @@ public class ConnectionPool {
 			}
 			if (this.closeAfterKeepAlive && (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE)) {
 				// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
-				if ((this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
+				if ((this.freeConnections.size() + this.usedConnections.size()) >= this.minConnections) {
 					// there are still enough (totalCons > minConnections) free - disconnect this one
+					// don't forget current connection is not included in above size calculation ">=" after removing it 4 lines before!
 					this.disconnectConnection(connection);
 					return;
 				}
