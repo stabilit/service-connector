@@ -198,7 +198,7 @@ public class SCClient {
 	 * 
 	 * @return true, if is attached
 	 */
-	public boolean isAttached() {
+	public synchronized boolean isAttached() {
 		return this.attached;
 	}
 
