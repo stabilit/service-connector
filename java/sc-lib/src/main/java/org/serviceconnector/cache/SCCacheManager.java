@@ -310,7 +310,7 @@ public class SCCacheManager {
 			metaEntry.setNumberOfParts(partCounter + 1);
 			metaEntry.setLastModified();
 
-			// set the correct partNr+1 for message to cache and cache it!
+			// set the correct partNr+1 for message to cache and cache it, points to the next part!
 			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
 			// an negative timeToLiveSeconds (expirationDate in the past) will throw an exception, handled by the cache
 			String cacheKey = reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts();
