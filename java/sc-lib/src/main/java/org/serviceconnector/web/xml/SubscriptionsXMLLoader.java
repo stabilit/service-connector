@@ -76,10 +76,21 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 			System.arraycopy(subscriptions, 0, sim, 0, subscriptions.length);
 			for (int i = subscriptions.length; i < simulation; i++) {
 				sim[i] = new Subscription(null, "sim " + i, null, 0, 0.0, false);
-		     }
+			}
 			subscriptions = sim;
- 		}
+		}
 		Paging paging = this.writePagingAttributes(writer, request, subscriptions.length, "");
+		int nOfRealSubscriptions = 0;
+		for (Subscription subscription : subscriptions) {
+			if(subscription.isCascaded() == true) {
+				// adding casceded subscriptions of current subscription
+				nOfRealSubscriptions += subscription.getCscSubscriptionIds().size();				
+			} else {
+				// adding current subscription because its a real one!
+				nOfRealSubscriptions++;
+			}
+		}
+		writer.writeAttribute("nOfRealSubscriptions", nOfRealSubscriptions + "");
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();

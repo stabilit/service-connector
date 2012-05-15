@@ -16,7 +16,7 @@
       <div class="sc_table max_width">
         <div class="sc_table_title">
            <xsl:call-template name="pageArea">
-             <xsl:with-param name="title">List of Subscriptions</xsl:with-param>
+             <xsl:with-param name="title">(Number of real Subscriptions <xsl:value-of select="$subscriptions/@nOfRealSubscriptions"/>) - List of Subscriptions</xsl:with-param>
              <xsl:with-param name="size" select="$subscriptions/@size"/>
              <xsl:with-param name="currentSite" select="$subscriptions/@site"/>
              <xsl:with-param name="currentPage" select="$subscriptions/@page"/>

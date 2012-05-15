@@ -377,6 +377,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof List<?>) {
 						writer.writeStartElement(name);
 						List<?> list = (List<?>) value;
+						writer.writeAttribute("size", list.size() + "");
 						Object[] objects = list.toArray(new Object[0]);
 						for (Object object : objects) {
 							writer.writeStartElement(object.getClass().getSimpleName().toLowerCase());
@@ -485,6 +486,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					writer.writeStartElement(name);
 					if (value instanceof Date) {
 						writer.writeCData(DateTimeUtility.getDateTimeAsString((Date) value));
+					} else if (value instanceof HashMap) {
+						writer.writeAttribute("size", ((HashMap) value).size() + "");
+						writer.writeCData(value.toString());
 					} else {
 						writer.writeCData(value.toString());
 					}
