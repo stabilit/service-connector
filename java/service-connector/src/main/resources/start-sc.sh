@@ -6,7 +6,7 @@
 # and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 #
 # Adapt this script to optimize JVM parameters for SC
-#  -Xmx1024M  allow 1GB memory
+#  -Xmx1024M  allow max 1GB heap size
 #  -server    enables server JVM
 #
 # start sc

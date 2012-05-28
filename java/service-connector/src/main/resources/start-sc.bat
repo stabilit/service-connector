@@ -12,7 +12,7 @@ rem			-DlogDirectory=%OS_VARIABLE%
 rem and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 rem
 rem Adapt this script to optimize JVM parameters for SC
-rem  -Xmx512M	allow 512MB memory
+rem  -Xmx512M	allow max 512MB heap size
 rem  -server	enables server JVM
 rem	 -Xrs		Reduces use of operating-system signals by the Java virtual machine (JVM).	
 rem
