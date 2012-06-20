@@ -114,8 +114,8 @@ public final class SC {
 		ServerLoader.load(AppContext.getRequesterConfiguration());
 		// load services
 		ServiceLoader.load(AppContext.getServiceConfiguration());
-		// load cache configuration in cache manager after service are loaded
-		AppContext.getCacheManager().load(AppContext.getSCCacheConfiguration());
+		// load cache configuration in cache after service are loaded
+		AppContext.getSCCache().load(AppContext.getSCCacheConfiguration());
 
 		// Initialize service connector command factory
 		AppContext.initCommands(new ServiceConnectorCommandFactory());
@@ -223,7 +223,7 @@ public final class SC {
 		@Override
 		public void run() {
 			String fs = System.getProperty("file.separator");
-			AppContext.getCacheManager().destroy();
+			AppContext.getSCCache().destroy();
 			try {
 				if (this.fileCtx != null) {
 					// release the file lock
