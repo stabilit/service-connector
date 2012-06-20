@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.server.FileServerException;
@@ -170,8 +170,8 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			}
 			if ("clearCache".equals(action)) {
 				XMLLoaderFactory.LOGGER.debug("clear cache by user interface");
-				SCCacheManager cacheManager = AppContext.getCacheManager();
-				cacheManager.clearAll();
+				SCCache cache = AppContext.getSCCache();
+				cache.clearAll();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
 				writer.writeEndElement();

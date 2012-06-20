@@ -71,7 +71,7 @@ public class CscDeleteSessionCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			// clears message in cache if in loading state
-			AppContext.getCacheManager().clearLoading(sessionId);
+			AppContext.getSCCache().clearLoading(sessionId);
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
 			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
 			cascadedSC.deleteSession(reqMessage, callback, oti);

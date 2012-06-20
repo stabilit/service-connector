@@ -20,12 +20,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The Interface ISCCache. Abstracts SC caches.
+ * The Interface ISCCacheModule. Abstracts SC caches modules. A SCCache holds cache modules.
+ * A cache module is a logical part of a cache.
  */
-public interface ISCCache<T> {
+public interface ISCCacheModule<T> {
 
 	/**
-	 * Gets the object from cache.
+	 * Gets the object from cache module.
 	 * 
 	 * @param key
 	 *            the key
@@ -34,33 +35,33 @@ public interface ISCCache<T> {
 	public abstract T get(Object key);
 
 	/**
-	 * Put the object in cache. Updates if element is already in cache.
+	 * Put the object in cache module. Updates if element is already in cache module.
 	 * 
 	 * @param key
 	 *            the key
 	 * @param value
 	 *            the value to store
 	 * @param timeToLiveSeconds
-	 *            seconds the object has to stay in cache from now on
+	 *            seconds the object has to stay in cache module from now on
 	 */
 	public abstract void putOrUpdate(Object key, T value, int timeToLiveSeconds);
 
 	/**
-	 * Replace the object in cache. Element has to be in place otherwise replace fails.
+	 * Replace the object in cache module. Element has to be in place otherwise replace fails.
 	 * 
 	 * @param key
 	 *            the key
 	 * @param value
 	 *            the value to store
 	 * @param timeToLiveSeconds
-	 *            seconds the object has to stay in cache from now on
+	 *            seconds the object has to stay in cache module from now on
 	 */
 	public abstract void replace(Object key, T value, int timeToLiveSeconds);
 
 	/**
-	 * Gets the list of keys in the cache.
+	 * Gets the list of keys in the cache module.
 	 * 
-	 * @return the keys with expiry check
+	 * @return the keys with expire check
 	 */
 	public abstract List<String> getKeyList();
 
@@ -96,7 +97,7 @@ public interface ISCCache<T> {
 	 * 
 	 * @return the cache name
 	 */
-	public abstract String getCacheName();
+	public abstract String getCacheModuleName();
 
 	/**
 	 * Gets the memory store size.
@@ -113,7 +114,7 @@ public interface ISCCache<T> {
 	public abstract long getNumberOfMessagesInDiskStore();
 
 	/**
-	 * Removes the object from cache.
+	 * Removes the object from cache module.
 	 * 
 	 * @param key
 	 *            the key
@@ -122,12 +123,12 @@ public interface ISCCache<T> {
 	public abstract T remove(Object key);
 
 	/**
-	 * Removes all the objects from cache.
+	 * Removes all the objects from cache module.
 	 */
 	public abstract void removeAll();
 
 	/**
-	 * Destroys the cache.
+	 * Destroys the cache module.
 	 */
 	public abstract void destroy();
 }

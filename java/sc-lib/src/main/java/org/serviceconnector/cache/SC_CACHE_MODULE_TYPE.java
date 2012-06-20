@@ -17,12 +17,12 @@
 package org.serviceconnector.cache;
 
 /**
- * The Enum SC_CACHE_TYPE. Every type of cache in SC. Identifies the caches in the cache Registry of AppContext.
+ * The Enum SC_CACHE_MODULE_TYPE. Every type of cache module in SC. Identifies the cache modules in the cache Registry of AppContext.
  */
-public enum SC_CACHE_TYPE {
+public enum SC_CACHE_MODULE_TYPE {
 
-	/** The META_DATA_CACHE. */
-	META_DATA_CACHE,
-	/** The DATA_CACHE. */
-	DATA_CACHE
+	/** The META_DATA_CACHE_MODULE. */
+	META_DATA_CACHE_MODULE,
+	/** The DATA_CACHE_MODULE. */
+	DATA_CACHE_MODULE
 }

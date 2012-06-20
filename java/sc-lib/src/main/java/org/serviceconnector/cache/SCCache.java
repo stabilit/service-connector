@@ -28,7 +28,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
-import org.serviceconnector.registry.CacheRegistry;
+import org.serviceconnector.registry.CacheModuleRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -38,20 +38,20 @@ import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class SCCacheManager. The cache manager is responsible for handling the cache in the Service Connector. The AppContext gives
- * access to the SC cache manager instance.
- * The manager controls the cache life cycles. Loading and destroying procedure are important to be called. <br>
+ * The Class SCCache. The cache is responsible for handling caching actions in the Service Connector. The AppContext gives
+ * access to the SC cache instance.
+ * It controls the life cycles of caching. Loading and destroying procedure are important to be called. <br>
  * <br>
- * Caching concept provides to physical caches (SC_CACHE_TYPE.DATA_CACHE, SC_CACHE_TYPE.META_DATA_CACHE). Whenever someone is
- * interested to insert or load from cache the META_DATA_CACHE gets accessed first. It contains a list of CacheMetaEntry instances,
- * which holds information about the stored SCMPMessage in DATA_CACHE. CacheMetaEntry are identified by the cacheKey
- * serviceName_cachedId, cached messages in DATA_CACHE by the cacheKey serviceName_cacheId/partNr.
+ * The cache contains two physical cache modules (SC_CACHE_TYPE.DATA_CACHE_MODULE, SC_CACHE_TYPE.META_DATA_CACHE_MODULE).
+ * Whenever someone is interested to insert or load from cache the META_DATA_CACHE_MODULE gets accessed first. It contains a list of
+ * CacheMetaEntry instances, which holds information about the stored SCMPMessage in DATA_CACHE_MODULE. CacheMetaEntry are
+ * identified by the cacheKey serviceName_cachedId, cached messages in DATA_CACHE_MODULE by the cacheKey serviceName_cacheId/partNr.
  * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
  * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
  * message completely. Only the first client (session) is allowed to load the message. When the message is complete all parts
  * transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an
  * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
- * of the expiration is done by the ISCCache implementation.
+ * of the expiration is done by the ISCCacheModule implementation.
  * There are several circumstances they can stop the loading process and clear the message:
  * - Server returns a fault message.
  * - Server returns no cacheId.
@@ -61,30 +61,30 @@ import org.serviceconnector.util.XMLDumpWriter;
  * - Server returns expirationDate in the past.
  * - Caching of message fails for some reason.
  */
-public class SCCacheManager {
+public class SCCache {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCCacheManager.class);
+	private static final Logger LOGGER = Logger.getLogger(SCCache.class);
 	/** The cache configuration. */
 	private SCCacheConfiguration scCacheConfiguration;
 	/** Map of current session id's which are loading messages into cache, (sid, cid). */
 	private HashMap<String, String> loadingSessionIds;
 
-	/** The meta data cache. */
-	ISCCache<SCCacheMetaEntry> metaDataCache = null;
-	/** The data cache. */
-	ISCCache<SCMPMessage> dataCache = null;
+	/** The meta data cache module. */
+	ISCCacheModule<SCCacheMetaEntry> metaDataCacheModule = null;
+	/** The data cache module. */
+	ISCCacheModule<SCMPMessage> dataCacheModule = null;
 
 	/**
-	 * Instantiates a new SC cache manager.
+	 * Instantiates a new SC cache.
 	 */
-	public SCCacheManager() {
+	public SCCache() {
 		this.scCacheConfiguration = null;
 		this.loadingSessionIds = new HashMap<String, String>();
 	}
 
 	/**
-	 * Loads the SCCacheManager. Initializes the caches and removes old cache files.
+	 * Loads the SCCache. Initializes the cache modules and removes old cache files.
 	 * 
 	 * @param cacheConfiguration
 	 *            the cache configuration
@@ -95,18 +95,19 @@ public class SCCacheManager {
 		if (this.scCacheConfiguration.isCacheEnabled() == false) {
 			return;
 		}
-		// clean up old cache files when loading a new SC cache manager
+		// clean up old cache files when loading a new SC cache
 		cleanUpCacheFiles();
 
-		CacheRegistry caches = AppContext.getCacheRegistry();
+		CacheModuleRegistry cacheModules = AppContext.getCacheModuleRegistry();
 
-		// create necessary caches (from ENUM)
-		for (SC_CACHE_TYPE cacheType : SC_CACHE_TYPE.values()) {
-			ISCCache<?> cache = SCCacheFactory.createDefaultSCCache(cacheConfiguration, cacheType);
-			caches.addCache(cacheType.name(), cache);
+		// create necessary cache modules (from ENUM)
+		for (SC_CACHE_MODULE_TYPE cacheModuleType : SC_CACHE_MODULE_TYPE.values()) {
+			ISCCacheModule<?> cacheModule = SCCacheFactory.createDefaultSCCache(cacheConfiguration, cacheModuleType);
+			cacheModules.addCacheModule(cacheModuleType.name(), cacheModule);
 		}
-		metaDataCache = (ISCCache<SCCacheMetaEntry>) caches.getCache(SC_CACHE_TYPE.META_DATA_CACHE.name());
-		dataCache = (ISCCache<SCMPMessage>) caches.getCache(SC_CACHE_TYPE.DATA_CACHE.name());
+		metaDataCacheModule = (ISCCacheModule<SCCacheMetaEntry>) cacheModules.getCache(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE
+				.name());
+		dataCacheModule = (ISCCacheModule<SCMPMessage>) cacheModules.getCache(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name());
 	}
 
 	/**
@@ -131,8 +132,9 @@ public class SCCacheManager {
 		// lookup cache meta entry
 		String sessionId = reqMessage.getSessionId();
 		String serviceName = reqMessage.getServiceName();
+		// TODO prefixing of serviceName must be removed!
 		String reqCacheKey = serviceName + Constants.UNDERLINE + cacheId;
-		SCCacheMetaEntry metaEntry = metaDataCache.get(reqCacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(reqCacheKey);
 
 		if (metaEntry != null) {
 
@@ -150,7 +152,7 @@ public class SCCacheManager {
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
-				SCMPMessage cachedMessage = dataCache.get(metaEntry.getCacheKey() + Constants.SLASH + reqPartNr);
+				SCMPMessage cachedMessage = dataCacheModule.get(metaEntry.getCacheKey() + Constants.SLASH + reqPartNr);
 				if (cachedMessage != null) {
 					// message found adapt header fields for requester
 					cachedMessage.setServiceName(serviceName);
@@ -213,7 +215,7 @@ public class SCCacheManager {
 			newMetaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADING);
 
 			// put meta entry to cache
-			metaDataCache.putOrUpdate(reqCacheKey, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
+			metaDataCacheModule.putOrUpdate(reqCacheKey, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
 			loadingSessionIds.put(sessionId, reqCacheKey);
 			CacheLogger.startLoadingCacheMessage(reqCacheKey, sessionId, otiMillis);
 			return null;
@@ -240,6 +242,7 @@ public class SCCacheManager {
 		String reqCacheId = reqMessage.getCacheId();
 		String resCacheId = resMessage.getCacheId();
 		String sid = reqMessage.getSessionId();
+		// TODO prefixing of serviceName must be removed!
 		String reqCacheKey = reqServiceName + Constants.UNDERLINE + reqCacheId;
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
@@ -260,6 +263,7 @@ public class SCCacheManager {
 					+ reqServiceName);
 			resServiceName = reqServiceName;
 		}
+		// TODO prefixing of serviceName must be removed!
 		String resCacheKey = resServiceName + Constants.UNDERLINE + resCacheId;
 
 		if (resCacheKey.equals(reqCacheKey) == false) {
@@ -271,7 +275,7 @@ public class SCCacheManager {
 			return;
 		}
 		// lookup up meta entry
-		SCCacheMetaEntry metaEntry = metaDataCache.get(resCacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(resCacheKey);
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up
@@ -314,12 +318,12 @@ public class SCCacheManager {
 			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNumberOfParts() + 1);
 			// an negative timeToLiveSeconds (expirationDate in the past) will throw an exception, handled by the cache
 			String cacheKey = reqCacheKey + Constants.SLASH + metaEntry.getNumberOfParts();
-			dataCache.putOrUpdate(cacheKey, resMessage, timeToLiveSeconds);
+			dataCacheModule.putOrUpdate(cacheKey, resMessage, timeToLiveSeconds);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
 			if (CacheLogger.isEnabled()) {
 				CacheLogger.putMessageToCache(cacheKey, metaEntry.getLoadingSessionId(),
-						DateTimeUtility.getDateTimeAsString(metaDataCache.getExpirationTime(resCacheKey)),
+						DateTimeUtility.getDateTimeAsString(metaDataCacheModule.getExpirationTime(resCacheKey)),
 						resMessage.getBodyLength());
 			}
 
@@ -327,14 +331,14 @@ public class SCCacheManager {
 				// large response ended, last message of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
 				// reduce TTL for meta entry 1 seconds this assures meta entry expires first
-				metaDataCache.replace(resCacheKey, metaEntry, timeToLiveSeconds - 1);
+				metaDataCacheModule.replace(resCacheKey, metaEntry, timeToLiveSeconds - 1);
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheKey(), metaEntry.getLoadingSessionId(),
 						metaEntry.getNumberOfParts());
 			} else {
 				// refresh meta entry state
-				metaDataCache.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis()
+				metaDataCacheModule.replace(resCacheKey, metaEntry, metaEntry.getLoadingTimeoutMillis()
 						/ Constants.SEC_TO_MILLISEC_FACTOR);
 			}
 		} catch (Exception e) {
@@ -360,7 +364,7 @@ public class SCCacheManager {
 			return;
 		}
 		// remove meta entry
-		SCCacheMetaEntry metaEntry = metaDataCache.remove(cacheKey);
+		SCCacheMetaEntry metaEntry = metaDataCacheModule.remove(cacheKey);
 		if (metaEntry == null) {
 			// no entry found
 			return;
@@ -370,7 +374,7 @@ public class SCCacheManager {
 
 		// remove data entries
 		for (int i = 1; i <= size; i++) {
-			dataCache.remove(cacheKey + Constants.SLASH + i);
+			dataCacheModule.remove(cacheKey + Constants.SLASH + i);
 		}
 		this.loadingSessionIds.remove(sessionId);
 	}
@@ -455,23 +459,23 @@ public class SCCacheManager {
 	 */
 	public synchronized void clearAll() {
 		CacheLogger.clearCache();
-		metaDataCache.removeAll();
-		dataCache.removeAll();
+		metaDataCacheModule.removeAll();
+		dataCacheModule.removeAll();
 		this.loadingSessionIds.clear();
 	}
 
 	/**
-	 * Destroy all caches controlled by this cache manager. Destroys the cache factory.
+	 * Destroy all cache modules controlled by this cache. Destroys the cache factory.
 	 */
 	public void destroy() {
-		LOGGER.trace("destroy cache manager and active caches");
-		AppContext.getCacheRegistry().removeCache(dataCache.getCacheName());
-		dataCache.removeAll();
-		dataCache.destroy();
+		LOGGER.trace("destroy cache and active cache modules");
+		AppContext.getCacheModuleRegistry().removeCache(dataCacheModule.getCacheModuleName());
+		dataCacheModule.removeAll();
+		dataCacheModule.destroy();
 
-		AppContext.getCacheRegistry().removeCache(metaDataCache.getCacheName());
-		metaDataCache.removeAll();
-		metaDataCache.destroy();
+		AppContext.getCacheModuleRegistry().removeCache(metaDataCacheModule.getCacheModuleName());
+		metaDataCacheModule.removeAll();
+		metaDataCacheModule.destroy();
 		CacheLogger.clearCache();
 
 		SCCacheFactory.destroy();
@@ -479,7 +483,7 @@ public class SCCacheManager {
 	}
 
 	/**
-	 * Dump the cache manager into the xml writer.
+	 * Dump the cache into the xml writer.
 	 * 
 	 * @param writer
 	 *            the writer
@@ -488,12 +492,12 @@ public class SCCacheManager {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 
-		// dump cache manager
-		writer.writeStartElement("cache-manager");
+		// dump cache
+		writer.writeStartElement("cache");
 		writer.writeAttribute("enabled", this.isCacheEnabled());
 		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
 		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
 		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
-		writer.writeEndElement(); // end of cache-manager
+		writer.writeEndElement(); // end of cache
 	}
 }

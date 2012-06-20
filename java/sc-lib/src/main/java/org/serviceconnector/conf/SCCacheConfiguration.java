@@ -19,14 +19,14 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class SCCacheConfiguration.
  * This is the main SC cache configuration class, keeping all required configuration parameters.
- * This class is used to setup cache manager {@link SCCacheManager} instance.
+ * This class is used to setup SC cache {@link SCCache} instance.
  */
 public class SCCacheConfiguration {
 

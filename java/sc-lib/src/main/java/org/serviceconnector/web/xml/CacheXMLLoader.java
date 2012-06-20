@@ -30,10 +30,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
-import org.serviceconnector.cache.SC_CACHE_TYPE;
+import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -58,16 +58,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		writer.writeStartElement("cache");
-		org.serviceconnector.cache.SCCacheManager cacheManager = AppContext.getCacheManager();
-		SCCacheConfiguration cacheConfiguration = cacheManager.getCacheConfiguration();
+		org.serviceconnector.cache.SCCache cache = AppContext.getSCCache();
+		SCCacheConfiguration cacheConfiguration = cache.getCacheConfiguration();
 		this.writeCacheConfiguration(writer, cacheConfiguration);
-		writer.writeEndElement(); // close cache tag
 		writer.writeStartElement("cacheLoading");
-		this.writeCacheLoading(writer, cacheManager);
+		this.writeCacheLoading(writer, cache);
 		writer.writeEndElement();
-		writer.writeStartElement("caches");
+		writer.writeStartElement("cacheModules");
 		this.writeCaches(writer, request);
-		writer.writeEndElement(); // close caches tag
+		writer.writeEndElement(); // close cache tag
 	}
 
 	/**
@@ -98,48 +97,48 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * Write caches.
+	 * Write cache modules.
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param cacheKeys
-	 *            the caches
+	 * @param cacheModuleKeys
+	 *            the cache module keys
 	 * @param request
 	 *            the request
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
 	private void writeCaches(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		String cacheParam = request.getParameter("cache");
+		String cacheModuleParam = request.getParameter("cacheModule");
 		int simulation = this.getParameterInt(request, "sim", 0);
-		List<String> cacheKeys = new ArrayList<String>();
-		cacheKeys.add(SC_CACHE_TYPE.META_DATA_CACHE.name());
-		cacheKeys.add(SC_CACHE_TYPE.DATA_CACHE.name());
-		Paging paging = this.writePagingAttributes(writer, request, cacheKeys.size(), ""); // no prefix
+		List<String> cacheModuleKeys = new ArrayList<String>();
+		cacheModuleKeys.add(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE.name());
+		cacheModuleKeys.add(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name());
+		Paging paging = this.writePagingAttributes(writer, request, cacheModuleKeys.size(), ""); // no prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
 
 		for (int i = startIndex; i < endIndex; i++) {
-			String cacheKey = cacheKeys.get(i);
-			ISCCache<?> scCache = AppContext.getCacheRegistry().getCache(cacheKey);
-			writer.writeStartElement("cache");
-			writer.writeStartElement("cacheName");
-			writer.writeCharacters(scCache.getCacheName());
-			writer.writeEndElement(); // close cacheName tag
+			String cacheModuleKey = cacheModuleKeys.get(i);
+			ISCCacheModule<?> scCacheModule = AppContext.getCacheModuleRegistry().getCache(cacheModuleKey);
+			writer.writeStartElement("cacheModule");
+			writer.writeStartElement("cacheModuleName");
+			writer.writeCharacters(scCacheModule.getCacheModuleName());
+			writer.writeEndElement(); // close cacheModuleName tag
 			writer.writeStartElement("cachedMessageCount");
-			writer.writeCharacters(String.valueOf(scCache.getKeyList().size() + simulation));
+			writer.writeCharacters(String.valueOf(scCacheModule.getKeyList().size() + simulation));
 			writer.writeEndElement(); // close cachedMessageCount tag
 			writer.writeStartElement("numberOfMessagesInMemoryStore");
-			writer.writeCharacters(String.valueOf(scCache.getNumberOfMessagesInStore()));
+			writer.writeCharacters(String.valueOf(scCacheModule.getNumberOfMessagesInStore()));
 			writer.writeEndElement(); // close memoryStoreSize tag
 			writer.writeStartElement("numberOfMessagesInDiskStore");
-			writer.writeCharacters(String.valueOf(scCache.getNumberOfMessagesInDiskStore()));
+			writer.writeCharacters(String.valueOf(scCacheModule.getNumberOfMessagesInDiskStore()));
 			writer.writeEndElement(); // close diskStoreSize tag
-			if (scCache.getCacheName().equals(cacheParam)) {
-				writeCacheDetails(writer, scCache, request);
+			if (scCacheModule.getCacheModuleName().equals(cacheModuleParam)) {
+				writeCacheModuleDetails(writer, scCacheModule, request);
 			}
-			writer.writeEndElement(); // close cache tag
+			writer.writeEndElement(); // close cache module tag
 		}
 	}
 
@@ -148,14 +147,14 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param cacheManager
-	 *            the cache manager
+	 * @param cache
+	 *            the cache
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCacheManager cacheManager)
+	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache)
 			throws XMLStreamException {
-		HashMap<String, String> loadingSessionIds = cacheManager.getLoadingSessionIds();
+		HashMap<String, String> loadingSessionIds = cache.getLoadingSessionIds();
 		Set<String> sessionIds = loadingSessionIds.keySet();
 		for (String sid : sessionIds) {
 			writer.writeStartElement("session");
@@ -168,22 +167,22 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * Write cache details.
+	 * Write cache module details.
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param cache
-	 *            the cache
+	 * @param cacheModule
+	 *            the cache module
 	 * @param request
 	 *            the request
 	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *             the XML stream exception
 	 */
-	private void writeCacheDetails(XMLStreamWriter writer, ISCCache<?> cache, IWebRequest request) throws Exception {
+	private void writeCacheModuleDetails(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
-		List<String> cacheKeys = cache.getKeyList();
+		List<String> cacheKeys = cacheModule.getKeyList();
 		// sort cacheKeys
-		if (cache.getCacheName().equals(SC_CACHE_TYPE.DATA_CACHE.name())) {
+		if (cacheModule.getCacheModuleName().equals(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name())) {
 			Collections.sort(cacheKeys, new DataCacheKeyComparator());
 		} else {
 			Collections.sort(cacheKeys);
@@ -212,21 +211,21 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 		for (int i = startIndex; i < endIndex; i++) {
 			String key = cacheKeys.get(i);
-			if (cache.getCacheName().equals(SC_CACHE_TYPE.META_DATA_CACHE.name())) {
-				SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) cache.get(key);
+			if (cacheModule.getCacheModuleName().equals(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE.name())) {
+				SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) cacheModule.get(key);
 				if (metaEntry == null && simulation > 0) {
 					metaEntry = new SCCacheMetaEntry("");
 				}
 				if (metaEntry != null) {
-					writeCacheMetaEntry(writer, cache, key, metaEntry, request);
+					writeCacheMetaEntry(writer, cacheModule, key, metaEntry, request);
 				}
 			} else {
-				SCMPMessage cachedMessage = (SCMPMessage) cache.get(key);
+				SCMPMessage cachedMessage = (SCMPMessage) cacheModule.get(key);
 				if (cachedMessage == null && simulation > 0) {
 					cachedMessage = new SCMPMessage("");
 				}
 				if (cachedMessage != null) {
-					writeCacheMessage(writer, cache, key, cachedMessage, request);
+					writeCacheMessage(writer, cacheModule, key, cachedMessage, request);
 				}
 			}
 		}
@@ -238,8 +237,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param cache
-	 *            the cache
+	 * @param cacheModule
+	 *            the cache module
 	 * @param cacheKey
 	 *            the cache key
 	 * @param metaEntry
@@ -249,7 +248,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCache<?> cache, String cacheKey, SCCacheMetaEntry metaEntry,
+	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCCacheMetaEntry metaEntry,
 			IWebRequest request) throws Exception {
 		int simulation = this.getParameterInt(request, "sim", 0);
 		writer.writeStartElement("cacheMessage");
@@ -264,8 +263,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeCharacters(String.valueOf(metaEntry.getLoadingSessionId()));
 		writer.writeEndElement(); // end of loadingSessionId
 		writer.writeStartElement("expirationTimeout");
-		Date expireDate = cache.getExpirationTime(cacheKey);
-		Date creationDate = cache.getCreationTime(cacheKey);
+		Date expireDate = cacheModule.getExpirationTime(cacheKey);
+		Date creationDate = cacheModule.getCreationTime(cacheKey);
 		long expireTimeoutMillis = expireDate.getTime() - creationDate.getTime();
 		writer.writeCharacters(String.valueOf(expireTimeoutMillis));
 		writer.writeEndElement(); // end of expirationTimeout
@@ -290,8 +289,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param cache
-	 *            the cache
+	 * @param cacheModule
+	 *            the cache module
 	 * @param cacheKey
 	 *            the cache key
 	 * @param cacheMessage
@@ -301,7 +300,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void writeCacheMessage(XMLStreamWriter writer, ISCCache<?> cache, String cacheKey, SCMPMessage cacheMessage,
+	private void writeCacheMessage(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCMPMessage cacheMessage,
 			IWebRequest request) throws Exception {
 		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
@@ -311,8 +310,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeCharacters(SC_CACHE_ENTRY_STATE.LOADED.name());
 		writer.writeEndElement(); // end of state
 		writer.writeStartElement("expirationTimeout");
-		Date expireDate = cache.getExpirationTime(cacheKey);
-		Date creationDate = cache.getCreationTime(cacheKey);
+		Date expireDate = cacheModule.getExpirationTime(cacheKey);
+		Date creationDate = cacheModule.getCreationTime(cacheKey);
 		long expireTimeoutMillis = expireDate.getTime() - creationDate.getTime();
 		writer.writeCharacters(String.valueOf(expireTimeoutMillis));
 		writer.writeEndElement(); // end of expirationTimeout
@@ -323,7 +322,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(creationDate));
 		writer.writeEndElement(); // end of creation
 		writer.writeStartElement("lastAccess");
-		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cache.getLastAccessTime(cacheKey)));
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheModule.getLastAccessTime(cacheKey)));
 		writer.writeEndElement(); // end of lastAccess
 		writer.writeStartElement("header");
 		Map<String, String> cacheMessageHeader = cacheMessage.getHeader();

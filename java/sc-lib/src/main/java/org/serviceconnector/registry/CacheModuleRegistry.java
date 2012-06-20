@@ -20,27 +20,27 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class CacheRegistry. Registries stores caches available in SC.
+ * The Class CacheModuleRegistry. Registries stores cache modules available in SC.
  */
-public class CacheRegistry extends Registry<String, ISCCache<?>> {
+public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 
 	/**
-	 * Adds the cache.
+	 * Adds the cache module.
 	 * 
 	 * @param key
 	 *            the key
-	 * @param cache
-	 *            the cache
+	 * @param cacheModule
+	 *            the cache module
 	 */
-	public void addCache(String key, ISCCache<?> cache) {
-		super.put(key, cache);
+	public void addCacheModule(String key, ISCCacheModule<?> cacheModule) {
+		super.put(key, cacheModule);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 	 *            the key
 	 * @return the cache
 	 */
-	public ISCCache<?> getCache(String key) {
+	public ISCCacheModule<?> getCache(String key) {
 		return this.get(key);
 	}
 
@@ -74,11 +74,11 @@ public class CacheRegistry extends Registry<String, ISCCache<?>> {
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("caches");
-		Set<Entry<String, ISCCache<?>>> entries = this.registryMap.entrySet();
-		for (Entry<String, ISCCache<?>> entry : entries) {
-			ISCCache<?> scCache = entry.getValue();
+		Set<Entry<String, ISCCacheModule<?>>> entries = this.registryMap.entrySet();
+		for (Entry<String, ISCCacheModule<?>> entry : entries) {
+			ISCCacheModule<?> scCache = entry.getValue();
 			writer.writeStartElement("cache");
-			writer.writeAttribute("cacheName", scCache.getCacheName());
+			writer.writeAttribute("cacheName", scCache.getCacheModuleName());
 			writer.writeAttribute("numberOfMessagesInDiskStore", scCache.getNumberOfMessagesInDiskStore());
 			writer.writeAttribute("numberOfMessagesInStore", scCache.getNumberOfMessagesInStore());
 			writer.writeAttribute("numberOfMessagesInCache", scCache.getKeyList().size());

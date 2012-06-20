@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.casc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -59,9 +59,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 	public void receive(SCMPMessage reply) {
 		String serviceName = this.requestMessage.getServiceName();
 		// caching
-		SCCacheManager cacheManager = AppContext.getCacheManager();
-		if (cacheManager.isCacheEnabled() == true) {
-			cacheManager.cacheMessage(this.requestMessage, reply);
+		SCCache cache = AppContext.getSCCache();
+		if (cache.isCacheEnabled() == true) {
+			cache.cacheMessage(this.requestMessage, reply);
 		}
 		// forward server reply to client
 		reply.setIsReply(true);
@@ -85,9 +85,9 @@ public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + sid);
 		}
 		// caching
-		SCCacheManager manager = AppContext.getCacheManager();
-		if (manager.isCacheEnabled() == true) {
-			manager.cacheMessage(this.requestMessage, fault);
+		SCCache cache = AppContext.getSCCache();
+		if (cache.isCacheEnabled() == true) {
+			cache.cacheMessage(this.requestMessage, fault);
 		}
 		String serviceName = this.requestMessage.getServiceName();
 		// forward server reply to client

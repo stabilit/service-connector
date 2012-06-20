@@ -22,8 +22,8 @@ import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
 
 import org.serviceconnector.cache.SCCacheMetaEntry;
-import org.serviceconnector.cache.ISCCache;
-import org.serviceconnector.cache.SC_CACHE_TYPE;
+import org.serviceconnector.cache.ISCCacheModule;
+import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -38,7 +38,7 @@ public final class SCCacheFactory {
 	/** The Constant DEFAULT_CACHE_NAME. */
 	private static final String DEFAULT_CACHE_NAME = "SC_CACHE";
 	/** The EHCache manager. */
-	private static CacheManager manager;
+	private static CacheManager ehManager;
 
 	/**
 	 * Instantiates a new factory. Private constructor to avoid instantiation.
@@ -105,7 +105,7 @@ public final class SCCacheFactory {
 	 *            the cache type needed
 	 * @return the ISC cache
 	 */
-	public static ISCCache<?> createDefaultSCCache(SCCacheConfiguration scCacheConfiguration, SC_CACHE_TYPE cacheType) {
+	public static ISCCacheModule<?> createDefaultSCCache(SCCacheConfiguration scCacheConfiguration, SC_CACHE_MODULE_TYPE cacheType) {
 		// sets up the configuration needed for the EHCache
 		String diskPath = scCacheConfiguration.getDiskPath();
 
@@ -125,15 +125,15 @@ public final class SCCacheFactory {
 		// create cache
 		EHCacheImpl<?> cacheData = null;
 		switch (cacheType) {
-		case META_DATA_CACHE:
+		case META_DATA_CACHE_MODULE:
 			cacheData = new EHCacheImpl<SCCacheMetaEntry>(ehCacheConfiguration);
 			break;
-		case DATA_CACHE:
+		case DATA_CACHE_MODULE:
 			cacheData = new EHCacheImpl<SCMPMessage>(ehCacheConfiguration);
 			break;
 		}
 
-		if (manager == null) {
+		if (ehManager == null) {
 			// following code adds EHCache monitor by JOT
 			// FactoryConfiguration<FactoryConfiguration> factory = new FactoryConfiguration<FactoryConfiguration>();
 			// factory.className("org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory");
@@ -153,9 +153,9 @@ public final class SCCacheFactory {
 			ehCacheManagerConfiguration.setName(SCCacheFactory.DEFAULT_CACHE_NAME);
 			ehCacheManagerConfiguration.setDefaultCacheConfiguration(ehCacheConfiguration);
 			ehCacheManagerConfiguration.setUpdateCheck(false); // disable update checker (checks EHCache version)
-			manager = new CacheManager(ehCacheManagerConfiguration);
+			ehManager = new CacheManager(ehCacheManagerConfiguration);
 		}
-		manager.addCache(cacheData.getEhCache()); // adds the cache to the EHCache CacheManager
+		ehManager.addCache(cacheData.getEhCache()); // adds the cache to the EHCache CacheManager
 		return cacheData;
 	}
 
@@ -163,10 +163,10 @@ public final class SCCacheFactory {
 	 * Destroys factory and shuts down resources.
 	 */
 	public static void destroy() {
-		if (manager != null) {
+		if (ehManager != null) {
 			// shuts down the EHCache CacheManager and related caches
-			manager.shutdown();
-			manager = null;
+			ehManager.shutdown();
+			ehManager = null;
 		}
 	}
 }

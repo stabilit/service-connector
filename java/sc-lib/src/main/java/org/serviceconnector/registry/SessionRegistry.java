@@ -82,7 +82,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			// sync on session avoids timer schedule and removing race condition
 			this.cancelSessionTimeout(session);
 			// clears message in cache if in loading state
-			AppContext.getCacheManager().clearLoading(session.getId());
+			AppContext.getSCCache().clearLoading(session.getId());
 			super.remove(session.getId());
 		}
 		SessionLogger.logDeleteSession(session.getId());

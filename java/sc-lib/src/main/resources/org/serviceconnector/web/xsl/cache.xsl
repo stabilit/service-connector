@@ -8,7 +8,7 @@
 	<xsl:variable name="comp_site" select="/sc-web/head/query/param/@comp_site"/>
 	<xsl:variable name="msg_page" select="/sc-web/head/query/param/@msg_page"/>
 	<xsl:variable name="msg_site" select="/sc-web/head/query/param/@msg_site"/>
-    <xsl:variable name="caches" select="$body/caches"/>        
+    <xsl:variable name="cacheModules" select="$body/cache/cacheModules"/>        
     <xsl:variable name="query">page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;</xsl:variable>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
@@ -22,34 +22,34 @@
         <xsl:call-template name="cache_config"/>
         <div class="sc_table_title">
            <xsl:call-template name="pageArea">
-             <xsl:with-param name="title">List of Caches</xsl:with-param>
+             <xsl:with-param name="title">List of Cache Modules</xsl:with-param>
              <xsl:with-param name="prefix"></xsl:with-param>
              <xsl:with-param name="query"></xsl:with-param>
-             <xsl:with-param name="size" select="$caches/@size"/>
-             <xsl:with-param name="currentSite" select="$caches/@site"/>
-             <xsl:with-param name="currentPage" select="$caches/@page"/>
-             <xsl:with-param name="lastPage" select="$caches/@lastPage"/>
-             <xsl:with-param name="lastSite" select="$caches/@lastSite"/>
-             <xsl:with-param name="siteSize" select="$caches/@siteSize"/>
-             <xsl:with-param name="pageSize" select="$caches/@pageSize"/>
+             <xsl:with-param name="size" select="$cacheModules/@size"/>
+             <xsl:with-param name="currentSite" select="$cacheModules/@site"/>
+             <xsl:with-param name="currentPage" select="$cacheModules/@page"/>
+             <xsl:with-param name="lastPage" select="$cacheModules/@lastPage"/>
+             <xsl:with-param name="lastSite" select="$cacheModules/@lastSite"/>
+             <xsl:with-param name="siteSize" select="$cacheModules/@siteSize"/>
+             <xsl:with-param name="pageSize" select="$cacheModules/@pageSize"/>
            </xsl:call-template>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
-            <th class="sc_table">Cache Name</th>
+            <th class="sc_table">Cache Module Name</th>
             <th class="sc_table">Message Count</th>
             <th class="sc_table">Messages in Memory</th>
             <th class="sc_table">Messages on Disk</th>
           </tr>          
-          <xsl:if test="not($body/caches/cache)">
-            <tr class="sc_table_even"><td colspan="7" class="sc_table">no caches</td></tr>
+          <xsl:if test="not($body/cache/cacheModules/cacheModule)">
+            <tr class="sc_table_even"><td colspan="7" class="sc_table">no cache modules</td></tr>
           </xsl:if>          
-          <xsl:apply-templates select="$body/caches/cache"/>
+          <xsl:apply-templates select="$body/cache/cacheModules/cacheModule"/>
         </table>
       </div>
     </xsl:template>
 	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./cache{$urlencoded}">Cache</a></div></xsl:template>
-	<xsl:template match="cache">
+	<xsl:template match="cacheModule">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
 	        <xsl:if test="details">
@@ -81,11 +81,11 @@
 	<xsl:template name="cache_row">
 	    <xsl:param name="query"/>
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="cacheName"/></td>
+	    <td class="{$class}"><xsl:value-of select="cacheModuleName"/></td>
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="cachedMessageCount &gt; 0">
-	         <a class="sc_table" href="cache{$urlencoded}?{$query}cache={cacheName}"><xsl:value-of select="cachedMessageCount"/></a>
+	         <a class="sc_table" href="cache{$urlencoded}?{$query}cacheModule={cacheModuleName}"><xsl:value-of select="cachedMessageCount"/></a>
             </xsl:when>
             <xsl:otherwise>	       
 	         <xsl:value-of select="cachedMessageCount"/>
@@ -127,7 +127,7 @@
 	            <th class="sc_table">Header Field Count</th><!-- Headers -->
 	          </tr>          
 	          <xsl:apply-templates select="details/cacheMessage">
-	            <xsl:with-param name="query"><xsl:value-of select="$query"/>cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;</xsl:with-param>
+	            <xsl:with-param name="query"><xsl:value-of select="$query"/>cacheModule=<xsl:value-of select="$head/query/param/@cacheModule"/>&amp;</xsl:with-param>
 	            <xsl:with-param name="subPagingQuery">comp_page=<xsl:value-of select="details/@page"/>&amp;comp_site=<xsl:value-of select="details/@site"/>&amp;</xsl:with-param>       
 	          	<xsl:with-param name="cacheMessageKey"><xsl:value-of select="$head/query/param/@cacheMessageKey"/></xsl:with-param>       
 	          </xsl:apply-templates>

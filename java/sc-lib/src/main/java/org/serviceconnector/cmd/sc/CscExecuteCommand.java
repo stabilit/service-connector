@@ -18,7 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.ClnExecuteCommandCascCallback;
@@ -65,13 +65,13 @@ public class CscExecuteCommand extends CommandAdapter {
 		// check service is present
 		Service abstractService = this.getService(serviceName);
 
-		SCCacheManager cacheManager = AppContext.getCacheManager();
+		SCCache cache = AppContext.getSCCache();
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
-			if (cacheManager.isCacheEnabled()) {
+			if (cache.isCacheEnabled()) {
 				// try to load response from cache
-				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
+				SCMPMessage message = cache.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
 					response.setSCMP(message);
 					responderCallback.responseCallback(request, response);
@@ -102,10 +102,10 @@ public class CscExecuteCommand extends CommandAdapter {
 			// reset session timeout to OTI+ECI - during wait for server reply
 			this.sessionRegistry.resetSessionTimeout(session, (otiOnSCMillis + session.getSessionTimeoutMillis()));
 		}
-		if (cacheManager.isCacheEnabled()) {
+		if (cache.isCacheEnabled()) {
 			try {
 				// try to load response from cache
-				SCMPMessage message = cacheManager.tryGetMessageFromCacheOrLoad(reqMessage);
+				SCMPMessage message = cache.tryGetMessageFromCacheOrLoad(reqMessage);
 				if (message != null) {
 					synchronized (session) {
 						// reset session timeout to ECI

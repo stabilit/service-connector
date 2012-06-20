@@ -23,14 +23,14 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 
-import org.serviceconnector.cache.ISCCache;
+import org.serviceconnector.cache.ISCCacheModule;
 
 /**
  * The Class EHCacheSCMPCacheImpl. This class wraps the EHCache implementation of a cache.
  * 
  * @param <T>
  */
-public class EHCacheImpl<T> implements ISCCache<T> {
+public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	/** The cache. */
 	private Cache ehCache;
 
@@ -101,7 +101,7 @@ public class EHCacheImpl<T> implements ISCCache<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getCacheName() {
+	public String getCacheModuleName() {
 		return this.ehCache.getName();
 	}
 

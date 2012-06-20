@@ -26,10 +26,10 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.cache.SCCacheMetaEntry;
-import org.serviceconnector.cache.ISCCache;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.ISCCacheModule;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
-import org.serviceconnector.cache.SC_CACHE_TYPE;
+import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -190,29 +190,28 @@ public class InspectCommand extends CommandAdapter {
 	 */
 	private String getCacheInspectString(final String serviceName, final String cacheKey) throws SCMPCommandException,
 			UnsupportedEncodingException {
-		SCCacheManager cacheManager = AppContext.getCacheManager();
-		if (cacheManager == null) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_MANAGER_ERROR,
-					"no cache manager (null)");
+		SCCache cache = AppContext.getSCCache();
+		if (cache == null) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, "no cache (null)");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		@SuppressWarnings("unchecked")
-		ISCCache<SCCacheMetaEntry> scCache = (ISCCache<SCCacheMetaEntry>) AppContext.getCacheRegistry().getCache(
-				SC_CACHE_TYPE.META_DATA_CACHE.name());
-		if (scCache == null) {
+		ISCCacheModule<SCCacheMetaEntry> scCacheModule = (ISCCacheModule<SCCacheMetaEntry>) AppContext.getCacheModuleRegistry()
+				.getCache(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE.name());
+		if (scCacheModule == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) scCache.get(cacheKey);
+		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) scCacheModule.get(cacheKey);
 		if (metaEntry == null) {
 			return URLString.toURLResponseString(Constants.CACHE_ID, cacheKey, "return", "notfound");
 		}
 		SC_CACHE_ENTRY_STATE cacheState = metaEntry.getSCCacheEntryState();
 		Date creationTime = metaEntry.getCreationTime();
 		Date lastModifiedTime = metaEntry.getLastModifiedTime();
-		String expirationDateTime = DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(cacheKey));
+		String expirationDateTime = DateTimeUtility.getDateTimeAsString(scCacheModule.getExpirationTime(cacheKey));
 		int size = metaEntry.getNumberOfParts();
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("return", "success");
