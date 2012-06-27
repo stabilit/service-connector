@@ -331,6 +331,7 @@ public class CascadedClient {
 		this.cascadedSC.unsubscribeCascadedClientInErrorCases(this);
 		// needs to be after unsubscribe
 		this.subscribed = false;
+		AppContext.getSCCache().removeManagedDataForRetriever(publishService.getName());
 		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;

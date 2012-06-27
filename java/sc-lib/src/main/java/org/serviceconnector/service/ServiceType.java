@@ -34,12 +34,16 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	SESSION_SERVICE("session"), //
 	/** The PUBLISH_SERVICE. */
 	PUBLISH_SERVICE("publish"), //
+	/** The CACHE_UPDATE_RETRIEVER. */
+	CACHE_UPDATE_RETRIEVER("cacheUpdateRetriever"), //
 	/** The CASCADED_SESSION_SERVICE. */
 	CASCADED_SESSION_SERVICE("cascadedSession"), //
 	/** The CASCADED_PUBLISH_SERVICE. */
 	CASCADED_PUBLISH_SERVICE("cascadedPublish"), //
 	/** The CASCADED_FILE_SERVICE. */
 	CASCADED_FILE_SERVICE("cascadedFile"), //
+	/** The CASCADED_CACHE_UPDATE_RETRIEVER. */
+	CASCADED_CACHE_UPDATE_RETRIEVER("cascadedCacheUpdateRetriever"), //
 	/** The FILE_SERVICE. */
 	FILE_SERVICE("file"), //
 	/** The UNDEFINED. */
@@ -48,7 +52,8 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ServiceType> REVERSE_MAP = new ReverseEnumMap<String, ServiceType>(ServiceType.class);
+	private static final ReverseEnumMap<String, ServiceType> REVERSE_MAP = new ReverseEnumMap<String, ServiceType>(
+			ServiceType.class);
 
 	/**
 	 * Instantiates a new service type.

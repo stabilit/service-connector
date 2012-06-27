@@ -1,5 +1,5 @@
 package org.serviceconnector.api;
 
-public class SCRemovedMessage extends SCMessage {
+public class SCRemovedMessage extends SCPublishMessage {
 
 }

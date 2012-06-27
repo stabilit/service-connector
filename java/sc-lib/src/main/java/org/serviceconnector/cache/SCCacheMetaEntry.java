@@ -54,6 +54,13 @@ public class SCCacheMetaEntry implements Serializable {
 	/** The cache id. */
 	private String cacheId = null;
 
+	// TODO
+	private int numberOfAppendices;
+	private String updateRetrieverName;
+	private int currLoadingAppendixPartNr;
+
+	private Map<String, Integer> appendicesInfo;
+
 	/**
 	 * Instantiates a new cache meta entry.
 	 * 
@@ -62,7 +69,7 @@ public class SCCacheMetaEntry implements Serializable {
 	 */
 	public SCCacheMetaEntry(String cacheKey) {
 		this.cacheKey = cacheKey;
-		this.numberOfParts = 0;
+		this.numberOfParts = -1; // increment to 0 when initial message retrieved
 		this.cacheEntryState = SC_CACHE_ENTRY_STATE.UNDEFINDED;
 		this.creationTime = DateTimeUtility.getCurrentTime();
 		this.lastModifiedTime = this.creationTime;
@@ -70,6 +77,10 @@ public class SCCacheMetaEntry implements Serializable {
 		this.cacheId = null;
 		this.loadingTimeoutMillis = -1;
 		this.header = new HashMap<String, String>();
+		this.numberOfAppendices = 0;
+		this.currLoadingAppendixPartNr = 0;
+		this.appendicesInfo = new HashMap<String, Integer>();
+		this.updateRetrieverName = "unset";
 	}
 
 	/**
@@ -268,5 +279,41 @@ public class SCCacheMetaEntry implements Serializable {
 	 */
 	public Map<String, String> getHeader() {
 		return header;
+	}
+
+	public int getNumberOfAppendices() {
+		return this.numberOfAppendices;
+	}
+
+	public int incrementNrOfAppendices() {
+		return (this.numberOfAppendices++);
+	}
+
+	public String getUpdateRetrieverName() {
+		return updateRetrieverName;
+	}
+
+	public void setUpdateRetrieverName(String updateRetrieverName) {
+		this.updateRetrieverName = updateRetrieverName;
+	}
+
+	public int getCurrLoadingAppendixPartNr() {
+		return currLoadingAppendixPartNr;
+	}
+
+	public void setCurrLoadingAppendixPartNr(int currLoadingAppendixPartNr) {
+		this.currLoadingAppendixPartNr = currLoadingAppendixPartNr;
+	}
+
+	public int incrementCurrLoadingAppendixPartNr() {
+		return (this.currLoadingAppendixPartNr++);
+	}
+
+	public void saveAppendixInfo(String appendixCacheId) {
+		this.appendicesInfo.put(appendixCacheId, this.currLoadingAppendixPartNr);
+	}
+	
+	public int getNrOfPartsOfAppendix(String appendixCacheId) {
+		return this.appendicesInfo.get(appendixCacheId);
 	}
 }

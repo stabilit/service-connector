@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.call.SCMPInspectCall;
@@ -87,6 +88,10 @@ public class SCClient {
 	/** The attached flag. Indicates if a SCClient is already attached to SC */
 	protected boolean attached;
 
+	private boolean activeRetriever;
+
+	private SCPublishService cacheUpdateRetriever;
+
 	/**
 	 * Instantiates a new SC client with default connection type.
 	 * 
@@ -116,7 +121,9 @@ public class SCClient {
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
 		this.attached = false;
+		this.activeRetriever = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
+		this.cacheUpdateRetriever = null;
 	}
 
 	/**
@@ -317,7 +324,7 @@ public class SCClient {
 	 *             called method after attach
 	 * @return the publish service
 	 */
-	public SCPublishService newPublishService(String serviceName) throws SCServiceException, SCMPValidatorException {
+	public synchronized SCPublishService newPublishService(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.attached == false) {
 			throw new SCServiceException("Creating a new publish service not possible - client not attached.");
 		}
@@ -327,6 +334,62 @@ public class SCClient {
 		ValidatorUtility
 				.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishService(this, serviceName, this.requester);
+	}
+
+	public synchronized void startCacheUpdateRetriever(String retrieverName, SCSubscribeMessage subscribeMessage,
+			SCMessageCallback retrieverCallback) throws SCServiceException, SCMPValidatorException {
+		this.startCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, retrieverName, subscribeMessage,
+				retrieverCallback);
+	}
+
+	public synchronized void startCacheUpdateRetriever(int operationTimeoutSeconds, String retrieverName,
+			SCSubscribeMessage subscribeMessage, SCMessageCallback retrieverCallback) throws SCServiceException,
+			SCMPValidatorException {
+		if (this.attached == false) {
+			throw new SCServiceException("Starting an Cache Update Retriever not possible - client not attached.");
+		}
+		if (this.activeRetriever == true) {
+			throw new SCServiceException("Cache Update Retriever already started.");
+		}
+		if (retrieverName == null) {
+			throw new SCMPValidatorException("Cache Update Retriever name must be set.");
+		}
+		ValidatorUtility.validateStringLengthTrim(1, retrieverName, Constants.MAX_LENGTH_SERVICENAME,
+				SCMPError.HV_WRONG_SERVICE_NAME);
+
+		SCPublishService retriever = new SCPublishService(this, retrieverName, this.requester);
+		retriever.subscribe(operationTimeoutSeconds, subscribeMessage, retrieverCallback);
+		this.activeRetriever = true;
+	}
+
+	public synchronized void changeUpdateRetrieval(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
+			SCServiceException {
+		this.changeUpdateRetrieval(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
+	}
+
+	public synchronized void changeUpdateRetrieval(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
+			throws SCMPValidatorException, SCServiceException {
+		this.cacheUpdateRetriever.changeSubscription(operationTimeoutSeconds, scSubscribeMessage);
+	}
+
+	public synchronized void stopCacheUpdateRetriever() throws SCServiceException, SCMPValidatorException {
+		this.stopCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	public synchronized void stopCacheUpdateRetriever(int operationTimeoutSeconds) throws SCServiceException,
+			SCMPValidatorException {
+		if (this.attached == false) {
+			throw new SCServiceException("Stopping an Cache Update Retriever not possible - client not attached.");
+		}
+		if (this.activeRetriever == false) {
+			// no active retriever to stop, ignore
+			return;
+		}
+		try {
+			this.cacheUpdateRetriever.unsubscribe(operationTimeoutSeconds);
+		} finally {
+			this.activeRetriever = false;
+		}
 	}
 
 	/**

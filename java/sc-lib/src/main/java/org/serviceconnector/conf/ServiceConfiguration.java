@@ -85,8 +85,8 @@ public class ServiceConfiguration {
 		}
 		String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 		if (remoteNode != null) {
-			RemoteNodeConfiguration remoteNodeConfigurationLocal = AppContext.getRequesterConfiguration().getRequesterConfigurations()
-					.get(remoteNode);
+			RemoteNodeConfiguration remoteNodeConfigurationLocal = AppContext.getRequesterConfiguration()
+					.getRequesterConfigurations().get(remoteNode);
 			if (remoteNodeConfigurationLocal == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown remoteNode=" + remoteNode);
 			}
@@ -269,6 +269,10 @@ public class ServiceConfiguration {
 		case PUBLISH_SERVICE:
 			if (remoteHost != null) {
 				return ServiceType.CASCADED_PUBLISH_SERVICE;
+			}
+		case CACHE_UPDATE_RETRIEVER:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER;
 			}
 		case FILE_SERVICE:
 			if (remoteHost != null) {

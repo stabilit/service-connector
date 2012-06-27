@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
@@ -30,6 +31,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -56,6 +58,12 @@ public class PublishCommand extends CommandAdapter {
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
 
+		if (service.getType() == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER
+				|| service.getType() == ServiceType.CACHE_UPDATE_RETRIEVER) {
+			// Managed data arrived over cache update retriever - handle caching
+			AppContext.getSCCache().manageCachedData(message);
+		}
+
 		// reset server timeout
 		this.resetServerTimeout(serviceName, request.getRemoteSocketAddress());
 
@@ -68,7 +76,6 @@ public class PublishCommand extends CommandAdapter {
 		if (message.isPart()) {
 			// incoming message is of type part - outgoing must be part too, poll request
 			reply = new SCMPPart(true);
-
 		} else {
 			reply = new SCMPMessage();
 		}

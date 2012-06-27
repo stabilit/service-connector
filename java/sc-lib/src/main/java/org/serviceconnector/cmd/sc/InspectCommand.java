@@ -25,9 +25,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCache;
+import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
 import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -240,7 +240,8 @@ public class InspectCommand extends CommandAdapter {
 		Service[] services = this.serviceRegistry.getServices();
 		int counter = 0;
 		for (Service service : services) {
-			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE
+					&& service.getType() != ServiceType.CACHE_UPDATE_RETRIEVER) {
 				continue;
 			}
 			if (service.getName().matches(serviceNameRegex) == false) {
@@ -250,6 +251,7 @@ public class InspectCommand extends CommandAdapter {
 			switch (service.getType()) {
 			case SESSION_SERVICE:
 			case PUBLISH_SERVICE:
+			case CACHE_UPDATE_RETRIEVER:
 				if (counter != 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}
@@ -266,6 +268,7 @@ public class InspectCommand extends CommandAdapter {
 			case CASCADED_FILE_SERVICE:
 			case CASCADED_PUBLISH_SERVICE:
 			case CASCADED_SESSION_SERVICE:
+			case CASCADED_CACHE_UPDATE_RETRIEVER:
 				if (counter != 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}

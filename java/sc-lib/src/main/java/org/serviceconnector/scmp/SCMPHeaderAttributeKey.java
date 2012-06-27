@@ -34,7 +34,11 @@ public enum SCMPHeaderAttributeKey {
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
 	/** The CACHE_PARTN_NUMBER. */
-	CACHE_PARTN_NUMBER("cpn"),
+	CACHE_PARTN_NUMBER("cpn"),	
+	/** The CACHING_METHOD. */
+	CACHING_METHOD("cmt"),
+	/** The NR_OF_APPENDICES. */
+	NR_OF_APPENDICES("nra"),
 	/** The COMPRESSION. */
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */

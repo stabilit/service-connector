@@ -124,6 +124,12 @@
 	            <th class="sc_table">Expiration Timeout (ms)</th>            
 	            <th class="sc_table">Creation</th>            
 	            <th class="sc_table">Last Access</th>
+	            <xsl:if test="details/cacheMessage/nrOfParts">
+	            	<th class="sc_table">Number of Parts</th>
+	            </xsl:if>
+	            <xsl:if test="details/cacheMessage/nrOfAppendices">
+	            	<th class="sc_table">Number of Appendices</th>
+	            </xsl:if>
 	            <th class="sc_table">Header Field Count</th><!-- Headers -->
 	          </tr>          
 	          <xsl:apply-templates select="details/cacheMessage">
@@ -181,6 +187,12 @@
 	    <td class="{$class}"><xsl:value-of select="expirationTimeout"/></td>
 	    <td class="{$class}"><xsl:value-of select="creation"/></td>
 	    <td class="{$class}"><xsl:value-of select="lastAccess"/></td>
+	    <xsl:if test="nrOfParts">
+    		<td class="{$class}"><xsl:value-of select="nrOfParts"/></td>
+    	</xsl:if>
+    	<xsl:if test="nrOfAppendices">
+		    <td class="{$class}"><xsl:value-of select="nrOfAppendices"/></td>
+		</xsl:if>	    	    
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="count(header/item) &gt; 0">

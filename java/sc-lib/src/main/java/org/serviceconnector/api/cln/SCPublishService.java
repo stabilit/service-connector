@@ -18,6 +18,7 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
@@ -63,12 +64,12 @@ public class SCPublishService extends SCService {
 	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
 	 * set. Default = 0.
 	 */
-	private int noDataIntervalSeconds;
+	protected int noDataIntervalSeconds;
 	/**
 	 * The receive publication timeout in seconds. Time to wait for the reply of SC in case of a receive publication until the
 	 * subscription is marked as dead.
 	 */
-	private int receivePublicationTimeoutSeconds;
+	protected int receivePublicationTimeoutSeconds;
 
 	/**
 	 * Instantiates a new SC publish service. Should only be used by service connector internal classes. Instantiating
@@ -131,7 +132,7 @@ public class SCPublishService extends SCService {
 	 *             subscribe to host failed<br />
 	 *             error message received from SC <br />
 	 */
-	public SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
+	public synchronized SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
 			SCMessageCallback scMessageCallback) throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive) {
@@ -318,14 +319,14 @@ public class SCPublishService extends SCService {
 	 * Unsubscribe from SC.
 	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
 	 * 
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
+	 * @param scMessage
+	 *            the SC message
 	 * @throws SCServiceException
 	 *             unsubscribe from SC failed<br />
 	 *             error message received from SC <br />
 	 */
-	public synchronized void unsubscribe(SCSubscribeMessage scSubscribeMessage) throws SCServiceException {
-		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
+	public synchronized void unsubscribe(SCMessage scMessage) throws SCServiceException {
+		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
 	}
 
 	/**
@@ -348,14 +349,13 @@ public class SCPublishService extends SCService {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
+	 * @param scMessage
+	 *            the SC message
 	 * @throws SCServiceException
 	 *             unsubscribe from SC failed<br />
 	 *             error message received from SC <br />
 	 */
-	public synchronized void unsubscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
-			throws SCServiceException {
+	public synchronized void unsubscribe(int operationTimeoutSeconds, SCMessage scMessage) throws SCServiceException {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
@@ -367,8 +367,8 @@ public class SCPublishService extends SCService {
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, this.serviceName, this.sessionId);
-			if (scSubscribeMessage != null) {
-				unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
+			if (scMessage != null) {
+				unsubscribeCall.setSessionInfo(scMessage.getSessionInfo());
 			}
 			try {
 				unsubscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);

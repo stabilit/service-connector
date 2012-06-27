@@ -274,8 +274,11 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("lastAccess");
 		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));
 		writer.writeEndElement(); // end of lastAccess
-		writer.writeStartElement("size");
+		writer.writeStartElement("nrOfParts");
 		writer.writeCharacters(String.valueOf(metaEntry.getNumberOfParts() + simulation));
+		writer.writeEndElement(); // end of size
+		writer.writeStartElement("nrOfAppendices");
+		writer.writeCharacters(String.valueOf(metaEntry.getNumberOfAppendices() + simulation));
 		writer.writeEndElement(); // end of size
 		writer.writeStartElement("header");
 		Map<String, String> metaEntryHeader = metaEntry.getHeader();
@@ -339,6 +342,12 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 		@Override
 		public int compare(String cacheKey1, String cacheKey2) {
+			
+			if(cacheKey1.indexOf("|") != -1 || cacheKey2.indexOf("|") != -1) {
+				//TODO jot
+				return 0;
+			}
+			
 			String serviceNameCacheId1 = cacheKey1.substring(0, cacheKey1.lastIndexOf(Constants.SLASH));
 			String serviceNameCacheId2 = cacheKey2.substring(0, cacheKey2.lastIndexOf(Constants.SLASH));
 			int stringResult = serviceNameCacheId1.compareTo(serviceNameCacheId2);
@@ -346,7 +355,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 				// // service names are not equal
 				return stringResult;
 			}
-
+			
 			String partNr1 = cacheKey1.substring(cacheKey1.lastIndexOf(Constants.SLASH) + 1);
 			String partNr2 = cacheKey2.substring(cacheKey2.lastIndexOf(Constants.SLASH) + 1);
 			int partNr1Int = new Integer(partNr1);

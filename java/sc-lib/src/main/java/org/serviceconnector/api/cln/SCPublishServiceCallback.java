@@ -16,8 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
+import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCRemovedMessage;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -60,8 +63,24 @@ class SCPublishServiceCallback extends SCServiceCallback {
 		// 4. post process, reply to client
 		boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 		if (noData == false) {
-			// data reply received - give to application
-			SCPublishMessage replyToClient = new SCPublishMessage();
+			// data reply received - pass to application
+			SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.getCachingMethod(reply
+					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+
+			SCPublishMessage replyToClient = null;
+
+			switch (cachingMethod) {
+			case INITIAL:
+			case UNDEFINED:
+				replyToClient = new SCPublishMessage();
+				break;
+			case APPEND:
+				replyToClient = new SCAppendMessage();
+				break;
+			case REMOVE:
+				replyToClient = new SCRemovedMessage();
+				break;
+			}
 			replyToClient.setData(reply.getBody());
 			replyToClient.setDataLength(reply.getBodyLength());
 			replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -70,6 +89,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+
 			// inform service request is completed
 			this.service.setRequestComplete();
 			this.messageCallback.receive(replyToClient);

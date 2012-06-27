@@ -103,4 +103,14 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
+
+	//TODO comment
+	public void setCacheMethod(String cacheMethod) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHING_METHOD, cacheMethod);
+	}
+
+	//TODO comment
+	public void setCacheId(String cacheId) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+	}
 }
