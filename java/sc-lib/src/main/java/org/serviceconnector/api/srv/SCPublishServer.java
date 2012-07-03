@@ -154,7 +154,7 @@ public class SCPublishServer extends SCSessionServer {
 			publishCall.setMask(publishMessage.getMask());
 			publishCall.setPartSize(publishMessage.getPartSize());
 			publishCall.setMessageInfo(publishMessage.getMessageInfo());
-			publishCall.setCacheMethod(publishMessage.getCacheMethod());
+			publishCall.setCacheMethod(publishMessage.getCachingMethod().getValue());
 			publishCall.setCacheId(publishMessage.getCacheId());
 			SCServerCallback callback = new SCServerCallback(true);
 			try {

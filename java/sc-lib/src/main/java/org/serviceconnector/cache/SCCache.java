@@ -22,8 +22,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -75,7 +77,7 @@ public class SCCache {
 	/** Map of current session id's which are loading messages into cache, (sid, cid). */
 	private HashMap<String, String> loadingSessionIds;
 
-	private List<String> mgdDataKeysInInitialState;
+	private Set<String> mgdDataKeysInInitialState;
 	private Map<String, List<String>> mgdDataKeysAssignedToRetriever;
 
 	/** The meta data cache module. */
@@ -89,7 +91,7 @@ public class SCCache {
 	public SCCache() {
 		this.scCacheConfiguration = null;
 		this.loadingSessionIds = new HashMap<String, String>();
-		this.mgdDataKeysInInitialState = new ArrayList<String>();
+		this.mgdDataKeysInInitialState = new HashSet<String>();
 		this.mgdDataKeysAssignedToRetriever = new HashMap<String, List<String>>();
 	}
 
@@ -317,11 +319,13 @@ public class SCCache {
 			SC_CACHING_METHOD resCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
 					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
+			// cache data entry
 			if (resCachingMethod == SC_CACHING_METHOD.INITIAL && resMessage.isPart() == false) {
 				// managed data received & no part message - no expiration time
 				dataCacheModule.putOrUpdate(cacheKey, resMessage);
+				this.mgdDataKeysInInitialState.add(resCacheId);
 			} else {
-				// an negative timeToLiveSeconds (expirationDate in the past) will throw an exception, handled by the cache
+				// parts cached with timeToLive - may stay in cache in case of error - in such cases no meta entry!
 				dataCacheModule.putOrUpdate(cacheKey, resMessage, timeToLiveSeconds);
 			}
 
@@ -379,8 +383,7 @@ public class SCCache {
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
 			LOGGER.error("Missing metaEntry message can not be applied to existing data.");
-			this.removeMetaAndDataEntries("sid unknown", resCacheId,
-					"Missing metaEntry message can not be applied to existing data.");
+			this.removeManagedDataForRetriever(currUpdateRetrieverName);
 			return;
 		}
 
@@ -451,6 +454,7 @@ public class SCCache {
 					dataCacheModule.putOrUpdate(initialCacheId, initialMessage, metaEntry.getLoadingTimeoutMillis());
 					// cache appendix
 					dataCacheModule.putOrUpdate(newAppendixCacheId, resMessage, metaEntry.getLoadingTimeoutMillis());
+					CacheLogger.putAppendixPartToCache(newAppendixCacheId, currUpdateRetrieverName, currLoadingAppendixPartNr);
 				} else {
 					// last part of appendix message received - set state to loaded, no expiration times
 					metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
@@ -461,6 +465,7 @@ public class SCCache {
 					dataCacheModule.putOrUpdate(initialCacheId, initialMessage);
 					// cache appendix
 					dataCacheModule.putOrUpdate(newAppendixCacheId, resMessage);
+					CacheLogger.finishCachingAppendix(newAppendixCacheId, currUpdateRetrieverName, currLoadingAppendixPartNr);
 				}
 			} else {
 				// appendix arrived increment counter
@@ -480,6 +485,8 @@ public class SCCache {
 					dataCacheModule.putOrUpdate(initialCacheId, initialMessage, metaEntry.getLoadingTimeoutMillis());
 					// cache appendix
 					dataCacheModule.putOrUpdate(baseAppendixCacheId, resMessage, metaEntry.getLoadingTimeoutMillis());
+					CacheLogger.startCachingAppendix(baseAppendixCacheId, currUpdateRetrieverName,
+							metaEntry.getLoadingTimeoutMillis());
 				} else {
 					// no part message received - common procedure, no expiration times!
 					metaEntry.saveAppendixInfo(baseAppendixCacheId);
@@ -489,6 +496,7 @@ public class SCCache {
 					dataCacheModule.putOrUpdate(initialCacheId, initialMessage);
 					// cache appendix
 					dataCacheModule.putOrUpdate(baseAppendixCacheId, resMessage);
+					CacheLogger.cacheAppendix(baseAppendixCacheId, currUpdateRetrieverName);
 				}
 			}
 		}
@@ -536,7 +544,7 @@ public class SCCache {
 		this.loadingSessionIds.remove(sessionId);
 	}
 
-	//TODO
+	// TODO
 	public synchronized void removeManagedDataForRetriever(String updateRetrieverName) {
 
 		// remove managed data in initial state
@@ -545,7 +553,12 @@ public class SCCache {
 		}
 
 		// removed managed data assigned to update retriever
-		for (String metaEntryCacheId : this.mgdDataKeysAssignedToRetriever.get(updateRetrieverName)) {
+		List<String> metaEntryCacheIds = this.mgdDataKeysAssignedToRetriever.get(updateRetrieverName);
+		if (metaEntryCacheIds == null) {
+			// no managed data to delete
+			return;
+		}
+		for (String metaEntryCacheId : metaEntryCacheIds) {
 			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Update Retriever, name=" + updateRetrieverName);
 		}
 	}

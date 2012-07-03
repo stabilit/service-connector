@@ -127,4 +127,8 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
 	}
+
+	public void setAppendixNr(int appendixNr) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.APPENDIX_NR, appendixNr);
+	}
 }

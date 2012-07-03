@@ -70,8 +70,14 @@ public class SCMPMessage implements Serializable {
 	 *            the message body
 	 */
 	public SCMPMessage(Object messageBody) {
-		this.header = new HashMap<String, String>();
+		this();
 		this.setBody(messageBody);
+	}
+
+	//TODO
+	public SCMPMessage(Map<String, String> baseHeader) {
+		this();
+		this.header = new HashMap<String, String>(baseHeader);
 	}
 
 	/**

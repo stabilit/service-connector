@@ -29,16 +29,27 @@ public final class CacheLogger {
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
 	/** The start loading str. */
 	private static String startLoadingStr = "start loading message cacheKey=%s sid=%s timeout=%sms";
+	// TODO
+	private static String startCachingAppStr = "start caching appendix cacheKey=%s updateRetrieverName=%s timeout=%sms";
+	private static String cachingAppStr = "cache appendix cacheKey=%s updateRetrieverName=%s";
+
 	/** The try loading str. */
 	private static String tryGetMsgStr = "try to get message from cache cacheKey=%s sid=%s cpn=%s";
 	/** The got message str. */
 	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s length=%s";
 	/** The finish loading str. */
-	private static String finishLoadingStr = "finish loading message cacheKey=%s sid=%s partCounter=%s";
+	private static String finishLoadingStr = "finish loading message cacheKey=%s sid=%s numberOfParts=%s";
+
+	// TODO
+	private static String finishCachingAppStr = "finish caching appendix cacheKey=%s updateRetrieverName=%s numberOfParts=%s";
 	/** The abort loading str. */
 	private static String abortLoadingStr = "abort loading message cacheKey=%s sid=%s";
 	/** The put message str. */
 	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s length=%s";
+
+	// TODO
+	private static String putAppendixPartStr = "put appendix part into cache cacheKey=%s updateRetrieverName=%s partNr=%s";
+
 	/** The remove msg from cache str. */
 	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s partNr=%s reason=%s";
 	/** The clear cache str. */
@@ -114,6 +125,24 @@ public final class CacheLogger {
 		}
 	}
 
+	public static void startCachingAppendix(String cacheKey, String updateRetrieverName, int timeout) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(startCachingAppStr, cacheKey, updateRetrieverName, timeout);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	public static void cacheAppendix(String cacheKey, String updateRetrieverName) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(cachingAppStr, cacheKey, updateRetrieverName);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
 	/**
 	 * Finish loading cache message.
 	 * 
@@ -128,6 +157,16 @@ public final class CacheLogger {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(finishLoadingStr, cacheKey, sessionId, numberOfParts);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	// TODO
+	public static void finishCachingAppendix(String cacheKey, String updateRetrieverName, int numberOfParts) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(finishCachingAppStr, cacheKey, updateRetrieverName, numberOfParts);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -164,6 +203,16 @@ public final class CacheLogger {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(putMessageStr, cacheKey, loadingSessionId, expiration, length);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	// TODO
+	public static void putAppendixPartToCache(String cacheKey, String updateRetrieverName, int partNr) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(putAppendixPartStr, cacheKey, updateRetrieverName, partNr);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

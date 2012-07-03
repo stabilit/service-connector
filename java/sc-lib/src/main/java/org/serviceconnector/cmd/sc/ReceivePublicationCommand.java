@@ -71,22 +71,15 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		}
 		LOGGER.debug("CRP message found in queue subscriptionId " + subscriptionId);
 		// message found in subscription queue set up reply
-		SCMPMessage reply = new SCMPMessage();
+		SCMPMessage reply = new SCMPMessage(message.getHeader());
 		if (message.isPart()) {
 			// message from queue is of type part - outgoing must be part too, no poll request
-			reply = new SCMPPart(false);
+			reply = new SCMPPart(false, message.getHeader());
 		}
-		reply.setServiceName(reqMessage.getServiceName());
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());
 		reply.setIsReply(true);
 		reply.setBody(message.getBody());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
-		String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-		if (messageInfo != null) {
-			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-		}
-		reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
 		response.setSCMP(reply);
 		// reset subscription timeout to ECI
 		this.subscriptionRegistry.resetSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());

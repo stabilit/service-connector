@@ -25,8 +25,6 @@ public class SCPublishMessage extends SCMessage {
 	 * message contents. Only printable characters are allowed.
 	 */
 	private String mask = null;
-	
-	private String cacheMethod = null;
 
 	/**
 	 * Instantiates a new SC publish message.
@@ -52,15 +50,6 @@ public class SCPublishMessage extends SCMessage {
 	 */
 	public SCPublishMessage(String data) {
 		super(data);
-	}
-
-	//TODO comment
-	public void setCacheMethod(String cacheMethod) {
-		this.cacheMethod = cacheMethod;
-	}	
-	
-	public String getCacheMethod() {
-		return cacheMethod;
 	}
 
 	/**

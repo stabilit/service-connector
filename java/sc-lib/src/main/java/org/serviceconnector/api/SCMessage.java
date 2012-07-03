@@ -19,6 +19,7 @@ package org.serviceconnector.api;
 import java.util.Date;
 
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
@@ -79,6 +80,9 @@ public class SCMessage {
 	 * expiration date and time of the message in cache. It must be set together with cacheId attribute.
 	 */
 	private Date cacheExpirationDateTime;
+
+	// TODO
+	private SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.NOT_MANAGED;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -397,6 +401,15 @@ public class SCMessage {
 	 */
 	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) {
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
+	}
+
+	// TODO comment
+	public void setCachingMethod(SC_CACHING_METHOD cachingMethod) {
+		this.cachingMethod = cachingMethod;
+	}
+
+	public SC_CACHING_METHOD getCachingMethod() {
+		return this.cachingMethod;
 	}
 
 	/** {@inheritDoc} */

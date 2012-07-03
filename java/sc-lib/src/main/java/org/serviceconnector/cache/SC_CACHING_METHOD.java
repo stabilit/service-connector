@@ -25,6 +25,7 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 	INITIAL("initial"), //
 	APPEND("append"), //
 	REMOVE("remove"), //
+	NOT_MANAGED(""),
 	/** The UNDEFINED. */
 	UNDEFINED("undefined");
 

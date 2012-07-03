@@ -145,7 +145,7 @@ public class SCCacheMetaEntry implements Serializable {
 	}
 
 	/**
-	 * Gets the number of parts.
+	 * Gets the number of parts. Pay attention, counter starts with 0!
 	 * 
 	 * @return the number of parts
 	 */

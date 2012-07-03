@@ -85,8 +85,8 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		if (scReply != null) {
 			reply.setBody(scReply.getData());
 			if (scReply.getCacheExpirationDateTime() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getDateTimeAsString(scReply
-						.getCacheExpirationDateTime()));
+				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
+						DateTimeUtility.getDateTimeAsString(scReply.getCacheExpirationDateTime()));
 			}
 			reply.setCacheId(scReply.getCacheId());
 			if (scReply.getMessageInfo() != null) {
@@ -100,6 +100,9 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 			}
 			if (scReply.getAppErrorText() != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
+			}
+			if (scReply.getCachingMethod() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.CACHING_METHOD, scReply.getCachingMethod().getValue());
 			}
 			reply.setPartSize(scReply.getPartSize());
 		}

@@ -38,7 +38,9 @@ public enum SCMPHeaderAttributeKey {
 	/** The CACHING_METHOD. */
 	CACHING_METHOD("cmt"),
 	/** The NR_OF_APPENDICES. */
-	NR_OF_APPENDICES("nra"),
+	NR_OF_APPENDICES("nra"),	
+	/** The APPENDIX_NR. */
+	APPENDIX_NR("anr"),	
 	/** The COMPRESSION. */
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */

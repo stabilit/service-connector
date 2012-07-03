@@ -71,6 +71,7 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
+		case CASCADED_CACHE_UPDATE_RETRIEVER:
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();

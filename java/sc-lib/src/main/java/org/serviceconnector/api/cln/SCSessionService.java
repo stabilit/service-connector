@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCAppendMessage;
+import org.serviceconnector.api.SCManagedMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
@@ -262,8 +264,16 @@ public class SCSessionService extends SCService {
 			scEx.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw scEx;
 		}
+
 		// 4. post process, reply to client
-		SCMessage replyToClient = new SCMessage();
+		SCMessage replyToClient = null;
+		Integer nrOfAppendix = reply.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDICES);
+		if (nrOfAppendix != null) {
+			replyToClient = this.pollAppendices(operationTimeoutSeconds, nrOfAppendix, scMessage.getCacheId());
+		} else {
+			replyToClient = new SCMessage();
+		}
+
 		replyToClient.setData(reply.getBody());
 		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -274,6 +284,46 @@ public class SCSessionService extends SCService {
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
+	}
+
+	private SCManagedMessage pollAppendices(int operationTimeoutSeconds, int nrOfAppendix, String cacheId)
+			throws SCServiceException {
+		SCManagedMessage managedMsg = new SCManagedMessage();
+
+		SCMPClnExecuteCall clnExecutePollCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
+		clnExecutePollCall.setCacheId(cacheId);
+		// appendices need to be read from cache
+		for (int readApp = 0; readApp <= nrOfAppendix; readApp++) {
+			clnExecutePollCall.setAppendixNr(readApp);
+			SCServiceCallback cbk = new SCServiceCallback(true);
+			try {
+				clnExecutePollCall.invoke(cbk, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				throw new SCServiceException("Execute poll request failed. ", e);
+			}
+			// 3. receiving reply and error handling
+			SCMPMessage reply = cbk.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			if (reply.isFault()) {
+				SCServiceException scEx = new SCServiceException("Execute poll failed.");
+				scEx.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				scEx.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				throw scEx;
+			}
+
+			SCAppendMessage appendix = new SCAppendMessage();
+			appendix.setData(reply.getBody());
+			appendix.setDataLength(reply.getBodyLength());
+			appendix.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+			appendix.setSessionId(this.sessionId);
+			appendix.setCacheId(reply.getCacheId());
+			appendix.setCachePartNr(reply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
+			appendix.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+			appendix.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			appendix.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+
+			managedMsg.addAppendix(appendix);
+		}
+		return managedMsg;
 	}
 
 	/**

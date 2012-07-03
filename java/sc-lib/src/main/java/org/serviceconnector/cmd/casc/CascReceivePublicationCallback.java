@@ -19,11 +19,14 @@ package org.serviceconnector.cmd.casc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.casc.CascadedClient;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.service.CascadedPublishService;
+import org.serviceconnector.service.ServiceType;
 
 /**
  * The Class CascReceivePublicationCallback.
@@ -82,6 +85,13 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 				// message received,insert in queue
 				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName()
 						+ " sid=" + sid);
+
+				//TODO
+				CascadedPublishService publishService = cascClient.getPublishService();
+				if (publishService.getType() == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER) {
+					// Managed data arrived over cache update retriever - handle caching
+					AppContext.getSCCache().manageCachedData(reply);
+				}
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);
 			}

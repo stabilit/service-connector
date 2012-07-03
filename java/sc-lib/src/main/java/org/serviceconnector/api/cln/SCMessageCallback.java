@@ -42,6 +42,10 @@ public abstract class SCMessageCallback {
 	public SCMessageCallback(SCService service) {
 		this.service = service;
 	}
+	
+	//TODO
+	public SCMessageCallback() {
+	}
 
 	/**
 	 * Callback. Method gets called when reply arrives.

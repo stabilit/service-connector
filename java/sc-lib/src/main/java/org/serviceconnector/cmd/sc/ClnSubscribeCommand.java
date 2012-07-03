@@ -90,6 +90,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
+		case CASCADED_CACHE_UPDATE_RETRIEVER:
 			// publish service is cascaded
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();

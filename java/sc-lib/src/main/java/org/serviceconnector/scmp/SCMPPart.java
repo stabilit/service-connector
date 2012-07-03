@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -50,14 +51,10 @@ public class SCMPPart extends SCMPMessage {
 		this.pollRequest = pollRequest;
 	}
 
-	/**
-	 * Instantiates a new SCMPPart.
-	 * 
-	 * @param map
-	 *            the map
-	 */
-	public SCMPPart(Map<String, String> map) {
-		this.header = map;
+	//TODO
+	public SCMPPart(boolean pollRequest, Map<String, String> baseHeader) {
+		this(pollRequest);
+		this.header = new HashMap<String, String>(baseHeader);		
 	}
 
 	/** {@inheritDoc} */

@@ -357,8 +357,8 @@ public class SCClient {
 		ValidatorUtility.validateStringLengthTrim(1, retrieverName, Constants.MAX_LENGTH_SERVICENAME,
 				SCMPError.HV_WRONG_SERVICE_NAME);
 
-		SCPublishService retriever = new SCPublishService(this, retrieverName, this.requester);
-		retriever.subscribe(operationTimeoutSeconds, subscribeMessage, retrieverCallback);
+		this.cacheUpdateRetriever = new SCPublishService(this, retrieverName, this.requester);
+		this.cacheUpdateRetriever.subscribe(operationTimeoutSeconds, subscribeMessage, retrieverCallback);
 		this.activeRetriever = true;
 	}
 

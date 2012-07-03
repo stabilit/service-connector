@@ -131,7 +131,7 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String cacheId = urlRequestString.getParamValue("cacheId");
 			LOGGER.debug("cache inspect for serviceName=" + serviceName + ", cacheId=" + cacheId);
-			String cacheInspectString = this.getCacheInspectString(serviceName, serviceName + Constants.UNDERLINE + cacheId);
+			String cacheInspectString = this.getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
