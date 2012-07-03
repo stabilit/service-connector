@@ -55,6 +55,8 @@ public class TestConstants {
 	public static final String pubServiceName1 = "publish-1";
 	public static final String pubServiceName2 = "publish-2";
 	public static final String pubServerName1 = "publish-1";
+	public static final String updateRetrieverName1 = "updateRetriever1";
+	public static final String updateRetrieverName2 = "updateRetriever2";
 	public static final String filServiceName1 = "file-1";
 	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";
@@ -64,6 +66,7 @@ public class TestConstants {
 	public static final String killServerCmd = "kill";
 	public static final String rejectCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
+	public static final String publish3Appendixin1SecIntervalMsgCmd = "publish3Appendixin5SecInterval";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
 	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";

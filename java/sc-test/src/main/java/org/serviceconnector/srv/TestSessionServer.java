@@ -30,6 +30,7 @@ import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
@@ -347,6 +348,12 @@ public class TestSessionServer extends TestStatefulServer {
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				request.setData("large request small response - 999 is a key for that!");
+			} else if (dataString.equals("managedData")) {
+				LOGGER.info("managed data requested - reply with initial in caching method");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				request.setData("managed data requested!");
+				request.setCachingMethod(SC_CACHING_METHOD.INITIAL);
 			} else {
 				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache

@@ -120,11 +120,11 @@ public class TestUtil {
 		while ((strLine = br.readLine()) != null) {
 			Matcher mEXC = PAT_EXC.matcher(strLine);
 			if (mEXC.matches()) {
-				throw new Exception("EXC found in " + logFileToCheck + "\n" + strLine);
+				throw new Exception("EXC found in " + fileToCheck.getPath() + "\n" + strLine);
 			}
 			Matcher mERROR = PAT_ERROR.matcher(strLine);
 			if (mERROR.matches()) {
-				throw new Exception("ERROR found in " + logFileToCheck + "\n" + strLine);
+				throw new Exception("ERROR found in " + fileToCheck.getPath() + "\n" + strLine);
 			}
 		}
 	}

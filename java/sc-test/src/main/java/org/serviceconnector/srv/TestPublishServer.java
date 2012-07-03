@@ -21,7 +21,6 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +35,7 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
@@ -339,6 +339,27 @@ public class TestPublishServer extends TestStatefulServer {
 				Thread.sleep(1000);
 				pubMessage.setMask(TestConstants.maskSrv);
 				pubMessage.setData(largeString);
+				this.publishSrv.publish(pubMessage);
+				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
+		// publish 3 appendix within 3 seconds
+		public void publish3Appendixin5SecInterval(SCMessage request, int operationTimeoutMillis) {
+			SCPublishMessage pubMessage = new SCPublishMessage();
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
+			try {
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0");
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(1000);
+				pubMessage.setData("1");
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(1000);
+				pubMessage.setData("2");
 				this.publishSrv.publish(pubMessage);
 				TestPublishServer.testLogger.info("publish message large message");
 			} catch (Exception e) {
