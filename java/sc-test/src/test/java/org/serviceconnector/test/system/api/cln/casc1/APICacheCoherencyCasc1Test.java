@@ -15,14 +15,19 @@
  */
 package org.serviceconnector.test.system.api.cln.casc1;
 
+import java.util.List;
+import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCManagedMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
 import org.serviceconnector.test.system.api.APISystemSuperCCTest;
 
 public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
@@ -38,7 +43,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	}
 
 	/**
-	 * Description: receive 3 appendix<br>
+	 * Description: receive 3 appendices<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -53,18 +58,18 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		// start update retriever
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
-		subMsg.setSessionInfo(TestConstants.publish3Appendixin1SecIntervalMsgCmd);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
 		// assure 3 messages arrive within 10 seconds!
 		updateRetrieverCbk.waitForMessage(10, 3);
 	}
 
 	/**
-	 * Description: read managed data from cache<br>
+	 * Description: read managed data from cache, 3 appendices<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_cc_readManagedData() throws Exception {
+	public void t02_cc_readManagedData() throws Exception {
 		// gets message cached (cacheid=700)
 		SCMessage request = new SCMessage();
 		request.setData("managedData");
@@ -75,7 +80,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		// start update retriever
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
-		subMsg.setSessionInfo(TestConstants.publish3Appendixin1SecIntervalMsgCmd);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
 		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
 		// assure 3 messages arrive within 10 seconds!
@@ -87,6 +92,46 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		Assert.assertTrue("response not of type managed message", response instanceof SCManagedMessage);
 		SCManagedMessage managedData = (SCManagedMessage) response;
 		Assert.assertEquals("response not of type managed message", managedData.getNrOfAppendices(), 3);
+		List<SCAppendMessage> appendices = managedData.getAppendices();
+
+		int i = 0;
+		for (SCAppendMessage scAppendMessage : appendices) {
+			Assert.assertEquals(i + "", (String) scAppendMessage.getData());
+			i++;
+		}
+
+		// verify that message is in cache on sc1 and not only in sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		Assert.assertEquals("success", inspectResponse.get("return"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
+		Assert.assertEquals("700", inspectResponse.get("cacheId"));
+		Assert.assertEquals("3", inspectResponse.get("cacheMessageNrOfAppendix"));
+		Assert.assertEquals("700/3|0=0&700/0=0&700/2|0=0&700/1|0=0&", inspectResponse.get("cacheMessagePartInfo")); // cacheNrOfPartsOfInitialMsg=0
+		Assert.assertEquals("updateRetriever1", inspectResponse.get("cacheMessageAssignedUpdateGuardian"));
+	}
+
+	/**
+	 * Description:
+	 * Expectation: passes
+	 */
+	@Test
+	public void t10_cc_StopUpdateRetrieverReadManagedData() throws Exception {
+
+	}
+
+	@Test
+	public void t10_cc_RetrievingAppendixWithoutCacheId() throws Exception {
+
+	}
+
+	@Test
+	public void t10_cc_RetrievingAppendixOfDifferentCacheGuardian() throws Exception {
+
+	}
+
+	@Test
+	public void t10_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
+
 	}
 
 	// /**

@@ -25,7 +25,6 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
@@ -71,10 +70,12 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		}
 		LOGGER.debug("CRP message found in queue subscriptionId " + subscriptionId);
 		// message found in subscription queue set up reply
-		SCMPMessage reply = new SCMPMessage(message.getHeader());
+		SCMPMessage reply = null;
 		if (message.isPart()) {
 			// message from queue is of type part - outgoing must be part too, no poll request
 			reply = new SCMPPart(false, message.getHeader());
+		} else {
+			reply = new SCMPMessage(message.getHeader());
 		}
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());

@@ -19,15 +19,13 @@ package org.serviceconnector.cache;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
-//TODO comment etc
+// TODO comment etc
 public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METHOD> {
 
 	INITIAL("initial"), //
 	APPEND("append"), //
 	REMOVE("remove"), //
-	NOT_MANAGED(""),
-	/** The UNDEFINED. */
-	UNDEFINED("undefined");
+	NOT_MANAGED("");
 
 	/** The value. */
 	private String value;
@@ -44,7 +42,7 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 		SC_CACHING_METHOD method = REVERSE_MAP.get(methodString);
 		if (method == null) {
 			// methodString doesn't match to a valid type
-			return SC_CACHING_METHOD.UNDEFINED;
+			return SC_CACHING_METHOD.NOT_MANAGED;
 		}
 		return method;
 	}

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
@@ -35,8 +36,6 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6142075299284577556L;
-	/** The numberOfParts, tells how many messages exists for this meta entry. */
-	private int numberOfParts;
 	/** The creation time, tells what time this meta entry has been created. */
 	private Date creationTime;
 	/** The last modified time. */
@@ -49,57 +48,32 @@ public class SCCacheMetaEntry implements Serializable {
 	private int loadingTimeoutMillis;
 	/** The header containing any header attributes of request SCMP message. */
 	private Map<String, String> header;
-	/** The cache key. */
-	private String cacheKey = null;
 	/** The cache id. */
 	private String cacheId = null;
 
 	// TODO
-	private int numberOfAppendices;
+	private int numberOfAppendix;
 	private String updateRetrieverName;
-	private int currLoadingAppendixPartNr;
 
-	private Map<String, Integer> appendicesInfo;
+	private Map<String, Integer> dataMessagePartInfo;
 
 	/**
 	 * Instantiates a new cache meta entry.
 	 * 
-	 * @param cacheKey
+	 * @param cacheId
 	 *            the cache id
 	 */
-	public SCCacheMetaEntry(String cacheKey) {
-		this.cacheKey = cacheKey;
-		this.numberOfParts = -1; // increment to 0 when initial message retrieved
+	public SCCacheMetaEntry(String cacheId) {
+		this.cacheId = cacheId;
 		this.cacheEntryState = SC_CACHE_ENTRY_STATE.UNDEFINDED;
 		this.creationTime = DateTimeUtility.getCurrentTime();
 		this.lastModifiedTime = this.creationTime;
 		this.loadingSessionId = null;
-		this.cacheId = null;
 		this.loadingTimeoutMillis = -1;
 		this.header = new HashMap<String, String>();
-		this.numberOfAppendices = 0;
-		this.currLoadingAppendixPartNr = 0;
-		this.appendicesInfo = new HashMap<String, Integer>();
+		this.numberOfAppendix = 0;
+		this.dataMessagePartInfo = new HashMap<String, Integer>();
 		this.updateRetrieverName = "unset";
-	}
-
-	/**
-	 * Gets the cache key.
-	 * 
-	 * @return the cache key
-	 */
-	public String getCacheKey() {
-		return cacheKey;
-	}
-
-	/**
-	 * Sets the cache id.
-	 * 
-	 * @param cacheId
-	 *            the new cache id
-	 */
-	public void setCacheId(String cacheId) {
-		this.cacheId = cacheId;
 	}
 
 	/**
@@ -145,25 +119,6 @@ public class SCCacheMetaEntry implements Serializable {
 	}
 
 	/**
-	 * Gets the number of parts. Pay attention, counter starts with 0!
-	 * 
-	 * @return the number of parts
-	 */
-	public int getNumberOfParts() {
-		return numberOfParts;
-	}
-
-	/**
-	 * Sets the number of parts.
-	 * 
-	 * @param numberOfParts
-	 *            the new number of parts
-	 */
-	public void setNumberOfParts(int numberOfParts) {
-		this.numberOfParts = numberOfParts;
-	}
-
-	/**
 	 * Sets the cache entry state.
 	 * 
 	 * @param cacheEntryState
@@ -182,13 +137,17 @@ public class SCCacheMetaEntry implements Serializable {
 		return this.cacheEntryState;
 	}
 
-	/**
-	 * Checks if this composite is loading. {@link SC_CACHE_ENTRY_STATE}
-	 * 
-	 * @return true, if is loading
-	 */
-	public boolean isLoading() {
-		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING) {
+	// TODO
+	public boolean isLoadingInitial() {
+		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING_INITIAL) {
+			return true;
+		}
+		return false;
+	}
+
+	// TODO
+	public boolean isLoadingAppendix() {
+		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING_APPENDIX) {
 			return true;
 		}
 		return false;
@@ -278,15 +237,16 @@ public class SCCacheMetaEntry implements Serializable {
 	 * @return the header
 	 */
 	public Map<String, String> getHeader() {
-		return header;
+		return this.header;
 	}
 
-	public int getNumberOfAppendices() {
-		return this.numberOfAppendices;
+	public int getNrOfAppendix() {
+		return this.numberOfAppendix;
 	}
 
-	public int incrementNrOfAppendices() {
-		return (this.numberOfAppendices++);
+	public int incrementNrOfAppendix() {
+		this.numberOfAppendix++;
+		return this.numberOfAppendix;
 	}
 
 	public String getUpdateRetrieverName() {
@@ -297,23 +257,28 @@ public class SCCacheMetaEntry implements Serializable {
 		this.updateRetrieverName = updateRetrieverName;
 	}
 
-	public int getCurrLoadingAppendixPartNr() {
-		return currLoadingAppendixPartNr;
+	public int getNrOfParts(String cacheId) {
+		return this.dataMessagePartInfo.get(cacheId);
 	}
 
-	public void setCurrLoadingAppendixPartNr(int currLoadingAppendixPartNr) {
-		this.currLoadingAppendixPartNr = currLoadingAppendixPartNr;
+	public int incrementNrOfPartsForDataMsg(String cacheId) {
+		Integer nrOfParts = this.dataMessagePartInfo.get(cacheId);
+		if (nrOfParts == null) {
+			// first part received - initialize
+			nrOfParts = 0;
+		} else {
+			nrOfParts++;
+		}
+		this.dataMessagePartInfo.put(cacheId, nrOfParts);
+		return nrOfParts;
 	}
 
-	public int incrementCurrLoadingAppendixPartNr() {
-		return (this.currLoadingAppendixPartNr++);
-	}
+	public String nrOfPartsForAppendixAsString() {
+		StringBuilder sb = new StringBuilder();
+		for (Entry<String, Integer> partInfo : this.dataMessagePartInfo.entrySet()) {
 
-	public void saveAppendixInfo(String appendixCacheId) {
-		this.appendicesInfo.put(appendixCacheId, this.currLoadingAppendixPartNr);
-	}
-	
-	public int getNrOfPartsOfAppendix(String appendixCacheId) {
-		return this.appendicesInfo.get(appendixCacheId);
+			sb.append(partInfo.getKey() + Constants.EQUAL_SIGN + partInfo.getValue() + Constants.AMPERSAND_SIGN);
+		}
+		return sb.toString();
 	}
 }

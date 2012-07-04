@@ -267,7 +267,7 @@ public class SCSessionService extends SCService {
 
 		// 4. post process, reply to client
 		SCMessage replyToClient = null;
-		Integer nrOfAppendix = reply.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDICES);
+		Integer nrOfAppendix = reply.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDIX);
 		if (nrOfAppendix != null) {
 			replyToClient = this.pollAppendices(operationTimeoutSeconds, nrOfAppendix, scMessage.getCacheId());
 		} else {
@@ -293,7 +293,7 @@ public class SCSessionService extends SCService {
 		SCMPClnExecuteCall clnExecutePollCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
 		clnExecutePollCall.setCacheId(cacheId);
 		// appendices need to be read from cache
-		for (int readApp = 0; readApp <= nrOfAppendix; readApp++) {
+		for (int readApp = 1; readApp <= nrOfAppendix; readApp++) {
 			clnExecutePollCall.setAppendixNr(readApp);
 			SCServiceCallback cbk = new SCServiceCallback(true);
 			try {

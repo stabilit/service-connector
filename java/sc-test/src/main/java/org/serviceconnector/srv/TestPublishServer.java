@@ -346,8 +346,8 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
-		// publish 3 appendix within 3 seconds
-		public void publish3Appendixin5SecInterval(SCMessage request, int operationTimeoutMillis) {
+		// publish 3 appendix
+		public void publish3Appendix(SCMessage request, int operationTimeoutMillis) {
 			SCPublishMessage pubMessage = new SCPublishMessage();
 			pubMessage.setCacheId((String) request.getData());
 			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
@@ -355,10 +355,10 @@ public class TestPublishServer extends TestStatefulServer {
 				pubMessage.setMask(TestConstants.maskSrv);
 				pubMessage.setData("0");
 				this.publishSrv.publish(pubMessage);
-				Thread.sleep(1000);
+				Thread.sleep(200);
 				pubMessage.setData("1");
 				this.publishSrv.publish(pubMessage);
-				Thread.sleep(1000);
+				Thread.sleep(200);
 				pubMessage.setData("2");
 				this.publishSrv.publish(pubMessage);
 				TestPublishServer.testLogger.info("publish message large message");

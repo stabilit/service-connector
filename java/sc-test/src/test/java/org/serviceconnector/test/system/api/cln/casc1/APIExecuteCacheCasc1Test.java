@@ -59,7 +59,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setCacheId("700");
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals(inspectResponse.get("return"), "notfound");
 	}
 
@@ -80,18 +80,18 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
 
 		request.setData("cacheFor2Hour");
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor1Hour", response.getData());
 		// inspect cache entry
-		inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
 
 		sessionService1.deleteSession();
@@ -176,11 +176,11 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
 		// inspect cache entry
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("1", inspectResponse.get("cacheSize")); //cacheSize=1, (2) 0,1
+		Assert.assertEquals("1", inspectResponse.get("cacheSize")); // cacheSize=1, (2) 0,1
 		sessionService1.deleteSession();
 	}
 
@@ -209,11 +209,11 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 			response = sessionService1.execute(request);
 			Assert.assertEquals(largeMessage, response.getData());
 			// inspect cache entry
-			Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+			Map<String, String> inspectResponse = client.inspectCache("700");
 			Assert.assertEquals("success", inspectResponse.get("return"));
-			Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+			Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 			Assert.assertEquals("700", inspectResponse.get("cacheId"));
-			Assert.assertEquals("1", inspectResponse.get("cacheSize")); //cacheSize=1, (2) 0,1
+			Assert.assertEquals("700=1&", inspectResponse.get("cacheMessagePartInfo"));
 		}
 		Thread.sleep(1000);
 		// next client calls, do not access srv, read from cache
@@ -228,7 +228,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		}
 		sessionService1.deleteSession();
 	}
-	
+
 	/**
 	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime, part size 64KB<br>
 	 * Expectation: get large message from cache
@@ -251,11 +251,11 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
 		// inspect cache entry
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); //cacheSize=51, (52) 0..51
+		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
 		sessionService1.deleteSession();
 	}
 
@@ -278,23 +278,23 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); //cacheSize=51, (52) 0..51
+		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
 		request.setData("cacheFor1Hour");
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
 		// inspect cache entry
-		inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheState"));
+		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); //cacheSize=51, (52) 0..51
+		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
 		sessionService1.deleteSession();
 	}
-	
+
 	/**
 	 * Description: exchange message with cacheId, server reply with cacheExpirationTime + 1 day<br>
 	 * Expectation: cached message stays
@@ -351,7 +351,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor1Hour", response.getData());
 		Assert.assertEquals("700", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr()); 
+		Assert.assertEquals("1", response.getCachePartNr());
 
 		// session service two gets message with cacheId 600
 		request.setData(TestConstants.pangram);
@@ -512,7 +512,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	@Test
 	public void t20_cacheServerTimeoutReply() throws Exception {
 		// inspect cache
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals(inspectResponse.get("return"), "notfound");
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
@@ -532,7 +532,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		}
 		// wait other 10s, SC server timeout should expire and cache composite removed from cache
 		Thread.sleep(10000);
-		inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		inspectResponse = client.inspectCache("700");
 		Assert.assertEquals(inspectResponse.get("return"), "notfound");
 		sessionService1.deleteSession();
 	}
@@ -545,7 +545,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	@Test
 	public void t21_cacheServerRepliesOtherCacheId() throws Exception {
 		// inspect cache
-		Map<String, String> inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		Map<String, String> inspectResponse = client.inspectCache("700");
 		Assert.assertEquals(inspectResponse.get("return"), "notfound");
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
@@ -560,10 +560,10 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheServerReplyOther", response.getData());
 		// inspect cache with cacheId 700
-		inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "700");
+		inspectResponse = client.inspectCache("700");
 		Assert.assertEquals("notfound", inspectResponse.get("return"));
 		// inspect cache with cacheId 800
-		inspectResponse = client.inspectCache(TestConstants.sesServiceName1, "800");
+		inspectResponse = client.inspectCache("800");
 		Assert.assertEquals("notfound", inspectResponse.get("return"));
 		sessionService1.deleteSession();
 	}

@@ -71,7 +71,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 
 			switch (cachingMethod) {
 			case INITIAL:
-			case UNDEFINED:
+			case NOT_MANAGED:
 				replyToClient = new SCPublishMessage();
 				break;
 			case APPEND:
@@ -80,6 +80,8 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			case REMOVE:
 				replyToClient = new SCRemovedMessage();
 				break;
+			default:
+				replyToClient = new SCPublishMessage();
 			}
 			replyToClient.setData(reply.getBody());
 			replyToClient.setDataLength(reply.getBodyLength());

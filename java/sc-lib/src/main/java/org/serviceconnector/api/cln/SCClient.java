@@ -635,8 +635,6 @@ public class SCClient {
 	 * operation.<br />
 	 * Operation only possible if client gets successfully attached before.
 	 * 
-	 * @param serviceName
-	 *            the service name
 	 * @param cacheId
 	 *            the cache id
 	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
@@ -648,9 +646,8 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br />
 	 */
-	public Map<String, String> inspectCache(String serviceName, String cacheId) throws SCServiceException,
-			UnsupportedEncodingException {
-		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
+	public Map<String, String> inspectCache(String cacheId) throws SCServiceException, UnsupportedEncodingException {
+		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, cacheId);
 	}
 
 	/**
@@ -659,8 +656,6 @@ public class SCClient {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
-	 * @param serviceName
-	 *            the service name
 	 * @param cacheId
 	 *            the cache id
 	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
@@ -672,13 +667,12 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br />
 	 */
-	public Map<String, String> inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId)
-			throws SCServiceException, UnsupportedEncodingException {
+	public Map<String, String> inspectCache(int operationTimeoutSeconds, String cacheId) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - inspectCache not possible.");
 		}
-		String urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.SERVICE_NAME, serviceName,
-				Constants.CACHE_ID, cacheId);
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.CACHE_ID, cacheId);
 		String body = this.inspectCall(operationTimeoutSeconds, urlString);
 		try {
 			URLString urlResponse = new URLString();

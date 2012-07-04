@@ -66,7 +66,7 @@ public class TestConstants {
 	public static final String killServerCmd = "kill";
 	public static final String rejectCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
-	public static final String publish3Appendixin1SecIntervalMsgCmd = "publish3Appendixin5SecInterval";
+	public static final String publish3AppendixMsgCmd = "publish3Appendix";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
 	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";

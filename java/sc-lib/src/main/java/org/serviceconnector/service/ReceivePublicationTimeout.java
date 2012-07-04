@@ -121,29 +121,20 @@ public class ReceivePublicationTimeout implements ITimeout {
 					reqMsg.setIsReply(true);
 					this.response.setSCMP(reqMsg);
 				} else {
+					// message polling successful
 					LOGGER.trace("message found on queue - subscription timeout set up reply message subscriptionId="
 							+ subscriptionId);
 					// set up reply
 					SCMPMessage reply = null;
 					if (message.isPart()) {
 						// message from queue is of type part - outgoing must be part too, no poll request
-						reply = new SCMPPart(false);
+						reply = new SCMPPart(false, message.getHeader());
 					} else {
-						reply = new SCMPMessage();
+						reply = new SCMPMessage(message.getHeader());
 					}
-					reply.setServiceName(reqMsg.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 					reply.setSessionId(subscriptionId);
 					reply.setMessageType(reqMsg.getMessageType());
 					reply.setIsReply(true);
-
-					// message polling successful
-					reply.setBody(message.getBody());
-					reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
-					String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-					if (messageInfo != null) {
-						reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-					}
-					reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
 					reply.setBody(message.getBody());
 					this.response.setSCMP(reply);
 				}

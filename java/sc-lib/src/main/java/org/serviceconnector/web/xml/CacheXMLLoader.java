@@ -274,12 +274,9 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("lastAccess");
 		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));
 		writer.writeEndElement(); // end of lastAccess
-		writer.writeStartElement("nrOfParts");
-		writer.writeCharacters(String.valueOf(metaEntry.getNumberOfParts() + simulation));
-		writer.writeEndElement(); // end of size
 		writer.writeStartElement("nrOfAppendices");
-		writer.writeCharacters(String.valueOf(metaEntry.getNumberOfAppendices() + simulation));
-		writer.writeEndElement(); // end of size
+		writer.writeCharacters(String.valueOf(metaEntry.getNrOfAppendix() + simulation));
+		writer.writeEndElement(); // end of nrOfAppendices
 		writer.writeStartElement("header");
 		Map<String, String> metaEntryHeader = metaEntry.getHeader();
 		this.writeHeaderMap(writer, metaEntryHeader);

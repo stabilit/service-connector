@@ -212,15 +212,19 @@ public class InspectCommand extends CommandAdapter {
 		Date creationTime = metaEntry.getCreationTime();
 		Date lastModifiedTime = metaEntry.getLastModifiedTime();
 		String expirationDateTime = DateTimeUtility.getDateTimeAsString(scCacheModule.getExpirationTime(cacheKey));
-		int size = metaEntry.getNumberOfParts();
+		String assignedUpdateGuardian = metaEntry.getUpdateRetrieverName();
+		String partInfo = metaEntry.nrOfPartsForAppendixAsString();
+		int nrOfAppendix = metaEntry.getNrOfAppendix();
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("return", "success");
 		parameters.put(Constants.CACHE_ID, metaEntry.getCacheId());
-		parameters.put("cacheState", cacheState.toString());
-		parameters.put("cacheSize", String.valueOf(size));
-		parameters.put("cacheExpiration", expirationDateTime);
-		parameters.put("creationTime", DateTimeUtility.getDateTimeAsString(creationTime));
-		parameters.put("lastModifiedTime", DateTimeUtility.getDateTimeAsString(lastModifiedTime));
+		parameters.put("cacheMessageState", cacheState.toString());
+		parameters.put("cacheMessagePartInfo", partInfo);
+		parameters.put("cacheMessageNrOfAppendix", String.valueOf(nrOfAppendix));
+		parameters.put("cacheMessageAssignedUpdateGuardian", assignedUpdateGuardian);
+		parameters.put("cacheMessageExpiration", expirationDateTime);
+		parameters.put("cacheMessageCreationTime", DateTimeUtility.getDateTimeAsString(creationTime));
+		parameters.put("cacheMessageLastModifiedTime", DateTimeUtility.getDateTimeAsString(lastModifiedTime));
 		return URLString.toURLResponseString(parameters);
 	}
 

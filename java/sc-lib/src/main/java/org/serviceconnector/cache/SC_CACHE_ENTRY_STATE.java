@@ -23,7 +23,9 @@ package org.serviceconnector.cache;
 public enum SC_CACHE_ENTRY_STATE {
 
 	/** The LOADING, cache entry not complete. */
-	LOADING,
+	LOADING_INITIAL,
+	//TODO
+	LOADING_APPENDIX,
 	/** The LOADEDm cache entry complete. */
 	LOADED,
 	/** The UNDEFINDED. */

@@ -104,7 +104,7 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 					writer.writeAttribute("loadingSessionId", metaEntry.getLoadingSessionId());
 					writer.writeAttribute("loadingTimeoutMillis", metaEntry.getLoadingTimeoutMillis());
 					writer.writeAttribute("scCacheEntryState", metaEntry.getSCCacheEntryState().name());
-					writer.writeAttribute("numberOfParts", metaEntry.getNumberOfParts());
+					writer.writeAttribute("numberOfParts", metaEntry.getNrOfParts(key));
 					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
 					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
 					writer.writeAttribute("lastModifiedTime", DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));
