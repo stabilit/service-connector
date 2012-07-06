@@ -220,7 +220,7 @@ public class SCRequester implements IRequester {
 				}
 
 				this.largeRequest = null;
-				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
+				if (scmpReply.isPart()) {
 					// response is a part - response is large, continue polling
 					LOGGER.debug("sc requester callback scmpReply cache id = " + scmpReply.getCacheId());
 					this.handlingLargeResponse(scmpReply);
@@ -250,7 +250,7 @@ public class SCRequester implements IRequester {
 					this.largeResponse = null;
 					return;
 				}
-				SCMPMessage message = largeResponse.getPart();
+				SCMPMessage message = largeResponse.getPollMessage();
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 					// increment msgSequenceNr
 					this.msgSequenceNr.incrementAndGetMsgSequenceNr();
@@ -304,7 +304,7 @@ public class SCRequester implements IRequester {
 			// response is a part - response is large, continue polling
 			// SCMPLargeResponse handles parts of large requests, putting all together
 			this.largeResponse = new SCMPCompositeReceiver(requestMsg, scmpReply);
-			SCMPMessage message = largeResponse.getPart();
+			SCMPMessage message = largeResponse.getPollMessage();
 			// handling msgSequenceNr
 			if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 				// increment msgSequenceNr
@@ -344,13 +344,6 @@ public class SCRequester implements IRequester {
 				return true;
 			}
 			if (largeRequest.hasNext() == false) {
-				if (this.requestMsg.isGroup()) {
-					/*
-					 * client processes group call, he needs to get the response - happens in special case: client sends a single
-					 * part of a group but content is to large and we need to split
-					 */
-					return true;
-				}
 				LOGGER.warn("largeRequest.hasNext() == false but part request not done");
 				return true;
 			}

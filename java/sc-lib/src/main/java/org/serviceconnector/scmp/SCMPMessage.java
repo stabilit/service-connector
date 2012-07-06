@@ -46,8 +46,8 @@ public class SCMPMessage implements Serializable {
 	private int partSize;
 	/** The message header. */
 	protected Map<String, String> header;
-	/** The internal status. */
-	private SCMPInternalStatus internalStatus; // internal usage only
+	// TODO
+	protected SCMPHeaderKey msgHeaderKey;
 	/** The message body. */
 	private Object body;
 	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
@@ -57,10 +57,14 @@ public class SCMPMessage implements Serializable {
 	 * Instantiates a new SCMP.
 	 */
 	public SCMPMessage() {
-		this.internalStatus = SCMPInternalStatus.NONE;
 		this.header = new HashMap<String, String>();
 		this.isReply = false;
 		this.partSize = Constants.DEFAULT_MESSAGE_PART_SIZE;
+	}
+
+	public SCMPMessage(SCMPHeaderKey msgHeaderKey) {
+		this();
+		this.msgHeaderKey = msgHeaderKey;
 	}
 
 	/**
@@ -74,10 +78,18 @@ public class SCMPMessage implements Serializable {
 		this.setBody(messageBody);
 	}
 
-	//TODO
-	public SCMPMessage(Map<String, String> baseHeader) {
-		this();
+	// TODO
+	public SCMPMessage(Map<String, String> baseHeader, SCMPHeaderKey msgHeaderKey) {
+		this(msgHeaderKey);
 		this.header = new HashMap<String, String>(baseHeader);
+	}
+
+	public SCMPHeaderKey getMsgHeaderKey() {
+		return this.msgHeaderKey;
+	}
+
+	public void setMsgHeaderKey(SCMPHeaderKey msgHeaderKey) {
+		this.msgHeaderKey = msgHeaderKey;
 	}
 
 	/**
@@ -207,15 +219,6 @@ public class SCMPMessage implements Serializable {
 	public boolean isComposite() {
 		// this is the default value!
 		return false;
-	}
-
-	/**
-	 * Checks if is part of a group call.
-	 * 
-	 * @return true, if is group call
-	 */
-	public boolean isGroup() {
-		return internalStatus == SCMPInternalStatus.GROUP;
 	}
 
 	/**
@@ -627,32 +630,13 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * Gets the internal status.
-	 * 
-	 * @return the internal status
-	 */
-	public SCMPInternalStatus getInternalStatus() {
-		return internalStatus;
-	}
-
-	/**
-	 * Sets the internal status.
-	 * 
-	 * @param internalStatus
-	 *            the new internal status
-	 */
-	public void setInternalStatus(SCMPInternalStatus internalStatus) {
-		this.internalStatus = internalStatus;
-	}
-
-	/**
 	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a request returns
 	 * true.
 	 * 
 	 * @return true, if is request
 	 */
 	public boolean isRequest() {
-		return internalStatus == SCMPInternalStatus.REQ;
+		return this.msgHeaderKey == SCMPHeaderKey.REQ;
 	}
 
 	/**

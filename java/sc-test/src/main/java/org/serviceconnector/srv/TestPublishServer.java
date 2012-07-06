@@ -367,6 +367,43 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
+		// publish 3 large appendix
+		public void publish3LargeAppendix(SCMessage request, int operationTimeoutMillis) {
+			SCPublishMessage pubMessage = new SCPublishMessage();
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
+			try {
+				String largeString = TestUtil.getLargeString();
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0:" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("1" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("2" + largeString);
+				this.publishSrv.publish(pubMessage);
+				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
+		// publish 1 10MB appendix
+		public void publish10MBAppendix(SCMessage request, int operationTimeoutMillis) {
+			SCPublishMessage pubMessage = new SCPublishMessage();
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
+			try {
+				String largeString = TestUtil.get10MBString();
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0:" + largeString);
+				this.publishSrv.publish(pubMessage);
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
 		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();

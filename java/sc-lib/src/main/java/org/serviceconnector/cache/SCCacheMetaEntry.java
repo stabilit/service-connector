@@ -17,8 +17,11 @@
 package org.serviceconnector.cache;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -53,6 +56,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	// TODO
 	private int numberOfAppendix;
+	private int expectedAppendix;
 	private String updateRetrieverName;
 
 	private Map<String, Integer> dataMessagePartInfo;
@@ -72,6 +76,7 @@ public class SCCacheMetaEntry implements Serializable {
 		this.loadingTimeoutMillis = -1;
 		this.header = new HashMap<String, String>();
 		this.numberOfAppendix = 0;
+		this.expectedAppendix = 0;
 		this.dataMessagePartInfo = new HashMap<String, Integer>();
 		this.updateRetrieverName = "unset";
 	}
@@ -258,7 +263,23 @@ public class SCCacheMetaEntry implements Serializable {
 	}
 
 	public int getNrOfParts(String cacheId) {
-		return this.dataMessagePartInfo.get(cacheId);
+		Integer nrOfParts = this.dataMessagePartInfo.get(cacheId);
+		if (nrOfParts == null) {
+			return -1;
+		}
+		return nrOfParts;
+	}
+
+	public int getExpectedAppendix() {
+		return expectedAppendix;
+	}
+
+	public void setExpectedAppendix(Integer expectedAppendix) {
+		if (expectedAppendix == null) {
+			this.expectedAppendix = 0;
+		} else {
+			this.expectedAppendix = expectedAppendix;
+		}
 	}
 
 	public int incrementNrOfPartsForDataMsg(String cacheId) {
@@ -273,11 +294,14 @@ public class SCCacheMetaEntry implements Serializable {
 		return nrOfParts;
 	}
 
-	public String nrOfPartsForAppendixAsString() {
+	public String nrOfPartsByAppendixAsString() {
 		StringBuilder sb = new StringBuilder();
-		for (Entry<String, Integer> partInfo : this.dataMessagePartInfo.entrySet()) {
 
-			sb.append(partInfo.getKey() + Constants.EQUAL_SIGN + partInfo.getValue() + Constants.AMPERSAND_SIGN);
+		List<String> sortedCids = new ArrayList<String>(this.dataMessagePartInfo.keySet());
+		Collections.sort(sortedCids, new CacheIdComparator());
+
+		for (String cid : sortedCids) {
+			sb.append(cid + Constants.EQUAL_SIGN + this.dataMessagePartInfo.get(cid) + Constants.AMPERSAND_SIGN);
 		}
 		return sb.toString();
 	}

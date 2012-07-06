@@ -266,6 +266,12 @@ public class TestSessionServer extends TestStatefulServer {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 
+			if(dataString.endsWith("managedData")) {
+				LOGGER.info("managed data requested");
+				request.setData("managed data requested!");
+				request.setCachingMethod(SC_CACHING_METHOD.INITIAL);
+			}
+			
 			LOGGER.info("cache call");
 			if (dataString.equals("cidNoCed")) {
 				LOGGER.info("cidNoCed");
@@ -348,12 +354,6 @@ public class TestSessionServer extends TestStatefulServer {
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				request.setData("large request small response - 999 is a key for that!");
-			} else if (dataString.equals("managedData")) {
-				LOGGER.info("managed data requested - reply with initial in caching method");
-				time.add(Calendar.HOUR_OF_DAY, 1);
-				request.setCacheExpirationDateTime(time.getTime());
-				request.setData("managed data requested!");
-				request.setCachingMethod(SC_CACHING_METHOD.INITIAL);
 			} else {
 				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache

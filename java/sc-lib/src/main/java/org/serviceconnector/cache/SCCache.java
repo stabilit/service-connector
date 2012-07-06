@@ -148,8 +148,14 @@ public class SCCache {
 
 		if (metaEntry != null) {
 
-			if (reqMessage.isPart() && reqMessage.isPollRequest() == false) {
-				// part but no poll - large request and meta entry in cache, ignore now!
+			if (reqMessage.isPart() == true && reqMessage.isPollRequest() == false) {
+				// part but no poll (PRQ) - large request and meta entry in cache, forward to next node!
+				return null;
+			}
+
+			if (reqMessage.isRequest() == true && metaEntry.isLoadingInitial() == true
+					&& metaEntry.isLoadingSessionId(sessionId) == true) {
+				// REQ & sid is loading session - ending REQ of large request, forward to next node!
 				return null;
 			}
 
@@ -165,13 +171,13 @@ public class SCCache {
 				reqPartNr = "0";
 			}
 			// build dataMsgCacheId
-			String dataMsgCacheId = metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
+			String appendixCid = metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
 			// TODO
 			CacheLogger.tryGetMessageFromCache(metaEntryCacheId, sessionId, reqPartNr);
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
-				SCMPMessage cachedMessage = dataCacheModule.get(dataMsgCacheId);
+				SCMPMessage cachedMessage = dataCacheModule.get(appendixCid);
 				if (cachedMessage != null) {
 					// message found adapt header fields for requester
 					cachedMessage.setServiceName(serviceName);
@@ -182,7 +188,7 @@ public class SCCache {
 						CacheLogger.gotMessageFromCache(metaEntryCacheId, sessionId, cachedMessage.getBodyLength());
 					}
 				} else {
-					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + dataMsgCacheId);
+					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + appendixCid);
 				}
 				return cachedMessage;
 			}
@@ -191,7 +197,8 @@ public class SCCache {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(sessionId) == true) {
 					// requested message is being loaded by current session - continue loading
-					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCacheId + "/0|0") + 1;
+					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE
+							+ "0") + 1;
 					int reqPartNrInt = Integer.parseInt(reqPartNr);
 					if (reqPartNrInt != nextPartNrToLoad) {
 						// requested partNr does not match current loading state - remove message from cache
@@ -309,58 +316,70 @@ public class SCCache {
 
 		// cache the message now!
 		try {
-			String initialMsgCacheId = metaEntryCacheId + "/0";
-			// part message arrived - increment part number
-			int nrOfParts = metaEntry.incrementNrOfPartsForDataMsg(initialMsgCacheId + "|0");
-			// refresh the meta entry
-			metaEntry.setLastModified();
+			int nrOfAppendix = metaEntry.getNrOfAppendix();
+			String baseCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix;
+			String currentMsgCid = baseCid + "|0";
+			Integer recvCachePartNr = resMessage.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 
-			// create cache id for received message
-			String partCacheId = initialMsgCacheId + Constants.PIPE + nrOfParts;
-			// set the correct partNr+1 in received message and cache it, partNr points to the next part!
-			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(initialMsgCacheId) + 1);
-			// evaluate time to live
-			int timeToLiveSeconds = this.evalTimeToLive(resMessage, metaEntry);
 			SC_CACHING_METHOD recvCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
 					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
-
-			// cache data entry
-			if (recvCachingMethod == SC_CACHING_METHOD.INITIAL && resMessage.isPart() == false) {
-				// managed data received & no large message (no loading) - no expiration time
-				dataCacheModule.putOrUpdate(partCacheId, resMessage);
-				this.mgdDataKeysInInitialState.add(metaEntryCacheId);
-			} else {
-				// parts cached with timeToLive
-				dataCacheModule.putOrUpdate(partCacheId, resMessage, timeToLiveSeconds);
+			if (recvCachingMethod == SC_CACHING_METHOD.APPEND && (recvCachePartNr == null || recvCachePartNr == 1)) {
+				// first message of appendix - increments number of appendix and create new cache id for message
+				nrOfAppendix = metaEntry.incrementNrOfAppendix();
+				baseCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix;
+				currentMsgCid = baseCid + "|0";
 			}
+
+			// part message arrived - increment part number
+			int nrOfParts = metaEntry.incrementNrOfPartsForDataMsg(currentMsgCid);
+			if (nrOfParts == 0 && nrOfAppendix == 0) {
+				// first part received - extract number of appendix to be loaded
+				Integer expectedAppendix = resMessage.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDIX);
+				metaEntry.setExpectedAppendix(expectedAppendix);
+			}
+
+			// refresh the meta entry
+			metaEntry.setLastModified();
+			// create cache id for received message
+			String partCacheId = baseCid + Constants.PIPE + nrOfParts;
+			// set the correct partNr+1 in received message and cache it, partNr points to the next part!
+			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(currentMsgCid) + 1);
+
+			if (recvCachingMethod == SC_CACHING_METHOD.INITIAL) {
+				// managed data received add to data in initial state list
+				this.mgdDataKeysInInitialState.add(metaEntryCacheId);
+			}
+
+			if (resMessage.isPart() == false && metaEntry.getNrOfAppendix() == metaEntry.getExpectedAppendix()) {
+				// last part of message received - refresh meta entry state and expire time
+				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
+
+				if (recvCachingMethod == SC_CACHING_METHOD.INITIAL || recvCachingMethod == SC_CACHING_METHOD.APPEND) {
+					// managed data received - no expiration time
+					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
+				} else {
+					// evaluate TTL for meta entry
+					int timeToLiveSeconds = this.evalTimeToLiveSeconds(resMessage);
+					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, timeToLiveSeconds);
+				}
+				// remove sessionId from loading sessionIds map
+				loadingSessionIds.remove(sid);
+				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(),
+						metaEntry.getNrOfParts(currentMsgCid));
+			} else {
+				// refresh meta entry state
+				metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis()
+						/ Constants.SEC_TO_MILLISEC_FACTOR);
+			}
+
+			// cache data entry - no expiration time
+			dataCacheModule.putOrUpdate(partCacheId, resMessage);
 
 			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
 			if (CacheLogger.isEnabled()) {
 				CacheLogger.putMessageToCache(partCacheId, metaEntry.getLoadingSessionId(),
 						DateTimeUtility.getDateTimeAsString(metaDataCacheModule.getExpirationTime(metaEntryCacheId)),
 						resMessage.getBodyLength());
-			}
-
-			if (resMessage.isPart() == false) {
-				// last part of message received - refresh meta entry state and expire time
-				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
-
-				if (recvCachingMethod == SC_CACHING_METHOD.INITIAL) {
-					// managed data received - no expiration time
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
-					this.mgdDataKeysInInitialState.add(metaEntryCacheId);
-				} else {
-					// reduce TTL for meta entry 2 seconds this assures meta entry expires first
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, timeToLiveSeconds - 2);
-				}
-				// remove sessionId from loading sessionIds map
-				loadingSessionIds.remove(sid);
-				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(),
-						metaEntry.getNrOfParts(initialMsgCacheId));
-			} else {
-				// refresh meta entry state
-				metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis()
-						/ Constants.SEC_TO_MILLISEC_FACTOR);
 			}
 		} catch (ParseException e) {
 			LOGGER.error("Parsing of expirationDate failed", e);
@@ -452,7 +471,10 @@ public class SCCache {
 				int nrOfAppendix = metaEntry.getNrOfAppendix();
 				String initialAppendixCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + "|0";
 				int nrOfPartsForAppendix = metaEntry.incrementNrOfPartsForDataMsg(initialAppendixCid);
-				String newAppendixPartCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + nrOfPartsForAppendix;
+				String newAppendixPartCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + Constants.PIPE
+						+ nrOfPartsForAppendix;
+				// set the correct partNr+1 in received message and cache it, partNr points to the next part!
+				resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(initialAppendixCid) + 1);
 
 				// cache appendix, managed data no expiration
 				dataCacheModule.putOrUpdate(newAppendixPartCid, resMessage);
@@ -481,18 +503,19 @@ public class SCCache {
 				initialMsg.setHeader(SCMPHeaderAttributeKey.NR_OF_APPENDIX, nrOfAppendix);
 				dataCacheModule.putOrUpdate(initialMsgCid, initialMsg);
 
-				// cache appendix, managed data no expiration
-				dataCacheModule.putOrUpdate(appendixCid, resMessage);
-
 				if (resMessage.isPart() == true) {
 					// start of large appendix received, update meta entry
 					metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADING_APPENDIX);
+					// set the correct partNr+1 in received message and cache it, partNr points to the next part!
+					resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(appendixCid) + 1);
 					// update meta entry, expiration time
 					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis());
 				} else {
 					// appendix received, update meta entry, no expiration time
 					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
 				}
+				// cache appendix, managed data no expiration
+				dataCacheModule.putOrUpdate(appendixCid, resMessage);
 			}
 		}
 	}
@@ -554,16 +577,20 @@ public class SCCache {
 	}
 
 	// TODO
-	private int evalTimeToLive(SCMPMessage messageToCache, SCCacheMetaEntry metaEntry) throws SCMPValidatorException,
-			ParseException {
-
+	private int evalTimeToLiveSeconds(SCMPMessage messageToCache) throws SCMPValidatorException, ParseException {
 		// use expire time from header field
 		String cacheExpirationDateTime = messageToCache.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 		// validate expiration date time format, null is throwing an exception
 		ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
 		Date expirationDate = DateTimeUtility.parseDateString(cacheExpirationDateTime);
 		long expireMillis = expirationDate.getTime();
-		return (int) ((expireMillis - System.currentTimeMillis()) / Constants.SEC_TO_MILLISEC_FACTOR);
+
+		int ttl = (int) ((expireMillis - System.currentTimeMillis()) / Constants.SEC_TO_MILLISEC_FACTOR);
+		if (ttl == 0) {
+			// time to live is 0, 0 causes message to stay forever (internal caching rule)
+			ttl = 1; // change to 1 second!
+		}
+		return ttl;
 	}
 
 	/**

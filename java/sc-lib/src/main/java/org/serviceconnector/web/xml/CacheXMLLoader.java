@@ -19,7 +19,6 @@ package org.serviceconnector.web.xml;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.serviceconnector.Constants;
+import org.serviceconnector.cache.CacheIdComparator;
 import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
@@ -152,8 +151,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache)
-			throws XMLStreamException {
+	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache) throws XMLStreamException {
 		HashMap<String, String> loadingSessionIds = cache.getLoadingSessionIds();
 		Set<String> sessionIds = loadingSessionIds.keySet();
 		for (String sid : sessionIds) {
@@ -178,12 +176,13 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the XML stream exception
 	 */
-	private void writeCacheModuleDetails(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, IWebRequest request) throws Exception {
+	private void writeCacheModuleDetails(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, IWebRequest request)
+			throws Exception {
 		writer.writeStartElement("details");
 		List<String> cacheKeys = cacheModule.getKeyList();
 		// sort cacheKeys
 		if (cacheModule.getCacheModuleName().equals(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name())) {
-			Collections.sort(cacheKeys, new DataCacheKeyComparator());
+			Collections.sort(cacheKeys, new CacheIdComparator());
 		} else {
 			Collections.sort(cacheKeys);
 		}
@@ -248,8 +247,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCCacheMetaEntry metaEntry,
-			IWebRequest request) throws Exception {
+	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey,
+			SCCacheMetaEntry metaEntry, IWebRequest request) throws Exception {
 		int simulation = this.getParameterInt(request, "sim", 0);
 		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
@@ -300,8 +299,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void writeCacheMessage(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCMPMessage cacheMessage,
-			IWebRequest request) throws Exception {
+	private void writeCacheMessage(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey,
+			SCMPMessage cacheMessage, IWebRequest request) throws Exception {
 		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
 		writer.writeCharacters(cacheKey);
@@ -329,40 +328,5 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		this.writeHeaderMap(writer, cacheMessageHeader);
 		writer.writeEndElement(); // end of header
 		writer.writeEndElement(); // end of cacheMessage
-	}
-
-	/**
-	 * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys. It compares serviceName + cacheId.
-	 * If both are the same value partNr is considered.
-	 */
-	private class DataCacheKeyComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String cacheKey1, String cacheKey2) {
-			
-			if(cacheKey1.indexOf("|") != -1 || cacheKey2.indexOf("|") != -1) {
-				//TODO jot
-				return 0;
-			}
-			
-			String serviceNameCacheId1 = cacheKey1.substring(0, cacheKey1.lastIndexOf(Constants.SLASH));
-			String serviceNameCacheId2 = cacheKey2.substring(0, cacheKey2.lastIndexOf(Constants.SLASH));
-			int stringResult = serviceNameCacheId1.compareTo(serviceNameCacheId2);
-			if (stringResult != 0) {
-				// // service names are not equal
-				return stringResult;
-			}
-			
-			String partNr1 = cacheKey1.substring(cacheKey1.lastIndexOf(Constants.SLASH) + 1);
-			String partNr2 = cacheKey2.substring(cacheKey2.lastIndexOf(Constants.SLASH) + 1);
-			int partNr1Int = new Integer(partNr1);
-			int partNr2Int = new Integer(partNr2);
-
-			if (partNr1Int == partNr2Int)
-				return 0;
-			if (partNr1Int > partNr2Int)
-				return 1;
-			return -1;
-		}
 	}
 }

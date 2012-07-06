@@ -954,7 +954,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		sessionService1.setEchoIntervalSeconds(10);
 		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.cacheCmd);
-		request.setData(TestUtil.get10MBString());
+		request.setData(TestUtil.getLargeString());
 		request.setCacheId("700");
 		response = sessionService1.execute(request);
 

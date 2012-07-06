@@ -41,7 +41,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
-	private SCMPMessage currentPart;
+	private SCMPMessage pollMsg;
 	/** The scmp offset. */
 	private int offest;
 	/** The output stream. */
@@ -65,25 +65,25 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		this.offest = 0;
 		// default compositeReceiver is not complete
 		this.complete = false;
+		this.header = messagePart.getHeader();
 		scmpList = new ArrayList<SCMPMessage>();
 		// builds up request to poll later
-		currentPart = new SCMPPart(true);
-		currentPart.setMessageType(request.getMessageType());
-		currentPart.setSessionId(request.getSessionId());
-		currentPart.setCacheId(request.getCacheId());
-		// LOGGER.info("cache id = " + request.getCacheId());
-		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
-		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
-		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
+		pollMsg = new SCMPPart(true, messagePart.getHeader());
+		pollMsg.setMessageType(request.getMessageType());
+		pollMsg.setSessionId(request.getSessionId());
+		pollMsg.setCacheId(request.getCacheId());
+		pollMsg.setHeader(SCMPHeaderAttributeKey.APPENDIX_NR, request.getHeader(SCMPHeaderAttributeKey.APPENDIX_NR));
+		pollMsg.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
+		pollMsg.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		// necessary for download file
-		currentPart.setHeader(request, SCMPHeaderAttributeKey.REMOTE_FILE_NAME); // tries to set remote file name
+		pollMsg.setHeader(request, SCMPHeaderAttributeKey.REMOTE_FILE_NAME); // tries to set remote file name
 		this.add(messagePart);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Map<String, String> getHeader() {
-		return currentPart.getHeader();
+		return pollMsg.getHeader();
 	}
 
 	/**
@@ -99,10 +99,11 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		int bodyLength = message.getBodyLength();
 		this.offest += bodyLength;
 		this.scmpList.add(message);
-		if (message.isPart() == false) {
-			// last message arrived
-			this.setHeader(message.getHeader());
-		}
+		// TODO JOT
+		// if (message.isPart() == false) {
+		// // last message arrived
+		// this.setHeader(message.getHeader());
+		// }
 	}
 
 	/** {@inheritDoc} */
@@ -228,16 +229,12 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** {@inheritDoc} */
 	@Override
 	public String getMessageType() {
-		return currentPart.getMessageType();
+		return this.pollMsg.getMessageType();
 	}
 
-	/**
-	 * Gets the part request.
-	 * 
-	 * @return the part request
-	 */
-	public SCMPMessage getPart() {
-		return currentPart;
+	// TODO
+	public SCMPMessage getPollMessage() {
+		return this.pollMsg;
 	}
 
 	/**

@@ -57,7 +57,7 @@ public class SCMPOffsetPart extends SCMPPart {
 		}
 		this.setPartSize(message.getPartSize());
 		this.setHeader(message);
-		this.setInternalStatus(message.getInternalStatus());
+		this.msgHeaderKey = message.getMsgHeaderKey();
 		this.setBody(message.getBody());
 		this.setIsReply(message.isReply());
 	}
@@ -65,22 +65,11 @@ public class SCMPOffsetPart extends SCMPPart {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isPart() {
-		if (this.isGroup()) {
-			return true;
-		}
 		if (this.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
 			// we never know if the stream has data available do not know its size
 			@SuppressWarnings("unused")
 			InputStream is = (InputStream) this.getBody();
 			return true;
-//			// needs to be different in case of STREAM - total length is misleading
-//			try {
-//				if (((InputStream) this.getBody()).available() - this.size <= 0) {
-//					return false;
-//				}
-//			} catch (IOException e) {
-//				return false;
-//			}
 		}
 		return offset + size < callLength;
 	}

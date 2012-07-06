@@ -104,7 +104,7 @@
 	               <xsl:call-template name="pageArea">
 	                 <xsl:with-param name="title">List of Cached Messages</xsl:with-param>
 	                 <xsl:with-param name="prefix">comp_</xsl:with-param>
-	                 <xsl:with-param name="query"><xsl:value-of select="$query"/>cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;</xsl:with-param>
+	                 <xsl:with-param name="query"><xsl:value-of select="$query"/>cacheModule=<xsl:value-of select="$head/query/param/@cacheModule"/>&amp;</xsl:with-param>
 	                 <xsl:with-param name="size" select="details/@size"/>
 	                 <xsl:with-param name="currentSite" select="details/@site"/>
 	                 <xsl:with-param name="currentPage" select="details/@page"/>

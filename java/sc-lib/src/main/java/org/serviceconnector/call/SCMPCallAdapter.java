@@ -16,14 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.scmp.SCMPPart;
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls.
@@ -31,9 +27,6 @@ import org.serviceconnector.scmp.SCMPPart;
  * @author JTraber
  */
 public abstract class SCMPCallAdapter implements ISCMPCall {
-
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCMPCallAdapter.class);
 
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
@@ -102,19 +95,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall openGroup() {
-		ISCMPCall groupCall = new SCMPGroupCall(this);
-		return groupCall;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) {
-		throw new UnsupportedOperationException("not allowed");
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, timeoutMillis);
@@ -138,121 +118,5 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	@Override
 	public void setRequestBody(Object obj) {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or small
-	 * message request and response. But all of them are handled as partial messages, large calls will be split into partial calls
-	 * (PRQ). The client uses group calls if the active communication is open end. Closing the group will send the completing
-	 * request
-	 * (REQ). <br />
-	 * Communication sample: <br />
-	 * openGroup (no transport) <br />
-	 * PRQ -> <-PRS <br />
-	 * .... <br />
-	 * PRQ-> <-PRS <br />
-	 * closeGroup (terminates group) <br />
-	 * REQ-> <-RES <br />
-	 */
-	public final class SCMPGroupCall implements ISCMPCall {
-
-		/** The parent call. */
-		private ISCMPCall parentCall;
-		/** The group state. */
-		private SCMPGroupState groupState;
-
-		/**
-		 * Instantiates a new SCMPGroupCall.
-		 * 
-		 * @param parentCall
-		 *            the parent call
-		 */
-		private SCMPGroupCall(ISCMPCall parentCall) {
-			this.parentCall = parentCall;
-			this.groupState = SCMPGroupState.OPEN;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
-			if (this.groupState == SCMPGroupState.CLOSE) {
-				LOGGER.warn("tried to invoke groupCall but state of group is closed");
-			}
-			SCMPMessage callSCMP = this.parentCall.getRequest();
-			SCMPCallAdapter.this.requestMessage.setInternalStatus(SCMPInternalStatus.GROUP);
-
-			if (callSCMP.isLargeMessage()) {
-				// parent call is large no need to change anything
-				this.parentCall.invoke(callback, timeoutMillis);
-				return;
-			}
-			if (callSCMP.isPart() == false) {
-				// callSCMP is small and not part but inside a group only parts are allowed
-				SCMPPart scmpPart = new SCMPPart();
-				scmpPart.setHeader(callSCMP);
-				scmpPart.setBody(callSCMP.getBody());
-				scmpPart.setIsPollRequest(callSCMP.isPollRequest());
-				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
-				callSCMP = null;
-			}
-			this.parentCall.invoke(callback, timeoutMillis);
-			return;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void setRequestBody(Object body) {
-			this.parentCall.setRequestBody(body);
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
-			this.groupState = SCMPGroupState.CLOSE;
-			// send empty closing REQ
-			SCMPMessage message = new SCMPMessage();
-			message.setHeader(SCMPCallAdapter.this.requestMessage);
-			message.setBody(null);
-			message.setInternalStatus(SCMPInternalStatus.GROUP);
-			SCMPCallAdapter.this.requestMessage = message;
-			this.parentCall.invoke(callback, timeoutMillis);
-			return;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public ISCMPCall openGroup() {
-			throw new UnsupportedOperationException("not allowed");
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public SCMPMsgType getMessageType() {
-			return parentCall.getMessageType();
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public SCMPMessage getRequest() {
-			return this.parentCall.getRequest();
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public SCMPMessage getResponse() {
-			return this.parentCall.getResponse();
-		}
-	}
-
-	/**
-	 * The Enum SCMPGroupState. States which a group call can be.
-	 */
-	private static enum SCMPGroupState {
-
-		/** The OPEN state. */
-		OPEN,
-
-		/** The CLOSE state. */
-		CLOSE;
 	}
 }

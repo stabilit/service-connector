@@ -180,7 +180,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("1", inspectResponse.get("cacheSize")); // cacheSize=1, (2) 0,1
+		Assert.assertEquals("700/0|0=1&", inspectResponse.get("cacheMessagePartInfo"));
 		sessionService1.deleteSession();
 	}
 
@@ -213,7 +213,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 			Assert.assertEquals("success", inspectResponse.get("return"));
 			Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 			Assert.assertEquals("700", inspectResponse.get("cacheId"));
-			Assert.assertEquals("700=1&", inspectResponse.get("cacheMessagePartInfo"));
+			Assert.assertEquals("700/0|0=1&", inspectResponse.get("cacheMessagePartInfo"));
 		}
 		Thread.sleep(1000);
 		// next client calls, do not access srv, read from cache
@@ -255,7 +255,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
+		Assert.assertEquals("700/0|0=51&", inspectResponse.get("cacheMessagePartInfo"));
 		sessionService1.deleteSession();
 	}
 
@@ -282,7 +282,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
+		Assert.assertEquals("700/0|0=51&", inspectResponse.get("cacheMessagePartInfo"));
 		request.setData("cacheFor1Hour");
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
@@ -291,7 +291,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("success", inspectResponse.get("return"));
 		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
 		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("51", inspectResponse.get("cacheSize")); // cacheSize=51, (52) 0..51
+		Assert.assertEquals("700/0|0=51&", inspectResponse.get("cacheMessagePartInfo"));
 		sessionService1.deleteSession();
 	}
 

@@ -25,6 +25,7 @@ import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCManagedMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
@@ -268,8 +269,13 @@ public class SCSessionService extends SCService {
 		// 4. post process, reply to client
 		SCMessage replyToClient = null;
 		Integer nrOfAppendix = reply.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDIX);
+		SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD
+				.getCachingMethod(reply.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+		
 		if (nrOfAppendix != null) {
 			replyToClient = this.pollAppendices(operationTimeoutSeconds, nrOfAppendix, scMessage.getCacheId());
+		} else if (cachingMethod == SC_CACHING_METHOD.INITIAL) {
+			replyToClient = new SCManagedMessage();
 		} else {
 			replyToClient = new SCMessage();
 		}

@@ -213,7 +213,7 @@ public class InspectCommand extends CommandAdapter {
 		Date lastModifiedTime = metaEntry.getLastModifiedTime();
 		String expirationDateTime = DateTimeUtility.getDateTimeAsString(scCacheModule.getExpirationTime(cacheKey));
 		String assignedUpdateGuardian = metaEntry.getUpdateRetrieverName();
-		String partInfo = metaEntry.nrOfPartsForAppendixAsString();
+		String partInfo = metaEntry.nrOfPartsByAppendixAsString();
 		int nrOfAppendix = metaEntry.getNrOfAppendix();
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("return", "success");

@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln.casc1;
 
-import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -27,7 +26,10 @@ import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCManagedMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.APISystemSuperCCTest;
 
 public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
@@ -50,7 +52,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	public void t01_cc_receive3Appendix() throws Exception {
 		// gets message cached (cacheid=700)
 		SCMessage request = new SCMessage();
-		request.setData("managedData");
+		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
@@ -72,8 +74,8 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	public void t02_cc_readManagedData() throws Exception {
 		// gets message cached (cacheid=700)
 		SCMessage request = new SCMessage();
-		request.setData("managedData");
 		request.setCacheId("700");
+		request.setData("cacheFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
@@ -88,50 +90,240 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 		// read managed data with session client from cache
 		SCMessage response = sessionService1.execute(request);
-
-		Assert.assertTrue("response not of type managed message", response instanceof SCManagedMessage);
-		SCManagedMessage managedData = (SCManagedMessage) response;
-		Assert.assertEquals("response not of type managed message", managedData.getNrOfAppendices(), 3);
-		List<SCAppendMessage> appendices = managedData.getAppendices();
-
-		int i = 0;
-		for (SCAppendMessage scAppendMessage : appendices) {
-			Assert.assertEquals(i + "", (String) scAppendMessage.getData());
-			i++;
-		}
-
+		this.checkAppendices(response, 3);
 		// verify that message is in cache on sc1 and not only in sc0
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
-		Assert.assertEquals("success", inspectResponse.get("return"));
-		Assert.assertEquals(SC_CACHE_ENTRY_STATE.LOADED.toString(), inspectResponse.get("cacheMessageState"));
-		Assert.assertEquals("700", inspectResponse.get("cacheId"));
-		Assert.assertEquals("3", inspectResponse.get("cacheMessageNrOfAppendix"));
-		Assert.assertEquals("700/3|0=0&700/0=0&700/2|0=0&700/1|0=0&", inspectResponse.get("cacheMessagePartInfo")); // cacheNrOfPartsOfInitialMsg=0
-		Assert.assertEquals("updateRetriever1", inspectResponse.get("cacheMessageAssignedUpdateGuardian"));
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=0&700/2|0=0&700/3|0=0&", "updateRetriever1");
 	}
 
 	/**
-	 * Description:
+	 * Description: large initial, read managed data from cache, 3 appendices<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_cc_StopUpdateRetrieverReadManagedData() throws Exception {
+	public void t03_cc_readManagedData10MBInitial() throws Exception {
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setCacheId("700");
+		request.setData("cache10MBStringFor1Hour_managedData");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// start update retriever
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
+		subMsg.setData("700");
+		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		// assure 3 messages arrive within 10 seconds!
+		updateRetrieverCbk.waitForMessage(10, 3);
+
+		// read managed data with session client from cache
+		SCMessage response = sessionService1.execute(request);
+		this.checkAppendices(response, 3);
+		// verify that message is in cache on sc1 and not only in sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=51&700/1|0=0&700/2|0=0&700/3|0=0&", "updateRetriever1");
+	}
+
+	/**
+	 * Description: large initial, read managed data from cache, 3 large appendices<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t04_cc_readManagedData10MBInitialLargeAppendix() throws Exception {
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setCacheId("700");
+		request.setData("cache10MBStringFor1Hour_managedData");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// start update retriever
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		subMsg.setData("700");
+		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		// assure 3 messages arrive within 10 seconds!
+		updateRetrieverCbk.waitForMessage(10, 3);
+
+		// read managed data with session client from cache
+		SCMessage response = sessionService1.execute(request);
+		this.checkAppendices(response, 3);
+		// verify that message is in cache on sc1 and not only in sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=51&700/1|0=1&700/2|0=1&700/3|0=1&", "updateRetriever1");
+	}
+
+	/**
+	 * Description: large initial, read managed data from cache, 1 10BM appendices<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t05_cc_readManagedData10MBInitial10MBAppendix() throws Exception {
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setCacheId("700");
+		request.setData("cache10MBStringFor1Hour_managedData");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// start update retriever
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish10MBAppendixMsgCmd);
+		subMsg.setData("700");
+		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		// assure 3 messages arrive within 10 seconds!
+		updateRetrieverCbk.waitForMessage(100, 1);
+
+		// read managed data with session client from cache
+		SCMessage response = sessionService1.execute(request);
+		this.checkAppendices(response, 1);
+		// verify that message is in cache on sc1 and not only in sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "1", "700/0|0=51&700/1|0=51&",
+				"updateRetriever1");
+	}
+
+	/**
+	 * Description: cache initial message, stop cache guardian, check cache state<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t06_cc_InitialMsgStopCacheGuardian() throws Exception {
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// start update retriever
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		subMsg.setData("700");
+		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		updateRetrClient.stopCacheUpdateRetriever();
+
+		// verify that message is in cache on sc1 and not only in sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
 
 	}
 
+	// @Test
+	// public void t10_cc_StopUpdateRetrieverReadManagedData() throws Exception {
+	//
+	// }
+	//
+	// @Test
+	// public void t10_cc_RetrievingAppendixWithoutCacheId() throws Exception {
+	//
+	// }
+	//
+	// @Test
+	// public void t10_cc_RetrievingAppendixOfDifferentCacheGuardian() throws Exception {
+	//
+	// }
+	//
+	// @Test
+	// public void t10_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
+	//
+	// }
+
+	/**
+	 * Description: managed data to SC0, start client to SC1 and load from cache of SC0<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void t10_cc_RetrievingAppendixWithoutCacheId() throws Exception {
+	public void t20_cc_ManagedDataToSC0PublishAppendixClientToCascSC() throws Exception {
+		// disconnect session client
+		this.sessionService1.deleteSession();
+		this.sessionClient.detach();
+		// connect new client to SC0
+		SCClient clientToSc0 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+		clientToSc0.attach();
+		SCSessionService sessionSrvToSC0 = clientToSc0.newSessionService(TestConstants.sesServiceName1);
+
+		// gets message cached (cacheid=700) to SC0
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionSrvToSC0.createSession(new SCMessage(), new SessionMsgCallback(sessionSrvToSC0));
+		sessionSrvToSC0.execute(request);
+
+		// start cache guardian and cache 3 appendix
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		subMsg.setData("700");
+		clientToSc0.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		// assure 3 messages arrive within 10 seconds!
+		updateRetrieverCbk.waitForMessage(10, 3);
+
+		// verify that message is in cache on sc0
+		Map<String, String> inspectResponse = clientToSc0.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "updateRetriever1");
+		// start client to cascaded sc, no appendix will be published
+		subMsg.setSessionInfo(TestConstants.doNothingCmd);
+		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		// stop client to sc0- cache SC0 should stay
+		clientToSc0.stopCacheUpdateRetriever();
+
+		// verify that message is still in cache on sc0
+		inspectResponse = clientToSc0.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "updateRetriever1");
+
+		this.sessionClient.attach();
+		sessionService1 = sessionClient.newSessionService(TestConstants.sesServiceName1);
+		sessionService1.createSession(new SCMessage(), new SessionMsgCallback(sessionService1));
+		// read managed data with session client from cache SC0 and load cascaded caches
+		SCMessage response = sessionService1.execute(request);
+		this.checkAppendices(response, 3);
+
+		// verify that message is still in cache on sc0
+		inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "unset");
 
 	}
 
-	@Test
-	public void t10_cc_RetrievingAppendixOfDifferentCacheGuardian() throws Exception {
+	private void checkCacheInspectString(Map<String, String> inspectResponse, String returnStr, SC_CACHE_ENTRY_STATE msgState,
+			String cid, String nrOfApp, String partInfo, String updateRetrieverName) {
+		Assert.assertEquals(returnStr, inspectResponse.get("return"));
 
+		if (inspectResponse.get("return").equals("notfound")) {
+			return;
+		}
+		Assert.assertEquals(msgState.toString(), inspectResponse.get("cacheMessageState"));
+		Assert.assertEquals(cid, inspectResponse.get("cacheId"));
+		Assert.assertEquals(nrOfApp, inspectResponse.get("cacheMessageNrOfAppendix"));
+		Assert.assertEquals(partInfo, inspectResponse.get("cacheMessagePartInfo")); // cacheNrOfPartsOfInitialMsg=0
+		Assert.assertEquals(updateRetrieverName, inspectResponse.get("cacheMessageAssignedUpdateGuardian"));
 	}
 
-	@Test
-	public void t10_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
-
+	private void checkAppendices(SCMessage scMessage, int expectedNrOfApp) {
+		Assert.assertTrue("response not of type managed message", scMessage instanceof SCManagedMessage);
+		SCManagedMessage managedMessage = (SCManagedMessage) scMessage;
+		Assert.assertEquals("unexpected number of appendices found in managed data", expectedNrOfApp,
+				managedMessage.getNrOfAppendices());
+		int i = 0;
+		for (SCAppendMessage scAppendMessage : managedMessage.getAppendices()) {
+			String body = (String) scAppendMessage.getData();
+			if (body.startsWith(i + "") == false) {
+				Assert.fail("unexpected appnendix body: " + body);
+			}
+			i++;
+		}
 	}
 
 	// /**

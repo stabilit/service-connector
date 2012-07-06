@@ -31,7 +31,6 @@ import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteCacheTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 import org.serviceconnector.test.system.scmp.SCMPClnSubscribeTest;
-import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -53,7 +52,6 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
 		SCMPClnExecuteTest.class,
-		SCMPGroupCallTest.class,
 		
 		// SCMP publish test
 		SCMPClnChangeSubscriptionTest.class,

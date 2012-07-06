@@ -65,6 +65,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		updateRetrClient.attach();
 		sessionClient.attach();
 		updateRetrieverCbk = new UpdateRetrieverCbk();
+		APISystemSuperCCTest.updateMsgRecvCounter = 0;
 
 		sessionService1 = sessionClient.newSessionService(TestConstants.sesServiceName1);
 		sessionCbk = new SessionMsgCallback(sessionService1);
@@ -145,7 +146,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 		@Override
 		public void receive(SCMessage reply) {
-			SystemSuperTest.testLogger.info("receive msg=" + reply.toString() + " data:" + reply.getData());
+			SystemSuperTest.testLogger.info("receive msg=" + reply.toString());
 			APISystemSuperCCTest.updateMsgRecvCounter++;
 		}
 

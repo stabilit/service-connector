@@ -27,7 +27,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
-import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
@@ -52,12 +51,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.SC_CHARACTER_SET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-
-		if (scmpMsg.isGroup() == false) {
-			// no group call reset internal status, if group call internal
-			// status already set
-			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
-		}
 
 		// evaluate right headline key from SCMP type
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
@@ -91,8 +84,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.flush();
 					os.write(ba);
 					os.flush();
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -113,10 +104,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						bw.write(t); // write body
 						bw.flush();
 					}
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
-				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 				throw new EncodingDecodingException("unsupported body type");
 			} else {
 				this.writeHeadLine(bw, headerKey, headerSize, headerSize);
@@ -125,10 +114,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			}
 		} catch (IOException ex) {
 			LOGGER.error("encode", ex);
-			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when encoding message", ex);
 		}
-		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		return;
 	}
 }

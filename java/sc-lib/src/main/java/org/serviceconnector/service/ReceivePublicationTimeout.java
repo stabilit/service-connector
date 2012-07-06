@@ -130,7 +130,7 @@ public class ReceivePublicationTimeout implements ITimeout {
 						// message from queue is of type part - outgoing must be part too, no poll request
 						reply = new SCMPPart(false, message.getHeader());
 					} else {
-						reply = new SCMPMessage(message.getHeader());
+						reply = new SCMPMessage(message.getHeader(), message.getMsgHeaderKey());
 					}
 					reply.setSessionId(subscriptionId);
 					reply.setMessageType(reqMsg.getMessageType());

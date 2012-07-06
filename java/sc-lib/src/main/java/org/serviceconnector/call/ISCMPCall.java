@@ -68,25 +68,4 @@ public interface ISCMPCall {
 	 * @return the message type
 	 */
 	public SCMPMsgType getMessageType();
-
-	/**
-	 * Open group.
-	 * 
-	 * @return the iSCMP call
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ISCMPCall openGroup() throws Exception;
-
-	/**
-	 * Close group, sends the ending request.
-	 * 
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout in milliseconds
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) throws Exception;
 }

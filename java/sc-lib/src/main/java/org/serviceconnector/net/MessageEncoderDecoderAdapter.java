@@ -70,6 +70,13 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		// evaluating header key and creating corresponding SCMP type
 		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(headline);
 		switch (headerKey) {
+		case RES:
+			scmpMsg = new SCMPMessage(headerKey);
+			scmpMsg.setIsReply(true);
+			break;
+		case REQ:
+			scmpMsg = new SCMPMessage(headerKey);
+			break;
 		case KRS:
 		case KRQ:
 			scmpMsg = new SCMPKeepAlive();

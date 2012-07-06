@@ -67,6 +67,8 @@ public class TestConstants {
 	public static final String rejectCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
 	public static final String publish3AppendixMsgCmd = "publish3Appendix";
+	public static final String publish10MBAppendixMsgCmd = "publish10MBAppendix";
+	public static final String publish3LargeAppendixMsgCmd = "publish3LargeAppendix";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
 	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";

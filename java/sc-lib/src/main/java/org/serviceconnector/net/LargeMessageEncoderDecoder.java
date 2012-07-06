@@ -28,7 +28,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
-import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
@@ -51,12 +50,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.SC_CHARACTER_SET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
-
-		if (scmpMsg.isGroup() == false) {
-			// no group call reset internal status, if group call internal
-			// status already set
-			scmpMsg.setInternalStatus(SCMPInternalStatus.NONE);
-		}
 
 		// evaluate right headline key from SCMP type
 		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
@@ -85,14 +78,12 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				headerKey = SCMPHeaderKey.REQ;
 			}
 		}
-
+		scmpMsg.setMsgHeaderKey(headerKey);
 		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
 		// write body depends on body type
 		Object body = scmpMsg.getBody();
 		int headerSize = sb.length();
 		try {
-			// message logging
-			MessageLogger.logOutputMessage(headerKey, scmpMsg);
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
@@ -112,8 +103,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						os.write(ba, bodyOffset, bodyLength);
 					}
 					os.flush();
-					// set internal status to save communication state
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -136,8 +125,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						bw.write(t, bodyOffset, bodyLength);
 						bw.flush();
 					}
-					// set internal status to save communication state
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
 				if (body instanceof InputStream) {
@@ -146,24 +133,21 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					byte[] buffer = new byte[msgPartSize];
 					// try reading as much as we can until stream is closed or part size reached
 					int bytesRead = 0;
-				    bytesRead = inStream.read(buffer, bytesRead, buffer.length - bytesRead);
+					bytesRead = inStream.read(buffer, bytesRead, buffer.length - bytesRead);
 					if (bytesRead <= 0) {
 						bytesRead = 0;
-					    scmpMsg.setPartSize(bytesRead);
-					    // this is the last message
-					    headerKey = SCMPHeaderKey.REQ;
+						scmpMsg.setPartSize(bytesRead);
+						// this is the last message
+						headerKey = SCMPHeaderKey.REQ;
+						scmpMsg.setMsgHeaderKey(headerKey);
 					}
 					this.writeHeadLine(bw, headerKey, bytesRead + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
 					os.write(buffer, 0, bytesRead);
 					os.flush();
-					// set internal status to save communication state
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					return;
 				}
-				// set internal status to save communication state
-				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 				throw new EncodingDecodingException("unsupported large message body type");
 			} else {
 				writeHeadLine(bw, headerKey, headerSize, headerSize);
@@ -172,11 +156,10 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			}
 		} catch (IOException ex) {
 			LOGGER.error("encode", ex);
-			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when decoding message", ex);
+		} finally {
+			// message logging
+			MessageLogger.logOutputMessage(headerKey, scmpMsg);
 		}
-		// set internal status to save communication state
-		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		return;
 	}
 }
