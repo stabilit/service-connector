@@ -59,6 +59,16 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 	}
 
 	/**
+	 * Sets the remote file name.
+	 * 
+	 * @param remoteFileName
+	 *            the new remote file name
+	 */
+	public void setRemoteFileName(String remoteFileName) {
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
+	}
+
+	/**
 	 * Gets the message type.
 	 * 
 	 * @return the message type {@inheritDoc}
@@ -66,18 +76,5 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.FILE_DOWNLOAD;
-	}
-
-	/**
-	 * Sets the remote file name.
-	 * 
-	 * @param remoteFileName
-	 *            the new remote file name
-	 */
-	public void setRemoteFileName(String remoteFileName) {
-		if (remoteFileName == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
 	}
 }

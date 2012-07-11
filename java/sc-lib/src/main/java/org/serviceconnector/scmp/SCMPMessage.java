@@ -46,7 +46,7 @@ public class SCMPMessage implements Serializable {
 	private int partSize;
 	/** The message header. */
 	protected Map<String, String> header;
-	// TODO
+	/** The message header key. */
 	protected SCMPHeaderKey msgHeaderKey;
 	/** The message body. */
 	private Object body;
@@ -62,6 +62,12 @@ public class SCMPMessage implements Serializable {
 		this.partSize = Constants.DEFAULT_MESSAGE_PART_SIZE;
 	}
 
+	/**
+	 * Instantiates a new SCMP message with given message key.
+	 * 
+	 * @param msgHeaderKey
+	 *            the message header key
+	 */
 	public SCMPMessage(SCMPHeaderKey msgHeaderKey) {
 		this();
 		this.msgHeaderKey = msgHeaderKey;
@@ -78,16 +84,34 @@ public class SCMPMessage implements Serializable {
 		this.setBody(messageBody);
 	}
 
-	// TODO
+	/**
+	 * Instantiates a new SCMP message with given message key.
+	 * 
+	 * @param baseHeader
+	 *            the base header
+	 * @param msgHeaderKey
+	 *            the message header key
+	 */
 	public SCMPMessage(Map<String, String> baseHeader, SCMPHeaderKey msgHeaderKey) {
 		this(msgHeaderKey);
 		this.header = new HashMap<String, String>(baseHeader);
 	}
 
+	/**
+	 * Gets the message header key.
+	 * 
+	 * @return the message header key
+	 */
 	public SCMPHeaderKey getMsgHeaderKey() {
 		return this.msgHeaderKey;
 	}
 
+	/**
+	 * Sets the message header key.
+	 * 
+	 * @param msgHeaderKey
+	 *            the new message header key
+	 */
 	public void setMsgHeaderKey(SCMPHeaderKey msgHeaderKey) {
 		this.msgHeaderKey = msgHeaderKey;
 	}
@@ -122,9 +146,9 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * Gets the message sequence nr.
+	 * Gets the message sequence number.
 	 * 
-	 * @return the message sequence nr
+	 * @return the message sequence number
 	 */
 	public String getMessageSequenceNr() {
 		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR);
@@ -312,6 +336,22 @@ public class SCMPMessage implements Serializable {
 	 *            the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, String attributeValue) {
+		this.header.put(headerType.getValue(), attributeValue);
+	}
+
+	/**
+	 * Sets the header check null value. If value is null header is not set!
+	 * 
+	 * @param headerType
+	 *            the header type
+	 * @param attributeValue
+	 *            the attribute value
+	 */
+	public void setHeaderCheckNull(SCMPHeaderAttributeKey headerType, String attributeValue) {
+		if (attributeValue == null) {
+			// attribute value is null - ignore header attribute
+			return;
+		}
 		this.header.put(headerType.getValue(), attributeValue);
 	}
 

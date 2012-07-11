@@ -61,16 +61,7 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			return;
-		}
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_SUBSCRIBE;
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/**
@@ -80,10 +71,7 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
-		if (mask == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
 	}
 
 	/**
@@ -112,5 +100,11 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_SUBSCRIBE;
 	}
 }

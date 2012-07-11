@@ -49,12 +49,13 @@ public class SCMPFileListCall extends SCMPCallAdapter {
 	 * @param requester
 	 *            the requester
 	 * @param msgToForward
-	 *            the msg to forward
+	 *            the message to forward
 	 */
 	public SCMPFileListCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.FILE_LIST;

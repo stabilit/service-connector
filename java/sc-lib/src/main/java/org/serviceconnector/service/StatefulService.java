@@ -115,6 +115,13 @@ public abstract class StatefulService extends Service {
 		return availableSessions;
 	}
 
+	/**
+	 * Notify removed session. Notification of a session removal on given stateful service.
+	 */
+	public void notifyRemovedSession() {
+		// notification of a session removal - some service may process special actions in this case
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
@@ -127,6 +134,7 @@ public abstract class StatefulService extends Service {
 		return sb.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("service");

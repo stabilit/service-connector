@@ -91,6 +91,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+			replyToClient.setCachingMethod(cachingMethod);
 
 			// inform service request is completed
 			this.service.setRequestComplete();

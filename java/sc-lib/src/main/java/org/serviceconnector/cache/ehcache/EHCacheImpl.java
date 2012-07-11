@@ -42,6 +42,7 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	 */
 	EHCacheImpl(CacheConfiguration cacheConfiguration) {
 		this.ehCache = new Cache(cacheConfiguration);
+		ehCache.getCacheEventNotificationService().registerListener(new EhCacheEventListener());
 	}
 
 	/** {@inheritDoc} */

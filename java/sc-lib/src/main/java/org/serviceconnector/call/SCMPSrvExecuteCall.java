@@ -46,12 +46,6 @@ public class SCMPSrvExecuteCall extends SCMPCallAdapter {
 		super(req, receivedMessage);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_EXECUTE;
-	}
-
 	/**
 	 * Sets the compression.
 	 * 
@@ -62,5 +56,11 @@ public class SCMPSrvExecuteCall extends SCMPCallAdapter {
 		if (compressed) {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_EXECUTE;
 	}
 }

@@ -42,8 +42,10 @@ public abstract class SCMessageCallback {
 	public SCMessageCallback(SCService service) {
 		this.service = service;
 	}
-	
-	//TODO
+
+	/**
+	 * Instantiates a new SCMessageCallback.
+	 */
 	public SCMessageCallback() {
 	}
 
@@ -54,6 +56,7 @@ public abstract class SCMessageCallback {
 	 *            the reply
 	 */
 	public abstract void receive(SCMessage reply);
+	
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.

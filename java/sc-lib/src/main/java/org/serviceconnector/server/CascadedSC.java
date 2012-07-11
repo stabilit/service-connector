@@ -60,6 +60,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.Subscription;
@@ -504,12 +505,24 @@ public class CascadedSC extends Server implements IStatefulServer {
 	 *            the callback
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
+	 * @param largeResponsePolling
+	 *            the large response polling
 	 */
-	public void receivePublication(CascadedClient cascClient, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				cascClient.getServiceName(), cascClient.getSubscriptionId());
+	public void receivePublication(CascadedClient cascClient, ISCMPMessageCallback callback, int timeoutMillis,
+			boolean largeResponsePolling) {
+
+		SCMPMessage req = null;
+		if (largeResponsePolling == true) {
+			req = new SCMPPart(true);
+		} else {
+			req = new SCMPMessage();
+		}
 		long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
-		receivePublicationCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
+		req.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
+		req.setSessionId(cascClient.getSubscriptionId());
+		req.setServiceName(cascClient.getServiceName());
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, req);
+
 		try {
 			receivePublicationCall.invoke(callback, timeoutMillis);
 		} catch (Exception e) {

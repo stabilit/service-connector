@@ -44,12 +44,6 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 		super(req, serviceName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.REGISTER_SERVER;
-	}
-
 	/**
 	 * Sets the version.
 	 * 
@@ -67,10 +61,7 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	 *            the new local date time
 	 */
 	public void setLocalDateTime(String localDateTime) {
-		if (localDateTime == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 
 	/**
@@ -110,8 +101,7 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	 *            the new check registration interval seconds
 	 */
 	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) {
-		this.requestMessage
-				.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL, checkRegistrationIntervalSeconds);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL, checkRegistrationIntervalSeconds);
 	}
 
 	/**
@@ -137,9 +127,12 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 	}
 
 	public void setUrlPath(String urlPath) {
-		if (urlPath == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.URL_PATH, urlPath);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.URL_PATH, urlPath);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.REGISTER_SERVER;
 	}
 }

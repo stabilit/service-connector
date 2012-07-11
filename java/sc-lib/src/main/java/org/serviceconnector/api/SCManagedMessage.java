@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api;
 
 import java.util.ArrayList;
@@ -5,21 +21,27 @@ import java.util.List;
 
 public class SCManagedMessage extends SCMessage {
 
-	private List<SCAppendMessage> appendices;
-	
+	private List<SCAppendMessage> appendixes;
+
 	public SCManagedMessage() {
-		this.appendices = new ArrayList<SCAppendMessage>();
+		this.appendixes = new ArrayList<SCAppendMessage>();
 	}
 
-	public List<SCAppendMessage> getAppendices() {
-		return appendices;
+	public List<SCAppendMessage> getAppendixes() {
+		return appendixes;
 	}
 
 	public void addAppendix(SCAppendMessage appendix) {
-		this.appendices.add(appendix);
+		this.appendixes.add(appendix);
 	}
 
-	public int getNrOfAppendices() {
-		return this.appendices.size();
+	public int getNrOfAppendixes() {
+		return this.appendixes.size();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isManaged() {
+		return true;
 	}
 }

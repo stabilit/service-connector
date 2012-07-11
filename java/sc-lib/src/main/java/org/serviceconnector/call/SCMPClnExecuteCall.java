@@ -19,7 +19,6 @@ package org.serviceconnector.call;
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -48,38 +47,13 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Instantiates a new sCMP cln execute call.
-	 * 
-	 * @param req
-	 *            the req
-	 * @param msgToSend
-	 *            the message to send
-	 */
-	public SCMPClnExecuteCall(IRequester req, SCMPMessage msgToSend) {
-		super(req, msgToSend);
-	}
-
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type {@inheritDoc}
-	 */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_EXECUTE;
-	}
-
-	/**
 	 * Sets the message info.
 	 * 
 	 * @param messageInfo
 	 *            the new message info
 	 */
 	public void setMessageInfo(String messageInfo) {
-		if (messageInfo == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
 	/**
@@ -91,7 +65,7 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	public void setPartSize(int partSize) {
 		this.requestMessage.setPartSize(partSize);
 	}
-	
+
 	/**
 	 * Sets the cache id.
 	 * 
@@ -99,10 +73,7 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
-		if (cacheId == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
 	}
 
 	/**
@@ -117,18 +88,25 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 		}
 	}
 
-	/**
-	 * Sets the request body.
-	 * 
-	 * @param obj
-	 *            the new request body {@inheritDoc} *
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
 	}
 
+	/**
+	 * Sets the appendix number.
+	 * 
+	 * @param appendixNr
+	 *            the new appendix number
+	 */
 	public void setAppendixNr(int appendixNr) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.APPENDIX_NR, appendixNr);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_EXECUTE;
 	}
 }

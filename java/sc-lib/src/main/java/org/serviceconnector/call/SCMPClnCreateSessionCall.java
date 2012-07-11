@@ -55,12 +55,6 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_CREATE_SESSION;
-	}
-
 	/**
 	 * Sets the session info.
 	 * 
@@ -68,10 +62,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			return;
-		}
-		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/**
@@ -100,5 +91,11 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
 }

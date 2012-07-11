@@ -72,7 +72,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		pollMsg.setMessageType(request.getMessageType());
 		pollMsg.setSessionId(request.getSessionId());
 		pollMsg.setCacheId(request.getCacheId());
-		pollMsg.setHeader(SCMPHeaderAttributeKey.APPENDIX_NR, request.getHeader(SCMPHeaderAttributeKey.APPENDIX_NR));
+		pollMsg.setHeader(request, SCMPHeaderAttributeKey.APPENDIX_NR);
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		// necessary for download file
@@ -90,7 +90,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * Adds the part.
 	 * 
 	 * @param message
-	 *            the scmp message
+	 *            the SCMP message
 	 */
 	public void add(SCMPMessage message) {
 		if (message == null) {
@@ -99,11 +99,6 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		int bodyLength = message.getBodyLength();
 		this.offest += bodyLength;
 		this.scmpList.add(message);
-		// TODO JOT
-		// if (message.isPart() == false) {
-		// // last message arrived
-		// this.setHeader(message.getHeader());
-		// }
 	}
 
 	/** {@inheritDoc} */
@@ -232,7 +227,11 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		return this.pollMsg.getMessageType();
 	}
 
-	// TODO
+	/**
+	 * Gets the poll message. Poll message to send in order to receive the next part of large message.
+	 * 
+	 * @return the poll message
+	 */
 	public SCMPMessage getPollMessage() {
 		return this.pollMsg;
 	}

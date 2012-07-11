@@ -36,12 +36,13 @@ public class SCMPCscUnsubscribeCall extends SCMPCallAdapter {
 	 * @param requester
 	 *            the requester
 	 * @param msgToSend
-	 *            the msg to send
+	 *            the message to send
 	 */
 	public SCMPCscUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_UNSUBSCRIBE;

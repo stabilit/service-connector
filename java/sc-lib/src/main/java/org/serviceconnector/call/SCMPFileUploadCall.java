@@ -58,11 +58,6 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 		super(requester, msgToForward);
 	}
 
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.FILE_UPLOAD;
-	}
-
 	/**
 	 * Sets the remote file name.
 	 * 
@@ -70,14 +65,18 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 	 *            the new remote file name
 	 */
 	public void setRemoteFileName(String remoteFileName) {
-		if (remoteFileName == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
 	}
-	
+
+	/** {@inheritDoc} */
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.FILE_UPLOAD;
 	}
 }

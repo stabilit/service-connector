@@ -80,8 +80,13 @@ public class SCMessage {
 	 * expiration date and time of the message in cache. It must be set together with cacheId attribute.
 	 */
 	private Date cacheExpirationDateTime;
-
-	// TODO
+	/**
+	 * The caching method. Method the message has been cached by the server.<br>
+	 * INITIAL: this message is a base message for possible appendix
+	 * APPEND: this message is an appendix for an initial message
+	 * REMOVE: this message has removed a cached managed message
+	 * NOT_MANAGED: default state for unmanaged (no appends possible) messages
+	 */
 	private SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.NOT_MANAGED;
 
 	/**
@@ -403,13 +408,36 @@ public class SCMessage {
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}
 
-	// TODO comment
+	/**
+	 * Sets the caching method.
+	 * 
+	 * @param cachingMethod
+	 *            the new caching method
+	 */
 	public void setCachingMethod(SC_CACHING_METHOD cachingMethod) {
 		this.cachingMethod = cachingMethod;
 	}
 
+	/**
+	 * Gets the caching method.
+	 * 
+	 * @return the caching method
+	 */
 	public SC_CACHING_METHOD getCachingMethod() {
 		return this.cachingMethod;
+	}
+
+	/**
+	 * Checks if message is managed.
+	 * 
+	 * @return true, if message is managed
+	 */
+	public boolean isManaged() {
+		if (this.cachingMethod == SC_CACHING_METHOD.NOT_MANAGED) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/** {@inheritDoc} */

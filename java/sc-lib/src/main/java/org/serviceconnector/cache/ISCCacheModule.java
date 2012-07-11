@@ -35,7 +35,7 @@ public interface ISCCacheModule<T> {
 	public abstract T get(Object key);
 
 	/**
-	 * Put the object in cache module. Updates if element is already in cache module.
+	 * Put the object in cache module. Existing elements are replaced.
 	 * 
 	 * @param key
 	 *            the key
@@ -45,7 +45,15 @@ public interface ISCCacheModule<T> {
 	 *            seconds the object has to stay in cache module from now on
 	 */
 	public abstract void putOrUpdate(Object key, T value, int timeToLiveSeconds);
-	
+
+	/**
+	 * Put or update. Existing elements are replaced. No expiration!
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
 	public abstract void putOrUpdate(Object key, T value);
 
 	/**
@@ -59,7 +67,15 @@ public interface ISCCacheModule<T> {
 	 *            seconds the object has to stay in cache module from now on
 	 */
 	public abstract void replace(Object key, T value, int timeToLiveSeconds);
-	
+
+	/**
+	 * Replace the object in cache module. Element has to be in place otherwise replace fails. No expiration!
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 */
 	public abstract void replace(Object key, T value);
 
 	/**

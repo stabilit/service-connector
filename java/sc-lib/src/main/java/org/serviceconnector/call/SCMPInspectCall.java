@@ -53,10 +53,10 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} **/
 	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.INSPECT;
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 
 	/**
@@ -71,9 +71,9 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		}
 	}
 
-	/** {@inheritDoc} **/
+	/** {@inheritDoc} */
 	@Override
-	public void setRequestBody(Object obj) {
-		this.requestMessage.setBody(obj);
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.INSPECT;
 	}
 }

@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.casc.CascReceivePublicationCallback;
+import org.serviceconnector.cmd.casc.CscReceivePublicationCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.server.CascadedSC;
@@ -271,11 +271,26 @@ public class CascadedClient {
 			// client got destroyed, stop receive publication
 			return;
 		}
-		CascReceivePublicationCallback callback = new CascReceivePublicationCallback(this);
+		CscReceivePublicationCallback callback = new CscReceivePublicationCallback(this);
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
 		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
 				* Constants.SEC_TO_MILLISEC_FACTOR;
-		this.cascadedSC.receivePublication(this, callback, oti);
+		this.cascadedSC.receivePublication(this, callback, oti, false);
+	}
+
+	/**
+	 * Receive publication part - needed for polling large publication.
+	 */
+	public void receivePublicationPart() {
+		if (this.destroyed == true) {
+			// client got destroyed, stop receive publication
+			return;
+		}
+		CscReceivePublicationCallback callback = new CscReceivePublicationCallback(this);
+		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
+		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
+				* Constants.SEC_TO_MILLISEC_FACTOR;
+		this.cascadedSC.receivePublication(this, callback, oti, true);
 	}
 
 	/**
@@ -331,7 +346,7 @@ public class CascadedClient {
 		this.cascadedSC.unsubscribeCascadedClientInErrorCases(this);
 		// needs to be after unsubscribe
 		this.subscribed = false;
-		AppContext.getSCCache().removeManagedDataForRetriever(publishService.getName());
+		AppContext.getSCCache().removeManagedDataForGuardian(publishService.getName());
 		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;

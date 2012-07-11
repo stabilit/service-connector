@@ -70,9 +70,9 @@ public final class Constants {
 	public static final int SEC_TO_NANOSSEC_FACTOR = SEC_TO_MILLISEC_FACTOR * SEC_TO_MILLISEC_FACTOR;
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
-	/** File qualifier for Http requests. */
+	/** The Constant SLASH. */
 	public static final String SLASH = "/";
-	//TODO
+	/** The Constant PIPE. */
 	public static final String PIPE = "|";
 	/** The Constant UNDERLINE. */
 	public static final String UNDERLINE = "_";

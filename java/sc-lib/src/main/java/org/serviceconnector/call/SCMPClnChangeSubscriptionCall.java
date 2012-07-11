@@ -24,10 +24,8 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -55,18 +53,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
-	/**
-	 * Instantiates a new sCMP cln change subscription call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToSend
-	 *            the msg to send
-	 */
-	public SCMPClnChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
-		super(requester, msgToSend);
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -74,9 +61,10 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 
 	/**
@@ -86,10 +74,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/**
@@ -99,10 +84,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
-		if (mask == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
 	}
 
 	/**
@@ -117,8 +99,9 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public void setRequestBody(Object obj) {
-		this.requestMessage.setBody(obj);
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
 	}
 }

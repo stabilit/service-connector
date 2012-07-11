@@ -61,7 +61,7 @@ public class PublishCommand extends CommandAdapter {
 		if (service.getType() == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER
 				|| service.getType() == ServiceType.CACHE_UPDATE_RETRIEVER) {
 			// Managed data arrived over cache update retriever - handle caching
-			AppContext.getSCCache().manageCachedData(message);
+			AppContext.getSCCache().cachedManagedData(message);
 		}
 
 		// reset server timeout

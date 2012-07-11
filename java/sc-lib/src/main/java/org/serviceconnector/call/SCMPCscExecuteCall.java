@@ -44,6 +44,7 @@ public class SCMPCscExecuteCall extends SCMPCallAdapter {
 		super(req, msgToSend);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_EXECUTE;

@@ -336,7 +336,7 @@ public class SCClient {
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 
-	public synchronized void startCacheUpdateRetriever(String retrieverName, SCSubscribeMessage subscribeMessage,
+	public synchronized void startCacheGuardian(String retrieverName, SCSubscribeMessage subscribeMessage,
 			SCMessageCallback retrieverCallback) throws SCServiceException, SCMPValidatorException {
 		this.startCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, retrieverName, subscribeMessage,
 				retrieverCallback);
@@ -372,7 +372,7 @@ public class SCClient {
 		this.cacheUpdateRetriever.changeSubscription(operationTimeoutSeconds, scSubscribeMessage);
 	}
 
-	public synchronized void stopCacheUpdateRetriever() throws SCServiceException, SCMPValidatorException {
+	public synchronized void stopCacheGuardian() throws SCServiceException, SCMPValidatorException {
 		this.stopCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 

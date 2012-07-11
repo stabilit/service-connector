@@ -51,7 +51,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/**
-	 * Instantiates a new scmp call adapter.
+	 * Instantiates a new SCMP call adapter.
 	 * 
 	 * @param requester
 	 *            the requester
@@ -104,6 +104,12 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
+	public void setRequestBody(Object obj) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SCMPMessage getRequest() {
 		return requestMessage;
 	}
@@ -112,11 +118,5 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	@Override
 	public SCMPMessage getResponse() {
 		return responseMessage;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setRequestBody(Object obj) {
-		throw new UnsupportedOperationException();
 	}
 }

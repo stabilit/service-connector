@@ -66,12 +66,6 @@ public class SCMPSrvSubscribeCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_SUBSCRIBE;
-	}
-
 	/**
 	 * Sets the compression.
 	 * 
@@ -82,5 +76,11 @@ public class SCMPSrvSubscribeCall extends SCMPCallAdapter {
 		if (compressed) {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_SUBSCRIBE;
 	}
 }

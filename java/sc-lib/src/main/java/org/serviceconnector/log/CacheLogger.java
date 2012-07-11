@@ -27,32 +27,31 @@ public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
 	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
-	/** The start loading str. */
-	private static String startLoadingStr = "start loading message cacheKey=%s sid=%s timeout=%sms";
-	// TODO
-	private static String startCachingAppStr = "start caching appendix cacheKey=%s updateRetrieverName=%s timeout=%sms";
-	private static String cachingAppStr = "cache appendix cacheKey=%s updateRetrieverName=%s";
-
-	/** The try loading str. */
-	private static String tryGetMsgStr = "try to get message from cache cacheKey=%s sid=%s cpn=%s";
-	/** The got message str. */
-	private static String gotMessageStr = "got message from cache cacheKey=%s sid=%s length=%s";
-	/** The finish loading str. */
-	private static String finishLoadingStr = "finish loading message cacheKey=%s sid=%s numberOfParts=%s";
-
-	// TODO
-	private static String finishCachingAppStr = "finish caching appendix cacheKey=%s updateRetrieverName=%s numberOfParts=%s";
-	/** The abort loading str. */
-	private static String abortLoadingStr = "abort loading message cacheKey=%s sid=%s";
-	/** The put message str. */
-	private static String putMessageStr = "put message into cache cacheKey=%s loading sid=%s expiration=%s length=%s";
-
-	// TODO
-	private static String putAppendixPartStr = "put appendix part into cache cacheKey=%s updateRetrieverName=%s partNr=%s";
-
-	/** The remove msg from cache str. */
-	private static String removeMsgFromCacheStr = "remove message from cache cacheKey=%s sid=%s partNr=%s reason=%s";
-	/** The clear cache str. */
+	/** The start loading string. */
+	private static String startLoadingStr = "start loading message cid=%s sid=%s timeout=%sms";
+	/** The start caching appendix string. */
+	private static String startCachingAppStr = "start caching appendix cid=%s cacheGuardian=%s metaEntryTimeout=%ssec";
+	/** The caching appendix string. */
+	private static String cachingAppStr = "cache appendix cid=%s cacheGuardian=%s";
+	/** The try loading string. */
+	private static String tryGetMsgStr = "try to get message from cache cid=%s sid=%s cpn=%s anr=%s";
+	/** The got message string. */
+	private static String gotMessageStr = "got message from cache cid=%s sid=%s length=%s";
+	/** The finish loading string. */
+	private static String finishLoadingStr = "finish loading message cacheId=%s sid=%s numberOfParts=%s numberOfAppendix=%s";
+	/** The finish caching appendix string. */
+	private static String finishCachingAppStr = "finish caching appendix cid=%s cacheGuardian=%s numberOfParts=%s";
+	/** The abort loading string. */
+	private static String abortLoadingStr = "abort loading message cid=%s sid=%s";
+	/** The put message string. */
+	private static String putMessageStr = "put message into cache cid=%s nrOfParts=%s loading sid=%s length=%s loadingState=%s cmt=%s";
+	/** The put managed data string. */
+	private static String putManagedDataStr = "put managed data into cache cacheId=%s cacheGuardian=%s appendixNr=%s partNr=%s";
+	/** The remove message from cache string. */
+	private static String removeMsgFromCacheStr = "remove message from cache cid=%s reason=%s";
+	/** The message expired string. */
+	private static String msgExpiredStr = "message expired cid=%s";
+	/** The clear cache string. */
 	private static String clearCacheStr = "clear cache, all messages removed.";
 
 	/**
@@ -73,17 +72,19 @@ public final class CacheLogger {
 	/**
 	 * Try to get message from cache.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param sessionId
 	 *            the session id
 	 * @param requestedPart
 	 *            the requested part
+	 * @param appendixNr
+	 *            the appendix number
 	 */
-	public static void tryGetMessageFromCache(String cacheKey, String sessionId, String requestedPart) {
+	public static void tryGetMessageFromCache(String cacheId, String sessionId, String requestedPart, String appendixNr) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(tryGetMsgStr, cacheKey, sessionId, requestedPart);
+			format.format(tryGetMsgStr, cacheId, sessionId, requestedPart, appendixNr);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -92,15 +93,15 @@ public final class CacheLogger {
 	/**
 	 * Got message from cache.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void gotMessageFromCache(String cacheKey, String sessionId, int length) {
+	public static void gotMessageFromCache(String cacheId, String sessionId, int length) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(gotMessageStr, cacheKey, sessionId, length);
+			format.format(gotMessageStr, cacheId, sessionId, length);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -109,35 +110,53 @@ public final class CacheLogger {
 	/**
 	 * Start loading cache message.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param sessionId
 	 *            the session id
 	 * @param timeout
 	 *            the loading timeout in milliseconds
 	 */
-	public static void startLoadingCacheMessage(String cacheKey, String sessionId, int timeout) {
+	public static void startLoadingCacheMessage(String cacheId, String sessionId, int timeout) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(startLoadingStr, cacheKey, sessionId, timeout);
+			format.format(startLoadingStr, cacheId, sessionId, timeout);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
 
-	public static void startCachingAppendix(String cacheKey, String updateRetrieverName, int timeout) {
+	/**
+	 * Start caching appendix.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 * @param timeout
+	 *            the timeout
+	 */
+	public static void startCachingAppendix(String cacheId, String cacheGuardian, int timeout) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(startCachingAppStr, cacheKey, updateRetrieverName, timeout);
+			format.format(startCachingAppStr, cacheId, cacheGuardian, timeout);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
 
-	public static void cacheAppendix(String cacheKey, String updateRetrieverName) {
+	/**
+	 * Cache appendix.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param cacheGuardian
+	 *            the cache guardian name
+	 */
+	public static void cacheAppendix(String cacheId, String cacheGuardian) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(cachingAppStr, cacheKey, updateRetrieverName);
+			format.format(cachingAppStr, cacheId, cacheGuardian);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -146,27 +165,38 @@ public final class CacheLogger {
 	/**
 	 * Finish loading cache message.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param sessionId
 	 *            the session id
 	 * @param numberOfParts
 	 *            the number of parts
+	 * @param numberOfAppendix
+	 *            the number of appendix
 	 */
-	public static void finishLoadingCacheMessage(String cacheKey, String sessionId, int numberOfParts) {
+	public static void finishLoadingCacheMessage(String cacheId, String sessionId, int numberOfParts, int numberOfAppendix) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(finishLoadingStr, cacheKey, sessionId, numberOfParts);
+			format.format(finishLoadingStr, cacheId, sessionId, numberOfParts, numberOfAppendix);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
 
-	// TODO
-	public static void finishCachingAppendix(String cacheKey, String updateRetrieverName, int numberOfParts) {
+	/**
+	 * Finish caching appendix.
+	 * 
+	 * @param cacheId
+	 *            the cache identifier
+	 * @param cacheGuardian
+	 *            the cache guardian name
+	 * @param numberOfParts
+	 *            the number of parts
+	 */
+	public static void finishCachingAppendix(String cacheId, String cacheGuardian, int numberOfParts) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(finishCachingAppStr, cacheKey, updateRetrieverName, numberOfParts);
+			format.format(finishCachingAppStr, cacheId, cacheGuardian, numberOfParts);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -175,15 +205,15 @@ public final class CacheLogger {
 	/**
 	 * Abort loading message.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param sessionId
 	 *            the session id
 	 */
-	public static void abortLoadingMessage(String cacheKey, String sessionId) {
+	public static void abortLoadingMessage(String cacheId, String sessionId) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(abortLoadingStr, cacheKey, sessionId);
+			format.format(abortLoadingStr, cacheId, sessionId);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -192,27 +222,39 @@ public final class CacheLogger {
 	/**
 	 * Put message to cache.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * @param cacheId
+	 *            the cache identifier
 	 * @param loadingSessionId
 	 *            the loading session id
-	 * @param expiration
-	 *            the expiration
 	 */
-	public static void putMessageToCache(String cacheKey, String loadingSessionId, String expiration, int length) {
+	public static void putMessageToCache(String cacheId, int nrOfParts, String loadingSessionId, int length, String loadingState,
+			String cmt) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(putMessageStr, cacheKey, loadingSessionId, expiration, length);
+			format.format(putMessageStr, cacheId, nrOfParts, loadingSessionId, length, loadingState, cmt);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
 	}
 
-	// TODO
-	public static void putAppendixPartToCache(String cacheKey, String updateRetrieverName, int partNr) {
+	/**
+	 * Put appendix part to cache.
+	 * 
+	 * @param cacheId
+	 *            the cache identifier
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 * @param nrOfAppendix
+	 *            the number of appendix
+	 * @param appendixNr
+	 *            the appendix number
+	 * @param partNr
+	 *            the part number
+	 */
+	public static void putManagedDataToCache(String cacheId, String cacheGuardian, int appendixNr, int partNr) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(putAppendixPartStr, cacheKey, updateRetrieverName, partNr);
+			format.format(putManagedDataStr, cacheId, cacheGuardian, appendixNr, partNr);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}
@@ -221,17 +263,28 @@ public final class CacheLogger {
 	/**
 	 * Removes the message from cache.
 	 * 
-	 * @param cacheKey
-	 *            the cache key
-	 * @param sessionId
-	 *            the session id
-	 * @param removeReason
-	 *            the remove reason
+	 * @param cid
+	 *            the cache identifier
 	 */
-	public static void removeMessageFromCache(String cacheKey, String sessionId, int nrOfParts, String removeReason) {
+	public static void removeMessageFromCache(String cid, String reason) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(removeMsgFromCacheStr, cacheKey, sessionId, nrOfParts, removeReason);
+			format.format(removeMsgFromCacheStr, cid, reason);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Message expired.
+	 * 
+	 * @param cid
+	 *            the cache identifier
+	 */
+	public static void messageExpired(String cid) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(msgExpiredStr, cid);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

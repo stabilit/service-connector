@@ -40,12 +40,12 @@ public class SCMPCscChangeSubscriptionCall extends SCMPCallAdapter {
 	private static final Logger LOGGER = Logger.getLogger(SCMPCscChangeSubscriptionCall.class);
 
 	/**
-	 * Instantiates a new sCMP csc change subscription call.
+	 * Instantiates a new SCMP csc change subscription call.
 	 * 
 	 * @param requester
 	 *            the requester
 	 * @param msgToSend
-	 *            the msg to send
+	 *            the message to send
 	 */
 	public SCMPCscChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

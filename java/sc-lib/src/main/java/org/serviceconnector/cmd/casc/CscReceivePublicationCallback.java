@@ -29,12 +29,12 @@ import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.ServiceType;
 
 /**
- * The Class CascReceivePublicationCallback.
+ * The Class CscReceivePublicationCallback.
  */
-public class CascReceivePublicationCallback implements ISCMPMessageCallback {
+public class CscReceivePublicationCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CascReceivePublicationCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CscReceivePublicationCallback.class);
 
 	/** The cascaded client. */
 	private CascadedClient cascClient;
@@ -45,7 +45,7 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	 * @param cascClient
 	 *            the cascaded client
 	 */
-	public CascReceivePublicationCallback(CascadedClient cascClient) {
+	public CscReceivePublicationCallback(CascadedClient cascClient) {
 		this.cascClient = cascClient;
 	}
 
@@ -86,11 +86,10 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName()
 						+ " sid=" + sid);
 
-				//TODO
 				CascadedPublishService publishService = cascClient.getPublishService();
 				if (publishService.getType() == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER) {
-					// Managed data arrived over cache update retriever - handle caching
-					AppContext.getSCCache().manageCachedData(reply);
+					// Managed data arrived over cache guardian - handle caching
+					AppContext.getSCCache().cachedManagedData(reply);
 				}
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);
@@ -103,7 +102,12 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			throw e;
 		}
 		// send next receive publication
-		this.cascClient.receivePublication();
+		if (reply.isPart() == true) {
+			// part received send PAC
+			this.cascClient.receivePublicationPart();
+		} else {
+			this.cascClient.receivePublication();
+		}
 	}
 
 	/** {@inheritDoc} */

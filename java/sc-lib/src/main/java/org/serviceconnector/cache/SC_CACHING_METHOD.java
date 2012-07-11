@@ -19,13 +19,15 @@ package org.serviceconnector.cache;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
-// TODO comment etc
+/**
+ * The Enumeration SC_CACHING_METHOD. Used by the server to publish appendix!
+ */
 public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METHOD> {
 
-	INITIAL("initial"), //
-	APPEND("append"), //
-	REMOVE("remove"), //
-	NOT_MANAGED("");
+	INITIAL("initial"), // this message is a base message for possible appendix
+	APPEND("append"), // this message is an appendix for an initial message
+	REMOVE("remove"), // this message has removed a cached managed message
+	NOT_MANAGED(""); // default state for unmanaged (no appends possible) messages
 
 	/** The value. */
 	private String value;
@@ -34,10 +36,23 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 	private static final ReverseEnumMap<String, SC_CACHING_METHOD> REVERSE_MAP = new ReverseEnumMap<String, SC_CACHING_METHOD>(
 			SC_CACHING_METHOD.class);
 
+	/**
+	 * Instantiates a new caching method.
+	 * 
+	 * @param value
+	 *            the value
+	 */
 	private SC_CACHING_METHOD(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * Gets the caching method.
+	 * 
+	 * @param methodString
+	 *            the method string
+	 * @return the caching method
+	 */
 	public static SC_CACHING_METHOD getCachingMethod(String methodString) {
 		SC_CACHING_METHOD method = REVERSE_MAP.get(methodString);
 		if (method == null) {
@@ -47,10 +62,12 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 		return method;
 	}
 
+	/** {@inheritDoc} */
 	public String getValue() {
 		return this.value;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SC_CACHING_METHOD reverse(String methodString) {
 		return SC_CACHING_METHOD.getCachingMethod(methodString);

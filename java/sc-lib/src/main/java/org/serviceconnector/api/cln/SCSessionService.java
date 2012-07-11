@@ -271,11 +271,12 @@ public class SCSessionService extends SCService {
 		Integer nrOfAppendix = reply.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDIX);
 		SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD
 				.getCachingMethod(reply.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
-		
+
 		if (nrOfAppendix != null) {
 			replyToClient = this.pollAppendices(operationTimeoutSeconds, nrOfAppendix, scMessage.getCacheId());
 		} else if (cachingMethod == SC_CACHING_METHOD.INITIAL) {
 			replyToClient = new SCManagedMessage();
+			replyToClient.setCachingMethod(cachingMethod);
 		} else {
 			replyToClient = new SCMessage();
 		}
@@ -292,9 +293,23 @@ public class SCSessionService extends SCService {
 		return replyToClient;
 	}
 
+	/**
+	 * Poll appendices.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @param nrOfAppendix
+	 *            the number of appendix
+	 * @param cacheId
+	 *            the cache id
+	 * @return the sC managed message
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
 	private SCManagedMessage pollAppendices(int operationTimeoutSeconds, int nrOfAppendix, String cacheId)
 			throws SCServiceException {
 		SCManagedMessage managedMsg = new SCManagedMessage();
+		managedMsg.setCachingMethod(SC_CACHING_METHOD.INITIAL);
 
 		SCMPClnExecuteCall clnExecutePollCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
 		clnExecutePollCall.setCacheId(cacheId);
@@ -326,7 +341,7 @@ public class SCSessionService extends SCService {
 			appendix.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 			appendix.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			appendix.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-
+			appendix.setCachingMethod(SC_CACHING_METHOD.APPEND);
 			managedMsg.addAppendix(appendix);
 		}
 		return managedMsg;

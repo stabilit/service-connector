@@ -24,9 +24,9 @@ public enum SC_CACHE_ENTRY_STATE {
 
 	/** The LOADING, cache entry not complete. */
 	LOADING_INITIAL,
-	//TODO
+	/** The LOADING appendix not complete. */
 	LOADING_APPENDIX,
-	/** The LOADEDm cache entry complete. */
+	/** The LOADED cache entry complete. */
 	LOADED,
 	/** The UNDEFINDED. */
 	UNDEFINDED;

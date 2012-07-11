@@ -36,7 +36,7 @@ public class SCMPCscDeleteSessionCall extends SCMPCallAdapter {
 	 * Instantiates a new sCMP csc delete session call.
 	 * 
 	 * @param req
-	 *            the req
+	 *            the requester
 	 * @param receivedMessage
 	 *            the received message
 	 */

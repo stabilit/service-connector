@@ -51,10 +51,17 @@ public class SCMPPart extends SCMPMessage {
 		this.pollRequest = pollRequest;
 	}
 
-	//TODO
+	/**
+	 * Instantiates a new SCMP part.
+	 * 
+	 * @param pollRequest
+	 *            the poll request
+	 * @param baseHeader
+	 *            the base header
+	 */
 	public SCMPPart(boolean pollRequest, Map<String, String> baseHeader) {
 		this(pollRequest);
-		this.header = new HashMap<String, String>(baseHeader);		
+		this.header = new HashMap<String, String>(baseHeader);
 	}
 
 	/** {@inheritDoc} */

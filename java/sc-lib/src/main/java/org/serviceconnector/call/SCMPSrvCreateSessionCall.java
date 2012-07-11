@@ -61,12 +61,6 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.SRV_CREATE_SESSION;
-	}
-
 	/**
 	 * Sets the compression.
 	 * 
@@ -77,5 +71,11 @@ public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 		if (compressed) {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
 }

@@ -41,7 +41,7 @@ public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMP csc create session call.
 	 * 
 	 * @param req
-	 *            the req
+	 *            the requester
 	 * @param messageToForward
 	 *            the message to forward
 	 */

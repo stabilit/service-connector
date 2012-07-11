@@ -44,10 +44,10 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 		super(req, serviceName);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} **/
 	@Override
-	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.PUBLISH;
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 
 	/**
@@ -69,16 +69,7 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
-		if (mask == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
-	}
-
-	/** {@inheritDoc} **/
-	@Override
-	public void setRequestBody(Object obj) {
-		this.requestMessage.setBody(obj);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
 	}
 
 	/**
@@ -90,7 +81,7 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	public void setPartSize(int partSize) {
 		this.requestMessage.setPartSize(partSize);
 	}
-	
+
 	/**
 	 * Sets the message info.
 	 * 
@@ -98,19 +89,32 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 *            the new message info
 	 */
 	public void setMessageInfo(String messageInfo) {
-		if (messageInfo == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
-	//TODO comment
+	/**
+	 * Sets the cache method.
+	 * 
+	 * @param cacheMethod
+	 *            the new cache method
+	 */
 	public void setCacheMethod(String cacheMethod) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHING_METHOD, cacheMethod);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.CACHING_METHOD, cacheMethod);
 	}
 
-	//TODO comment
+	/**
+	 * Sets the cache id.
+	 * 
+	 * @param cacheId
+	 *            the new cache id
+	 */
 	public void setCacheId(String cacheId) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.PUBLISH;
 	}
 }

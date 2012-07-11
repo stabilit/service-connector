@@ -39,26 +39,27 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6142075299284577556L;
-	/** The creation time, tells what time this meta entry has been created. */
-	private Date creationTime;
-	/** The last modified time. */
-	private Date lastModifiedTime;
+	/** The cache id. */
+	private String cacheId = null;
+	/** The header containing any header attributes of request SCMP message. */
+	private Map<String, String> header;
 	/** The cache state. {@link SC_CACHE_ENTRY_STATE} */
 	private volatile SC_CACHE_ENTRY_STATE cacheEntryState;
 	/** The loading session id. */
 	private String loadingSessionId;
-	/** The loading timeout (ms). This timeout tells, how long we can stay in the loading state. */
+	/** The loading timeout (milliseconds). This timeout tells, how long we can stay in the loading state. */
 	private int loadingTimeoutMillis;
-	/** The header containing any header attributes of request SCMP message. */
-	private Map<String, String> header;
-	/** The cache id. */
-	private String cacheId = null;
-
-	// TODO
+	/** The creation time, tells what time this meta entry has been created. */
+	private Date creationTime;
+	/** The last modified time. */
+	private Date lastModifiedTime;
+	/** The number of appendix the meta entry contains. */
 	private int numberOfAppendix;
+	/** The expected number of appendix, helper variable in polling appendix procedure. */
 	private int expectedAppendix;
-	private String updateRetrieverName;
-
+	/** The cache guardian name assigned to the meta entry. */
+	private String cacheGuardianName;
+	/** The data message part info. Holds number of parts available for specific data message meta entry contains. */
 	private Map<String, Integer> dataMessagePartInfo;
 
 	/**
@@ -78,7 +79,7 @@ public class SCCacheMetaEntry implements Serializable {
 		this.numberOfAppendix = 0;
 		this.expectedAppendix = 0;
 		this.dataMessagePartInfo = new HashMap<String, Integer>();
-		this.updateRetrieverName = "unset";
+		this.cacheGuardianName = "unset";
 	}
 
 	/**
@@ -142,7 +143,11 @@ public class SCCacheMetaEntry implements Serializable {
 		return this.cacheEntryState;
 	}
 
-	// TODO
+	/**
+	 * Checks if is loading initial.
+	 * 
+	 * @return true, if is loading initial
+	 */
 	public boolean isLoadingInitial() {
 		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING_INITIAL) {
 			return true;
@@ -150,7 +155,11 @@ public class SCCacheMetaEntry implements Serializable {
 		return false;
 	}
 
-	// TODO
+	/**
+	 * Checks if is loading appendix.
+	 * 
+	 * @return true, if is loading appendix
+	 */
 	public boolean isLoadingAppendix() {
 		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING_APPENDIX) {
 			return true;
@@ -245,23 +254,51 @@ public class SCCacheMetaEntry implements Serializable {
 		return this.header;
 	}
 
+	/**
+	 * Gets the number of appendix.
+	 * 
+	 * @return the number of appendix
+	 */
 	public int getNrOfAppendix() {
 		return this.numberOfAppendix;
 	}
 
+	/**
+	 * Increment number of appendix.
+	 * 
+	 * @return incremented number of appendix
+	 */
 	public int incrementNrOfAppendix() {
 		this.numberOfAppendix++;
 		return this.numberOfAppendix;
 	}
 
-	public String getUpdateRetrieverName() {
-		return updateRetrieverName;
+	/**
+	 * Gets the cache guardian name.
+	 * 
+	 * @return the cache guardian name
+	 */
+	public String getCacheGuardianName() {
+		return this.cacheGuardianName;
 	}
 
-	public void setUpdateRetrieverName(String updateRetrieverName) {
-		this.updateRetrieverName = updateRetrieverName;
+	/**
+	 * Sets the cache guardian name.
+	 * 
+	 * @param cacheGuardianName
+	 *            the new cache guardian name
+	 */
+	public void setCacheGuardianName(String cacheGuardianName) {
+		this.cacheGuardianName = cacheGuardianName;
 	}
 
+	/**
+	 * Gets the number of parts.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @return the number of parts
+	 */
 	public int getNrOfParts(String cacheId) {
 		Integer nrOfParts = this.dataMessagePartInfo.get(cacheId);
 		if (nrOfParts == null) {
@@ -270,10 +307,21 @@ public class SCCacheMetaEntry implements Serializable {
 		return nrOfParts;
 	}
 
+	/**
+	 * Gets the expected number of appendix.
+	 * 
+	 * @return the expected number of appendix
+	 */
 	public int getExpectedAppendix() {
-		return expectedAppendix;
+		return this.expectedAppendix;
 	}
 
+	/**
+	 * Sets the expected number of appendix.
+	 * 
+	 * @param expectedAppendix
+	 *            the new expected number of appendix
+	 */
 	public void setExpectedAppendix(Integer expectedAppendix) {
 		if (expectedAppendix == null) {
 			this.expectedAppendix = 0;
@@ -282,6 +330,13 @@ public class SCCacheMetaEntry implements Serializable {
 		}
 	}
 
+	/**
+	 * Increment number of parts for cached data message.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @return the number of parts
+	 */
 	public int incrementNrOfPartsForDataMsg(String cacheId) {
 		Integer nrOfParts = this.dataMessagePartInfo.get(cacheId);
 		if (nrOfParts == null) {
@@ -294,6 +349,11 @@ public class SCCacheMetaEntry implements Serializable {
 		return nrOfParts;
 	}
 
+	/**
+	 * Number of parts by appendix as string.
+	 * 
+	 * @return the string
+	 */
 	public String nrOfPartsByAppendixAsString() {
 		StringBuilder sb = new StringBuilder();
 

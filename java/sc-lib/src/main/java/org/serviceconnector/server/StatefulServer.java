@@ -86,7 +86,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
-		this.serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
+		this.serverKey = serviceName + Constants.UNDERLINE + socketAddress.getHostName() + Constants.SLASH
+				+ socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.service = null;
 		// set up separate remote node configuration for SRV_ABORT_SESSION request in case of busy connection pool
@@ -136,6 +137,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			return;
 		}
 		this.sessions.remove(session);
+		this.service.notifyRemovedSession();
 	}
 
 	/**

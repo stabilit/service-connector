@@ -44,7 +44,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	public SCMPAttachCall(IRequester req) {
 		super(req);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
@@ -70,10 +70,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 *            the new local date time
 	 */
 	private void setLocalDateTime(String localDateTime) {
-		if (localDateTime == null) {
-			return;
-		}
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
+		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 
 	/** {@inheritDoc} */

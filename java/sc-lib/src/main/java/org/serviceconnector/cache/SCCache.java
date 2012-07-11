@@ -78,7 +78,7 @@ public class SCCache {
 	private HashMap<String, String> loadingSessionIds;
 
 	private Set<String> mgdDataKeysInInitialState;
-	private Map<String, List<String>> mgdDataKeysAssignedToRetriever;
+	private Map<String, List<String>> mgdDataAssignedToGuardian;
 
 	/** The meta data cache module. */
 	private ISCCacheModule<SCCacheMetaEntry> metaDataCacheModule = null;
@@ -92,7 +92,7 @@ public class SCCache {
 		this.scCacheConfiguration = null;
 		this.loadingSessionIds = new HashMap<String, String>();
 		this.mgdDataKeysInInitialState = new HashSet<String>();
-		this.mgdDataKeysAssignedToRetriever = new HashMap<String, List<String>>();
+		this.mgdDataAssignedToGuardian = new HashMap<String, List<String>>();
 	}
 
 	/**
@@ -170,14 +170,13 @@ public class SCCache {
 				// set default partNr = 0 when it is missing in the request
 				reqPartNr = "0";
 			}
-			// build dataMsgCacheId
-			String appendixCid = metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
-			// TODO
-			CacheLogger.tryGetMessageFromCache(metaEntryCacheId, sessionId, reqPartNr);
+			// build dataEntryCid
+			String dataEntryCid = metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
+			CacheLogger.tryGetMessageFromCache(metaEntryCacheId, sessionId, reqPartNr, appendixNr);
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
-				SCMPMessage cachedMessage = dataCacheModule.get(appendixCid);
+				SCMPMessage cachedMessage = dataCacheModule.get(dataEntryCid);
 				if (cachedMessage != null) {
 					// message found adapt header fields for requester
 					cachedMessage.setServiceName(serviceName);
@@ -185,10 +184,10 @@ public class SCCache {
 					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					cachedMessage.setSessionId(sessionId);
 					if (CacheLogger.isEnabled()) {
-						CacheLogger.gotMessageFromCache(metaEntryCacheId, sessionId, cachedMessage.getBodyLength());
+						CacheLogger.gotMessageFromCache(dataEntryCid, sessionId, cachedMessage.getBodyLength());
 					}
 				} else {
-					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + appendixCid);
+					LOGGER.error("Cache error, data-cache and meta-cache are not consistent. cacheKey=" + dataEntryCid);
 				}
 				return cachedMessage;
 			}
@@ -248,7 +247,8 @@ public class SCCache {
 
 	/**
 	 * Cache message. Tries to cache a message. If caching the message for some reason fails, the meta entry of specific cachId gets
-	 * removed. Basically a clean up is done!
+	 * removed. Basically a clean up is done! Cache message is called in a polling procedure of a client. Published appendices are
+	 * cached by the method "cacheManagedData".
 	 * 
 	 * @param reqMessage
 	 *            the request message
@@ -350,6 +350,12 @@ public class SCCache {
 				this.mgdDataKeysInInitialState.add(metaEntryCacheId);
 			}
 
+			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
+			if (CacheLogger.isEnabled()) {
+				CacheLogger.putMessageToCache(partCacheId, nrOfParts, metaEntry.getLoadingSessionId(), resMessage.getBodyLength(),
+						metaEntry.getSCCacheEntryState().name(), recvCachingMethod.name());
+			}
+
 			if (resMessage.isPart() == false && metaEntry.getNrOfAppendix() == metaEntry.getExpectedAppendix()) {
 				// last part of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
@@ -365,22 +371,14 @@ public class SCCache {
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(),
-						metaEntry.getNrOfParts(currentMsgCid));
+						metaEntry.getNrOfParts(currentMsgCid), metaEntry.getNrOfAppendix());
 			} else {
 				// refresh meta entry state
 				metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis()
 						/ Constants.SEC_TO_MILLISEC_FACTOR);
 			}
-
 			// cache data entry - no expiration time
 			dataCacheModule.putOrUpdate(partCacheId, resMessage);
-
-			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
-			if (CacheLogger.isEnabled()) {
-				CacheLogger.putMessageToCache(partCacheId, metaEntry.getLoadingSessionId(),
-						DateTimeUtility.getDateTimeAsString(metaDataCacheModule.getExpirationTime(metaEntryCacheId)),
-						resMessage.getBodyLength());
-			}
 		} catch (ParseException e) {
 			LOGGER.error("Parsing of expirationDate failed", e);
 			this.removeMetaAndDataEntries(sid, metaEntryCacheId, "Parsing of expirationDate failed");
@@ -396,45 +394,49 @@ public class SCCache {
 		}
 	}
 
-	// TODO
-	public synchronized void manageCachedData(SCMPMessage resMessage) {
-		String metaEntryCacheId = resMessage.getCacheId();
-		String currUpdateRetrieverName = resMessage.getServiceName();
+	/**
+	 * Cached managed data. Called for caching managed data. Never used in a polling procedure of a client.
+	 * 
+	 * @param resMessage
+	 *            the res message
+	 */
+	public synchronized void cachedManagedData(SCMPMessage resMessage) {
+		String metaEntryCid = resMessage.getCacheId();
+		String currGuardian = resMessage.getServiceName();
+		String sessionId = resMessage.getSessionId();
 
 		// lookup up meta entry - no managing of cached data possible without
-		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(metaEntryCacheId);
+		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(metaEntryCid);
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
 			LOGGER.error("Missing metaEntry message can not be applied to existing data.");
-			this.removeManagedDataForRetriever(currUpdateRetrieverName);
+			this.removeMetaAndDataEntries(sessionId, metaEntryCid, "Missing metaEntry message can not be applied to existing data.");
 			return;
 		}
 
-		String updateRetrieverOfCachedMsg = metaEntry.getUpdateRetrieverName();
-		if (updateRetrieverOfCachedMsg.equals("unset")) {
-			// no update retriever assigned to message, set it now!
-			metaEntry.setUpdateRetrieverName(currUpdateRetrieverName);
+		String guardianOfCachedMsg = metaEntry.getCacheGuardianName();
+		if (guardianOfCachedMsg.equals("unset")) {
+			// no cache guardian assigned to message, set it now!
+			metaEntry.setCacheGuardianName(currGuardian);
 			// remove cache id from initial data list
-			boolean deleteResult = this.mgdDataKeysInInitialState.remove(metaEntryCacheId);
+			boolean deleteResult = this.mgdDataKeysInInitialState.remove(metaEntryCid);
 
 			if (deleteResult == false) {
 				// deletion failed - update retrieved for non-managed data
-				LOGGER.error("Update retrieved for non-managed data, update ignored. (metaEntryCacheId=" + metaEntryCacheId
-						+ ", resUpdateRetriever=" + currUpdateRetrieverName + ", updateRetrieverOfCachedMsg="
-						+ updateRetrieverOfCachedMsg + ")");
+				LOGGER.error("Update retrieved for non-managed data, update ignored. (metaEntryCacheId=" + metaEntryCid
+						+ ", resCacheGuardianr=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 				return;
 			}
 			// add cache id to assigned data list
-			if (this.mgdDataKeysAssignedToRetriever.containsKey(currUpdateRetrieverName) == false) {
-				this.mgdDataKeysAssignedToRetriever.put(currUpdateRetrieverName, new ArrayList<String>());
+			if (this.mgdDataAssignedToGuardian.containsKey(currGuardian) == false) {
+				this.mgdDataAssignedToGuardian.put(currGuardian, new ArrayList<String>());
 			}
-			this.mgdDataKeysAssignedToRetriever.get(currUpdateRetrieverName).add(metaEntryCacheId);
-		} else if (updateRetrieverOfCachedMsg.equals(currUpdateRetrieverName) == false) {
-			// managed data retrieved of different update retriever - ignore data
-			LOGGER.trace("Managed data ignored, different update retriever responsible for treatment. (metaEntryCacheId="
-					+ metaEntryCacheId + ", resUpdateRetriever=" + currUpdateRetrieverName + ", updateRetrieverOfMessage="
-					+ updateRetrieverOfCachedMsg + ")");
+			this.mgdDataAssignedToGuardian.get(currGuardian).add(metaEntryCid);
+		} else if (guardianOfCachedMsg.equals(currGuardian) == false) {
+			// managed data retrieved of different cache guardian - ignore data
+			LOGGER.trace("Managed data ignored, different cache guardian responsible for treatment. (metaEntryCid=" + metaEntryCid
+					+ ", resCacheGuardianr=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 			return;
 		}
 
@@ -442,16 +444,14 @@ public class SCCache {
 				.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 		if (resCachingMethod == SC_CACHING_METHOD.NOT_MANAGED) {
-			LOGGER.warn("Wrong cachingMethod in received message cmt=" + resCachingMethod + " metaEntryCacheId= "
-					+ metaEntryCacheId + ".");
+			LOGGER.warn("Wrong cachingMethod in received message cmt=" + resCachingMethod + " metaEntryCid= " + metaEntryCid + ".");
 			return;
 		}
 
 		if (resCachingMethod == SC_CACHING_METHOD.REMOVE) {
 			// remove received
 			// TODO
-			this.removeMetaAndDataEntries("sid unknown", metaEntryCacheId, "Remove requested from server for cacheId="
-					+ metaEntryCacheId);
+			this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Remove requested from server for cacheId=" + metaEntryCid);
 			return;
 		}
 
@@ -468,51 +468,55 @@ public class SCCache {
 
 			if (metaEntry.isLoadingAppendix() == true) {
 				// meta entry loading appendix
-				int nrOfAppendix = metaEntry.getNrOfAppendix();
-				String initialAppendixCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + "|0";
+				int appendixNr = metaEntry.getNrOfAppendix();
+				String initialAppendixCid = metaEntryCid + Constants.SLASH + appendixNr + "|0";
 				int nrOfPartsForAppendix = metaEntry.incrementNrOfPartsForDataMsg(initialAppendixCid);
-				String newAppendixPartCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + Constants.PIPE
-						+ nrOfPartsForAppendix;
+				String appendixPartCid = metaEntryCid + Constants.SLASH + appendixNr + Constants.PIPE + nrOfPartsForAppendix;
 				// set the correct partNr+1 in received message and cache it, partNr points to the next part!
 				resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(initialAppendixCid) + 1);
 
 				// cache appendix, managed data no expiration
-				dataCacheModule.putOrUpdate(newAppendixPartCid, resMessage);
+				dataCacheModule.putOrUpdate(appendixPartCid, resMessage);
 
 				if (resMessage.isPart() == true) {
 					// part of large appendix received, update meta entry
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis());
-					CacheLogger.putAppendixPartToCache(newAppendixPartCid, currUpdateRetrieverName, nrOfPartsForAppendix);
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
+							/ Constants.SEC_TO_MILLISEC_FACTOR);
+					CacheLogger.putManagedDataToCache(appendixPartCid, currGuardian, appendixNr, nrOfPartsForAppendix);
 				} else {
 					// end of large appendix received
 					metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
 					// update meta entry, no expiration time anymore
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
-					CacheLogger.finishCachingAppendix(newAppendixPartCid, currUpdateRetrieverName, nrOfPartsForAppendix);
+					metaDataCacheModule.replace(metaEntryCid, metaEntry);
+					CacheLogger.finishCachingAppendix(appendixPartCid, currGuardian, nrOfPartsForAppendix);
 				}
 			} else {
 				// meta entry is loaded - appendix received, increment counter
-				int nrOfAppendix = metaEntry.incrementNrOfAppendix();
-				String appendixCid = metaEntryCacheId + Constants.SLASH + nrOfAppendix + "|0";
+				int appendixNr = metaEntry.incrementNrOfAppendix();
+				String appendixCid = metaEntryCid + Constants.SLASH + appendixNr + "|0";
 				// increment number of parts for appendix in meta entry
-				metaEntry.incrementNrOfPartsForDataMsg(appendixCid);
+				int nrOfPart = metaEntry.incrementNrOfPartsForDataMsg(appendixCid);
 
 				// update initial message with correct number of appendix
-				String initialMsgCid = metaEntryCacheId + Constants.SLASH + "0|0";
+				String initialMsgCid = metaEntryCid + Constants.SLASH + "0|0";
 				SCMPMessage initialMsg = dataCacheModule.get(initialMsgCid);
-				initialMsg.setHeader(SCMPHeaderAttributeKey.NR_OF_APPENDIX, nrOfAppendix);
+				initialMsg.setHeader(SCMPHeaderAttributeKey.NR_OF_APPENDIX, appendixNr);
 				dataCacheModule.putOrUpdate(initialMsgCid, initialMsg);
 
 				if (resMessage.isPart() == true) {
 					// start of large appendix received, update meta entry
 					metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADING_APPENDIX);
 					// set the correct partNr+1 in received message and cache it, partNr points to the next part!
-					resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, metaEntry.getNrOfParts(appendixCid) + 1);
+					resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, nrOfPart + 1);
 					// update meta entry, expiration time
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, metaEntry.getLoadingTimeoutMillis());
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
+							/ Constants.SEC_TO_MILLISEC_FACTOR);
+					CacheLogger.startCachingAppendix(appendixCid, currGuardian, metaEntry.getLoadingTimeoutMillis()
+							/ Constants.SEC_TO_MILLISEC_FACTOR);
 				} else {
 					// appendix received, update meta entry, no expiration time
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
+					metaDataCacheModule.replace(metaEntryCid, metaEntry);
+					CacheLogger.putManagedDataToCache(appendixCid, currGuardian, appendixNr, nrOfPart);
 				}
 				// cache appendix, managed data no expiration
 				dataCacheModule.putOrUpdate(appendixCid, resMessage);
@@ -541,42 +545,71 @@ public class SCCache {
 			// no entry found
 			return;
 		}
-
-		int nrOfAppendices = metaEntry.getNrOfAppendix();
-		CacheLogger.removeMessageFromCache(metaEntryCacheId, sessionId, nrOfAppendices, removeReason);
-
-		// remove data entries - appendices belonging to the message
-		for (int i = 0; i < nrOfAppendices; i++) {
-			String appendixCid = metaEntryCacheId + Constants.SLASH + nrOfAppendices + "|0";
-			int nrOfPartsOfAppendix = metaEntry.getNrOfParts(appendixCid);
-
-			for (int index = 0; index < nrOfPartsOfAppendix; index++) {
-				dataCacheModule.remove(metaEntryCacheId + Constants.SLASH + nrOfAppendices + "|" + index);
-			}
-		}
+		CacheLogger.removeMessageFromCache(metaEntryCacheId, removeReason);
+		this.removeDataEntriesByMetaEntry(metaEntry, removeReason);
 		this.loadingSessionIds.remove(sessionId);
 	}
 
-	// TODO
-	public synchronized void removeManagedDataForRetriever(String updateRetrieverName) {
+	/**
+	 * Removes the data entries by meta entry.
+	 * 
+	 * @param metaEntry
+	 *            the meta entry
+	 * @param removeReason
+	 *            the remove reason
+	 */
+	public synchronized void removeDataEntriesByMetaEntry(SCCacheMetaEntry metaEntry, String removeReason) {
+		String metaEntryCacheId = metaEntry.getCacheId();
+		int nrOfAppendices = metaEntry.getNrOfAppendix();
+
+		// remove data entries - appendices belonging to the message
+		for (int i = 0; i <= nrOfAppendices; i++) {
+			String appendixCid = metaEntryCacheId + Constants.SLASH + i + "|0";
+			int nrOfPartsOfAppendix = metaEntry.getNrOfParts(appendixCid);
+
+			for (int index = 0; index <= nrOfPartsOfAppendix; index++) {
+				String dataCid = metaEntryCacheId + Constants.SLASH + i + Constants.PIPE + index;
+				dataCacheModule.remove(dataCid);
+				CacheLogger.removeMessageFromCache(dataCid, removeReason);
+			}
+		}
+	}
+
+	/**
+	 * Removes the managed data for guardian. Any data assigned to the specific cache guardian will be deleted.
+	 * 
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 */
+	public synchronized void removeManagedDataForGuardian(String cacheGuardian) {
 
 		// remove managed data in initial state
 		for (String metaEntryCacheId : this.mgdDataKeysInInitialState) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Update Retriever, name=" + updateRetrieverName);
+			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Cache Guardian, name=" + cacheGuardian);
 		}
 
-		// removed managed data assigned to update retriever
-		List<String> metaEntryCacheIds = this.mgdDataKeysAssignedToRetriever.get(updateRetrieverName);
+		// removed managed data assigned to cache guardian
+		List<String> metaEntryCacheIds = this.mgdDataAssignedToGuardian.get(cacheGuardian);
 		if (metaEntryCacheIds == null) {
 			// no managed data to delete
 			return;
 		}
 		for (String metaEntryCacheId : metaEntryCacheIds) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Update Retriever, name=" + updateRetrieverName);
+			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Cache Guardian, name=" + cacheGuardian);
 		}
 	}
 
-	// TODO
+	/**
+	 * Evaluates time to live in seconds.
+	 * 
+	 * @param messageToCache
+	 *            the message to cache
+	 * @return number of seconds to live
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 * @throws ParseException
+	 *             the parse exception
+	 */
 	private int evalTimeToLiveSeconds(SCMPMessage messageToCache) throws SCMPValidatorException, ParseException {
 		// use expire time from header field
 		String cacheExpirationDateTime = messageToCache.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
