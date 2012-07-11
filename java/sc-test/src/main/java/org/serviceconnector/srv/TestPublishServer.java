@@ -314,9 +314,15 @@ public class TestPublishServer extends TestStatefulServer {
 			int waitTime = Integer.parseInt(dataString[1]);
 			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
 			pubMessage.setCompressed(false);
+			pubMessage.setMask(TestConstants.maskSrv);
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
+			if (dataString.length == 3) {
+				String cacheId = dataString[2];
+				pubMessage.setCacheId(cacheId);
+			}
 			for (int i = 0; i < count; i++) {
 				try {
-					pubMessage.setMask(TestConstants.maskSrv);
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
 					Thread.sleep(waitTime);

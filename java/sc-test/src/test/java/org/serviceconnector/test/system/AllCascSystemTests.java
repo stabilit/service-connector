@@ -17,6 +17,7 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.test.system.api.cln.casc1.APICacheCoherencyCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
@@ -24,6 +25,7 @@ import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientChangeSub
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc2.APICacheCoherencyCasc2Test;
 import org.serviceconnector.test.system.api.cln.casc2.APICreateDeleteSessionCasc2Test;
 import org.serviceconnector.test.system.api.cln.casc2.APIExecuteAndSendCasc2Test;
 import org.serviceconnector.test.system.api.cln.casc2.APIExecuteCacheCasc2Test;
@@ -53,6 +55,9 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnSubscribeCasc2Test;
 		// API session tests
 		APICreateDeleteSessionCasc1Test.class,
 		APIExecuteAndSendCasc1Test.class,
+		
+		// cache coherency tests
+		APICacheCoherencyCasc1Test.class,
 
 		// API publish tests
 		APISubscribeUnsubscribeChangeCasc1Test.class,
@@ -74,6 +79,9 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnSubscribeCasc2Test;
 		APICreateDeleteSessionCasc2Test.class,
 		APIExecuteAndSendCasc2Test.class,
 
+		// cache coherency tests
+		APICacheCoherencyCasc2Test.class,
+		
 		// API publish tests for cascaded 2 mode
 		APISubscribeUnsubscribeChangeCasc2Test.class,
 		APIReceivePublicationCasc2Test.class,

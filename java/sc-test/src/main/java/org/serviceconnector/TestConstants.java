@@ -31,6 +31,7 @@ public class TestConstants {
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_SES_SRV_TCP = 30000;
 	public static final int PORT_PUB_SRV_TCP = 30001;
+	public static final int PORT_PUB_SRV2_TCP = 30002;
 	public static final int PORT_SES_SRV_HTTP = 40000;
 	public static final int PORT_PUB_SRV_HTTP = 40001;
 
@@ -55,8 +56,9 @@ public class TestConstants {
 	public static final String pubServiceName1 = "publish-1";
 	public static final String pubServiceName2 = "publish-2";
 	public static final String pubServerName1 = "publish-1";
-	public static final String updateRetrieverName1 = "updateRetriever1";
-	public static final String updateRetrieverName2 = "updateRetriever2";
+	public static final String pubServerName2 = "publish-2";
+	public static final String cacheGuardian1 = "updateRetriever1";
+	public static final String cacheGuardian2 = "updateRetriever2";
 	public static final String filServiceName1 = "file-1";
 	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";
@@ -68,6 +70,7 @@ public class TestConstants {
 	public static final String doNothingCmd = "doNothing";
 	public static final String publish3AppendixMsgCmd = "publish3Appendix";
 	public static final String publish10MBAppendixMsgCmd = "publish10MBAppendix";
+	public static final String publish50MBAppendixMsgCmd = "publish50MBAppendix";
 	public static final String publish3LargeAppendixMsgCmd = "publish3LargeAppendix";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";

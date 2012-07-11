@@ -37,11 +37,9 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 	protected SCMgmtClient mgmtClient;
 	protected SCClient sessionClient;
 	protected SCSessionService sessionService1;
-	protected SCClient updateRetrClient;
-	protected UpdateRetrieverCbk updateRetrieverCbk;
+	protected SCClient guardianClient;
+	protected GuardianCbk cacheGuardianCbk;
 	protected SessionMsgCallback sessionCbk;
-
-	protected static int updateMsgRecvCounter = 0;
 
 	public APISystemSuperCCTest() {
 		APISystemSuperCCTest.setUp1CascadedServiceConnectorAndServer();
@@ -50,22 +48,21 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 	public void setUpClientToSC() throws Exception {
 		if (cascadingLevel == 0) {
 			mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
-			updateRetrClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
+			guardianClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 			sessionClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		} else if (cascadingLevel == 1) {
 			mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
-			updateRetrClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
+			guardianClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
 			sessionClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP);
 		} else if (cascadingLevel == 2) {
 			mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
-			updateRetrClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
+			guardianClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
 			sessionClient = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);
 		}
 		mgmtClient.attach();
-		updateRetrClient.attach();
+		guardianClient.attach();
 		sessionClient.attach();
-		updateRetrieverCbk = new UpdateRetrieverCbk();
-		APISystemSuperCCTest.updateMsgRecvCounter = 0;
+		cacheGuardianCbk = new GuardianCbk();
 
 		sessionService1 = sessionClient.newSessionService(TestConstants.sesServiceName1);
 		sessionCbk = new SessionMsgCallback(sessionService1);
@@ -92,13 +89,18 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.updateRetrieverName1);
+				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian1);
+
+		ServerDefinition srvPublish2ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServerName2, TestConstants.PORT_PUB_SRV2_TCP,
+				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian2);
 
 		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
 				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 
 		srvToSC0CascDefs.add(srvPublishToSC0Def);
+		srvToSC0CascDefs.add(srvPublish2ToSC0Def);
 		srvToSC0CascDefs.add(srvSessionToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
@@ -111,24 +113,30 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			updateRetrClient.stopCacheUpdateRetriever();
+			guardianClient.stopCacheGuardian();
 			sessionService1.deleteSession();
 		} catch (Exception e1) {
 			SystemSuperTest.testLogger.error("receive error=" + e1.getMessage());
 		}
 		try {
 			mgmtClient.detach();
-			updateRetrClient.detach();
+			guardianClient.detach();
 			sessionClient.detach();
 		} catch (Exception e) {
 			SystemSuperTest.testLogger.error("receive error=" + e.getMessage());
 		}
 		mgmtClient = null;
-		updateRetrClient = null;
+		guardianClient = null;
 		super.afterOneTest();
 	}
 
-	protected class UpdateRetrieverCbk extends SCMessageCallback {
+	protected class GuardianCbk extends SCMessageCallback {
+
+		private int updateMsgRecvCounter;
+
+		public GuardianCbk() {
+			this.updateMsgRecvCounter = 0;
+		}
 
 		public void waitForMessage(int nrSeconds) throws Exception {
 			this.waitForMessage(nrSeconds, 1);
@@ -136,7 +144,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 		public void waitForMessage(int nrSeconds, int nrMsgs) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (APISystemSuperCCTest.updateMsgRecvCounter >= nrMsgs) {
+				if (updateMsgRecvCounter >= nrMsgs) {
 					return;
 				}
 				Thread.sleep(100);
@@ -147,15 +155,18 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		@Override
 		public void receive(SCMessage reply) {
 			SystemSuperTest.testLogger.info("receive msg=" + reply.toString());
-			APISystemSuperCCTest.updateMsgRecvCounter++;
+			updateMsgRecvCounter++;
 		}
 
 		@Override
 		public void receive(Exception ex) {
 			SystemSuperTest.testLogger.error("receive error=" + ex.getMessage());
-			APISystemSuperCCTest.updateMsgRecvCounter++;
+			updateMsgRecvCounter++;
 		}
 
+		public int getUpdateMsgCounter() {
+			return this.updateMsgRecvCounter;
+		}
 	}
 
 	protected class SessionMsgCallback extends SCMessageCallback {
@@ -170,5 +181,6 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		@Override
 		public void receive(Exception ex) {
 		}
+
 	}
 }

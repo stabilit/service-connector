@@ -29,6 +29,7 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.APISystemSuperCCTest;
 
@@ -61,9 +62,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(10, 3);
+		cacheGuardianCbk.waitForMessage(10, 3);
 	}
 
 	/**
@@ -84,9 +85,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(10, 3);
+		cacheGuardianCbk.waitForMessage(10, 3);
 
 		// read managed data with session client from cache
 		SCMessage response = sessionService1.execute(request);
@@ -115,9 +116,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(10, 3);
+		cacheGuardianCbk.waitForMessage(10, 3);
 
 		// read managed data with session client from cache
 		SCMessage response = sessionService1.execute(request);
@@ -146,9 +147,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(10, 3);
+		cacheGuardianCbk.waitForMessage(10, 3);
 
 		// read managed data with session client from cache
 		SCMessage response = sessionService1.execute(request);
@@ -177,9 +178,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish10MBAppendixMsgCmd);
 		subMsg.setData("700");
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(100, 1);
+		cacheGuardianCbk.waitForMessage(100, 1);
 
 		// read managed data with session client from cache
 		SCMessage response = sessionService1.execute(request);
@@ -191,11 +192,11 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	}
 
 	/**
-	 * Description: cache initial message, stop cache guardian, check cache state<br>
+	 * Description: cache initial message, 3 appendix, stop cache guardian, check cache state is empty<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t06_cc_InitialMsgStopCacheGuardian() throws Exception {
+	public void t06_cc_InitialMsg3AppendixStopCacheGuardian() throws Exception {
 		// gets message cached (cacheid=700)
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
@@ -208,41 +209,73 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
-		updateRetrClient.stopCacheUpdateRetriever();
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+		guardianClient.stopCacheGuardian();
 
-		// verify that message is in cache on sc1 and not only in sc0
+		// verify that message is not in cascaded SC cache anymore
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
 
+		// read managed data with session client from cache
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setData("test");
+		request.setCacheId("700");
+		SCMessage response = sessionService1.execute(request);
+		Assert.assertEquals("test", response.getData());
 	}
 
-	// @Test
-	// public void t10_cc_StopUpdateRetrieverReadManagedData() throws Exception {
-	//
-	// }
-	//
-	// @Test
-	// public void t10_cc_RetrievingAppendixWithoutCacheId() throws Exception {
-	//
-	// }
-	//
-	// @Test
-	// public void t10_cc_RetrievingAppendixOfDifferentCacheGuardian() throws Exception {
-	//
-	// }
-	//
-	// @Test
-	// public void t10_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
-	//
-	// }
+	/**
+	 * Description: cache initial message, stop cache guardian, check cache state is empty<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t07_cc_InitialMsgStopCacheGuardian() throws Exception {
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// start cache guardian
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setData("700");
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+		guardianClient.stopCacheGuardian();
+
+		// verify that message is not in cache anymore
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
+	}
+
+	@Test
+	public void t20_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
+		// start cache guardian publish every second a message
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
+		subMsg.setData("100003|1000|700");
+		subMsg.setCachingMethod(SC_CACHING_METHOD.APPEND);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// gets message cached (cacheid=700)
+		SCMessage request = new SCMessage();
+		request.setCacheId("700");
+		request.setData("cache50MBStringFor1Hour_managedData");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// assure 3 messages arrive within 10 seconds!
+		cacheGuardianCbk.waitForMessage(100, 1);
+	}
 
 	/**
 	 * Description: managed data to SC0, start client to SC1 and load from cache of SC0<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t20_cc_ManagedDataToSC0PublishAppendixClientToCascSC() throws Exception {
+	public void t40_cc_ManagedDataToSC0PublishAppendixClientToCascSC() throws Exception {
 		// disconnect session client
 		this.sessionService1.deleteSession();
 		this.sessionClient.detach();
@@ -264,9 +297,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
-		clientToSc0.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		clientToSc0.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// assure 3 messages arrive within 10 seconds!
-		updateRetrieverCbk.waitForMessage(10, 3);
+		cacheGuardianCbk.waitForMessage(10, 3);
 
 		// verify that message is in cache on sc0
 		Map<String, String> inspectResponse = clientToSc0.inspectCache("700");
@@ -274,9 +307,9 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "updateRetriever1");
 		// start client to cascaded sc, no appendix will be published
 		subMsg.setSessionInfo(TestConstants.doNothingCmd);
-		updateRetrClient.startCacheUpdateRetriever(TestConstants.updateRetrieverName1, subMsg, updateRetrieverCbk);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 		// stop client to sc0- cache SC0 should stay
-		clientToSc0.stopCacheUpdateRetriever();
+		clientToSc0.stopCacheGuardian();
 
 		// verify that message is still in cache on sc0
 		inspectResponse = clientToSc0.inspectCache("700");
@@ -297,6 +330,105 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 	}
 
+	/**
+	 * Description: 2 client 2 publish server one cache, 2 cache guardian<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t41_cc_2Clients2Server1Cache() throws Exception {
+		// connect new client to cascaded SC
+		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+
+		// gets message cached (cacheid=700) to SC0
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+		// verify that message is still in cache on sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0|0=0&", "unset");
+
+		// start cache guardian no publish instruction
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setData("700");
+		subMsg.setSessionInfo(TestConstants.doNothingCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
+		// start cache guardian and cache 3 appendix
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
+		client2.startCacheGuardian(TestConstants.cacheGuardian2, subMsg, cacheGuardianCbk2);
+		// assure 3 messages arrive within 10 seconds!
+		cacheGuardianCbk2.waitForMessage(10, 3);
+
+		Assert.assertEquals("unexpected append received!", 0, cacheGuardianCbk.getUpdateMsgCounter());
+
+		// verify that message is in cache on sc0
+		inspectResponse = guardianClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian2);
+	}
+
+	/**
+	 * Description: 2 client 2 publish server one cache, 2 cache guardian<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t42_cc_2Clients2Server1Cache() throws Exception {
+		// connect new client to cascaded SC
+		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+
+		// gets message cached (cacheid=700) to SC0
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+		// verify that message is still in cache on sc0
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0|0=0&", "unset");
+
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
+		// start cache guardian and cache 3 appendix
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setData("700");
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
+		client2.startCacheGuardian(TestConstants.cacheGuardian2, subMsg, cacheGuardianCbk2);
+		// assure 3 messages arrive within 10 seconds!
+		cacheGuardianCbk2.waitForMessage(10, 3);
+
+		// start cache guardian no publish instruction
+		subMsg.setSessionInfo(TestConstants.doNothingCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		Assert.assertEquals("unexpected append received!", 0, cacheGuardianCbk.getUpdateMsgCounter());
+		guardianClient.stopCacheGuardian();
+
+		// verify that message is in cache on sc0
+		inspectResponse = guardianClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian2);
+
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+		// assure 3 messages arrive within 10 seconds!
+		cacheGuardianCbk.waitForMessage(10, 3);
+
+		// verify that message is in cache on sc0
+		inspectResponse = guardianClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian2);
+	}
+
 	private void checkCacheInspectString(Map<String, String> inspectResponse, String returnStr, SC_CACHE_ENTRY_STATE msgState,
 			String cid, String nrOfApp, String partInfo, String updateRetrieverName) {
 		Assert.assertEquals(returnStr, inspectResponse.get("return"));
@@ -312,12 +444,13 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	}
 
 	private void checkAppendices(SCMessage scMessage, int expectedNrOfApp) {
-		Assert.assertTrue("response not of type managed message", scMessage instanceof SCManagedMessage);
+		Assert.assertTrue("response not of type managed message", scMessage.isManaged());
+		Assert.assertEquals(SC_CACHING_METHOD.INITIAL, scMessage.getCachingMethod());
 		SCManagedMessage managedMessage = (SCManagedMessage) scMessage;
 		Assert.assertEquals("unexpected number of appendices found in managed data", expectedNrOfApp,
-				managedMessage.getNrOfAppendices());
+				managedMessage.getNrOfAppendixes());
 		int i = 0;
-		for (SCAppendMessage scAppendMessage : managedMessage.getAppendices()) {
+		for (SCAppendMessage scAppendMessage : managedMessage.getAppendixes()) {
 			String body = (String) scAppendMessage.getData();
 			if (body.startsWith(i + "") == false) {
 				Assert.fail("unexpected appnendix body: " + body);
@@ -325,174 +458,4 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 			i++;
 		}
 	}
-
-	// /**
-	// * Description: receive 1000 messages<br>
-	// * Expectation: passes
-	// */
-	// @Test
-	// public void t02_receive() throws Exception {
-	// publishService = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	// SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-	// SCSubscribeMessage subMsgResponse = null;
-	// msgCallback = new MsgCallback(publishService);
-	// subMsgRequest.setMask(TestConstants.mask);
-	// subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-	// int nrMessages = 1000;
-	// subMsgRequest.setData(Integer.toString(nrMessages));
-	// subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
-	// msgCallback.setExpectedMessages(nrMessages);
-	// subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	// Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-	// Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-	// Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-	// Assert.assertTrue("is not subscribed", publishService.isSubscribed());
-	//
-	// msgCallback.waitForMessage(20);
-	// Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
-	// SCMessage response = msgCallback.getMessage();
-	// Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-	//
-	// publishService.unsubscribe();
-	// Assert.assertNull("the session ID is not null", publishService.getSessionId());
-	// }
-	//
-	// /**
-	// * Description: receive message after noDataInterval has expired<br>
-	// * Expectation: passes
-	// */
-	// @Test
-	// public void t03_receive() throws Exception {
-	// publishService = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	// SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-	// SCSubscribeMessage subMsgResponse = null;
-	// msgCallback = new MsgCallback(publishService);
-	// subMsgRequest.setMask(TestConstants.mask);
-	// subMsgRequest.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
-	// int nrMessages = 5;
-	// String waitMillis = "1000";
-	// subMsgRequest.setData(nrMessages + "|" + waitMillis);
-	// subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
-	// msgCallback.setExpectedMessages(nrMessages);
-	// subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	// Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-	// Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-	// Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-	// Assert.assertTrue("is not subscribed", publishService.isSubscribed());
-	//
-	// msgCallback.waitForMessage(5);
-	// Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
-	// SCMessage response = msgCallback.getMessage();
-	// Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-	//
-	// publishService.unsubscribe();
-	// Assert.assertNull("the session ID is not null", publishService.getSessionId());
-	// }
-	//
-	// /**
-	// * Description: do not receive message because subscription does not match<br>
-	// * Expectation: passes (catch exception while waiting for message)
-	// */
-	// @Test
-	// public void t04_receiveNoMatch() throws Exception {
-	// publishService = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	// SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-	// SCSubscribeMessage subMsgResponse = null;
-	// msgCallback = new MsgCallback(publishService);
-	// // wrong mask
-	// subMsgRequest.setMask(TestConstants.mask1);
-	// subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-	// int nrMessages = 200;
-	// subMsgRequest.setData(Integer.toString(nrMessages));
-	// subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
-	// msgCallback.setExpectedMessages(nrMessages);
-	// subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	// Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-	// Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-	// Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-	// Assert.assertTrue("is not subscribed", publishService.isSubscribed());
-	//
-	// try {
-	// msgCallback.waitForMessage(2);
-	// Assert.fail("TimeoutException should have been thrown!");
-	// } catch (TimeoutException e) {
-	// Assert.assertEquals("Nr messages does not match", 0, msgCallback.getMessageCount());
-	// }
-	// publishService.unsubscribe();
-	// Assert.assertNull("the session ID is not null", publishService.getSessionId());
-	// }
-	//
-	// /**
-	// * Description: receive 2x100 messages in two subscriptions of the same client<br>
-	// * Expectation: passes
-	// */
-	// @Test
-	// public void t10_receiveTwoSubscriptions() throws Exception {
-	// SCPublishService service1 = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	// SCPublishService service2 = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	//
-	// int nrMessages = 100;
-	// MsgCallback cbk1 = new MsgCallback(service1);
-	// cbk1.setExpectedMessages(nrMessages);
-	// MsgCallback cbk2 = new MsgCallback(service2);
-	// cbk2.setExpectedMessages(nrMessages);
-	//
-	// SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-	// SCSubscribeMessage subMsgResponse = null;
-	// subMsgRequest.setMask(TestConstants.mask);
-	// subMsgRequest.setData(Integer.toString(nrMessages));
-	// subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
-	//
-	// subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
-	// Assert.assertNotNull("the session ID is null", service1.getSessionId());
-	// Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-	// Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-	// Assert.assertTrue("is not subscribed", service1.isSubscribed());
-	//
-	// subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-	// subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
-	// Assert.assertNotNull("the session ID is null", service2.getSessionId());
-	// Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-	// Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-	// Assert.assertTrue("is not subscribed", service2.isSubscribed());
-	//
-	// cbk1.waitForMessage(200);
-	// Assert.assertEquals("Nr messages does not match", nrMessages, cbk1.getMessageCount());
-	// SCMessage response = cbk1.getMessage();
-	// Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-	// cbk2.waitForMessage(200);
-	// Assert.assertEquals("Nr messages does not match", nrMessages, cbk2.getMessageCount());
-	// response = cbk2.getMessage();
-	// Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-	//
-	// service1.unsubscribe(4);
-	// Assert.assertNull("the session ID is not null)", service1.getSessionId());
-	// service2.unsubscribe(4);
-	// Assert.assertNull("the session ID is not null)", service2.getSessionId());
-	// }
-	//
-	// /**
-	// * Description: two message receives - waitTime on server is longer than subscriptionTimeout, it verifies timer are scheduled
-	// * correctly<br>
-	// * Expectation: passes
-	// */
-	// @Test
-	// public void t11_receive() throws Exception {
-	// publishService = mgmtClient.newPublishService(TestConstants.pubServiceName1);
-	// SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-	// msgCallback = new MsgCallback(publishService);
-	// subMsgRequest.setMask(TestConstants.mask);
-	// subMsgRequest.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
-	// int nrMessages = 2;
-	// String waitMillis = "124000";
-	// subMsgRequest.setData(nrMessages + "|" + waitMillis);
-	// subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
-	// subMsgRequest.setNoDataIntervalSeconds(63);
-	// msgCallback.setExpectedMessages(nrMessages);
-	// publishService.subscribe(subMsgRequest, msgCallback);
-	// msgCallback.waitForMessage(124000);
-	// Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
-	// msgCallback.getMessage();
-	// publishService.unsubscribe();
-	// }
 }

@@ -117,6 +117,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		// wait until cache message expires
 		Thread.sleep(4010);
 		request.setData(TestConstants.pangram);
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = sessionService1.execute(request);
 		Assert.assertEquals(TestConstants.pangram, response.getData());
 		sessionService1.deleteSession();
