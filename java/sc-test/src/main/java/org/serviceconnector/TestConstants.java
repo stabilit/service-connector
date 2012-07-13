@@ -57,8 +57,8 @@ public class TestConstants {
 	public static final String pubServiceName2 = "publish-2";
 	public static final String pubServerName1 = "publish-1";
 	public static final String pubServerName2 = "publish-2";
-	public static final String cacheGuardian1 = "updateRetriever1";
-	public static final String cacheGuardian2 = "updateRetriever2";
+	public static final String cacheGuardian1 = "cacheGuardian1";
+	public static final String cacheGuardian2 = "cacheGuardian2";
 	public static final String filServiceName1 = "file-1";
 	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";

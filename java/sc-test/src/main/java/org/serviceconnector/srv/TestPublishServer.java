@@ -410,6 +410,21 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
+		// publish 1 50MB appendix
+		public void publish50MBAppendix(SCMessage request, int operationTimeoutMillis) {
+			SCPublishMessage pubMessage = new SCPublishMessage();
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
+			try {
+				String largeString = TestUtil.get50MBString();
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0:" + largeString);
+				this.publishSrv.publish(pubMessage);
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
 		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();
