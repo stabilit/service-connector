@@ -690,6 +690,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	@Override
 	public void destroy() {
 		super.destroy();
+		this.service.notifyRemovedSession();
 		this.sessions = null;
 		this.service = null;
 	}

@@ -136,15 +136,15 @@ public class SCCache {
 	public synchronized SCMPMessage tryGetMessageFromCacheOrLoad(SCMPMessage reqMessage) throws SCMPCommandException {
 
 		// get and check cache-id
-		String metaEntryCacheId = reqMessage.getCacheId();
-		if (metaEntryCacheId == null) {
+		String metaEntryCid = reqMessage.getCacheId();
+		if (metaEntryCid == null) {
 			// no caching requested from client
 			return null;
 		}
 		// lookup cache meta entry
 		String sessionId = reqMessage.getSessionId();
 		String serviceName = reqMessage.getServiceName();
-		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(metaEntryCacheId);
+		SCCacheMetaEntry metaEntry = metaDataCacheModule.get(metaEntryCid);
 
 		if (metaEntry != null) {
 
@@ -171,8 +171,8 @@ public class SCCache {
 				reqPartNr = "0";
 			}
 			// build dataEntryCid
-			String dataEntryCid = metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
-			CacheLogger.tryGetMessageFromCache(metaEntryCacheId, sessionId, reqPartNr, appendixNr);
+			String dataEntryCid = metaEntryCid + Constants.SLASH + appendixNr + Constants.PIPE + reqPartNr;
+			CacheLogger.tryGetMessageFromCache(metaEntryCid, sessionId, reqPartNr, appendixNr);
 			// meta entry exists
 			if (metaEntry.isLoaded() == true) {
 				// message already loaded - return message
@@ -192,44 +192,52 @@ public class SCCache {
 				return cachedMessage;
 			}
 
+			if (metaEntry.isLoadingAppendix() == true) {
+				// requested message gets an updated by an appendix (loading appendix)
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
+						+ serviceName + " cacheId=" + metaEntryCid);
+				scmpCommandException.setMessageType(reqMessage.getMessageType());
+				throw scmpCommandException;
+			}
+
 			if (metaEntry.isLoadingInitial() == true) {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(sessionId) == true) {
 					// requested message is being loaded by current session - continue loading
-					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCacheId + Constants.SLASH + appendixNr + Constants.PIPE
+					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCid + Constants.SLASH + appendixNr + Constants.PIPE
 							+ "0") + 1;
 					int reqPartNrInt = Integer.parseInt(reqPartNr);
 					if (reqPartNrInt != nextPartNrToLoad) {
 						// requested partNr does not match current loading state - remove message from cache
 						LOGGER.warn("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
 								+ nextPartNrToLoad + ").");
-						this.removeMetaAndDataEntries(sessionId, metaEntryCacheId, "Requested partNr=" + reqPartNr
+						this.removeMetaAndDataEntries(sessionId, metaEntryCid, "Requested partNr=" + reqPartNr
 								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
 						// do return an error here to stop current request loading this message and avoid parallel loading problems
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId="
-										+ metaEntryCacheId);
+										+ metaEntryCid);
 						scmpCommandException.setMessageType(reqMessage.getMessageType());
 						throw scmpCommandException;
 					}
 					return null;
 				}
 				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-						+ serviceName + " cacheId=" + metaEntryCacheId);
+						+ serviceName + " cacheId=" + metaEntryCid);
 				scmpCommandException.setMessageType(reqMessage.getMessageType());
 				throw scmpCommandException;
 			} else {
-				LOGGER.error("Cache error, bad state of meta entry cacheKey=" + metaEntryCacheId);
+				LOGGER.error("Cache error, bad state of meta entry cacheKey=" + metaEntryCid);
 				return null;
 			}
 		} else {
 			if (reqMessage.isPollRequest()) {
 				// poll large response and no meta entry: Cache got destroyed in meantime or no caching required!
-				LOGGER.trace("Poll large response with cacheId=" + metaEntryCacheId + " but no meta entry.");
+				LOGGER.trace("Poll large response with cacheId=" + metaEntryCid + " but no meta entry.");
 				return null;
 			}
 			// start loading message to cache
-			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(metaEntryCacheId);
+			SCCacheMetaEntry newMetaEntry = new SCCacheMetaEntry(metaEntryCid);
 			// take original OTI so transporting message would stop before metaEntry expires!
 			int otiMillis = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			newMetaEntry.setHeader(reqMessage.getHeader()); // save all header attributes
@@ -238,9 +246,9 @@ public class SCCache {
 			newMetaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADING_INITIAL);
 
 			// put meta entry to cache
-			this.metaDataCacheModule.putOrUpdate(metaEntryCacheId, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
-			this.loadingSessionIds.put(sessionId, metaEntryCacheId);
-			CacheLogger.startLoadingCacheMessage(metaEntryCacheId, sessionId, otiMillis);
+			this.metaDataCacheModule.putOrUpdate(metaEntryCid, newMetaEntry, otiMillis / Constants.SEC_TO_MILLISEC_FACTOR);
+			this.loadingSessionIds.put(sessionId, metaEntryCid);
+			CacheLogger.startLoadingCacheMessage(metaEntryCid, sessionId, otiMillis);
 			return null;
 		}
 	}
@@ -410,7 +418,7 @@ public class SCCache {
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
-			LOGGER.error("Missing metaEntry message can not be applied to existing data.");
+			LOGGER.error("Missing metaEntry message can not be applied to existing data, cid=" + metaEntryCid);
 			this.removeMetaAndDataEntries(sessionId, metaEntryCid, "Missing metaEntry message can not be applied to existing data.");
 			return;
 		}
@@ -462,10 +470,9 @@ public class SCCache {
 		}
 
 		if (metaEntry.isLoadingInitial() == true) {
-			// meta entry is loaded by client - managed data already received
-			// TODO - delete existing stuff!
+			LOGGER.error("Appendix reveived, initial message still loading - delete data to avoid inconsistency.");
+			this.removeMetaAndDataEntries(sessionId, metaEntryCid, "Appendix reveived, initial message still loading.");
 		} else if (resCachingMethod == SC_CACHING_METHOD.APPEND) {
-
 			if (metaEntry.isLoadingAppendix() == true) {
 				// meta entry loading appendix
 				int appendixNr = metaEntry.getNrOfAppendix();
@@ -547,7 +554,6 @@ public class SCCache {
 		}
 		CacheLogger.removeMessageFromCache(metaEntryCacheId, removeReason);
 		this.removeDataEntriesByMetaEntry(metaEntry, removeReason);
-		this.loadingSessionIds.remove(sessionId);
 	}
 
 	/**
@@ -573,6 +579,7 @@ public class SCCache {
 				CacheLogger.removeMessageFromCache(dataCid, removeReason);
 			}
 		}
+		this.loadingSessionIds.remove(metaEntry.getLoadingSessionId());
 	}
 
 	/**

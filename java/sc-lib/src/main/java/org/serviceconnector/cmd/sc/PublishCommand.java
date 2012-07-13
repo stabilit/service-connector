@@ -58,9 +58,8 @@ public class PublishCommand extends CommandAdapter {
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
 
-		if (service.getType() == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER
-				|| service.getType() == ServiceType.CACHE_UPDATE_RETRIEVER) {
-			// Managed data arrived over cache update retriever - handle caching
+		if (service.getType() == ServiceType.CASCADED_CACHE_GUARDIAN || service.getType() == ServiceType.CACHE_GUARDIAN) {
+			// Managed data arrived over cache guardian - handle caching
 			AppContext.getSCCache().cachedManagedData(message);
 		}
 

@@ -279,7 +279,7 @@ public class SCRequester implements IRequester {
 			}
 
 			if (scmpReply.isPart()) {
-				// handling large response
+				// handling large response start
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}

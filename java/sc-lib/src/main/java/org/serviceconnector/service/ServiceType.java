@@ -34,16 +34,16 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	SESSION_SERVICE("session"), //
 	/** The PUBLISH_SERVICE. */
 	PUBLISH_SERVICE("publish"), //
-	/** The CACHE_UPDATE_RETRIEVER. */
-	CACHE_UPDATE_RETRIEVER("cacheUpdateRetriever"), //
+	/** The CACHE_GUARDIAN. */
+	CACHE_GUARDIAN("cacheGuardian"), //
 	/** The CASCADED_SESSION_SERVICE. */
 	CASCADED_SESSION_SERVICE("cascadedSession"), //
 	/** The CASCADED_PUBLISH_SERVICE. */
 	CASCADED_PUBLISH_SERVICE("cascadedPublish"), //
 	/** The CASCADED_FILE_SERVICE. */
 	CASCADED_FILE_SERVICE("cascadedFile"), //
-	/** The CASCADED_CACHE_UPDATE_RETRIEVER. */
-	CASCADED_CACHE_UPDATE_RETRIEVER("cascadedCacheUpdateRetriever"), //
+	/** The CASCADED_CACHE_GUARDIAN. */
+	CASCADED_CACHE_GUARDIAN("cascadedCacheGuardian"), //
 	/** The FILE_SERVICE. */
 	FILE_SERVICE("file"), //
 	/** The UNDEFINED. */

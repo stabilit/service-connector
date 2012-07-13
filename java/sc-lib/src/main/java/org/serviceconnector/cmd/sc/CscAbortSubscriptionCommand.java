@@ -74,7 +74,7 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
-		case CASCADED_CACHE_UPDATE_RETRIEVER:
+		case CASCADED_CACHE_GUARDIAN:
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();

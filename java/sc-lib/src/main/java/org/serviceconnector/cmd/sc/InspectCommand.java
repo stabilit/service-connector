@@ -245,7 +245,7 @@ public class InspectCommand extends CommandAdapter {
 		int counter = 0;
 		for (Service service : services) {
 			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE
-					&& service.getType() != ServiceType.CACHE_UPDATE_RETRIEVER) {
+					&& service.getType() != ServiceType.CACHE_GUARDIAN) {
 				continue;
 			}
 			if (service.getName().matches(serviceNameRegex) == false) {
@@ -255,7 +255,7 @@ public class InspectCommand extends CommandAdapter {
 			switch (service.getType()) {
 			case SESSION_SERVICE:
 			case PUBLISH_SERVICE:
-			case CACHE_UPDATE_RETRIEVER:
+			case CACHE_GUARDIAN:
 				if (counter != 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}
@@ -272,7 +272,7 @@ public class InspectCommand extends CommandAdapter {
 			case CASCADED_FILE_SERVICE:
 			case CASCADED_PUBLISH_SERVICE:
 			case CASCADED_SESSION_SERVICE:
-			case CASCADED_CACHE_UPDATE_RETRIEVER:
+			case CASCADED_CACHE_GUARDIAN:
 				if (counter != 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}

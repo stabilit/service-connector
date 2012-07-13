@@ -2,11 +2,11 @@ package org.serviceconnector.service;
 
 import org.serviceconnector.ctx.AppContext;
 
-public class CacheUpdateRetriever extends PublishService {
+public class CacheGuardian extends PublishService {
 
-	public CacheUpdateRetriever(String name) {
+	public CacheGuardian(String name) {
 		super(name);
-		this.type = ServiceType.CACHE_UPDATE_RETRIEVER;
+		this.type = ServiceType.CACHE_GUARDIAN;
 	}
 
 	@Override

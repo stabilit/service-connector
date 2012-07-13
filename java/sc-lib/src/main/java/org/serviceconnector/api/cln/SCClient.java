@@ -88,9 +88,9 @@ public class SCClient {
 	/** The attached flag. Indicates if a SCClient is already attached to SC */
 	protected boolean attached;
 
-	private boolean activeRetriever;
+	private boolean activeGuardian;
 
-	private SCPublishService cacheUpdateRetriever;
+	private SCPublishService cacheGuardian;
 
 	/**
 	 * Instantiates a new SC client with default connection type.
@@ -121,9 +121,9 @@ public class SCClient {
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
 		this.attached = false;
-		this.activeRetriever = false;
+		this.activeGuardian = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		this.cacheUpdateRetriever = null;
+		this.cacheGuardian = null;
 	}
 
 	/**
@@ -336,59 +336,57 @@ public class SCClient {
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 
-	public synchronized void startCacheGuardian(String retrieverName, SCSubscribeMessage subscribeMessage,
-			SCMessageCallback retrieverCallback) throws SCServiceException, SCMPValidatorException {
-		this.startCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, retrieverName, subscribeMessage,
-				retrieverCallback);
+	public synchronized void startCacheGuardian(String guardianName, SCSubscribeMessage subscribeMessage,
+			SCMessageCallback guardianCallback) throws SCServiceException, SCMPValidatorException {
+		this.startCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, guardianName, subscribeMessage, guardianCallback);
 	}
 
-	public synchronized void startCacheUpdateRetriever(int operationTimeoutSeconds, String retrieverName,
-			SCSubscribeMessage subscribeMessage, SCMessageCallback retrieverCallback) throws SCServiceException,
+	public synchronized void startCacheGuardian(int operationTimeoutSeconds, String guardianName,
+			SCSubscribeMessage subscribeMessage, SCMessageCallback guardianCallback) throws SCServiceException,
 			SCMPValidatorException {
 		if (this.attached == false) {
-			throw new SCServiceException("Starting an Cache Update Retriever not possible - client not attached.");
+			throw new SCServiceException("Starting a Cache Guardian not possible - client not attached.");
 		}
-		if (this.activeRetriever == true) {
-			throw new SCServiceException("Cache Update Retriever already started.");
+		if (this.activeGuardian == true) {
+			throw new SCServiceException("Cache Guardian already started.");
 		}
-		if (retrieverName == null) {
-			throw new SCMPValidatorException("Cache Update Retriever name must be set.");
+		if (guardianName == null) {
+			throw new SCMPValidatorException("Cache Guardian name must be set.");
 		}
-		ValidatorUtility.validateStringLengthTrim(1, retrieverName, Constants.MAX_LENGTH_SERVICENAME,
+		ValidatorUtility.validateStringLengthTrim(1, guardianName, Constants.MAX_LENGTH_SERVICENAME,
 				SCMPError.HV_WRONG_SERVICE_NAME);
 
-		this.cacheUpdateRetriever = new SCPublishService(this, retrieverName, this.requester);
-		this.cacheUpdateRetriever.subscribe(operationTimeoutSeconds, subscribeMessage, retrieverCallback);
-		this.activeRetriever = true;
+		this.cacheGuardian = new SCPublishService(this, guardianName, this.requester);
+		this.cacheGuardian.subscribe(operationTimeoutSeconds, subscribeMessage, guardianCallback);
+		this.activeGuardian = true;
 	}
 
-	public synchronized void changeUpdateRetrieval(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
+	public synchronized void changeCacheGuardian(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
 			SCServiceException {
-		this.changeUpdateRetrieval(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
+		this.changeGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
 	}
 
-	public synchronized void changeUpdateRetrieval(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
+	public synchronized void changeGuardian(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws SCMPValidatorException, SCServiceException {
-		this.cacheUpdateRetriever.changeSubscription(operationTimeoutSeconds, scSubscribeMessage);
+		this.cacheGuardian.changeSubscription(operationTimeoutSeconds, scSubscribeMessage);
 	}
 
 	public synchronized void stopCacheGuardian() throws SCServiceException, SCMPValidatorException {
-		this.stopCacheUpdateRetriever(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		this.stopCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	public synchronized void stopCacheUpdateRetriever(int operationTimeoutSeconds) throws SCServiceException,
-			SCMPValidatorException {
+	public synchronized void stopCacheGuardian(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		if (this.attached == false) {
-			throw new SCServiceException("Stopping an Cache Update Retriever not possible - client not attached.");
+			throw new SCServiceException("Stopping an Cache Guardian not possible - client not attached.");
 		}
-		if (this.activeRetriever == false) {
-			// no active retriever to stop, ignore
+		if (this.activeGuardian == false) {
+			// no active guardian to stop, ignore
 			return;
 		}
 		try {
-			this.cacheUpdateRetriever.unsubscribe(operationTimeoutSeconds);
+			this.cacheGuardian.unsubscribe(operationTimeoutSeconds);
 		} finally {
-			this.activeRetriever = false;
+			this.activeGuardian = false;
 		}
 	}
 

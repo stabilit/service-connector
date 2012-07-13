@@ -119,7 +119,7 @@ public class ServiceConfiguration {
 		// get remote host for file services or cascaded services
 		if ((serviceType == ServiceType.FILE_SERVICE) || (serviceType == ServiceType.CASCADED_SESSION_SERVICE)
 				|| (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_FILE_SERVICE)
-				|| (serviceType == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER)) {
+				|| (serviceType == ServiceType.CASCADED_CACHE_GUARDIAN)) {
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
@@ -137,7 +137,7 @@ public class ServiceConfiguration {
 			this.remoteNodeConfiguration = remoteNodeConfig;
 		}
 
-		if ((serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER)) {
+		if ((serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_CACHE_GUARDIAN)) {
 			Integer noDataIntervalSecondsInteger = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_NOI, null);
 			if (noDataIntervalSecondsInteger == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
@@ -271,9 +271,9 @@ public class ServiceConfiguration {
 			if (remoteHost != null) {
 				return ServiceType.CASCADED_PUBLISH_SERVICE;
 			}
-		case CACHE_UPDATE_RETRIEVER:
+		case CACHE_GUARDIAN:
 			if (remoteHost != null) {
-				return ServiceType.CASCADED_CACHE_UPDATE_RETRIEVER;
+				return ServiceType.CASCADED_CACHE_GUARDIAN;
 			}
 		case FILE_SERVICE:
 			if (remoteHost != null) {

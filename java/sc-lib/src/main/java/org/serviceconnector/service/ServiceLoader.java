@@ -94,14 +94,14 @@ public final class ServiceLoader {
 				service = new CascadedPublishService(serviceName, (CascadedSC) server,
 						serviceConfiguration.getNoDataIntervalSeconds());
 				break;
-			case CASCADED_CACHE_UPDATE_RETRIEVER:
+			case CASCADED_CACHE_GUARDIAN:
 				server = AppContext.getServerRegistry().getServer(remotNodeName);
 				if (server == null) {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remotNodeName
-							+ " configured for cache update retriever =" + serviceName + " is not configured");
+							+ " configured for cache guardian =" + serviceName + " is not configured");
 				}
 
-				service = new CascadedCacheUpdateRetriever(serviceName, (CascadedSC) server,
+				service = new CascadedCacheGuardian(serviceName, (CascadedSC) server,
 						serviceConfiguration.getNoDataIntervalSeconds());
 				break;
 			case CASCADED_FILE_SERVICE:
@@ -118,8 +118,8 @@ public final class ServiceLoader {
 			case PUBLISH_SERVICE:
 				service = new PublishService(serviceName);
 				break;
-			case CACHE_UPDATE_RETRIEVER:
-				service = new CacheUpdateRetriever(serviceName);
+			case CACHE_GUARDIAN:
+				service = new CacheGuardian(serviceName);
 				break;
 			case FILE_SERVICE:
 				server = AppContext.getServerRegistry().getServer(remotNodeName);

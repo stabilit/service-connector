@@ -166,7 +166,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the SCMP command exception
 	 */
 	protected PublishService validatePublishService(Service service) throws SCMPCommandException {
-		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.CACHE_UPDATE_RETRIEVER) {
+		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.CACHE_GUARDIAN) {
 			// service is not publish service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service.getName()
 					+ " is not publish service");
@@ -212,7 +212,7 @@ public abstract class CommandAdapter implements ICommand {
 		switch (service.getType()) {
 		case PUBLISH_SERVICE:
 		case SESSION_SERVICE:
-		case CACHE_UPDATE_RETRIEVER:
+		case CACHE_GUARDIAN:
 			break;
 		default:
 			// service is not the right type
