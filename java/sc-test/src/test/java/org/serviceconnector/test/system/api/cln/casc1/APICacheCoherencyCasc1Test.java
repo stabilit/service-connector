@@ -50,17 +50,19 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 	/**
 	 * Description
-	 * 1: load 10MB to cache (cid=700)<br>
-	 * 2: start cache guardian - publish 3 appendix<br>
-	 * 3: verify callback retrieval
+	 * 1: load data to cache (cid=700)
+	 * 2: start cache guardian - publish 3 Appendix
+	 * 3: verify callback retrieval - 3 appendix within 10sec
+	 * 4: read data from cache and verify
+	 * 5: verify data is in top level cache
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_cc_receive3Appendix() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+	public void t01_cc_readManagedData() throws Exception {
+		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
-		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
+		request.setData("cacheFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
@@ -68,161 +70,168 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
-		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// 3: verify callback retrieval - 3 appendix within 10sec
-		cacheGuardianCbk.waitForMessage(10, 3);
-	}
-
-	/**
-	 * Description: read managed data from cache, 3 appendices<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t02_cc_readManagedData() throws Exception {
-		// 1: load 10MB to cache (cid=700)
-		SCMessage request = new SCMessage();
-		request.setCacheId("700");
-		request.setData("cacheFor1Hour_managedData");
-		request.setMessageInfo(TestConstants.cacheCmd);
-		sessionService1.execute(request);
-
-		// start cache guardian
-		SCSubscribeMessage subMsg = new SCSubscribeMessage();
-		subMsg.setMask(TestConstants.mask);
-		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 3: verify callback retrieval - 3 appendix within 10sec
 		cacheGuardianCbk.waitForMessage(10, 3);
 
-		// read managed data with session client from cache
+		// 4: read data from cache and verify
 		SCMessage response = sessionService1.execute(request);
 		this.checkAppendices(response, 3);
-		// verify that message is in cache on sc1 and not only in sc0
+
+		// 5: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=0&700/1|0=0&700/2|0=0&700/3|0=0&", TestConstants.cacheGuardian1);
 	}
 
 	/**
-	 * Description: large initial, read managed data from cache, 3 appendices<br>
+	 * Description
+	 * 1: load large data (10MB) to cache (cid=700)
+	 * 2: start cache guardian - publish 3 Appendix
+	 * 3: verify callback retrieval - 3 appendix within 10sec
+	 * 4: read data from cache and verify
+	 * 5: verify data is in top level cache
 	 * Expectation: passes
 	 */
 	@Test
 	public void t03_cc_readManagedData10MBInitial() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// start cache guardian
+		// 2: start cache guardian - publish 3 Appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 3: verify callback retrieval - 3 appendix within 10sec
 		cacheGuardianCbk.waitForMessage(10, 3);
 
-		// read managed data with session client from cache
+		// 4: read data from cache and verify
 		SCMessage response = sessionService1.execute(request);
 		this.checkAppendices(response, 3);
-		// verify that message is in cache on sc1 and not only in sc0
+
+		// 5: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=51&700/1|0=0&700/2|0=0&700/3|0=0&", TestConstants.cacheGuardian1);
 	}
 
 	/**
-	 * Description: large initial, read managed data from cache, 3 large appendices<br>
+	 * Description
+	 * 1: load large data (10MB) to cache (cid=700)
+	 * 2: start cache guardian - publish 3 large Appendix (2 parts each)
+	 * 3: verify callback retrieval - 3 appendix within 10sec
+	 * 4: read data from cache and verify
+	 * 5: verify data is in top level cache
 	 * Expectation: passes
 	 */
 	@Test
 	public void t04_cc_readManagedData10MBInitialLargeAppendix() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// start cache guardian
+		// 2: start cache guardian - publish 3 large Appendix (2 parts each)
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 3: verify callback retrieval - 3 appendix within 10sec
 		cacheGuardianCbk.waitForMessage(10, 3);
 
-		// read managed data with session client from cache
+		// 4: read data from cache and verify
 		SCMessage response = sessionService1.execute(request);
 		this.checkAppendices(response, 3);
-		// verify that message is in cache on sc1 and not only in sc0
+
+		// 5: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=51&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian1);
 	}
 
 	/**
-	 * Description: large initial, read managed data from cache, 1 10BM appendices<br>
+	 * Description:
+	 * 1: load large data (10MB) to cache (cid=700)
+	 * 2: start cache guardian - publish 1 large (10MB) Appendix
+	 * 3: verify callback retrieval - 1 appendix within 100sec
+	 * 4: read data from cache and verify
+	 * 5: verify data is in top level cache
 	 * Expectation: passes
 	 */
 	@Test
 	public void t05_cc_readManagedData10MBInitial10MBAppendix() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// start cache guardian
+		// 2: start cache guardian - publish 1 large (10MB) Appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish10MBAppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 3: verify callback retrieval - 1 appendix within 100sec
 		cacheGuardianCbk.waitForMessage(100, 1);
 
-		// read managed data with session client from cache
+		// 4: read data from cache and verify
 		SCMessage response = sessionService1.execute(request);
 		this.checkAppendices(response, 1);
-		// verify that message is in cache on sc1 and not only in sc0
+
+		// 5: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "1", "700/0|0=51&700/1|0=51&",
 				TestConstants.cacheGuardian1);
 	}
 
 	/**
-	 * Description: cache initial message, 3 appendix, stop cache guardian, check cache state is empty<br>
+	 * Description
+	 * 1: load data to cache (cid=700)
+	 * 2: start cache guardian - doing nothing
+	 * 3: stop cache guardian - cache will clean up managed data
+	 * 4: verify data is NOT in top level cache
+	 * 5: verify data is NOT in any cache
 	 * Expectation: passes
 	 */
 	@Test
-	public void t06_cc_InitialMsg3AppendixStopCacheGuardian() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+	public void t06_cc_InitialMsgStopCacheGuardian() throws Exception {
+		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// start cache guardian
+		// 2: start cache guardian - doing nothing
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
-		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 3: stop cache guardian - cache will clean up managed data
 		guardianClient.stopCacheGuardian();
 
-		// verify that message is not in cascaded SC cache anymore
+		// 4: verify data is NOT in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
 
-		// read managed data with session client from cache
+		// 5: verify data is NOT in any cache
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("test");
 		request.setCacheId("700");
@@ -231,111 +240,171 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	}
 
 	/**
-	 * Description: cache initial message, stop cache guardian, check cache state is empty<br>
+	 * Description:
+	 * 1: load data to cache (cid=700)
+	 * 2: start cache guardian - publish 3 large Appendix (2 parts each)
+	 * 3: stop cache guardian - cache will clean up managed data
+	 * 4: verify data is NOT in top level cache
+	 * 5: verify data is NOT in any cache
 	 * Expectation: passes
 	 */
 	@Test
-	public void t07_cc_InitialMsgStopCacheGuardian() throws Exception {
-		// gets message cached (cacheid=700)
+	public void t07_cc_InitialMsg3AppendixStopCacheGuardian() throws Exception {
+		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// start cache guardian
+		// 2: start cache guardian - publish 3 large Appendix (2 parts each)
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 3: stop cache guardian - cache will clean up managed data
 		guardianClient.stopCacheGuardian();
 
-		// verify that message is not in cache anymore
+		// 4: verify data is NOT in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
+
+		// 5: verify data is NOT in any cache
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setData("test");
+		request.setCacheId("700");
+		SCMessage response = sessionService1.execute(request);
+		Assert.assertEquals("test", response.getData());
 	}
 
+	/**
+	 * Description:
+	 * 1: start cache guardian - publish Appendix (10000 with 1sec delay, cid=700)
+	 * 2: load 10MB to cache (cid=700)
+	 * 3: verify response is correct
+	 * 4: verify data is NOT in top level cache
+	 * 5: stop cache guardian
+	 * Expectation: passes
+	 */
 	@Test
 	public void t20_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
-		// start cache guardian publish every second a message
+		// 1: start cache guardian - publish Appendix (10000 with 1sec delay, cid=700)
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
-		subMsg.setData("100003|1000|700");
+		subMsg.setData("10000|1000|700");
 		subMsg.setCachingMethod(SC_CACHING_METHOD.APPEND);
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
-		// 1: load 10MB to cache (cid=700)
+		// 2: load 10MB to cache (cid=700) - no caching possible because appendix are retrieved
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
-
 		SCMessage response = sessionService1.execute(request);
+
+		// 3: verify response is correct
 		String expectedResponse = TestUtil.get10MBString();
 		Assert.assertEquals("unequal length", expectedResponse.length(), response.getDataLength());
 		Assert.assertEquals(expectedResponse, response.getData());
 
-		guardianClient.stopCacheGuardian();
-		// assure 1 messages arrived within 5 seconds!
-		cacheGuardianCbk.waitForMessage(5, 1);
-
-		// verify that message is not in cascaded SC cache anymore
+		// 4: verify data is NOT in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
+
+		// 5: stop cache guardian
+		guardianClient.stopCacheGuardian();
 	}
 
+	/**
+	 * Description
+	 * 1: load large data (10MB) to cache (cid=700)
+	 * 2: verify data is in top level cache
+	 * 3: start cache guardian - publish 1 large (50MB) Appendix
+	 * 4: try reading data from cache - cache loading exception (appendix loading)
+	 * 5: wait until appendix is loaded
+	 * 6: verify data is in top level cache
+	 * Expectation: passes
+	 */
 	@Test
 	public void t21_cc_CacheLoadingExceptionLoadingAppendix() throws Exception {
-		// 1: load 10MB to cache (cid=700)
+		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
 
-		// verify that message is in cache on cascaded SC
+		// 2: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0|0=51&", "unset");
 
-		// start cache guardian publish 10MB Appendix
+		// 3: start cache guardian - publish 1 large (50MB) Appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish50MBAppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		Thread.sleep(2000);
+
+		// 4: try reading data from cache - cache loading exception (appendix loading)
+		Thread.sleep(2000); // assure publish appendix started
 		try {
-			SCMessage response = sessionService1.execute(request);
-			String expectedResponse = TestUtil.get10MBString();
-			Assert.assertEquals("unequal length", expectedResponse.length(), response.getDataLength());
-			Assert.assertEquals(expectedResponse, response.getData());
+			sessionService1.execute(request);
 			Assert.fail("Cache loading exception expected.");
 		} catch (SCServiceException e) {
 			Assert.assertEquals(SCMPError.CACHE_LOADING.getErrorCode(), e.getSCErrorCode());
 		}
-		guardianClient.stopCacheGuardian();
 
-		// verify that message is not in cascaded SC cache anymore
-		inspectResponse = mgmtClient.inspectCache("700");
-		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
+		// 5: wait until appendix is loaded
+		boolean finish = false;
+		while (finish == false) {
+			inspectResponse = mgmtClient.inspectCache("700");
+			String state = inspectResponse.get("cacheMessageState");
+			if (state.equals(SC_CACHE_ENTRY_STATE.LOADING_APPENDIX.name()) == false) {
+				finish = true;
+			}
+			Thread.sleep(1000);
+		}
+
+		// 6: verify data is in top level cache
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "1",
+				"700/0|0=51&700/1|0=256&", TestConstants.cacheGuardian1);
+
+		// 7: stop cache guardian
+		guardianClient.stopCacheGuardian();
 	}
 
 	/**
-	 * Description: managed data to SC0, start client to SC1 and load from cache of SC0<br>
+	 * Description:
+	 * 01: disconnect client to top level (cascaded) SC
+	 * 02: connect new client to SC0
+	 * 03: load data to cache (cid=700) on SC0
+	 * 04: start cache guardian - publish 3 large Appendix
+	 * 05: verify callback retrieval - 3 appendix within 10sec
+	 * 06: verify data is in cache on SC0
+	 * 07: start cache guardian over top level (cascaded) SC - doing nothing
+	 * 08: stop cache guardian over SC0 - cached managed data should stay
+	 * 09: verify data is still in cache on SC0
+	 * 10: verify data is NOT in top level cache
+	 * 11: reconnect client to top level (cascaded) SC - read data from cache
+	 * 12: verify data is correct
+	 * 13: verify data is now in top level cache
 	 * Expectation: passes
 	 */
 	@Test
 	public void t40_cc_ManagedDataToSC0PublishAppendixClientToCascSC() throws Exception {
-		// disconnect session client
+		// 1: disconnect client to top level (cascaded) SC
 		this.sessionService1.deleteSession();
 		this.sessionClient.detach();
-		// connect new client to SC0
+
+		// 2: connect new client to SC0
 		SCClient clientToSc0 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		clientToSc0.attach();
 		SCSessionService sessionSrvToSC0 = clientToSc0.newSessionService(TestConstants.sesServiceName1);
 
-		// 1: load 10MB to cache (cid=700) SC0
+		// 3: load data to cache (cid=700) on SC0
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
@@ -343,42 +412,50 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		sessionSrvToSC0.createSession(new SCMessage(), new SessionMsgCallback(sessionSrvToSC0));
 		sessionSrvToSC0.execute(request);
 
-		// start cache guardian and cache 3 appendix
+		// 4: start cache guardian - publish 3 large appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		subMsg.setData("700");
 		clientToSc0.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 5: verify callback retrieval - 3 appendix within 10sec
 		cacheGuardianCbk.waitForMessage(10, 3);
 
-		// verify that message is in cache on sc0
+		// 6: verify data is in cache on SC0
 		Map<String, String> inspectResponse = clientToSc0.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian1);
-		// start client to cascaded sc, no appendix will be published
+
+		// 7: start cache guardian over top level (cascaded) SC - doing nothing
 		subMsg.setSessionInfo(TestConstants.doNothingCmd);
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-		// stop client to sc0- cache SC0 should stay
+
+		// 8: stop cache guardian over SC0 - cached managed data should stay
 		clientToSc0.stopCacheGuardian();
 
-		// verify that message is still in cache on sc0
+		// 9: verify data is still in cache on SC0
 		inspectResponse = clientToSc0.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian1);
 
+		// 10: verify data is NOT in top level cache
+		inspectResponse = this.mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "700", "", "", "");
+
+		// 11: reconnect client to top level (cascaded) SC - read data from cache
 		this.sessionClient.attach();
 		sessionService1 = sessionClient.newSessionService(TestConstants.sesServiceName1);
 		sessionService1.createSession(new SCMessage(), new SessionMsgCallback(sessionService1));
-		// read managed data with session client from cache SC0 and load cascaded caches
 		SCMessage response = sessionService1.execute(request);
+
+		// 12: verify data is correct
 		this.checkAppendices(response, 3);
 
-		// verify that message is still in cache on sc0
+		// 13: verify data is now in top level cache
 		inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "unset");
-
 	}
 
 	/**
@@ -387,40 +464,39 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 */
 	@Test
 	public void t41_cc_2Clients2Server1Cache() throws Exception {
-		// connect new client to cascaded SC
+		// 1: connect new client2 to top level (cascaded) SC
 		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
 		client2.attach();
 		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
 
-		// gets message cached (cacheid=700) to SC0
+		// 2: load data to cache (cid=700) by client1
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
-		// verify that message is still in cache on sc0
-		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
-		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0|0=0&", "unset");
 
-		// start cache guardian no publish instruction
+		// 3: start cache guardian1 - do nothing
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setData("700");
 		subMsg.setSessionInfo(TestConstants.doNothingCmd);
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
-		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
-		// start cache guardian and cache 3 appendix
+		// 4: start cache guardian2 - publish 3 large appendix
 		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
 		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
 		client2.startCacheGuardian(TestConstants.cacheGuardian2, subMsg, cacheGuardianCbk2);
-		// assure 3 messages arrive within 10 seconds!
+
+		// 5: verify callback of guardian2 retrieval - 3 appendix within 100sec
 		cacheGuardianCbk2.waitForMessage(10, 3);
 
+		// 6: verify callback of guardian1 retrieval - nothing retrieved
 		Assert.assertEquals("unexpected append received!", 0, cacheGuardianCbk.getUpdateMsgCounter());
 
-		// verify that message is in cache on sc0
-		inspectResponse = guardianClient.inspectCache("700");
+		// 7: verify data is now in top level cache
+		Map<String, String> inspectResponse = guardianClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian2);
 	}
