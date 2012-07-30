@@ -77,7 +77,9 @@ public class SCCache {
 	/** Map of current session id's which are loading messages into cache, (sid, cid). */
 	private HashMap<String, String> loadingSessionIds;
 
+	/** The managed data keys in initial state. */
 	private Set<String> mgdDataKeysInInitialState;
+	/** The managed data assigned to guardian. */
 	private Map<String, List<String>> mgdDataAssignedToGuardian;
 
 	/** The meta data cache module. */
@@ -274,6 +276,8 @@ public class SCCache {
 		String reqCacheId = reqMessage.getCacheId();
 		String resCacheId = resMessage.getCacheId();
 		String sid = reqMessage.getSessionId();
+		SC_CACHING_METHOD recvCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
+				.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
@@ -283,10 +287,20 @@ public class SCCache {
 			return;
 
 		}
+
 		if (resCacheId == null) {
 			// no cache id replied no caching requested
 			return;
 		}
+
+		if (resMessage.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) == null
+				&& recvCachingMethod != SC_CACHING_METHOD.INITIAL) {
+			// expiration date not set and unmanaged data - not allowed!
+			LOGGER.error("Expiration date not set for unmanaged data cid=" + resCacheId);
+			this.removeMetaAndDataEntries(sid, reqCacheId, "Expiration date not set for unmanaged data reqCacheId=" + reqCacheId);
+			return;
+		}
+
 		// this happens here because fault replies doesn't have serviceName set.
 		if (resServiceName == null) {
 			LOGGER.error("server did not reply service name (null), response service name set to request serviceName="
@@ -318,7 +332,7 @@ public class SCCache {
 			LOGGER.error("MetaEntry gets loaded by wrong session, not allowed expected sid=" + metaEntry.getLoadingSessionId()
 					+ " loading sid= " + sid);
 			this.removeMetaAndDataEntries(sid, metaEntryCacheId,
-					"Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid= " + sid);
+					"Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid=" + sid);
 			return;
 		}
 
@@ -329,8 +343,6 @@ public class SCCache {
 			String currentMsgCid = baseCid + "|0";
 			Integer recvCachePartNr = resMessage.getHeaderInt(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 
-			SC_CACHING_METHOD recvCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
-					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 			if (recvCachingMethod == SC_CACHING_METHOD.APPEND && (recvCachePartNr == null || recvCachePartNr == 1)) {
 				// first message of appendix - increments number of appendix and create new cache id for message
 				nrOfAppendix = metaEntry.incrementNrOfAppendix();
@@ -338,13 +350,18 @@ public class SCCache {
 				currentMsgCid = baseCid + "|0";
 			}
 
+			String expDateTimeStr = metaEntry.getExpDateTimeStr();
 			// part message arrived - increment part number
 			int nrOfParts = metaEntry.incrementNrOfPartsForDataMsg(currentMsgCid);
 			if (nrOfParts == 0 && nrOfAppendix == 0) {
-				// first part received - extract number of appendix to be loaded
+				// first part received no appendix - extract number of appendix to be loaded
 				Integer expectedAppendix = resMessage.getHeaderInt(SCMPHeaderAttributeKey.NR_OF_APPENDIX);
 				metaEntry.setExpectedAppendix(expectedAppendix);
+				// evaluate TTL for meta entry - 0 means forever valid (use expire time from header field)
+				expDateTimeStr = resMessage.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+				metaEntry.setExpDateTimeStr(expDateTimeStr);
 			}
+			int timeToLiveSeconds = this.evalTimeToLiveSeconds(expDateTimeStr);
 
 			// refresh the meta entry
 			metaEntry.setLastModified();
@@ -368,14 +385,8 @@ public class SCCache {
 				// last part of message received - refresh meta entry state and expire time
 				metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
 
-				if (recvCachingMethod == SC_CACHING_METHOD.INITIAL || recvCachingMethod == SC_CACHING_METHOD.APPEND) {
-					// managed data received - no expiration time
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry);
-				} else {
-					// evaluate TTL for meta entry
-					int timeToLiveSeconds = this.evalTimeToLiveSeconds(resMessage);
-					metaDataCacheModule.replace(metaEntryCacheId, metaEntry, timeToLiveSeconds);
-				}
+				metaDataCacheModule.replace(metaEntryCacheId, metaEntry, timeToLiveSeconds);
+
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(sid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(),
@@ -407,8 +418,10 @@ public class SCCache {
 	 * 
 	 * @param resMessage
 	 *            the res message
+	 * @throws ParseException
+	 * @throws SCMPValidatorException
 	 */
-	public synchronized void cachedManagedData(SCMPMessage resMessage) {
+	public synchronized void cachedManagedData(SCMPMessage resMessage) throws SCMPValidatorException, ParseException {
 		String metaEntryCid = resMessage.getCacheId();
 		String currGuardian = resMessage.getServiceName();
 		String sessionId = resMessage.getSessionId();
@@ -521,8 +534,9 @@ public class SCCache {
 					CacheLogger.startCachingAppendix(appendixCid, currGuardian, metaEntry.getLoadingTimeoutMillis()
 							/ Constants.SEC_TO_MILLISEC_FACTOR);
 				} else {
-					// appendix received, update meta entry, no expiration time
-					metaDataCacheModule.replace(metaEntryCid, metaEntry);
+					// appendix received, update meta entry, expiration time
+					int timeToLive = this.evalTimeToLiveSeconds(metaEntry.getExpDateTimeStr());
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, timeToLive);
 					CacheLogger.putManagedDataToCache(appendixCid, currGuardian, appendixNr, nrOfPart);
 				}
 				// cache appendix, managed data no expiration
@@ -580,6 +594,8 @@ public class SCCache {
 			}
 		}
 		this.loadingSessionIds.remove(metaEntry.getLoadingSessionId());
+		this.mgdDataKeysInInitialState.remove(metaEntryCacheId);
+		this.mgdDataAssignedToGuardian.remove(metaEntryCacheId);
 	}
 
 	/**
@@ -612,14 +628,18 @@ public class SCCache {
 	 * @param messageToCache
 	 *            the message to cache
 	 * @return number of seconds to live
+	 *         0 if forever
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 * @throws ParseException
 	 *             the parse exception
 	 */
-	private int evalTimeToLiveSeconds(SCMPMessage messageToCache) throws SCMPValidatorException, ParseException {
-		// use expire time from header field
-		String cacheExpirationDateTime = messageToCache.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+	private int evalTimeToLiveSeconds(String cacheExpirationDateTime) throws SCMPValidatorException, ParseException {
+		if (cacheExpirationDateTime == null) {
+			// no expiration time set - 0 means forever valid
+			return 0;
+		}
+
 		// validate expiration date time format, null is throwing an exception
 		ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
 		Date expirationDate = DateTimeUtility.parseDateString(cacheExpirationDateTime);

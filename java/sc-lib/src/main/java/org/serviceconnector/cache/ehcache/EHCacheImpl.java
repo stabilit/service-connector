@@ -151,6 +151,7 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 		this.ehCache.removeAll();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 		this.ehCache.dispose();

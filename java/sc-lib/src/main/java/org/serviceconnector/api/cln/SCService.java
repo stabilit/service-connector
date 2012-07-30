@@ -48,7 +48,7 @@ public abstract class SCService {
 	protected volatile boolean sessionActive = false;
 	/** The message callback to use for replies. */
 	protected SCMessageCallback messageCallback;
-
+	
 	/**
 	 * Instantiates a new service.
 	 * 

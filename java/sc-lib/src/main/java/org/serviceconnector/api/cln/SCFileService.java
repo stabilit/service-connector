@@ -44,7 +44,7 @@ public class SCFileService extends SCService {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SCFileService.class);
-
+	
 	/**
 	 * Instantiates a new SC file service. Should only be used by service connector internal classes. Instantiating
 	 * SCFileService should be done by the SCClient method newFileService().

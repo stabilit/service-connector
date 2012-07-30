@@ -17,40 +17,30 @@
 package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCAppendMessage;
+import org.serviceconnector.api.SCRemovedMessage;
 
 /**
- * The Class SCMessageCallback. Abstract class provides basic functions for a message callback.
+ * The Class SCGuardianCallback. Abstract class provides basic functions for a guardian callback.
  * 
  * @author JTraber
  */
-public abstract class SCMessageCallback {
+public abstract class SCGuardianMessageCallback extends SCMessageCallback {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMessageCallback.class);
-
-	/** The service which is using the message callback. */
-	protected SCService service;
+	private static final Logger LOGGER = Logger.getLogger(SCGuardianMessageCallback.class);
 
 	/**
-	 * Instantiates a new SCMessageCallback.
-	 * 
-	 * @param service
-	 *            the service
+	 * Instantiates a new SCGuardianCallback.
 	 */
-	public SCMessageCallback(SCService service) {
-		this.service = service;
+	public SCGuardianMessageCallback() {
+		super(null);
 	}
 
-	/**
-	 * Callback. Method gets called when reply arrives.
-	 * 
-	 * @param reply
-	 *            the reply
-	 */
-	public abstract void receive(SCMessage reply);
-	
+	public abstract void receiveAppendix(SCAppendMessage appendix);
+
+	public abstract void receiveRemove(SCRemovedMessage remove);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
@@ -59,13 +49,4 @@ public abstract class SCMessageCallback {
 	 *            the exception
 	 */
 	public abstract void receive(Exception ex);
-
-	/**
-	 * Gets the service which is using the message callback.
-	 * 
-	 * @return the service
-	 */
-	public SCService getService() {
-		return service;
-	}
 }

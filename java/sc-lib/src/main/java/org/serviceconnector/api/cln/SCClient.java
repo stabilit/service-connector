@@ -90,7 +90,7 @@ public class SCClient {
 
 	private boolean activeGuardian;
 
-	private SCPublishService cacheGuardian;
+	private SCGuardianService cacheGuardian;
 
 	/**
 	 * Instantiates a new SC client with default connection type.
@@ -336,13 +336,43 @@ public class SCClient {
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 
+	/**
+	 * Start cache guardian.
+	 * 
+	 * @param guardianName
+	 *            the guardian name
+	 * @param subscribeMessage
+	 *            the subscribe message
+	 * @param guardianCallback
+	 *            the guardian callback
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public synchronized void startCacheGuardian(String guardianName, SCSubscribeMessage subscribeMessage,
-			SCMessageCallback guardianCallback) throws SCServiceException, SCMPValidatorException {
+			SCGuardianMessageCallback guardianCallback) throws SCServiceException, SCMPValidatorException {
 		this.startCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, guardianName, subscribeMessage, guardianCallback);
 	}
 
+	/**
+	 * Start cache guardian.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @param guardianName
+	 *            the guardian name
+	 * @param subscribeMessage
+	 *            the subscribe message
+	 * @param guardianCallback
+	 *            the guardian callback
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public synchronized void startCacheGuardian(int operationTimeoutSeconds, String guardianName,
-			SCSubscribeMessage subscribeMessage, SCMessageCallback guardianCallback) throws SCServiceException,
+			SCSubscribeMessage subscribeMessage, SCGuardianMessageCallback guardianCallback) throws SCServiceException,
 			SCMPValidatorException {
 		if (this.attached == false) {
 			throw new SCServiceException("Starting a Cache Guardian not possible - client not attached.");
@@ -356,25 +386,65 @@ public class SCClient {
 		ValidatorUtility.validateStringLengthTrim(1, guardianName, Constants.MAX_LENGTH_SERVICENAME,
 				SCMPError.HV_WRONG_SERVICE_NAME);
 
-		this.cacheGuardian = new SCPublishService(this, guardianName, this.requester);
+		this.cacheGuardian = new SCGuardianService(this, guardianName, this.requester);
 		this.cacheGuardian.subscribe(operationTimeoutSeconds, subscribeMessage, guardianCallback);
 		this.activeGuardian = true;
 	}
 
+	/**
+	 * Change cache guardian.
+	 * 
+	 * @param scSubscribeMessage
+	 *            the SC subscribe message
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 */
 	public synchronized void changeCacheGuardian(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
 			SCServiceException {
 		this.changeGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
 	}
 
+	/**
+	 * Change guardian.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @param scSubscribeMessage
+	 *            the sc subscribe message
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 */
 	public synchronized void changeGuardian(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws SCMPValidatorException, SCServiceException {
 		this.cacheGuardian.changeSubscription(operationTimeoutSeconds, scSubscribeMessage);
 	}
 
+	/**
+	 * Stop cache guardian.
+	 * 
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public synchronized void stopCacheGuardian() throws SCServiceException, SCMPValidatorException {
 		this.stopCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
+	/**
+	 * Stop cache guardian.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public synchronized void stopCacheGuardian(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		if (this.attached == false) {
 			throw new SCServiceException("Stopping an Cache Guardian not possible - client not attached.");

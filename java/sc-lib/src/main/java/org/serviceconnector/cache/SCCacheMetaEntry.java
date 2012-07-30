@@ -62,6 +62,8 @@ public class SCCacheMetaEntry implements Serializable {
 	/** The data message part info. Holds number of parts available for specific data message meta entry contains. */
 	private Map<String, Integer> dataMessagePartInfo;
 
+	private String expirationDateTimeString;
+
 	/**
 	 * Instantiates a new cache meta entry.
 	 * 
@@ -290,6 +292,25 @@ public class SCCacheMetaEntry implements Serializable {
 	 */
 	public void setCacheGuardianName(String cacheGuardianName) {
 		this.cacheGuardianName = cacheGuardianName;
+	}
+
+	/**
+	 * Sets the expiration date time string.
+	 * 
+	 * @param cacheExpirationDateTime
+	 *            the new expiration date time string
+	 */
+	public void setExpDateTimeStr(String cacheExpirationDateTime) {
+		this.expirationDateTimeString = cacheExpirationDateTime;
+	}
+
+	/**
+	 * Gets the expiration date time string.
+	 * 
+	 * @return the expiration date time string
+	 */
+	public String getExpDateTimeStr() {
+		return this.expirationDateTimeString;
 	}
 
 	/**
