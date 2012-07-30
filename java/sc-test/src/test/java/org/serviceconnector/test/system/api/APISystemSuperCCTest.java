@@ -22,8 +22,11 @@ import java.util.concurrent.TimeoutException;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCRemovedMessage;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCGuardianMessageCallback;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -130,12 +133,14 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		super.afterOneTest();
 	}
 
-	protected class GuardianCbk extends SCMessageCallback {
+	protected class GuardianCbk extends SCGuardianMessageCallback {
 
-		private int updateMsgRecvCounter;
+		private int appendMsgRecvCounter;
+		private int removeMsgRecvCounger;
+		private int initialMsgRecvCounter;
 
 		public GuardianCbk() {
-			this.updateMsgRecvCounter = 0;
+			this.appendMsgRecvCounter = 0;
 		}
 
 		public void waitForMessage(int nrSeconds) throws Exception {
@@ -144,7 +149,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 		public void waitForMessage(int nrSeconds, int nrMsgs) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (updateMsgRecvCounter >= nrMsgs) {
+				if (appendMsgRecvCounter >= nrMsgs) {
 					return;
 				}
 				Thread.sleep(100);
@@ -153,23 +158,40 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		}
 
 		@Override
-		public void receive(SCMessage reply) {
-			SystemSuperTest.testLogger.info("receive msg=" + reply.toString());
-			updateMsgRecvCounter++;
+		public void receive(SCMessage initial) {
+			SystemSuperTest.testLogger.info("receive initial msg=" + initial.toString());
+			initialMsgRecvCounter++;
+		}
+
+		@Override
+		public void receiveAppendix(SCAppendMessage appendix) {
+			SystemSuperTest.testLogger.info("receive append msg=" + appendix.toString());
+			appendMsgRecvCounter++;
+		}
+
+		@Override
+		public void receiveRemove(SCRemovedMessage remove) {
+			SystemSuperTest.testLogger.info("receive remove msg=" + remove.toString());
+			removeMsgRecvCounger++;
 		}
 
 		@Override
 		public void receive(Exception ex) {
 			SystemSuperTest.testLogger.error("receive error=" + ex.getMessage());
-			updateMsgRecvCounter++;
+			appendMsgRecvCounter++;
+			removeMsgRecvCounger++;
+			initialMsgRecvCounter++;
 		}
 
 		public int getUpdateMsgCounter() {
-			return this.updateMsgRecvCounter;
+			return this.appendMsgRecvCounter;
 		}
 	}
 
 	protected class SessionMsgCallback extends SCMessageCallback {
+
+		private Exception receivedException;
+
 		public SessionMsgCallback(SCSessionService service) {
 			super(service);
 		}
@@ -180,7 +202,11 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 		@Override
 		public void receive(Exception ex) {
+			this.receivedException = ex;
 		}
 
+		public Exception getReceivedException() {
+			return receivedException;
+		}
 	}
 }
