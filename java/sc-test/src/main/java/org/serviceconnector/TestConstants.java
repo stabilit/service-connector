@@ -68,7 +68,11 @@ public class TestConstants {
 	public static final String killServerCmd = "kill";
 	public static final String rejectCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
+	public static final String publish1RemoveMsgCmd = "publish1Remove";
 	public static final String publish3AppendixMsgCmd = "publish3Appendix";
+	public static final String publish1InitialMsgCmd = "publish1Initial";
+	public static final String publish3LargeAppendix1InitialMsgCmd = "publish3LargeAppendix1Initial";
+	public static final String publish3LargeAppendix1RemoveMsgCmd = "publish3LargeAppendix1Remove";
 	public static final String publish10MBAppendixMsgCmd = "publish10MBAppendix";
 	public static final String publish50MBAppendixMsgCmd = "publish50MBAppendix";
 	public static final String publish3LargeAppendixMsgCmd = "publish3LargeAppendix";

@@ -266,12 +266,12 @@ public class TestSessionServer extends TestStatefulServer {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 
-			if(dataString.endsWith("managedData")) {
+			if (dataString.endsWith("managedData")) {
 				LOGGER.info("managed data requested");
 				request.setData("managed data requested!");
 				request.setCachingMethod(SC_CACHING_METHOD.INITIAL);
 			}
-			
+
 			LOGGER.info("cache call");
 			if (dataString.equals("cidNoCed")) {
 				LOGGER.info("cidNoCed");
@@ -282,6 +282,10 @@ public class TestSessionServer extends TestStatefulServer {
 			} else if (dataString.startsWith("cacheFor2Sec")) {
 				LOGGER.info("cacheFor2Sec");
 				time.add(Calendar.SECOND, 2);
+				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("cacheFor4Sec")) {
+				LOGGER.info("cacheFor4Sec");
+				time.add(Calendar.SECOND, 4);
 				request.setCacheExpirationDateTime(time.getTime());
 			} else if (dataString.startsWith("cacheFor1Hour")) {
 				LOGGER.info("cacheFor1Hour");

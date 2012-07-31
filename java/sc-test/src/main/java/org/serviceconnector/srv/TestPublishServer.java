@@ -28,8 +28,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
+import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCRemovedMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -354,9 +356,8 @@ public class TestPublishServer extends TestStatefulServer {
 
 		// publish 3 appendix
 		public void publish3Appendix(SCMessage request, int operationTimeoutMillis) {
-			SCPublishMessage pubMessage = new SCPublishMessage();
+			SCAppendMessage pubMessage = new SCAppendMessage();
 			pubMessage.setCacheId((String) request.getData());
-			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
 			try {
 				pubMessage.setMask(TestConstants.maskSrv);
 				pubMessage.setData("0");
@@ -373,11 +374,86 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
+		// publish a remove
+		public void publish1Remove(SCMessage request, int operationTimeoutMillis) {
+			SCRemovedMessage removeMessage = new SCRemovedMessage();
+			removeMessage.setCacheId((String) request.getData());
+			removeMessage.setMask(TestConstants.maskSrv);
+			try {
+				this.publishSrv.publish(removeMessage);
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
+		// publish 1 initial
+		public void publish1Initial(SCMessage request, int operationTimeoutMillis) {
+			SCPublishMessage initMessage = new SCPublishMessage();
+			initMessage.setCacheId((String) request.getData());
+			initMessage.setMask(TestConstants.maskSrv);
+			initMessage.setCachingMethod(SC_CACHING_METHOD.INITIAL);
+			try {
+				this.publishSrv.publish(initMessage);
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
+		// publish 3 large appendix 1 remove
+		public void publish3LargeAppendix1Remove(SCMessage request, int operationTimeoutMillis) {
+			SCAppendMessage pubMessage = new SCAppendMessage();
+			pubMessage.setCacheId((String) request.getData());
+			try {
+				String largeString = TestUtil.getLargeString();
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0:" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("1" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("2" + largeString);
+				this.publishSrv.publish(pubMessage);
+				SCRemovedMessage removeMessage = new SCRemovedMessage();
+				removeMessage.setCacheId((String) request.getData());
+				removeMessage.setMask(TestConstants.maskSrv);
+				this.publishSrv.publish(removeMessage);
+				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+		
+		// publish 3 large appendix 1 initial
+		public void publish3LargeAppendix1Initial(SCMessage request, int operationTimeoutMillis) {
+			SCAppendMessage pubMessage = new SCAppendMessage();
+			pubMessage.setCacheId((String) request.getData());
+			try {
+				String largeString = TestUtil.getLargeString();
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData("0:" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("1" + largeString);
+				this.publishSrv.publish(pubMessage);
+				Thread.sleep(200);
+				pubMessage.setData("2" + largeString);
+				this.publishSrv.publish(pubMessage);
+				SCPublishMessage initialMessage = new SCPublishMessage();
+				initialMessage.setCacheId((String) request.getData());
+				initialMessage.setMask(TestConstants.maskSrv);
+				initialMessage.setCachingMethod(SC_CACHING_METHOD.INITIAL);
+				this.publishSrv.publish(initialMessage);
+				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+		
 		// publish 3 large appendix
 		public void publish3LargeAppendix(SCMessage request, int operationTimeoutMillis) {
-			SCPublishMessage pubMessage = new SCPublishMessage();
+			SCAppendMessage pubMessage = new SCAppendMessage();
 			pubMessage.setCacheId((String) request.getData());
-			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
 			try {
 				String largeString = TestUtil.getLargeString();
 				pubMessage.setMask(TestConstants.maskSrv);
@@ -397,9 +473,8 @@ public class TestPublishServer extends TestStatefulServer {
 
 		// publish 1 10MB appendix
 		public void publish10MBAppendix(SCMessage request, int operationTimeoutMillis) {
-			SCPublishMessage pubMessage = new SCPublishMessage();
+			SCAppendMessage pubMessage = new SCAppendMessage();
 			pubMessage.setCacheId((String) request.getData());
-			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
 			try {
 				String largeString = TestUtil.get10MBString();
 				pubMessage.setMask(TestConstants.maskSrv);
@@ -412,9 +487,8 @@ public class TestPublishServer extends TestStatefulServer {
 
 		// publish 1 50MB appendix
 		public void publish50MBAppendix(SCMessage request, int operationTimeoutMillis) {
-			SCPublishMessage pubMessage = new SCPublishMessage();
+			SCAppendMessage pubMessage = new SCAppendMessage();
 			pubMessage.setCacheId((String) request.getData());
-			pubMessage.setCachingMethod(SC_CACHING_METHOD.APPEND);
 			try {
 				String largeString = TestUtil.get50MBString();
 				pubMessage.setMask(TestConstants.maskSrv);
