@@ -38,8 +38,20 @@ public abstract class SCGuardianMessageCallback extends SCMessageCallback {
 		super(null);
 	}
 
+	/**
+	 * Receive appendix.
+	 * 
+	 * @param appendix
+	 *            the appendix
+	 */
 	public abstract void receiveAppendix(SCAppendMessage appendix);
 
+	/**
+	 * Receive remove.
+	 * 
+	 * @param remove
+	 *            the remove
+	 */
 	public abstract void receiveRemove(SCRemovedMessage remove);
 
 	/**
