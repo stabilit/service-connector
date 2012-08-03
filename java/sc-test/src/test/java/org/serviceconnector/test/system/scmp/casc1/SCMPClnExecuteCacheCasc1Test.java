@@ -235,7 +235,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: execute small request - no cache expiration date set by server, no caching of message<br>
+	 * Description: execute small request - no cache expiration date set by server, caching of message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -248,7 +248,7 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);
-		this.checkCacheContent("700", "checkCacheContent");
+		this.checkCacheContent("700", "cidNoCed");
 	}
 
 	/**
