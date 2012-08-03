@@ -82,7 +82,7 @@ public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 		// 6: verify data is in cache on SC0
 		Map<String, String> inspectResponse = clientToSc0.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
-				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian1);
+				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&", TestConstants.cacheGuardian1);
 
 		// 7: start cache guardian over top level (cascaded) SC - doing nothing
 		subMsg.setSessionInfo(TestConstants.doNothingCmd);
@@ -94,7 +94,7 @@ public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 		// 9: verify data is still in cache on SC0
 		inspectResponse = clientToSc0.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
-				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", TestConstants.cacheGuardian1);
+				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&", TestConstants.cacheGuardian1);
 
 		// 10: verify data is NOT in top level cache
 		inspectResponse = this.mgmtClient.inspectCache("700");
@@ -112,6 +112,6 @@ public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 		// 13: verify data is now in top level cache
 		inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
-				"700/0|0=0&700/1|0=1&700/2|0=1&700/3|0=1&", "unset");
+				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&", "unset");
 	}
 }
