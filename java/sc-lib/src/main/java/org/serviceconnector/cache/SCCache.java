@@ -486,6 +486,10 @@ public class SCCache {
 				affectedMetaEntry = new SCCacheMetaEntry(metaEntryCid);
 				affectedMetaEntry.setLoadingTimeoutMillis(metaEntry.getLoadingTimeoutMillis());
 				affectedMetaEntry.setCacheGuardianName(currGuardian);
+				// add cache id to assigned data list
+				if (this.mgdDataAssignedToGuardian.containsKey(currGuardian) == false) {
+					this.mgdDataAssignedToGuardian.put(currGuardian, new HashSet<String>());
+				}
 				this.mgdDataAssignedToGuardian.get(currGuardian).add(metaEntryCid);
 				affectedMetaEntry.setExpDateTimeStr(metaEntry.getExpDateTimeStr());
 				affectedMetaEntry.setHeader(metaEntry.getHeader());
