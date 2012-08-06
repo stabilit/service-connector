@@ -144,10 +144,10 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		}
 
 		public void waitForMessage(int nrSeconds) throws Exception {
-			this.waitForMessage(nrSeconds, 1);
+			this.waitForMessage(1, nrSeconds);
 		}
 
-		public void waitForMessage(int nrSeconds, int nrMsgs) throws Exception {
+		public void waitForMessage(int nrMsgs, int nrSeconds) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
 				if (initialMsgRecvCounter >= nrMsgs) {
 					return;
@@ -157,7 +157,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
 		
-		public void waitForAppendMessage(int nrSeconds, int nrMsgs) throws Exception {
+		public void waitForAppendMessage(int nrMsgs, int nrSeconds) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
 				if (appendMsgRecvCounter >= nrMsgs) {
 					return;
@@ -167,7 +167,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
 		
-		public void waitForRemoveMessage(int nrSeconds, int nrMsgs) throws Exception {
+		public void waitForRemoveMessage(int nrMsgs, int nrSeconds) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
 				if (removeMsgRecvCounger >= nrMsgs) {
 					return;

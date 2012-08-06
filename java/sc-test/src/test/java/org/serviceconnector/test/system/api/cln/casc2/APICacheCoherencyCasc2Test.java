@@ -77,7 +77,7 @@ public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 		clientToSc0.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
 		// 5: verify callback retrieval - 3 appendix within 10sec
-		cacheGuardianCbk.waitForAppendMessage(10, 3);
+		cacheGuardianCbk.waitForAppendMessage(3, 10);
 
 		// 6: verify data is in cache on SC0
 		Map<String, String> inspectResponse = clientToSc0.inspectCache("700");

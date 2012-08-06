@@ -71,11 +71,15 @@ public class TestConstants {
 	public static final String publish1RemoveMsgCmd = "publish1Remove";
 	public static final String publish3AppendixMsgCmd = "publish3Appendix";
 	public static final String publish1InitialMsgCmd = "publish1Initial";
+	public static final String publish1LargeInitialMsgCmd = "publish1LargeInitial";
+	public static final String publish10MBInitialMsgCmd = "publish10MBInitial";
 	public static final String publish3LargeAppendix1InitialMsgCmd = "publish3LargeAppendix1Initial";
 	public static final String publish3LargeAppendix1RemoveMsgCmd = "publish3LargeAppendix1Remove";
 	public static final String publish10MBAppendixMsgCmd = "publish10MBAppendix";
 	public static final String publish50MBAppendixMsgCmd = "publish50MBAppendix";
 	public static final String publish3LargeAppendixMsgCmd = "publish3LargeAppendix";
+	public static final String publish3LargeAppendix1LargeInitialMsgCmd = "publish3LargeAppendix1LargeInitial";
+	public static final String publish1Initial3LargeAppendixMsgCmd = "publish1Initial3LargeAppendix";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
 	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";

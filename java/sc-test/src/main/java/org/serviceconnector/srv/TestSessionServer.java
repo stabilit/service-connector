@@ -358,6 +358,9 @@ public class TestSessionServer extends TestStatefulServer {
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				request.setData("large request small response - 999 is a key for that!");
+			} else if (dataString.startsWith("staticLargeData")) {
+				LOGGER.info("caching static large data!");
+				request.setData(TestUtil.getLargeString());
 			} else {
 				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache
