@@ -951,8 +951,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
 		subMsg.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
-		subMsg.setData("10000|100|700");
-		subMsg.setCachingMethod(SC_CACHING_METHOD.APPEND);
+		subMsg.setData("10000|100|700|" + SC_CACHING_METHOD.APPEND.getValue());
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
 		// 2: load 10MB to cache (cid=700) - no caching possible because appendix are retrieved
