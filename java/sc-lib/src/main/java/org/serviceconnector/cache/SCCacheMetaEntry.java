@@ -44,7 +44,7 @@ public class SCCacheMetaEntry implements Serializable {
 	/** The header containing any header attributes of request SCMP message. */
 	private Map<String, String> header;
 	/** The cache state. {@link SC_CACHE_ENTRY_STATE} */
-	private volatile SC_CACHE_ENTRY_STATE cacheEntryState;
+	private SC_CACHE_ENTRY_STATE cacheEntryState;
 	/** The loading session id. */
 	private String loadingSessionId;
 	/** The loading timeout (milliseconds). This timeout tells, how long we can stay in the loading state. */
@@ -61,8 +61,10 @@ public class SCCacheMetaEntry implements Serializable {
 	private String cacheGuardianName;
 	/** The data message part info. Holds number of parts available for specific data message meta entry contains. */
 	private Map<String, Integer> dataMessagePartInfo;
-
+	/** The expiration date time string. */
 	private String expirationDateTimeString;
+	/** The caching method. {@link SC_CACHING_METHOD} */
+	private SC_CACHING_METHOD cachingMethod;
 
 	/**
 	 * Instantiates a new cache meta entry.
@@ -73,6 +75,7 @@ public class SCCacheMetaEntry implements Serializable {
 	public SCCacheMetaEntry(String cacheId) {
 		this.cacheId = cacheId;
 		this.cacheEntryState = SC_CACHE_ENTRY_STATE.UNDEFINDED;
+		this.cachingMethod = SC_CACHING_METHOD.NOT_MANAGED;
 		this.creationTime = DateTimeUtility.getCurrentTime();
 		this.lastModifiedTime = this.creationTime;
 		this.loadingSessionId = null;
@@ -146,12 +149,34 @@ public class SCCacheMetaEntry implements Serializable {
 	}
 
 	/**
-	 * Checks if is loading initial.
+	 * Sets the caching method.
 	 * 
-	 * @return true, if is loading initial
+	 * @param cachingMethod
+	 *            the new caching method
 	 */
-	public boolean isLoadingInitial() {
-		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING_INITIAL) {
+	public void setCachingMethod(SC_CACHING_METHOD cachingMethod) {
+		this.cachingMethod = cachingMethod;
+	}
+
+	/**
+	 * Checks if is managed.
+	 * 
+	 * @return true, if is managed
+	 */
+	public boolean isManaged() {
+		if (this.cachingMethod == SC_CACHING_METHOD.NOT_MANAGED) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if is loading.
+	 * 
+	 * @return true, if is loading
+	 */
+	public boolean isLoading() {
+		if (this.cacheEntryState == SC_CACHE_ENTRY_STATE.LOADING) {
 			return true;
 		}
 		return false;

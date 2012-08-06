@@ -72,8 +72,6 @@ public final class Constants {
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 	/** The Constant SLASH. */
 	public static final String SLASH = "/";
-	/** The Constant PIPE. */
-	public static final String PIPE = "|";
 	/** The Constant UNDERLINE. */
 	public static final String UNDERLINE = "_";
 	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent. */

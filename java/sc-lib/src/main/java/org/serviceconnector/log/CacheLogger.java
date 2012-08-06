@@ -47,6 +47,12 @@ public final class CacheLogger {
 	private static String putMessageStr = "put message into cache cid=%s nrOfParts=%s loading sid=%s length=%s loadingState=%s cmt=%s";
 	/** The put managed data string. */
 	private static String putManagedDataStr = "put managed data into cache cacheId=%s cacheGuardian=%s appendixNr=%s partNr=%s";
+	/** The replacement string. */
+	private static String replacementStr = "replace data in cache cacheId=%s cacheGuardian=%s";
+	/** The start loading replacement string. */
+	private static String startLoadingReplacementStr = "start loading replacement into cache cacheId=%s cacheGuardian=%s";
+	/** The stop loading replacement string. */
+	private static String stopLoadingReplacementStr = "stop loading replacement into cache cacheId=%s cacheGuardian=%s numberOfParts=%s";
 	/** The remove message from cache string. */
 	private static String removeMsgFromCacheStr = "remove message from cache cid=%s reason=%s";
 	/** The message expired string. */
@@ -255,6 +261,59 @@ public final class CacheLogger {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(putManagedDataStr, cacheId, cacheGuardian, appendixNr, partNr);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Start loading replacement.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 */
+	public static void startLoadingReplacement(String cacheId, String cacheGuardian) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(startLoadingReplacementStr, cacheId, cacheGuardian);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Stop loading replacement.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 * @param nrOfParts
+	 *            the nr of parts
+	 */
+	public static void stopLoadingReplacement(String cacheId, String cacheGuardian, int nrOfParts) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(stopLoadingReplacementStr, cacheId, cacheGuardian, nrOfParts);
+			CACHE_LOGGER.trace(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * Replace existing data.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param cacheGuardian
+	 *            the cache guardian
+	 */
+	public static void replaceExistingData(String cacheId, String cacheGuardian) {
+		if (CACHE_LOGGER.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(replacementStr, cacheId, cacheGuardian);
 			CACHE_LOGGER.trace(format.toString());
 			format.close();
 		}

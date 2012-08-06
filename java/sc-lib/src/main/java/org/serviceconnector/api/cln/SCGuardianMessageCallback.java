@@ -53,12 +53,4 @@ public abstract class SCGuardianMessageCallback extends SCMessageCallback {
 	 *            the remove
 	 */
 	public abstract void receiveRemove(SCRemovedMessage remove);
-
-	/**
-	 * Callback. Method gets called when an error shows up in communication process.
-	 * 
-	 * @param ex
-	 *            the exception
-	 */
-	public abstract void receive(Exception ex);
 }
