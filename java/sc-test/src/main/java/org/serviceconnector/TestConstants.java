@@ -18,9 +18,11 @@ package org.serviceconnector;
 public class TestConstants {
 	public static final String HOST = "localhost";
 	public static final int PORT_SC0_HTTP = 7000;
+	public static final int PORT_SC0A_HTTP = 3000;
 	public static final int PORT_SC1_HTTP = 7001;
 	public static final int PORT_SC2_HTTP = 7002;
 	public static final int PORT_SC0_TCP = 9000;
+	public static final int PORT_SC0A_TCP = 5000;
 	public static final int PORT_SC1_TCP = 9001;
 	public static final int PORT_SC2_TCP = 9002;
 
@@ -30,7 +32,9 @@ public class TestConstants {
 	public static final int PORT_MIN = 1;
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_SES_SRV_TCP = 30000;
+	public static final int PORT_SES_SRVA_TCP = 50000;
 	public static final int PORT_PUB_SRV_TCP = 30001;
+	public static final int PORT_PUB_SRVA_TCP = 50001;
 	public static final int PORT_PUB_SRV2_TCP = 30002;
 	public static final int PORT_SES_SRV_HTTP = 40000;
 	public static final int PORT_PUB_SRV_HTTP = 40001;
@@ -42,23 +46,28 @@ public class TestConstants {
 	public static final String SC1Properties = "sc1.properties";
 	public static final String SC2Properties = "sc2.properties";
 	public static final String log4jSC0Properties = "log4j-sc0.properties";
+	public static final String log4jSC0AProperties = "log4j-sc0A.properties";
 	public static final String log4jSC1Properties = "log4j-sc1.properties";
 	public static final String log4jSC2Properties = "log4j-sc2.properties";
 
 	public static final String log4jClnProperties = "log4j-cln.properties";
 	public static final String log4jSrvProperties = "log4j-srv.properties";
 	public static final String SC0Properties = "sc0.properties";
+	public static final String SC0AProperties = "sc0A.properties";
 	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";
 
 	public static final String sesServiceName1 = "session-1";
 	public static final String sesServiceName2 = "session-2";
 	public static final String sesServerName1 = "session-1";
+	public static final String sesServerName1A = "session-1A";
 	public static final String pubServiceName1 = "publish-1";
 	public static final String pubServiceName2 = "publish-2";
 	public static final String pubServerName1 = "publish-1";
+	public static final String pubServerName1A = "publish-1A";
 	public static final String pubServerName2 = "publish-2";
 	public static final String cacheGuardian1 = "cacheGuardian1";
 	public static final String cacheGuardian2 = "cacheGuardian2";
+	public static final String cacheGuardian1A = "cacheGuardian1A";
 	public static final String filServiceName1 = "file-1";
 	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";
@@ -75,6 +84,7 @@ public class TestConstants {
 	public static final String publish10MBInitialMsgCmd = "publish10MBInitial";
 	public static final String publish3LargeAppendix1InitialMsgCmd = "publish3LargeAppendix1Initial";
 	public static final String publish3LargeAppendix1RemoveMsgCmd = "publish3LargeAppendix1Remove";
+	public static final String publish50LargeAppendixMsgCmd = "publish50LargeAppendix";
 	public static final String publish10MBAppendixMsgCmd = "publish10MBAppendix";
 	public static final String publish50MBAppendixMsgCmd = "publish50MBAppendix";
 	public static final String publish3LargeAppendixMsgCmd = "publish3LargeAppendix";
@@ -123,6 +133,7 @@ public class TestConstants {
 
 	// SC names
 	public static final String SC0 = "sc0";
+	public static final String SC0A = "sc0A";
 	public static final String SC1 = "sc1";
 	public static final String SC2 = "sc2";
 	public static final String RemoteNodeName = "TestRemoteNode";

@@ -17,6 +17,7 @@ package org.serviceconnector.test.system.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
@@ -30,7 +31,9 @@ import org.serviceconnector.api.cln.SCGuardianMessageCallback;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICacheCoherencyCasc1Test;
@@ -108,6 +111,31 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	protected void startSC0AAndServers() throws Exception {
+		List<ServiceConnectorDefinition> sc0ADefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0A, TestConstants.SC0AProperties,
+				TestConstants.log4jSC0AProperties);
+		sc0ADefs.add(sc0Def);
+
+		Map<String, ProcessCtx> sc0AProcess = ctrl.startSCEnvironment(sc0ADefs);
+		SystemSuperTest.scCtxs.putAll(sc0AProcess);
+
+		List<ServerDefinition> srvToSC0ACascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServerName1A, TestConstants.PORT_PUB_SRVA_TCP,
+				TestConstants.PORT_SC0A_TCP, 3, 3, TestConstants.cacheGuardian1A);
+
+		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1A, TestConstants.PORT_SES_SRVA_TCP,
+				TestConstants.PORT_SC0A_TCP, 100, 10, TestConstants.sesServiceName1);
+
+		srvToSC0ACascDefs.add(srvPublishToSC0Def);
+		srvToSC0ACascDefs.add(srvSessionToSC0Def);
+
+		Map<String, ProcessCtx> sc0ASeverProcess = ctrl.startServerEnvironment(srvToSC0ACascDefs);
+		SystemSuperTest.srvCtxs.putAll(sc0ASeverProcess);
+	}
+
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -148,33 +176,55 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		}
 
 		public void waitForMessage(int nrMsgs, int nrSeconds) throws Exception {
-			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (initialMsgRecvCounter >= nrMsgs) {
-					return;
+			try {
+				for (int i = 0; i < (nrSeconds * 10); i++) {
+					if (initialMsgRecvCounter >= nrMsgs) {
+						return;
+					}
+					Thread.sleep(100);
 				}
-				Thread.sleep(100);
+				throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+			} finally {
+				this.initialMsgRecvCounter = 0;
 			}
-			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
-		
+
 		public void waitForAppendMessage(int nrMsgs, int nrSeconds) throws Exception {
-			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (appendMsgRecvCounter >= nrMsgs) {
-					return;
+			try {
+				if (nrMsgs == 0) {
+					Thread.sleep(nrSeconds * 1000);
+					if (this.appendMsgRecvCounter == 0) {
+						return;
+					}
+					throw new TimeoutException(this.appendMsgRecvCounter + " Message(s) received within " + nrSeconds
+							+ " seconds, fault zero expected.");
 				}
-				Thread.sleep(100);
+
+				for (int i = 0; i < (nrSeconds * 10); i++) {
+					if (appendMsgRecvCounter >= nrMsgs) {
+						return;
+					}
+					Thread.sleep(100);
+				}
+
+				throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+			} finally {
+				this.appendMsgRecvCounter = 0;
 			}
-			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
-		
+
 		public void waitForRemoveMessage(int nrMsgs, int nrSeconds) throws Exception {
-			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (removeMsgRecvCounger >= nrMsgs) {
-					return;
+			try {
+				for (int i = 0; i < (nrSeconds * 10); i++) {
+					if (removeMsgRecvCounger >= nrMsgs) {
+						return;
+					}
+					Thread.sleep(100);
 				}
-				Thread.sleep(100);
+				throw new TimeoutException("No remove message received within " + nrSeconds + " seconds timeout.");
+			} finally {
+				this.removeMsgRecvCounger = 0;
 			}
-			throw new TimeoutException("No remove message received within " + nrSeconds + " seconds timeout.");
 		}
 
 		@Override

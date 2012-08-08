@@ -114,4 +114,113 @@ public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&", "unset");
 	}
+
+	/**
+	 * Description:
+	 * 01: connect new client2 to top level (cascaded) SC
+	 * 02: load data to cache (cid=700) by client1
+	 * 03: start cache guardian1 of client1 - do nothing
+	 * 04: start cache guardian1A of client2 - publish 3 large appendix
+	 * 05: verify callback of client2 guardian1A retrieval - 3 appendix within 10sec
+	 * 06: verify callback of client1 guardian1 retrieval - 0 appendix within 3sec
+	 * 07: verify data is now in top level cache
+	 * Expectation: passes
+	 */
+	@Test
+	public void t41_cc_2SC0() throws Exception {
+		// start up additional SC0A and Servers for this test
+		this.startSC0AAndServers();
+
+		// 1: connect new client2 to top level (cascaded) SC
+		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
+
+		// 2: load data to cache (cid=700) by client1
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// 3: start cache guardian1 of client1 - do nothing
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setData("700");
+		subMsg.setSessionInfo(TestConstants.doNothingCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 4: start cache guardian1A of client2 - publish 3 large appendix
+		subMsg.setSessionInfo(TestConstants.publish3LargeAppendixMsgCmd);
+		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
+		client2.startCacheGuardian(TestConstants.cacheGuardian1A, subMsg, cacheGuardianCbk2);
+
+		// 5: verify callback of client2 guardian1A retrieval - 3 appendix within 10sec
+		cacheGuardianCbk2.waitForAppendMessage(3, 10);
+
+		// 6: verify callback of client1 guardian1 retrieval - 0 appendix within 3sec
+		cacheGuardianCbk.waitForAppendMessage(0, 3);
+
+		// 7: verify data is now in top level cache
+		Map<String, String> inspectResponse = guardianClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&");
+	}
+
+	/**
+	 * Description:
+	 * 01: connect new client2 to top level (cascaded) SC
+	 * 02: load data to cache (cid=700) by client1
+	 * 03: start cache guardian1 of client1 - publish 1 large initial
+	 * 04: verify callback of client1 guardian1 retrieval - 1 large initial message within 10sec
+	 * 05: start cache guardian1A of client2 - publish 1 large initial
+	 * 06: verify callback of client2 guardian1A retrieval - 1 large initial message within 10sec
+	 * 06: verify callback of client1 guardian1 retrieval - 0 large initial message within 2sec
+	 * 08: verify data is now in top level cache
+	 * Expectation: passes
+	 */
+	@Test
+	public void t42_cc_2SC0() throws Exception {
+		// start up additional SC0A and Servers for this test
+		this.startSC0AAndServers();
+
+		// 1: connect new client2 to top level (cascaded) SC
+		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
+
+		// 2: load data to cache (cid=700) by client1
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// 3: start cache guardian1 of client1 - publish 1 large initial
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setData("700");
+		subMsg.setSessionInfo(TestConstants.publish1LargeInitialMsgCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 4: verify callback of client1 guardian1 retrieval - 1 large initial message within 10sec
+		cacheGuardianCbk.waitForMessage(1, 10);
+
+		// 5: start cache guardian1A of client2 - publish 1 large initial
+		subMsg.setSessionInfo(TestConstants.publish1LargeInitialMsgCmd);
+		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
+		client2.startCacheGuardian(TestConstants.cacheGuardian1A, subMsg, cacheGuardianCbk2);
+
+		// 6: verify callback of client2 guardian1A retrieval - 1 large initial message within 10sec
+		cacheGuardianCbk2.waitForMessage(1, 10);
+
+		// 7: verify callback of client1 guardian1 retrieval - 0 large initial message within 2sec
+		cacheGuardianCbk.waitForMessage(0, 2);
+
+		// 8: verify data is now in top level cache
+		Map<String, String> inspectResponse = guardianClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0/0=1&");
+	}
 }

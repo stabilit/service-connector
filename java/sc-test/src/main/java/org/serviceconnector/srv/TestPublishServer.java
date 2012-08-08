@@ -536,7 +536,7 @@ public class TestPublishServer extends TestStatefulServer {
 			pubMessage.setCacheId((String) request.getData());
 			try {
 				String largeString = TestUtil.getLargeString();
-				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setMask(((SCSubscribeMessage) request).getMask());
 				pubMessage.setData("0:" + largeString);
 				this.publishSrv.publish(pubMessage);
 				Thread.sleep(200);
@@ -546,6 +546,23 @@ public class TestPublishServer extends TestStatefulServer {
 				pubMessage.setData("2" + largeString);
 				this.publishSrv.publish(pubMessage);
 				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				LOGGER.error("cannot publish", e);
+			}
+		}
+
+		// publish 50 large appendix
+		public void publish50LargeAppendix(SCMessage request, int operationTimeoutMillis) {
+			SCAppendMessage pubMessage = new SCAppendMessage();
+			pubMessage.setCacheId((String) request.getData());
+			String largeString = TestUtil.getLargeString();
+			pubMessage.setMask(((SCSubscribeMessage) request).getMask());
+			try {
+				for (int i = 0; i < 50; i++) {
+					pubMessage.setData(i + ":" + largeString);
+					this.publishSrv.publish(pubMessage);
+					Thread.sleep(200);
+				}
 			} catch (Exception e) {
 				LOGGER.error("cannot publish", e);
 			}

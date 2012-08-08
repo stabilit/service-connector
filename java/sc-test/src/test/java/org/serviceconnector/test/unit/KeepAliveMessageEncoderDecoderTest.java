@@ -27,7 +27,7 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.scmp.SCMPHeaderKey;
+import org.serviceconnector.net.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPVersion;
