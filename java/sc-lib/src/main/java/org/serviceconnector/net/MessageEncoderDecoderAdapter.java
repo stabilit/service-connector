@@ -71,20 +71,27 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(headline);
 		switch (headerKey) {
 		case RES:
-			scmpMsg = new SCMPMessage(headerKey);
+			scmpMsg = new SCMPMessage();
 			scmpMsg.setIsReply(true);
+			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 			break;
 		case REQ:
-			scmpMsg = new SCMPMessage(headerKey);
+			scmpMsg = new SCMPMessage();
+			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 			break;
 		case KRS:
 		case KRQ:
 			scmpMsg = new SCMPKeepAlive();
 			return scmpMsg;
 		case PRQ:
-		case PRS:
 			// no poll request
 			scmpMsg = new SCMPPart(false);
+			scmpMsg.setIsReply(false);
+			break;
+		case PRS:
+			// no poll response
+			scmpMsg = new SCMPPart(false);
+			scmpMsg.setIsReply(true);
 			break;
 		case PAC:
 			// poll request

@@ -71,11 +71,11 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		LOGGER.debug("CRP message found in queue subscriptionId " + subscriptionId);
 		// message found in subscription queue set up reply
 		SCMPMessage reply = null;
-		if (message.isPart()) {
+		if (message.isPart() == true) {
 			// message from queue is of type part - outgoing must be part too, no poll request
 			reply = new SCMPPart(false, message.getHeader());
 		} else {
-			reply = new SCMPMessage(message.getHeader(), message.getMsgHeaderKey());
+			reply = new SCMPMessage(message.getHeader());
 		}
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());

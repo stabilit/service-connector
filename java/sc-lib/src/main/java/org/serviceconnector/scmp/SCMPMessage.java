@@ -42,12 +42,12 @@ public class SCMPMessage implements Serializable {
 	public static final SCVersion SC_VERSION = SCVersion.CURRENT;
 	/** The is reply. */
 	private boolean isReply;
+	/** The is req complete after marshalling part. */
+	private boolean isReqCompleteAfterMarshallingPart;
 	/** The message part size. */
 	private int partSize;
 	/** The message header. */
 	protected Map<String, String> header;
-	/** The message header key. */
-	protected SCMPHeaderKey msgHeaderKey;
 	/** The message body. */
 	private Object body;
 	/** the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server. */
@@ -65,55 +65,14 @@ public class SCMPMessage implements Serializable {
 	/**
 	 * Instantiates a new SCMP message with given message key.
 	 * 
-	 * @param msgHeaderKey
-	 *            the message header key
-	 */
-	public SCMPMessage(SCMPHeaderKey msgHeaderKey) {
-		this();
-		this.msgHeaderKey = msgHeaderKey;
-	}
-
-	/**
-	 * Instantiates a new SCMP message.
-	 * 
-	 * @param messageBody
-	 *            the message body
-	 */
-	public SCMPMessage(Object messageBody) {
-		this();
-		this.setBody(messageBody);
-	}
-
-	/**
-	 * Instantiates a new SCMP message with given message key.
-	 * 
 	 * @param baseHeader
 	 *            the base header
 	 * @param msgHeaderKey
 	 *            the message header key
 	 */
-	public SCMPMessage(Map<String, String> baseHeader, SCMPHeaderKey msgHeaderKey) {
-		this(msgHeaderKey);
+	public SCMPMessage(Map<String, String> baseHeader) {
+		this();
 		this.header = new HashMap<String, String>(baseHeader);
-	}
-
-	/**
-	 * Gets the message header key.
-	 * 
-	 * @return the message header key
-	 */
-	public SCMPHeaderKey getMsgHeaderKey() {
-		return this.msgHeaderKey;
-	}
-
-	/**
-	 * Sets the message header key.
-	 * 
-	 * @param msgHeaderKey
-	 *            the new message header key
-	 */
-	public void setMsgHeaderKey(SCMPHeaderKey msgHeaderKey) {
-		this.msgHeaderKey = msgHeaderKey;
 	}
 
 	/**
@@ -673,10 +632,20 @@ public class SCMPMessage implements Serializable {
 	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a request returns
 	 * true.
 	 * 
-	 * @return true, if is request
+	 * @return true, if is final request part
 	 */
-	public boolean isRequest() {
-		return this.msgHeaderKey == SCMPHeaderKey.REQ;
+	public boolean isReqCompleteAfterMarshallingPart() {
+		return this.isReqCompleteAfterMarshallingPart;
+	}
+
+	/**
+	 * Sets the checks if is request complete after marshalling part.
+	 * 
+	 * @param isReqCompleteAfterMarshallingPart
+	 *            the new checks if is request complete after marshalling part
+	 */
+	public void setIsReqCompleteAfterMarshallingPart(boolean isReqCompleteAfterMarshallingPart) {
+		this.isReqCompleteAfterMarshallingPart = isReqCompleteAfterMarshallingPart;
 	}
 
 	/**
@@ -685,7 +654,7 @@ public class SCMPMessage implements Serializable {
 	 * @return true, if is reply
 	 */
 	public boolean isReply() {
-		return isReply;
+		return this.isReply;
 	}
 
 	/**

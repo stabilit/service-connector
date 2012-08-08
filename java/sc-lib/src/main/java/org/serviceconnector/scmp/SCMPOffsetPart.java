@@ -57,7 +57,6 @@ public class SCMPOffsetPart extends SCMPPart {
 		}
 		this.setPartSize(message.getPartSize());
 		this.setHeader(message);
-		this.msgHeaderKey = message.getMsgHeaderKey();
 		this.setBody(message.getBody());
 		this.setIsReply(message.isReply());
 	}

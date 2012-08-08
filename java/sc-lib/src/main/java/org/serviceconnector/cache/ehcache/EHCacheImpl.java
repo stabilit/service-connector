@@ -64,25 +64,10 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 		this.ehCache.put(element);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void putOrUpdate(Object key, T value) {
-		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive (0 = unlimited)
-		Element element = new Element(key, value, false, 0, 0);
-		this.ehCache.put(element);
-	}
-
 	@Override
 	public void replace(Object key, T value, int timeToLiveSeconds) {
 		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive
 		Element element = new Element(key, value, false, 0, timeToLiveSeconds);
-		this.ehCache.replace(element);
-	}
-
-	@Override
-	public void replace(Object key, T value) {
-		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive (0 = unlimited)
-		Element element = new Element(key, value, false, 0, 0);
 		this.ehCache.replace(element);
 	}
 

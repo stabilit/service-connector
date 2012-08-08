@@ -221,7 +221,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			} else {
 				SCMPMessage cachedMessage = (SCMPMessage) cacheModule.get(key);
 				if (cachedMessage == null && simulation > 0) {
-					cachedMessage = new SCMPMessage("");
+					cachedMessage = new SCMPMessage();
+					cachedMessage.setBody("");
 				}
 				if (cachedMessage != null) {
 					writeCacheMessage(writer, cacheModule, key, cachedMessage, request);

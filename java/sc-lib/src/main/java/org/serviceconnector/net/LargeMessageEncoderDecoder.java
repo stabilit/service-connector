@@ -71,14 +71,16 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			if (scmpMsg.isPart() || scmpMsg.isComposite()) {
 				if (scmpMsg.isPollRequest()) {
 					headerKey = SCMPHeaderKey.PAC;
+					scmpMsg.setIsReqCompleteAfterMarshallingPart(false);
 				} else {
 					headerKey = SCMPHeaderKey.PRQ;
+					scmpMsg.setIsReqCompleteAfterMarshallingPart(false);
 				}
 			} else {
 				headerKey = SCMPHeaderKey.REQ;
+				scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 			}
 		}
-		scmpMsg.setMsgHeaderKey(headerKey);
 		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
 		// write body depends on body type
 		Object body = scmpMsg.getBody();
@@ -139,7 +141,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						scmpMsg.setPartSize(bytesRead);
 						// this is the last message
 						headerKey = SCMPHeaderKey.REQ;
-						scmpMsg.setMsgHeaderKey(headerKey);
+						scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 					}
 					this.writeHeadLine(bw, headerKey, bytesRead + sb.length(), headerSize);
 					bw.write(sb.toString());

@@ -336,7 +336,7 @@ public class SCRequester implements IRequester {
 			SCMPMessage part = null;
 
 			part = largeRequest.getCurrentPart();
-			if (part.isRequest()) {
+			if (part.isReqCompleteAfterMarshallingPart()) {
 				/*
 				 * request has been sent completely. The response can be small or large, this doesn't matter, we continue reading any
 				 * large response later

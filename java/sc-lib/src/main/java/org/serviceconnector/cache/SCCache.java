@@ -49,13 +49,23 @@ import org.serviceconnector.util.XMLDumpWriter;
  * The cache contains two physical cache modules (SC_CACHE_TYPE.DATA_CACHE_MODULE, SC_CACHE_TYPE.META_DATA_CACHE_MODULE).
  * Whenever someone is interested to insert or load from cache the META_DATA_CACHE_MODULE gets accessed first. It contains a list of
  * CacheMetaEntry instances, which holds information about the stored SCMPMessage in DATA_CACHE_MODULE. CacheMetaEntry are
- * identified by the cacheKey serviceName_cachedId, cached messages in DATA_CACHE_MODULE by the cacheKey serviceName_cacheId/partNr.
+ * identified by the cacheKey cachedId, cached messages in DATA_CACHE_MODULE by the cacheKey cacheId/appendixNr/partNr.
  * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
  * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
- * message completely. Only the first client (session) is allowed to load the message. When the message is complete all parts
- * transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an
+ * message completely. Only the first client (session) is allowed to load the message. At the time the message is complete and all
+ * parts transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an
  * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
- * of the expiration is done by the ISCCacheModule implementation.
+ * of the expiration is done by the ISCCacheModule implementation. Data entries never (0 means forever) have an expiration time.
+ * When a meta entry expires every data entry belonging to this meta entry will be deleted. Managed (loaded with cmt=initial) data
+ * with an empty expiration never expire. They stay as long as no remove is received.<br>
+ * <br>
+ * Cache identifiers naming:
+ * cacheId/appendixNr/partNr
+ * |---baseDataCid---|
+ * |--------dataCid--------| <br>
+ * <br>
+ * The cache identifier with appendix zero and part number zero (e.g. 700/0/0)is called initialDataCid.<br>
+ * <br>
  * There are several circumstances they can stop the loading process and clear the message:
  * - Server returns a fault message.
  * - Server returns no cacheId.
@@ -152,7 +162,8 @@ public class SCCache {
 				return null;
 			}
 
-			if (reqMessage.isRequest() == true && metaEntry.isLoading() == true && metaEntry.isLoadingSessionId(sessionId) == true) {
+			if (reqMessage.isReqCompleteAfterMarshallingPart() == true && metaEntry.isLoading() == true
+					&& metaEntry.isLoadingSessionId(sessionId) == true) {
 				// REQ & sid is loading session - ending REQ of large request, forward to next node!
 				return null;
 			}
@@ -281,7 +292,6 @@ public class SCCache {
 			this.removeMetaAndDataEntries(loadingSid, reqCacheId, "Reply faulty (" + scErrorCode
 					+ ") or resCacheId=null and reqCacheId=" + reqCacheId);
 			return;
-
 		}
 
 		if (resCacheId == null) {
@@ -385,8 +395,8 @@ public class SCCache {
 				metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
 						/ Constants.SEC_TO_MILLISEC_FACTOR);
 			}
-			// cache data entry - no expiration time
-			dataCacheModule.putOrUpdate(dataEntryCid, resMessage);
+			// cache data entry - expiration time forever for data entries
+			dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
 		} catch (ParseException e) {
 			LOGGER.error("Parsing of expirationDate failed", e);
 			this.removeMetaAndDataEntries(loadingSid, metaEntryCid, "Parsing of expirationDate failed");
@@ -420,7 +430,7 @@ public class SCCache {
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
-			LOGGER.error("Missing metaEntry message can not be applied, cid=" + metaEntryCid);
+			LOGGER.warn("Missing metaEntry message can not be applied, cid=" + metaEntryCid);
 			this.removeMetaAndDataEntries(sid, metaEntryCid, "Missing metaEntry message can not be applied.");
 			return;
 		}
@@ -516,8 +526,8 @@ public class SCCache {
 			metaDataCacheModule.putOrUpdate(metaEntryCid, affectedMetaEntry, timeToLiveSeconds);
 			// set the correct partNr+1 in received message and cache it, partNr points to the next part!
 			resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, nrOfParts + 1);
-			// cache data entry - no expiration time
-			dataCacheModule.putOrUpdate(dataEntryCid, resMessage);
+			// cache data entry - expiration time forever for data entries
+			dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
 			CacheLogger.putManagedDataToCache(dataEntryCid, currGuardian, 0, nrOfParts);
 			return;
 		}
@@ -562,8 +572,8 @@ public class SCCache {
 				// set the correct partNr+1 in received message and cache it, partNr points to the next part!
 				resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, nrOfPartsForAppendix + 1);
 
-				// cache appendix, managed data no expiration
-				dataCacheModule.putOrUpdate(dataEntryCid, resMessage);
+				// cache appendix, managed data expiration time forever
+				dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
 
 				if (resMessage.isPart() == true) {
 					// part of large appendix received, update meta entry
@@ -573,8 +583,9 @@ public class SCCache {
 				} else {
 					// end of large appendix received
 					metaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
-					// update meta entry, no expiration time anymore
-					metaDataCacheModule.replace(metaEntryCid, metaEntry);
+					// update meta entry
+					int timeToLive = this.evalTimeToLiveSeconds(metaEntry.getExpDateTimeStr());
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, timeToLive);
 					CacheLogger.finishCachingAppendix(dataEntryCid, currGuardian, nrOfPartsForAppendix);
 				}
 			} else {
@@ -588,7 +599,8 @@ public class SCCache {
 				String initialDataCid = metaEntryCid + Constants.SLASH + "0" + Constants.SLASH + "0";
 				SCMPMessage initialData = dataCacheModule.get(initialDataCid);
 				initialData.setHeader(SCMPHeaderAttributeKey.NR_OF_APPENDIX, appendixNr);
-				dataCacheModule.putOrUpdate(initialDataCid, initialData);
+				// expiration time forever for data entries
+				dataCacheModule.putOrUpdate(initialDataCid, initialData, 0);
 
 				if (resMessage.isPart() == true) {
 					// start of large appendix received, update meta entry
@@ -606,8 +618,8 @@ public class SCCache {
 					metaDataCacheModule.replace(metaEntryCid, metaEntry, timeToLive);
 					CacheLogger.putManagedDataToCache(dataEntryCid, currGuardian, appendixNr, nrOfPart);
 				}
-				// cache appendix, managed data no expiration
-				dataCacheModule.putOrUpdate(dataEntryCid, resMessage);
+				// cache appendix, managed data expiration forever
+				dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
 			}
 		}
 	}
@@ -682,11 +694,11 @@ public class SCCache {
 		}
 
 		// removed managed data assigned to cache guardian
-		Set<String> metaEntryCacheIds = this.mgdDataAssignedToGuardian.get(cacheGuardian);
-		if (metaEntryCacheIds == null) {
+		if (this.mgdDataAssignedToGuardian.containsKey(cacheGuardian) == false) {
 			// no managed data to delete
 			return;
 		}
+		String[] metaEntryCacheIds = (String[]) this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
 		for (String metaEntryCacheId : metaEntryCacheIds) {
 			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Cache Guardian, name=" + cacheGuardian);
 		}

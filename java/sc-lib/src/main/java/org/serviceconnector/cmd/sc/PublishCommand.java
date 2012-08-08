@@ -60,6 +60,7 @@ public class PublishCommand extends CommandAdapter {
 
 		if (service.getType() == ServiceType.CASCADED_CACHE_GUARDIAN || service.getType() == ServiceType.CACHE_GUARDIAN) {
 			// Managed data arrived over cache guardian - handle caching
+			message.setSessionId("SPUnoSid"); // setting a dummy sid, is needed for the cache!
 			AppContext.getSCCache().cachedManagedData(message);
 		}
 
