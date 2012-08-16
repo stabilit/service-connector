@@ -690,7 +690,7 @@ public class SCCache {
 
 		// remove managed data in initial state
 		for (String metaEntryCacheId : this.mgdDataKeysInInitialState) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Cache Guardian, name=" + cacheGuardian);
+			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
 
 		// removed managed data assigned to cache guardian
@@ -700,7 +700,7 @@ public class SCCache {
 		}
 		String[] metaEntryCacheIds = (String[]) this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
 		for (String metaEntryCacheId : metaEntryCacheIds) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken Cache Guardian, name=" + cacheGuardian);
+			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
 		this.mgdDataAssignedToGuardian.remove(cacheGuardian);
 	}
