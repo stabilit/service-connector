@@ -43,8 +43,8 @@ import org.serviceconnector.cmd.SCMPValidatorException;
  */
 public enum SCMPVersion {
 
-	/** 1.2, the current version. */
-	CURRENT('1', '2'),
+	/** 1.3, the current version. */
+	CURRENT('1', '3'),
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
 	TEST('3', '2');
 
