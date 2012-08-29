@@ -77,7 +77,7 @@ public class FileServer extends Server {
 	 * @param remoteFileName
 	 *            the remote file name
 	 * @param timeoutMillis
-	 *            the timeout millis
+	 *            the timeout milliseconds
 	 * @return the sCMP message
 	 * @throws Exception
 	 *             the exception
@@ -123,17 +123,19 @@ public class FileServer extends Server {
 			out.close();
 			httpCon = session.getHttpURLConnection();
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
-				// error handling
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.FILE_UPLOAD_FAILED, httpCon.getResponseMessage());
+				// error handling - SCMP Version request
+				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.FILE_UPLOAD_FAILED,
+						httpCon.getResponseMessage());
 				LOGGER.warn("Upload file failed =" + httpCon.getResponseMessage());
 				return fault;
 			}
 			httpCon.disconnect();
 			session.stopStreaming();
-			reply = new SCMPMessage();
+			// SCMP Version request
+			reply = new SCMPMessage(message.getSCMPVersion());
 		} else {
-			// set up poll request
-			reply = new SCMPPart(true);
+			// set up poll request - SCMP Version request
+			reply = new SCMPPart(message.getSCMPVersion(), true);
 		}
 		return reply;
 	}
@@ -171,8 +173,9 @@ public class FileServer extends Server {
 				httpCon.connect();
 				in = httpCon.getInputStream();
 			} catch (Exception e) {
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
-						+ e.getMessage());
+				// SCMP Version request
+				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.SERVER_ERROR,
+						httpCon.getResponseMessage() + " " + e.getMessage());
 				LOGGER.warn("Download file request failed " + httpCon.getResponseMessage());
 				return fault;
 			}
@@ -186,16 +189,16 @@ public class FileServer extends Server {
 		byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
 		int readBytes = in.read(fullBuffer);
 		if (readBytes < 0) {
-			// this is the end
-			reply = new SCMPMessage();
+			// this is the end - SCMP Version request
+			reply = new SCMPMessage(message.getSCMPVersion());
 			reply.setBody(new byte[0]);
 			in.close();
 			session.getHttpURLConnection().disconnect();
 			session.stopStreaming();
 			return reply;
 		}
-		// set up part request, no poll request
-		reply = new SCMPPart(false);
+		// set up part request, no poll request - SCMP Version request
+		reply = new SCMPPart(message.getSCMPVersion(), false);
 		reply.setBody(fullBuffer, 0, readBytes);
 		return reply;
 	}
@@ -215,9 +218,10 @@ public class FileServer extends Server {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutSeconds)
+	public SCMPMessage serverGetFileList(String path, String listScriptName, SCMPMessage reqMessage, int timeoutSeconds)
 			throws Exception {
 		HttpURLConnection httpCon = null;
+		String serviceName = reqMessage.getServiceName();
 		String urlPath = URLUtility.makePath(path, listScriptName);
 		urlPath += Constants.QUESTION_MARK + Constants.UPLOAD_SERVICE_PARAM_NAME + Constants.EQUAL_SIGN + serviceName;
 		URL url = new URL(Constants.HTTP, this.remoteNodeConfiguration.getHost(), this.remoteNodeConfiguration.getPort(), urlPath);
@@ -232,8 +236,9 @@ public class FileServer extends Server {
 			httpCon.connect();
 			in = httpCon.getInputStream();
 		} catch (Exception e) {
-			SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
-					+ e.getMessage());
+			// SCMP Version request
+			SCMPMessageFault fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR,
+					httpCon.getResponseMessage() + " " + e.getMessage());
 			LOGGER.warn("List file request failed " + httpCon.getResponseMessage());
 			return fault;
 		}
@@ -243,19 +248,20 @@ public class FileServer extends Server {
 			byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
 			int readBytes = in.read(fullBuffer);
 			if (readBytes < 0) {
-				// this is the end
-				reply = new SCMPMessage();
+				// this is the end - SCMP Version request
+				reply = new SCMPMessage(reqMessage.getSCMPVersion());
 				reply.setBody(new byte[0]);
 				in.close();
 				httpCon.disconnect();
 				return reply;
 			}
-			// set up part request, no poll request
-			reply = new SCMPMessage();
+			// set up part request, no poll request - SCMP Version request
+			reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {
-			SCMPMessageFault fault = new SCMPMessageFault(e);
+			// SCMP Version request
+			SCMPMessageFault fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), e, SCMPError.SERVER_ERROR);
 			LOGGER.warn("List file failed " + httpCon.getResponseMessage());
 			return fault;
 		}

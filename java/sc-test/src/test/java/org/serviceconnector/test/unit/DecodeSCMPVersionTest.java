@@ -25,6 +25,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 public class DecodeSCMPVersionTest extends SuperUnitTest {
 
@@ -41,7 +42,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);
@@ -61,7 +62,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);
@@ -81,7 +82,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);
@@ -101,7 +102,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);
@@ -119,7 +120,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 		String requestString = "REQ 0000053 00053 2.0\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);

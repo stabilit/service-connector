@@ -35,6 +35,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class LargeMessageEncoderDecoderTest.
@@ -70,7 +71,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 		this.bodyLength = "12";
 		this.body = "hello world!";
 
-		encodeScmp = new SCMPMessage();
+		encodeScmp = new SCMPMessage(SCMPVersion.CURRENT);
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
@@ -89,7 +90,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -113,7 +114,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -138,7 +139,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -163,7 +164,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		try {
 			coder.decode(is);
@@ -186,7 +187,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -214,7 +215,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -240,7 +241,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -257,7 +258,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 		buffer = requestString.getBytes();
 		is = new ByteArrayInputStream(buffer);
-		coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		message = null;
 		try {
@@ -274,7 +275,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t20_EncodeREQTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
@@ -295,14 +296,14 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t21_EncodeRESTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		this.headKey = SCMPHeaderKey.RES;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeRes = new SCMPMessage();
+		SCMPMessage encodeRes = new SCMPMessage(SCMPVersion.CURRENT);
 		encodeRes.setIsReply(true);
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
@@ -322,14 +323,14 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t22_encodeEXCTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		this.headKey = SCMPHeaderKey.EXC;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeExc = new SCMPMessageFault();
+		SCMPMessage encodeExc = new SCMPMessageFault(SCMPVersion.CURRENT);
 		encodeExc.setHeader(encodeScmp);
 		encodeExc.setBody(body.getBytes());
 
@@ -348,14 +349,14 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t23_EncodePRQTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		this.headKey = SCMPHeaderKey.PRQ;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeRes = new SCMPPart();
+		SCMPMessage encodeRes = new SCMPPart(SCMPVersion.CURRENT);
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
 
@@ -374,14 +375,14 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t24_EncodePRSTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		this.headKey = SCMPHeaderKey.PRS;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeRes = new SCMPPart();
+		SCMPMessage encodeRes = new SCMPPart(SCMPVersion.CURRENT);
 		encodeRes.setIsReply(true);
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
@@ -401,7 +402,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t25_EncodeBodyTypesTest() {
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart(SCMPVersion.CURRENT));
 
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 

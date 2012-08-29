@@ -29,6 +29,7 @@ import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
@@ -115,7 +116,7 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 						writer.writeEndElement(); // end of scmpMessage
 					}
 					for (int j = 0; j < simulation; j++) {
-						SCMPMessage scmpMessage = new SCMPMessage();
+						SCMPMessage scmpMessage = new SCMPMessage(SCMPVersion.CURRENT);
 						scmpMessage.setHeader(SCMPHeaderAttributeKey.MASK, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 						scmpMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, j);
 						writer.writeStartElement("scmpMessage");

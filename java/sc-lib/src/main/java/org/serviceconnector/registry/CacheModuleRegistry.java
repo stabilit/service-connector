@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCacheMetaEntry;
+import org.serviceconnector.cache.SC_CACHE_ENTRY_STATE;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.XMLDumpWriter;
@@ -104,7 +105,12 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 					writer.writeAttribute("loadingSessionId", metaEntry.getLoadingSessionId());
 					writer.writeAttribute("loadingTimeoutMillis", metaEntry.getLoadingTimeoutMillis());
 					writer.writeAttribute("scCacheEntryState", metaEntry.getSCCacheEntryState().name());
-					writer.writeAttribute("numberOfParts", metaEntry.getNrOfParts(key));
+					writer.writeAttribute("numberOfAppendix", metaEntry.getNrOfAppendix());
+					writer.writeAttribute("cacheGuardian", metaEntry.getCacheGuardianName());
+					if (metaEntry.getSCCacheEntryState() == SC_CACHE_ENTRY_STATE.LOADING_APPENDIX) {
+						writer.writeAttribute("expectedAppendix", metaEntry.getExpectedAppendix());
+					}
+					writer.writeAttribute("isManaged", metaEntry.isManaged());
 					writer.writeAttribute("expirationTime", DateTimeUtility.getDateTimeAsString(scCache.getExpirationTime(key)));
 					writer.writeAttribute("creationTime", DateTimeUtility.getDateTimeAsString(scCache.getCreationTime(key)));
 					writer.writeAttribute("lastModifiedTime", DateTimeUtility.getDateTimeAsString(metaEntry.getLastModifiedTime()));

@@ -60,6 +60,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 *            the message part
 	 */
 	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
+		// SCMP Version request
+		super(request.getSCMPVersion());
 		this.outputStream = null;
 		this.writer = null;
 		this.offest = 0;
@@ -67,15 +69,15 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		this.complete = false;
 		this.header = messagePart.getHeader();
 		scmpList = new ArrayList<SCMPMessage>();
-		// builds up request to poll later
-		pollMsg = new SCMPPart(true, messagePart.getHeader());
+		// builds up request to poll later - SCMP Version request
+		pollMsg = new SCMPPart(request.getSCMPVersion(), true, messagePart.getHeader());
 		pollMsg.setMessageType(request.getMessageType());
 		pollMsg.setSessionId(request.getSessionId());
 		pollMsg.setCacheId(request.getCacheId());
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.APPENDIX_NR);
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
-		// necessary for download file
+		// necessary to download file
 		pollMsg.setHeader(request, SCMPHeaderAttributeKey.REMOTE_FILE_NAME); // tries to set remote file name
 		this.add(messagePart);
 	}

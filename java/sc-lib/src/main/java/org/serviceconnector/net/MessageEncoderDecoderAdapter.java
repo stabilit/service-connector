@@ -39,6 +39,7 @@ import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class MessageEncoderDecoderAdapter.
@@ -63,7 +64,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 		byte[] version = new byte[Constants.SCMP_VERSION_LENGTH_IN_HEADLINE];
 		this.readBufferFromStream(is, version);
-		SCMPMessage.SCMP_VERSION.isSupported(version);
+		SCMPVersion.CURRENT.isSupported(version);
+		SCMPVersion receivedVersion = SCMPVersion.getSCMPVersionByByteArray(version);
 		is.skip(1); // read LF
 
 		SCMPMessage scmpMsg = null;
@@ -71,39 +73,39 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(headline);
 		switch (headerKey) {
 		case RES:
-			scmpMsg = new SCMPMessage();
+			scmpMsg = new SCMPMessage(receivedVersion);
 			scmpMsg.setIsReply(true);
 			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 			break;
 		case REQ:
-			scmpMsg = new SCMPMessage();
+			scmpMsg = new SCMPMessage(receivedVersion);
 			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 			break;
 		case KRS:
 		case KRQ:
-			scmpMsg = new SCMPKeepAlive();
+			scmpMsg = new SCMPKeepAlive(receivedVersion);
 			return scmpMsg;
 		case PRQ:
 			// no poll request
-			scmpMsg = new SCMPPart(false);
+			scmpMsg = new SCMPPart(receivedVersion, false);
 			scmpMsg.setIsReply(false);
 			break;
 		case PRS:
 			// no poll response
-			scmpMsg = new SCMPPart(false);
+			scmpMsg = new SCMPPart(receivedVersion, false);
 			scmpMsg.setIsReply(true);
 			break;
 		case PAC:
 			// poll request
-			scmpMsg = new SCMPPart(true);
+			scmpMsg = new SCMPPart(receivedVersion, true);
 			break;
 		case EXC:
-			scmpMsg = new SCMPMessageFault();
+			scmpMsg = new SCMPMessageFault(receivedVersion);
 			break;
 		case UNDEF:
 			throw new EncodingDecodingException("wrong protocol in message not possible to decode");
 		default:
-			scmpMsg = new SCMPMessage();
+			scmpMsg = new SCMPMessage(receivedVersion);
 		}
 
 		// parse headerSize & bodySize
@@ -232,8 +234,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/**
 	 * Write head line.
 	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
 	 * @param bw
-	 *            the bw
+	 *            the bufferedWriter
 	 * @param headerKey
 	 *            the header key
 	 * @param messageSize
@@ -243,14 +247,15 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	protected void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize, int headerSize) throws IOException {
+	protected void writeHeadLine(SCMPVersion scmpVersion, BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize,
+			int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(FORMAT_MSG_SIZE_IN_HEADER.format(messageSize));
 		bw.write(FORMAT_HEADER_SIZE_IN_HEADER.format(headerSize));
 		bw.write(Constants.BLANK_SIGN);
-		bw.write(SCMPMessage.SCMP_VERSION.getReleaseNumber());
+		bw.write(scmpVersion.getReleaseNumber());
 		bw.write(Constants.DOT_HEX);
-		bw.write(SCMPMessage.SCMP_VERSION.getVersionNumber());
+		bw.write(scmpVersion.getVersionNumber());
 		bw.write(Constants.LINE_BREAK_SIGN);
 		bw.flush();
 	}

@@ -50,10 +50,10 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {
 			SCMPHeaderKey headerKey = SCMPHeaderKey.KRS;
-			writeHeadLine(bw, headerKey, 0, 0);
+			this.writeHeadLine(keepAlive.getSCMPVersion(), bw, headerKey, 0, 0);
 		} else {
 			SCMPHeaderKey headerKey = SCMPHeaderKey.KRQ;
-			writeHeadLine(bw, headerKey, 0, 0);
+			this.writeHeadLine(keepAlive.getSCMPVersion(), bw, headerKey, 0, 0);
 		}
 		return;
 	}

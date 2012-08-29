@@ -36,6 +36,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
 
@@ -437,7 +438,8 @@ public class SCRequester implements IRequester {
 			LOGGER.warn("oti timeout expiration in sc client API oti=" + this.timeoutMillis);
 			this.disconnectConnection(true);
 			try {
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.REQUEST_TIMEOUT,
+						"Operation timeout expired on client");
 				fault.setMessageType(requestMsg.getMessageType());
 				this.scmpCallback.receive(fault);
 			} catch (Exception e) {

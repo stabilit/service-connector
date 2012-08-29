@@ -26,6 +26,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 
@@ -194,7 +195,7 @@ public class LinkedQueueTest extends SuperUnitTest {
 
 	private void insertIntoQueue(int numberOfMsg, String bodyString) {
 		for (int i = 0; i < numberOfMsg; i++) {
-			SCMPMessage message = new SCMPMessage();
+			SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 			message.setBody(bodyString + i);
 			this.queue.insert(message);
 		}
@@ -235,7 +236,7 @@ public class LinkedQueueTest extends SuperUnitTest {
 		public void run() {
 			int i = 0;
 			while (!LinkedQueueTest.this.killThreads) {
-				SCMPMessage message = new SCMPMessage();
+				SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 				message.setBody(i++);
 				queue.insert(message);
 				try {

@@ -67,8 +67,8 @@ public class SrvAbortSubscriptionCommand extends SrvCommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 
 		if (srvService == null) {
-			// service not available anymore set up reply
-			SCMPMessage reply = new SCMPMessage();
+			// service not available anymore set up reply - SCMP Version request
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setServiceName(serviceName);
 			reply.setSessionId(reqMessage.getSessionId());
 			reply.setMessageType(this.getKey());
@@ -93,8 +93,8 @@ public class SrvAbortSubscriptionCommand extends SrvCommandAdapter {
 
 		// inform callback with scMessages
 		((SrvPublishService) srvService).getCallback().abortSubscription(scMessage, oti);
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());

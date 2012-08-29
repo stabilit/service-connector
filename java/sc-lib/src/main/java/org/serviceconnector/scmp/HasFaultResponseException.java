@@ -32,8 +32,8 @@ public abstract class HasFaultResponseException extends Exception {
 	private static final Logger LOGGER = Logger.getLogger(HasFaultResponseException.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
-	/** The fault message. */
-	protected SCMPMessageFault fault = new SCMPMessageFault();
+	/** The fault message. */ //TODO JOT VERIFY
+	protected SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.LOWEST);
 
 	/**
 	 * Instantiates a new checks for fault response exception.
@@ -124,5 +124,4 @@ public abstract class HasFaultResponseException extends Exception {
 	public String toString() {
 		return super.toString() + " HasFaultResponseException [fault=" + fault + "]";
 	}
-
 }

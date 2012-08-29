@@ -67,8 +67,9 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		server.abortSessionsAndDestroy("deregister of server");
 		this.serverRegistry.removeServer(serverKey);
-
-		SCMPMessage scmpReply = new SCMPMessage();
+		
+		// SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(message.getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);

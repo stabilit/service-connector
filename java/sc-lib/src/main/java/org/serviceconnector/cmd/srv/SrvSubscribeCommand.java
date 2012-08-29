@@ -71,8 +71,8 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().subscribe(scMessage, oti);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version current
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 
 		if (scReply != null) {
 			reply.setBody(scReply.getData());

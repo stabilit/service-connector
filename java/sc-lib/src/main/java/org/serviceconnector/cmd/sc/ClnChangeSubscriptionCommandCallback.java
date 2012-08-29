@@ -108,16 +108,17 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT,
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.OPERATION_TIMEOUT,
 					"Operation timeout expired on SC cln change subscription sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln change subscription sid="
-					+ sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.CONNECTION_EXCEPTION,
+					"broken connection on SC cln change subscription sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln change subscription failed sid=" + sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SC_ERROR,
+					"executing cln change subscription failed sid=" + sid);
 		}
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);

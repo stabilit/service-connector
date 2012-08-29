@@ -72,8 +72,8 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 			// handling msgSequenceNr
 			SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 			msgSequenceNr.incrementAndGetMsgSequenceNr();
-			// set up reply
-			SCMPMessage reply = new SCMPMessage();
+			// set up reply - SCMP Version
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			reply.setServiceName(serviceName);
 			reply.setSessionId(reqMessage.getSessionId());

@@ -73,9 +73,9 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		SCMPMessage reply = null;
 		if (message.isPart() == true) {
 			// message from queue is of type part - outgoing must be part too, no poll request
-			reply = new SCMPPart(false, message.getHeader());
+			reply = new SCMPPart(message.getSCMPVersion(), false, message.getHeader());
 		} else {
-			reply = new SCMPMessage(message.getHeader());
+			reply = new SCMPMessage(message.getSCMPVersion(), message.getHeader());
 		}
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());

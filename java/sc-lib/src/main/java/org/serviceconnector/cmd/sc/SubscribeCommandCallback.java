@@ -33,6 +33,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.ReceivePublicationTimeout;
@@ -135,17 +136,21 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
 		String serviceName = this.reqMessage.getServiceName();
+		SCMPVersion scmpVersion = this.reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe sid=" + sid);
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
+					"Operation timeout expired on SC cln subscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid="
+					+ sid);
 		} else if (ex instanceof InterruptedException) {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid="
+					+ sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing cln subscribe failed sid=" + sid);
 		}
 		// forward reply to client
 		fault.setIsReply(true);

@@ -487,7 +487,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof Date) {
 						writer.writeCData(DateTimeUtility.getDateTimeAsString((Date) value));
 					} else if (value instanceof HashMap) {
-						writer.writeAttribute("size", ((HashMap) value).size() + "");
+						writer.writeAttribute("size", ((HashMap<?, ?>) value).size() + "");
 						writer.writeCData(value.toString());
 					} else {
 						writer.writeCData(value.toString());

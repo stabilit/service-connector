@@ -79,7 +79,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						// message compression required
 						ba = this.compressBody(ba, 0, bodyLength);
 					}
-					this.writeHeadLine(bw, headerKey, ba.length + sb.length(), headerSize);
+					this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, ba.length + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
 					os.write(ba);
@@ -93,13 +93,13 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						// message compression required
 						byte[] ba = t.getBytes();
 						ba = this.compressBody(ba, 0, bodyLength);
-						this.writeHeadLine(bw, headerKey, ba.length + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, ba.length + sb.length(), headerSize);
 						bw.write(sb.toString()); // write header
 						bw.flush();
 						os.write(ba);
 						os.flush();
 					} else {
-						this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, bodyLength + sb.length(), headerSize);
 						bw.write(sb.toString()); // write header
 						bw.write(t); // write body
 						bw.flush();
@@ -108,7 +108,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				throw new EncodingDecodingException("unsupported body type");
 			} else {
-				this.writeHeadLine(bw, headerKey, headerSize, headerSize);
+				this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, headerSize, headerSize);
 				bw.write(sb.toString());
 				bw.flush();
 			}

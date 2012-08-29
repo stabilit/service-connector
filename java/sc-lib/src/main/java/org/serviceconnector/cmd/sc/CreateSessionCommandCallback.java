@@ -31,6 +31,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 
@@ -118,14 +119,17 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		server.removeSession(session);
 		SCMPMessage fault = null;
+		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC create session sid=" + sid);
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
+					"Operation timeout expired on SC create session sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid="
+					+ sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing create session failed sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing create session failed sid=" + sid);
 		}
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);

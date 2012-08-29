@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * SystemInfo holds and detects current system information.
@@ -63,6 +64,8 @@ public final class SystemInfo {
 
 	/** The config file name. */
 	private static String configFileName;
+	/** The SCMP version. */
+	private static String scmpVersion;
 	/** The java version. */
 	private static String javaVersion;
 	/** The vm version. */
@@ -111,7 +114,7 @@ public final class SystemInfo {
 	private static void loadInfos() {
 
 		Properties sysprops = System.getProperties();
-
+		scmpVersion = SCMPVersion.CURRENT.getValue();
 		javaVersion = sysprops.getProperty(JAVA_VERSION);
 		vmVersion = sysprops.getProperty(JAVA_VM_VERSION);
 		os = sysprops.getProperty(OS_NAME);
@@ -151,6 +154,15 @@ public final class SystemInfo {
 	 */
 	public static String getConfigFileName() {
 		return configFileName;
+	}
+	
+	/**
+	 * Gets the SCMP version.
+	 * 
+	 * @return the SCMP version
+	 */
+	public static String getscmpVersion() {
+		return scmpVersion;
 	}
 
 	/**

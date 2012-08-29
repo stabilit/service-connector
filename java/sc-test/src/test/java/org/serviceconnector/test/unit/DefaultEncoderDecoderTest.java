@@ -34,6 +34,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class DefaultEncoderDecoderTest.
@@ -70,7 +71,7 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 		this.bodyLength = "12";
 		this.body = "hello world!";
 
-		encodeScmp = new SCMPMessage();
+		encodeScmp = new SCMPMessage(SCMPVersion.CURRENT);
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
@@ -247,7 +248,7 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeRes = new SCMPMessage();
+		SCMPMessage encodeRes = new SCMPMessage(SCMPVersion.CURRENT);
 		encodeRes.setIsReply(true);
 		encodeRes.setHeader(encodeScmp);
 		encodeRes.setBody(body.getBytes());
@@ -274,7 +275,7 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeExc = new SCMPMessageFault();
+		SCMPMessage encodeExc = new SCMPMessageFault(SCMPVersion.CURRENT);
 		encodeExc.setHeader(encodeScmp);
 		encodeExc.setBody(body.getBytes());
 

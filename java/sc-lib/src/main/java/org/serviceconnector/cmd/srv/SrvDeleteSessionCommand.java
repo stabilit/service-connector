@@ -73,8 +73,8 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 			// handling msgSequenceNr
 			SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 			msgSequenceNr.incrementAndGetMsgSequenceNr();
-			// set up reply
-			SCMPMessage reply = new SCMPMessage();
+			// set up reply - SCMP Version request
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setServiceName(serviceName);
 			reply.setSessionId(reqMessage.getSessionId());
 			reply.setMessageType(this.getKey());

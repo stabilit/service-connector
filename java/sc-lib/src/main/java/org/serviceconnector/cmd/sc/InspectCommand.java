@@ -79,7 +79,8 @@ public class InspectCommand extends CommandAdapter {
 		String callKey = urlRequestString.getCallKey();
 		String serviceName = urlRequestString.getParamValue(Constants.SERVICE_NAME);
 
-		SCMPMessage scmpReply = new SCMPMessage();
+		// SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(reqMsg.getSCMPVersion());
 		scmpReply.setIsReply(true);
 		InetAddress localHost = InetAddress.getLocalHost();
 		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
@@ -93,7 +94,8 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply.setBody(this.getStateOfServicesString(serviceName));
 			} catch (Exception e) {
 				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+				// SCMP Version request
+				scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
@@ -108,7 +110,7 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply.setBody(this.getSessionsOfServicesString(serviceName));
 			} catch (Exception e) {
 				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+				scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
@@ -121,7 +123,7 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply.setBody(this.getServiceConfigurationString(serviceName));
 			} catch (Exception e) {
 				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+				scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
@@ -149,7 +151,7 @@ public class InspectCommand extends CommandAdapter {
 		}
 
 		LOGGER.error("wrong inspect command body=" + bodyString); // body has bad syntax
-		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
+		scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply
 		responderCallback.responseCallback(request, response);

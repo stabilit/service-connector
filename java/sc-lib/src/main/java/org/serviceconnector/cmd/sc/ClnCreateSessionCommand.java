@@ -109,8 +109,8 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			fileSession.setSessionTimeoutMillis(eciInMillis * basicConf.getEchoIntervalMultiplier());
 			// finally add file session to the registry
 			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
-			// reply to client
-			SCMPMessage reply = new SCMPMessage();
+			// reply to client - SCMP Version request
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			reply.setSessionId(fileSession.getId());

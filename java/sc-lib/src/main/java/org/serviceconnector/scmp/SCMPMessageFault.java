@@ -30,71 +30,42 @@ public class SCMPMessageFault extends SCMPMessage {
 	private Exception exception;
 
 	/**
-	 * Instantiates a new sCMP message fault.
+	 * Instantiates a new SCMP fault.
+	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
+	 */
+	public SCMPMessageFault(SCMPVersion scmpVersion) {
+		super(scmpVersion);
+	}
+
+	/**
+	 * Instantiates a new SCMP fault message.
+	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
+	 * @param error
+	 *            the error code
+	 * @param additionalInfo
+	 *            the additional info
+	 */
+	public SCMPMessageFault(SCMPVersion scmpVersion, SCMPError error, String additionalInfo) {
+		super(scmpVersion);
+		this.setError(error, additionalInfo);
+	}
+
+	/**
+	 * Instantiates a new SCMP fault.
 	 * 
 	 * @param exception
 	 *            the exception
+	 * @param error
+	 *            the error
 	 */
-	public SCMPMessageFault(Exception exception) {
-		super();
+	public SCMPMessageFault(SCMPVersion scmpVersion, Exception exception, SCMPError error) {
+		super(scmpVersion);
+		this.setError(error);
 		this.exception = exception;
-	}
-
-	/**
-	 * Instantiates a new SCMP fault.
-	 */
-	public SCMPMessageFault() {
-		super();
-	}
-
-	/**
-	 * Instantiates a new SCMP fault message.
-	 * 
-	 * @param error
-	 *            the error code
-	 */
-	public SCMPMessageFault(SCMPError error) {
-		this.setError(error);
-	}
-
-	/**
-	 * Instantiates a new SCMP fault message.
-	 * 
-	 * @param error
-	 *            the error code
-	 * @param additionalInfo
-	 *            the additional info
-	 */
-	public SCMPMessageFault(SCMPError error, String additionalInfo) {
-		this.setError(error, additionalInfo);
-	}
-
-	/**
-	 * Instantiates a new SCMP fault.
-	 * 
-	 * @param e
-	 *            the e
-	 * @param error
-	 *            the error
-	 */
-	public SCMPMessageFault(Exception e, SCMPError error) {
-		this.setError(error);
-		this.exception = e;
-	}
-
-	/**
-	 * Instantiates a new SCMP fault.
-	 * 
-	 * @param e
-	 *            the e
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
-	 */
-	public SCMPMessageFault(Exception e, SCMPError error, String additionalInfo) {
-		this.setError(error, additionalInfo);
-		this.exception = e;
 	}
 
 	/**

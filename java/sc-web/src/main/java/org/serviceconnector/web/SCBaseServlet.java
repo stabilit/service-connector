@@ -363,7 +363,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 				SCBaseServlet.compositeRegistry.removeSCMPLargeResponse(sessionId);
 				SCBaseServlet.compositeRegistry.removeSCMPLargeRequest(sessionId);
 				// fault received nothing to to return - delete largeRequest/largeResponse
-				SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType="
+				SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType="
 						+ reqMessage.getMessageType());
 				scmpFault.setMessageType(reqMessage.getMessageType());
 				scmpFault.setLocalDateTime();
@@ -415,13 +415,13 @@ public abstract class SCBaseServlet extends HttpServlet {
 				scReply = ((SCBasePublishServlet) this).baseAbortSubscription(reqMessage, oti);
 				break;
 			default:
-				scReply = new SCMPMessageFault(SCMPError.BAD_REQUEST, "Unknown message type received.");
+				scReply = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "Unknown message type received.");
 				break;
 			}
 		} catch (Exception e) {
 			LOGGER.error("Processing message failed.", e);
 			// fault received nothing to to return - delete largeRequest/largeResponse
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR,
+			SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR,
 					"Processing message failed when calling servlet API");
 			scmpFault.setMessageType(reqMessage.getMessageType());
 			scmpFault.setLocalDateTime();
@@ -547,8 +547,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
 			largeRequest.incomplete();
-			// set up poll response
-			scmpReply = new SCMPPart(true);
+			// set up poll response - SCMP Version request
+			scmpReply = new SCMPPart(scmpReq.getSCMPVersion(), true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.incrementAndGetMsgSequenceNr());
 			scmpReply.setIsReply(true);
 			scmpReply.setMessageType(scmpReq.getMessageType());

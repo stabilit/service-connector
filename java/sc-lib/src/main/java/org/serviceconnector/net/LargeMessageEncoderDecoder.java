@@ -94,12 +94,12 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
 						// message compression required
 						ba = this.compressBody(ba, bodyOffset, bodyLength);
-						this.writeHeadLine(bw, headerKey, ba.length + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, ba.length + sb.length(), headerSize);
 						bw.write(sb.toString());
 						bw.flush();
 						os.write(ba);
 					} else {
-						this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, bodyLength + sb.length(), headerSize);
 						bw.write(sb.toString());
 						bw.flush();
 						os.write(ba, bodyOffset, bodyLength);
@@ -115,13 +115,13 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						// message compression required
 						byte[] ba = t.getBytes();
 						ba = this.compressBody(ba, bodyOffset, bodyLength);
-						this.writeHeadLine(bw, headerKey, ba.length + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, ba.length + sb.length(), headerSize);
 						bw.write(sb.toString()); // write header
 						bw.flush();
 						os.write(ba);
 						os.flush();
 					} else {
-						this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, bodyLength + sb.length(), headerSize);
 						bw.write(sb.toString()); // write header
 						bw.flush();
 						bw.write(t, bodyOffset, bodyLength);
@@ -143,7 +143,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						headerKey = SCMPHeaderKey.REQ;
 						scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
 					}
-					this.writeHeadLine(bw, headerKey, bytesRead + sb.length(), headerSize);
+					this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, bytesRead + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
 					os.write(buffer, 0, bytesRead);
@@ -152,7 +152,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				throw new EncodingDecodingException("unsupported large message body type");
 			} else {
-				writeHeadLine(bw, headerKey, headerSize, headerSize);
+				writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, headerSize, headerSize);
 				bw.write(sb.toString());
 				bw.flush();
 			}

@@ -42,6 +42,7 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.WebCredentials;
@@ -108,7 +109,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			response.write();
 			return;
 		}
-		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage()
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.SC_ERROR, th.getMessage()
 				+ " caught exception in web responder request handler");
 		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);

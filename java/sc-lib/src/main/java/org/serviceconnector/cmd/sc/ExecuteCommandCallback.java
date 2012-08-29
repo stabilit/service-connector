@@ -30,6 +30,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.Session;
 
 /**
@@ -107,13 +108,15 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 	public void receive(Exception ex) {
 		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		SCMPMessage fault = null;
+		SCMPVersion scmpVersion = this.requestMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + this.sid);
+			// operation timeout handling - SCMPVersion request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
+					+ this.sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid=" + this.sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid=" + this.sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + this.sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "error executing " + this.msgType + " sid=" + this.sid);
 		}
 		// caching
 		SCCache cache = AppContext.getSCCache();

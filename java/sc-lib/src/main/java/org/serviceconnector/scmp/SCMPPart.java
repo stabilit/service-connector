@@ -36,31 +36,39 @@ public class SCMPPart extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMPPart.
+	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
 	 */
-	public SCMPPart() {
-		this(false);
+	public SCMPPart(SCMPVersion scmpVersion) {
+		this(scmpVersion, false);
 	}
 
 	/**
 	 * Instantiates a new SCMP part.
 	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
 	 * @param pollRequest
 	 *            the poll request
 	 */
-	public SCMPPart(boolean pollRequest) {
+	public SCMPPart(SCMPVersion scmpVersion, boolean pollRequest) {
+		super(scmpVersion);
 		this.pollRequest = pollRequest;
 	}
 
 	/**
 	 * Instantiates a new SCMP part.
 	 * 
+	 * @param scmpVersion
+	 *            the SCMP version
 	 * @param pollRequest
 	 *            the poll request
 	 * @param baseHeader
 	 *            the base header
 	 */
-	public SCMPPart(boolean pollRequest, Map<String, String> baseHeader) {
-		this(pollRequest);
+	public SCMPPart(SCMPVersion scmpVersion, boolean pollRequest, Map<String, String> baseHeader) {
+		this(scmpVersion, pollRequest);
 		this.header = new HashMap<String, String>(baseHeader);
 	}
 

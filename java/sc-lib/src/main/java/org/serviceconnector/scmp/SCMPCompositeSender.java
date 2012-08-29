@@ -44,6 +44,8 @@ public class SCMPCompositeSender extends SCMPMessage {
 	 *            the scmp message
 	 */
 	public SCMPCompositeSender(SCMPMessage message) {
+		// SCMP Version - version in request 
+		super(message.getSCMPVersion());
 		this.message = message;
 		this.largeMessageLength = this.message.getBodyLength();
 		this.offset = 0;

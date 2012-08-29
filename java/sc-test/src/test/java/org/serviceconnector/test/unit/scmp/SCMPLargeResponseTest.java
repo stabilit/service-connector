@@ -25,6 +25,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPCompositeTest.
@@ -42,11 +43,11 @@ public class SCMPLargeResponseTest {
 		int bodyLength = 0;
 		StringBuilder body = new StringBuilder();
 
-		SCMPMessage request = new SCMPMessage();
+		SCMPMessage request = new SCMPMessage(SCMPVersion.CURRENT);
 		request.setBody("request");
 		request.setMessageType(SCMPMsgType.CLN_EXECUTE);
 
-		SCMPPart firstPart = new SCMPPart(false);
+		SCMPPart firstPart = new SCMPPart(SCMPVersion.CURRENT, false);
 		String bodyString = "first part request";
 		firstPart.setBody(bodyString);
 		SCMPCompositeReceiver largeResponse = new SCMPCompositeReceiver(request, firstPart);
@@ -56,7 +57,7 @@ public class SCMPLargeResponseTest {
 		Assert.assertEquals(bodyLength, largeResponse.getOffset());
 
 		for (int i = 0; i < 10; i++) {
-			SCMPPart part = new SCMPPart();
+			SCMPPart part = new SCMPPart(SCMPVersion.CURRENT);
 			bodyString = "part nr: " + i;
 			part.setBody(bodyString);
 			largeResponse.add(part);

@@ -116,7 +116,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		// add server to server registry
 		this.serverRegistry.addServer(serverKey, server);
 
-		SCMPMessage scmpReply = new SCMPMessage();
+		// SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(message.getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);

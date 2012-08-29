@@ -11,6 +11,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 
@@ -85,13 +86,16 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 		server.removeSession(session);
 		SCMPMessage fault = null;
 		String serviceName = reqMessage.getServiceName();
+		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC delete session sid=" + sid);
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
+					"Operation timeout expired on SC delete session sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC delete session sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC delete session sid="
+					+ sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing delete session failed sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing delete session failed sid=" + sid);
 		}
 		// forward server reply to client
 		fault.setIsReply(true);

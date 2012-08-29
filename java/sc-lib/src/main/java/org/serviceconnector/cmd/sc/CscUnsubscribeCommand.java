@@ -117,7 +117,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 
 			if (reqMessage.getSessionId() == null) {
 				// no session id set, cascadedSC unsubscribe on his own because of an error
-				SCMPMessage reply = new SCMPMessage();
+				SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 				reply.setIsReply(true);
 				reply.setServiceName(serviceName);
 				reply.setMessageType(getKey());
@@ -126,7 +126,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				responderCallback.responseCallback(request, response);
 				// delete unreferenced nodes in queue
 				publishMessageQueue.removeNonreferencedNodes();
-				this.abortCascSubscriptions(cascSubscription);
+				this.abortCascSubscriptions(cascSubscription, reqMessage);
 				return;
 			}
 		} else {
@@ -161,7 +161,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				if (i >= (tries - 1)) {
 					if (cascadedSCMask == null) {
 						// unsubscribe by cascSC on behalf of his last client, abort subscriptions in relation if there are left
-						this.abortCascSubscriptions(cascSubscription);
+						this.abortCascSubscriptions(cascSubscription, reqMessage);
 					}
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
@@ -177,24 +177,26 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 
 		if (cascadedSCMask == null) {
 			// unsubscribe made by cascaded SC on behalf of his last client, abort subscriptions in relation if there are left
-			this.abortCascSubscriptions(cascSubscription);
+			this.abortCascSubscriptions(cascSubscription, reqMessage);
 		}
 	}
 
 	/**
-	 * Abort casc subscriptions.
+	 * Abort cascaded subscriptions.
 	 * 
 	 * @param cascSubscription
-	 *            the casc subscription
+	 *            the cascaded subscription
+	 * @param reqMessage
+	 *            the request message
 	 */
-	private void abortCascSubscriptions(Subscription cascSubscription) {
+	private void abortCascSubscriptions(Subscription cascSubscription, SCMPMessage reqMessage) {
 		if (cascSubscription.isCascaded() == true) {
 			// XAB procedure for casc subscriptions
 			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
 
 			int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
-			// set up abort message
-			SCMPMessage abortMessage = new SCMPMessage();
+			// set up abort message - SCMP Version request
+			SCMPMessage abortMessage = new SCMPMessage(reqMessage.getSCMPVersion());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
 					SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));

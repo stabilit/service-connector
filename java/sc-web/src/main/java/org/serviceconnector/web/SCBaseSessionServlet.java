@@ -108,8 +108,8 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		// call servlet service implementation
 		SCMessage scReply = ((ISCSessionServerCallback) this).createSession(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 
@@ -164,8 +164,8 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		// call servlet service implementation
 		((ISCSessionServerCallback) this).deleteSession(scMessage, operationTimeoutMillis);
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());
@@ -194,8 +194,8 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		scMessage.setServiceName(reqMessage.getServiceName());
 		// call servlet service implementation
 		((ISCSessionServerCallback) this).abortSession(scMessage, operationTimeoutMillis);
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());
@@ -225,8 +225,8 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		// call servlet service implementation
 		SCMessage scReply = ((ISCSessionServerCallback) this).execute(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());

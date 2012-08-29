@@ -75,9 +75,10 @@ public class PublishCommand extends CommandAdapter {
 		SCMPMessage reply = null;
 		if (message.isPart()) {
 			// incoming message is of type part - outgoing must be part too, poll request
-			reply = new SCMPPart(true);
+			reply = new SCMPPart(message.getSCMPVersion(), true);
 		} else {
-			reply = new SCMPMessage();
+			// SCMP Version request
+			reply = new SCMPMessage(message.getSCMPVersion());
 		}
 		reply.setMessageType(this.getKey());
 		reply.setIsReply(true);

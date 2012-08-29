@@ -66,8 +66,8 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		String sessionId = reqMessage.getSessionId();
 
 		if (srvService == null) {
-			// service not available anymore set up reply
-			SCMPMessage reply = new SCMPMessage();
+			// service not available anymore set up reply - SCMP Version request
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setServiceName(serviceName);
 			reply.setSessionId(reqMessage.getSessionId());
 			reply.setMessageType(this.getKey());
@@ -92,8 +92,8 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		// inform callback with scMessagesF
 		((SrvSessionService) srvService).getCallback().abortSession(scMessage, oti);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());

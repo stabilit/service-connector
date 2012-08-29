@@ -36,6 +36,7 @@ import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.IWebRequest;
 
@@ -221,7 +222,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			} else {
 				SCMPMessage cachedMessage = (SCMPMessage) cacheModule.get(key);
 				if (cachedMessage == null && simulation > 0) {
-					cachedMessage = new SCMPMessage();
+					cachedMessage = new SCMPMessage(SCMPVersion.CURRENT);
 					cachedMessage.setBody("");
 				}
 				if (cachedMessage != null) {

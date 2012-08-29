@@ -27,6 +27,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.InvalidMaskLengthException;
 
 /**
@@ -81,15 +82,16 @@ public class CommandCascCallback implements ISCMPMessageCallback {
 		String sid = reqMessage.getSessionId();
 		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		SCMPMessage fault = null;
+		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + sid);
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
-			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing " + this.msgType + " failed sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing " + this.msgType + " failed sid=" + sid);
 		}
 		fault.setSessionId(this.request.getMessage().getSessionId());
 		String serviceName = reqMessage.getServiceName();

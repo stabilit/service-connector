@@ -40,6 +40,7 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
@@ -217,7 +218,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	@Test
 	public void t50_GetConnectionSendAttachFreeConnection10000Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-		SCMPMessage message = new SCMPMessage();
+		SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
@@ -241,7 +242,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	@Test
 	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection10000Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-		SCMPMessage message = new SCMPMessage();
+		SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);

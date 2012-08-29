@@ -49,7 +49,7 @@ public class AttachCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) {
 		// set up response
-		SCMPMessage scmpReply = new SCMPMessage();
+		SCMPMessage scmpReply = new SCMPMessage(request.getMessage().getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

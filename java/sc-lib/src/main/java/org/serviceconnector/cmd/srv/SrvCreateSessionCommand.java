@@ -72,8 +72,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().createSession(scMessage, oti);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 
 		if (scReply != null) {
 			reply.setBody(scReply.getData());

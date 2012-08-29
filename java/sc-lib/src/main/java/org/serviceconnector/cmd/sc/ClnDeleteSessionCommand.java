@@ -102,8 +102,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			break;
 		case FILE_SERVER:
 			((FileServer) abstractServer).removeSession(session);
-			// reply to client
-			SCMPMessage reply = new SCMPMessage();
+			// reply to client - SCMP Version request
+			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			response.setSCMP(reply);

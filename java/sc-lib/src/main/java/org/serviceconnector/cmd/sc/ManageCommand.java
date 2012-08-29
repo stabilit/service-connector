@@ -64,8 +64,8 @@ public class ManageCommand extends CommandAdapter {
 		urlRequestString.parseRequestURLString(bodyString);
 		String callKey = urlRequestString.getCallKey();
 
-		// set up response
-		SCMPMessage scmpReply = new SCMPMessage();
+		// set up response - SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(reqMsg.getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -105,7 +105,8 @@ public class ManageCommand extends CommandAdapter {
 			boolean success = this.modifyStateOfServices(true, serviceName);
 			if (success == false) {
 				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+				// SCMP Version request
+				scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
@@ -117,14 +118,16 @@ public class ManageCommand extends CommandAdapter {
 			boolean success = this.modifyStateOfServices(false, serviceName);
 			if (success == false) {
 				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+				// SCMP Version request
+				scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
 			return;
 		}
 		LOGGER.error("wrong manage command body=" + bodyString); // body has bad syntax
-		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
+		// SCMP Version request
+		scmpReply = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply
 		responderCallback.responseCallback(request, response);

@@ -76,8 +76,8 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(reqMessage
 				.getSessionId());
 		msgSequenceNr.incrementAndGetMsgSequenceNr();
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());

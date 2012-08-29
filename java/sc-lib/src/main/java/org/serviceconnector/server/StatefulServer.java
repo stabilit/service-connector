@@ -45,6 +45,7 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.ServiceType;
@@ -462,8 +463,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.removeSession(session);
 
 		int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
-		// set up abort message
-		SCMPMessage abortMessage = new SCMPMessage();
+		// set up abort message - SCMP Version current
+		SCMPMessage abortMessage = new SCMPMessage(SCMPVersion.CURRENT);
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 		abortMessage.setServiceName(this.getServiceName());
@@ -598,8 +599,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 			AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
 			AppContext.getSessionRegistry().removeSession(session.getId());
 		}
-		// set up server abort session message
-		SCMPMessage abortMessage = new SCMPMessage();
+		// set up server abort session message - SCMP Version current
+		SCMPMessage abortMessage = new SCMPMessage(SCMPVersion.CURRENT);
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());

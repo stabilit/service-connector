@@ -56,7 +56,7 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -78,7 +78,7 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive(SCMPVersion.CURRENT));
 
 		SCMPMessage message = null;
 		try {
@@ -96,8 +96,8 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 	@Test
 	public void t10_EncodeKRQTest() {
 		this.headKey = SCMPHeaderKey.KRQ;
-		this.encodeScmp = new SCMPKeepAlive();
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
+		this.encodeScmp = new SCMPKeepAlive(SCMPVersion.CURRENT);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive(SCMPVersion.CURRENT));
 
 		String expectedString = this.headKey.name() + " 0000000 00000 " + SCMPVersion.CURRENT + "\n";
 
@@ -117,8 +117,8 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 	@Test
 	public void t11_EncodeKRSTest() {
 		this.headKey = SCMPHeaderKey.KRS;
-		this.encodeScmp = new SCMPKeepAlive();
-		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
+		this.encodeScmp = new SCMPKeepAlive(SCMPVersion.CURRENT);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive(SCMPVersion.CURRENT));
 
 		String expectedString = this.headKey.name() + " 0000000 00000 " + SCMPVersion.CURRENT + "\n";
 

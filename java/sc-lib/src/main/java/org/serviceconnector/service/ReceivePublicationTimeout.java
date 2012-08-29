@@ -96,9 +96,10 @@ public class ReceivePublicationTimeout implements ITimeout {
 		LOGGER.trace("timeout receivePublicationTimeout");
 		String subscriptionId = null;
 		Subscription subscription = null;
+		// extracting subscriptionId from request message
+		SCMPMessage reqMsg = request.getMessage();
+
 		try {
-			// extracting subscriptionId from request message
-			SCMPMessage reqMsg = request.getMessage();
 			// set up subscription timeout
 			subscriptionId = reqMsg.getSessionId();
 
@@ -107,7 +108,8 @@ public class ReceivePublicationTimeout implements ITimeout {
 			if (subscription == null) {
 				LOGGER.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
+				SCMPMessageFault fault = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SUBSCRIPTION_NOT_FOUND,
+						subscriptionId);
 				fault.setMessageType(reqMsg.getMessageType());
 				response.setSCMP(fault);
 			} else {
@@ -128,9 +130,9 @@ public class ReceivePublicationTimeout implements ITimeout {
 					SCMPMessage reply = null;
 					if (message.isPart()) {
 						// message from queue is of type part - outgoing must be part too, no poll request
-						reply = new SCMPPart(false, message.getHeader());
+						reply = new SCMPPart(message.getSCMPVersion(), false, message.getHeader());
 					} else {
-						reply = new SCMPMessage(message.getHeader());
+						reply = new SCMPMessage(message.getSCMPVersion(), message.getHeader());
 					}
 					reply.setSessionId(subscriptionId);
 					reply.setMessageType(reqMsg.getMessageType());
@@ -141,7 +143,7 @@ public class ReceivePublicationTimeout implements ITimeout {
 			}
 		} catch (Exception ex) {
 			LOGGER.warn("timeout expired procedure failed, " + ex.getMessage());
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
+			SCMPMessageFault scmpFault = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SERVER_ERROR, ex.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.RECEIVE_PUBLICATION);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);

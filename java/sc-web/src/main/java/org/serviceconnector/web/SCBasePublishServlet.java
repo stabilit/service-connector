@@ -112,8 +112,8 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		// call servlet service implementation
 		SCMessage scReply = ((ISCPublishServerCallback) this).subscribe(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 		reply.setServiceName(serviceName);
@@ -167,8 +167,8 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		// call servlet service implementation
 		((ISCPublishServerCallback) this).unsubscribe(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 		reply.setServiceName(serviceName);
@@ -200,8 +200,8 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		// call servlet service implementation
 		((ISCPublishServerCallback) this).abortSubscription(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(reqMessage.getMessageType());
@@ -233,8 +233,8 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		// call servlet service implementation
 		SCMessage scReply = ((ISCPublishServerCallback) this).changeSubscription(scMessage, operationTimeoutMillis);
 
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
+		// set up reply - SCMP Version request
+		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
 		long msgSequenceNr = this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr);
 		reply.setServiceName(serviceName);

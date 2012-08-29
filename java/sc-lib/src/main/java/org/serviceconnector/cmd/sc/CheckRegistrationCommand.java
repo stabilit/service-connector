@@ -71,8 +71,8 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		LOGGER.debug("refresh server timeout in CRG server=" + server.getServerKey() + " timeout(ms)=" + server.getServerTimeoutMillis());
 		serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
 
-		// send back positive response
-		SCMPMessage scmpReply = new SCMPMessage();
+		// send back positive response - SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(message.getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);

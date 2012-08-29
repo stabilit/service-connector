@@ -47,6 +47,8 @@ public class SCMPOffsetPart extends SCMPPart {
 	 *            the large message length
 	 */
 	public SCMPOffsetPart(SCMPMessage message, int offset, int largeMessageLength) {
+		// SCMP Version - version in request
+		super(message.getSCMPVersion());
 		this.offset = offset;
 		this.callLength = largeMessageLength;
 		// evaluates the size of this part

@@ -24,7 +24,6 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class DetachCommand. Responsible for validation and execution of detach command. Allows detaching (virtual
  * detach) from SC.
@@ -36,7 +35,7 @@ public class DetachCommand extends CommandAdapter {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(DetachCommand.class);
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -46,8 +45,8 @@ public class DetachCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
-		// set up response
-		SCMPMessage scmpReply = new SCMPMessage();
+		// set up response - SCMP Version request
+		SCMPMessage scmpReply = new SCMPMessage(request.getMessage().getSCMPVersion());
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		response.setSCMP(scmpReply);

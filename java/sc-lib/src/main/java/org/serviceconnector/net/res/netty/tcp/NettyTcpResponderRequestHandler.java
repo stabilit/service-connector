@@ -32,6 +32,7 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
@@ -77,7 +78,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			response.write();
 			return;
 		}
-		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.SC_ERROR, th.getMessage());
 		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();

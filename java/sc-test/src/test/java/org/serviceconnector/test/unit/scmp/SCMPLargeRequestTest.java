@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPOffsetPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPLargeRequestTest.
@@ -45,7 +46,7 @@ public class SCMPLargeRequestTest {
 			sb.append(i);
 		}
 
-		SCMPMessage largeScmp = new SCMPMessage();
+		SCMPMessage largeScmp = new SCMPMessage(SCMPVersion.CURRENT);
 		largeScmp.setBody(sb.toString());
 
 		SCMPCompositeSender largeRequest = new SCMPCompositeSender(largeScmp);

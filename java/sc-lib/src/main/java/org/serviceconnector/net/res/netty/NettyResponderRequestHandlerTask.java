@@ -36,6 +36,7 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY
@@ -154,7 +155,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 			}
 		} catch (Exception e2) {
 			LOGGER.error("run ", e2);
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e2.getMessage());
+			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.SERVER_ERROR, e2.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
@@ -204,8 +205,8 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
 			largeRequest.incomplete();
-			// set up poll response
-			SCMPMessage scmpReply = new SCMPPart(true);
+			// set up poll response - SCMP Version request
+			SCMPMessage scmpReply = new SCMPPart(scmpReq.getSCMPVersion(), true);
 			scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.incrementAndGetMsgSequenceNr());
 			scmpReply.setIsReply(true);
 			scmpReply.setMessageType(scmpReq.getMessageType());
@@ -253,12 +254,13 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 	 * @param response
 	 *            the response
 	 * @param scmpReq
-	 *            the scmp req
+	 *            the SCMP request
 	 * @throws Exception
 	 *             the exception
 	 */
 	protected void sendBadRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType=" + scmpReq.getMessageType());
+		SCMPMessageFault scmpFault = new SCMPMessageFault(scmpReq.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType="
+				+ scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);

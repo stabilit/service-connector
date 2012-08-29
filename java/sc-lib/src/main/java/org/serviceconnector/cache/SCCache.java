@@ -64,7 +64,7 @@ import org.serviceconnector.util.XMLDumpWriter;
  * |---baseDataCid---|
  * |--------dataCid--------| <br>
  * <br>
- * The cache identifier with appendix zero and part number zero (e.g. 700/0/0)is called initialDataCid.<br>
+ * The cache identifier with appendix zero and part number zero (e.g. 700/0/0) is called initialDataCid.<br>
  * <br>
  * There are several circumstances they can stop the loading process and clear the message:
  * - Server returns a fault message.

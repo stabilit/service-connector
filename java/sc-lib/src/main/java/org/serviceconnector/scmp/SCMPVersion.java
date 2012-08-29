@@ -19,13 +19,15 @@ package org.serviceconnector.scmp;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.util.IReversibleEnum;
+import org.serviceconnector.util.ReverseEnumMap;
 
 /**
  * Provides actual SCMP version and method to check compatibility.
- * The SCMP versioning schema follows this philosophy <br />
+ * The SCMP version schema follows this philosophy <br />
  * 
  * <pre>
- * 	9.9 (Ex. 2.4)<br />
+ * 	9.9 (E.g. 2.4)<br />
  *  | | <br />
  *  | +-- version number<br />
  *  +-- release number<br />
@@ -33,7 +35,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
  * <p>
  * Release number designates the major release (design) of the protocol. It starts at 1 and is incremented by 1. New protocol is by
  * definition not compatible with the old one. E.g. if the release number is not the same an error occurs.
- *<p>
+ * <p>
  * Version number designates the minor improvements of the protocol. It starts at 0 and is incremented by 1. New versions may
  * contain additional features and are compatible. E.g. 2.(x+1) is compatible with V2.(x) but not the other way round.<br />
  * <br />
@@ -41,12 +43,20 @@ import org.serviceconnector.cmd.SCMPValidatorException;
  * 
  * @author JTraber
  */
-public enum SCMPVersion {
+public enum SCMPVersion implements IReversibleEnum<String, SCMPVersion> {
+	/**
+	 * PAY ATTENTION: Its important to enumerate any potential SCMP Version used by requesters. E.g. if CURRENT is 1.4 and
+	 * requesters may connect using 1.2, VERSION_1_2('1','2') must be defined here to.
+	 **/
 
 	/** 1.3, the current version. */
-	CURRENT('1', '3'),
+	CURRENT('1', '2'),
+	/** 1.2, old version. */
+	LOWEST('1', '2'),
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
-	TEST('3', '2');
+	TEST('3', '2'),
+	/** The UNDEFINED SCMP Version. */
+	UNDEFINED(' ', ' ');
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
@@ -56,6 +66,10 @@ public enum SCMPVersion {
 	private byte release;
 	/** The version. */
 	private byte version;
+
+	/** The REVERSE_MAP, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPVersion> REVERSE_MAP = new ReverseEnumMap<String, SCMPVersion>(
+			SCMPVersion.class);
 
 	/**
 	 * Instantiates a new SCMP version.
@@ -76,10 +90,9 @@ public enum SCMPVersion {
 	 * @param buffer
 	 *            the buffer containing the version number
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
-
 		if (this.release != buffer[0]) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_RELEASE_NR, new String(buffer));
 		}
@@ -90,6 +103,16 @@ public enum SCMPVersion {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_VERSION_NR, new String(buffer));
 		}
 		return;
+	}
+
+	// TODO jot ... describe everything in top
+	public static SCMPVersion getSCMPVersionByByteArray(byte[] versionBuffer) {
+		SCMPVersion scmpVersion = REVERSE_MAP.get(new String(versionBuffer));
+		if (scmpVersion == null) {
+			// SCMP version doesn't match to a valid SCMPVersion
+			return SCMPVersion.UNDEFINED;
+		}
+		return scmpVersion;
 	}
 
 	/**
@@ -108,6 +131,27 @@ public enum SCMPVersion {
 	 */
 	public byte getReleaseNumber() {
 		return this.release;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getValue() {
+		StringBuilder sb = new StringBuilder();
+		sb.append((char) this.release);
+		sb.append((char) Constants.DOT_HEX);
+		sb.append((char) this.version);
+		return sb.toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPVersion reverse(String buffer) {
+		SCMPVersion scmpVersion = REVERSE_MAP.get(buffer);
+		if (scmpVersion == null) {
+			// SCMP version doesn't match to a valid SCMPVersion
+			return SCMPVersion.UNDEFINED;
+		}
+		return scmpVersion;
 	}
 
 	/** {@inheritDoc} */

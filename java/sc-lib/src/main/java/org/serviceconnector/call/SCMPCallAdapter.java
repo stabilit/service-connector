@@ -20,6 +20,7 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls.
@@ -47,7 +48,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 */
 	public SCMPCallAdapter(IRequester requester) {
 		this.requester = requester;
-		this.requestMessage = new SCMPMessage();
+		this.requestMessage = new SCMPMessage(SCMPVersion.CURRENT);
 	}
 
 	/**

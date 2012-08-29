@@ -19,7 +19,9 @@ package org.serviceconnector.call;
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPPublishCall. Call publishes a message to clients.
@@ -42,6 +44,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 */
 	public SCMPPublishCall(IRequester req, String serviceName) {
 		super(req, serviceName);
+		this.requestMessage = new SCMPMessage(SCMPVersion.LOWEST);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/** {@inheritDoc} **/

@@ -28,6 +28,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.Subscription;
 
 /**
@@ -83,15 +84,16 @@ public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallbac
 		LOGGER.warn("receive exception sid=" + sid + " " + ex.toString());
 		String serviceName = reqMessage.getServiceName();
 		SCMPMessage fault = null;
+		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc abort subscription sid="
-					+ sid);
+			// operation timeout handling - SCMP Version request
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
+					"Operation timeout expired on SC csc abort subscription sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc abort subscription sid="
-					+ sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION,
+					"broken connection on SC csc abort subscription sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc abort subscription failed sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing csc abort subscription failed sid=" + sid);
 		}
 		// forward server reply to client
 		fault.setIsReply(true);

@@ -118,7 +118,7 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 			SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 		}
 		// set up abort message
-		SCMPMessage abortMessage = new SCMPMessage();
+		SCMPMessage abortMessage = new SCMPMessage(reqMessage.getSCMPVersion());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
 				SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
@@ -134,24 +134,26 @@ public class CscAbortSubscriptionCommand extends CommandAdapter {
 		publishMessageQueue.removeNonreferencedNodes();
 		if (cascadedSCMask == null) {
 			// unsubscribe made by cascaded SC on behalf of his last client, abort subscriptions in relation if there are left
-			this.abortCascSubscriptions(cascSubscription);
+			this.abortCascSubscriptions(cascSubscription, reqMessage);
 		}
 	}
 
 	/**
-	 * Abort casc subscriptions.
+	 * Abort cascaded subscriptions.
 	 * 
 	 * @param cascSubscription
-	 *            the casc subscription
+	 *            the cascaded subscription
+	 * @param reqMessage
+	 *            the request message
 	 */
-	private void abortCascSubscriptions(Subscription cascSubscription) {
+	private void abortCascSubscriptions(Subscription cascSubscription, SCMPMessage reqMessage) {
 		if (cascSubscription.isCascaded() == true) {
-			// XAB procedure for casc subscriptions
+			// XAB procedure for cascaded subscriptions
 			Set<String> subscriptionIds = cascSubscription.getCscSubscriptionIds().keySet();
 
 			int oti = AppContext.getBasicConfiguration().getSrvAbortOTIMillis();
 			// set up abort message
-			SCMPMessage abortMessage = new SCMPMessage();
+			SCMPMessage abortMessage = new SCMPMessage(reqMessage.getSCMPVersion());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
 					SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));

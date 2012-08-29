@@ -61,6 +61,7 @@ import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.Subscription;
@@ -484,7 +485,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 			return;
 		}
 		try {
-			SCMPMessage message = new SCMPMessage();
+			// SCMP Version current
+			SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 			message.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
 			message.setServiceName(cascClient.getServiceName());
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
@@ -513,9 +515,11 @@ public class CascadedSC extends Server implements IStatefulServer {
 
 		SCMPMessage req = null;
 		if (largeResponsePolling == true) {
-			req = new SCMPPart(true);
+			// SCMP Version current
+			req = new SCMPPart(SCMPVersion.CURRENT, true);
 		} else {
-			req = new SCMPMessage();
+			// SCMP Version current
+			req = new SCMPMessage(SCMPVersion.CURRENT);
 		}
 		long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		req.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
@@ -678,7 +682,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 			IRequest request = new NettyHttpRequest(null, null, null);
-			SCMPMessage abortMessage = new SCMPMessage();
+			// SCMP Version current
+			SCMPMessage abortMessage = new SCMPMessage(SCMPVersion.CURRENT);
 			abortMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, casService.getName());
 			// cascaded id will be set in following (cascadedSCAbortSubscription) method

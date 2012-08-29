@@ -24,6 +24,7 @@ import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
@@ -51,14 +52,14 @@ public class CommandCallback extends SynchronousCallback {
 		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
+			// operation timeout handling - SCMP Version current
+			fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection");
+			fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.CONNECTION_EXCEPTION, "broken connection");
 		} else if (ex instanceof ConnectionPoolBusyException) {
-			fault = new SCMPMessageFault(ex, SCMPError.NO_FREE_CONNECTION);
+			fault = new SCMPMessageFault(SCMPVersion.CURRENT, ex, SCMPError.NO_FREE_CONNECTION);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing command failed");
+			fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.SC_ERROR, "executing command failed");
 		}
 		super.receive(fault);
 	}

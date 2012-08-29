@@ -361,6 +361,11 @@ public class TestSessionServer extends TestStatefulServer {
 			} else if (dataString.startsWith("staticLargeData")) {
 				LOGGER.info("caching static large data!");
 				request.setData(TestUtil.getLargeString());
+			} else if (dataString.startsWith("staticCacheFor2Sec")) {
+				LOGGER.info("caching static large data for 2 sec!");
+				request.setData(TestUtil.getLargeString());
+				time.add(Calendar.SECOND, 2);
+				request.setCacheExpirationDateTime(time.getTime());
 			} else {
 				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache

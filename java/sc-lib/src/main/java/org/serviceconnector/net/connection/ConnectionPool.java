@@ -27,6 +27,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.XMLDumpWriter;
 
@@ -408,8 +409,8 @@ public class ConnectionPool {
 			}
 			this.usedConnections.add(connection);
 		}
-		// send a keep alive message
-		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
+		// send a keep alive message - SCMP version current
+		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive(SCMPVersion.CURRENT);
 		connection.incrementNrOfIdles();
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback(true);
