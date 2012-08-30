@@ -50,7 +50,7 @@ public enum SCMPVersion implements IReversibleEnum<String, SCMPVersion> {
 	 **/
 
 	/** 1.3, the current version. */
-	CURRENT('1', '2'),
+	CURRENT('1', '3'),
 	/** 1.2, old version. */
 	LOWEST('1', '2'),
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
