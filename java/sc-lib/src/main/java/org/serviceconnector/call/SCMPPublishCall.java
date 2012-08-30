@@ -44,6 +44,7 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 */
 	public SCMPPublishCall(IRequester req, String serviceName) {
 		super(req, serviceName);
+		// SCMP Version for a publish has to match lowest version of clients in field!
 		this.requestMessage = new SCMPMessage(SCMPVersion.LOWEST);
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
