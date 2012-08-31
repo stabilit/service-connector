@@ -17,3 +17,4 @@ SC Feature List
 - OTI monitors the arrival of a message part, but not the completion of the entire large message. On Client the OTI monitors the whole message.
 - Load balancing for servers running on different nodes
 - Failover for services (primary / secondary service)
+- Java Script Library to connect to the SC
