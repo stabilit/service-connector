@@ -36,7 +36,7 @@ public class SCMPMessage implements Serializable {
 	private static final long serialVersionUID = 4620549763039638861L;
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SCMPMessage.class);
-	/** The SCMP_VERSION. */
+	/** The SCMP_VERSION of current message. */
 	private final SCMPVersion SCMP_VERSION;;
 	/** The actual SC_VERSION. */
 	public static final SCVersion SC_VERSION = SCVersion.CURRENT;
@@ -55,6 +55,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Instantiates a new SCMP.
+	 * 
+	 * @param scmpVersion
+	 *            the SCMP version of current message
 	 */
 	public SCMPMessage(SCMPVersion scmpVersion) {
 		this.header = new HashMap<String, String>();
@@ -66,17 +69,21 @@ public class SCMPMessage implements Serializable {
 	/**
 	 * Instantiates a new SCMP message with given message key.
 	 * 
+	 * @param scmpVersion
+	 *            the SCMP version of current message
 	 * @param baseHeader
 	 *            the base header
-	 * @param msgHeaderKey
-	 *            the message header key
 	 */
 	public SCMPMessage(SCMPVersion scmpVersion, Map<String, String> baseHeader) {
 		this(scmpVersion);
 		this.header = new HashMap<String, String>(baseHeader);
 	}
 
-	//TODO jot SCMPVersion scmpVersion,
+	/**
+	 * Gets the SCMP version.
+	 * 
+	 * @return the SCMP version
+	 */
 	public SCMPVersion getSCMPVersion() {
 		return this.SCMP_VERSION;
 	}

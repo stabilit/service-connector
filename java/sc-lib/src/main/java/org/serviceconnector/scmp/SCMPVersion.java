@@ -80,7 +80,7 @@ public enum SCMPVersion implements IReversibleEnum<String, SCMPVersion> {
 	/** The version. */
 	private byte version;
 
-	/** The REVERSE_MAP, to get access to the enum constants by string value. */
+	/** The REVERSE_MAP, to get access to the enumeration constants by string value. */
 	private static final ReverseEnumMap<String, SCMPVersion> REVERSE_MAP = new ReverseEnumMap<String, SCMPVersion>(
 			SCMPVersion.class);
 
@@ -103,7 +103,7 @@ public enum SCMPVersion implements IReversibleEnum<String, SCMPVersion> {
 	 * @param buffer
 	 *            the buffer containing the version number
 	 * @throws SCMPValidatorException
-	 *             the SCMP validator exception
+	 *             the SCMP validation exception
 	 */
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 		if (this.release != buffer[0]) {
@@ -118,7 +118,13 @@ public enum SCMPVersion implements IReversibleEnum<String, SCMPVersion> {
 		return;
 	}
 
-	// TODO jot ... describe everything in top
+	/**
+	 * Gets the sCMP version by byte array.
+	 * 
+	 * @param versionBuffer
+	 *            the version buffer
+	 * @return the sCMP version by byte array
+	 */
 	public static SCMPVersion getSCMPVersionByByteArray(byte[] versionBuffer) {
 		SCMPVersion scmpVersion = REVERSE_MAP.get(new String(versionBuffer));
 		if (scmpVersion == null) {
