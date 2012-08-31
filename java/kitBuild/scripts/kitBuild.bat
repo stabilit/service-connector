@@ -34,5 +34,5 @@ cd ..\kit-tmp\
 "C:\Program Files\WinZip\wzzip" -ex -rP ..\..\..\kit\sc-src.zip @..\scripts\kitIncludeSrcList.txt -x@..\scripts\kitExcludeSrcList.txt
 cd ..\scripts\
 
-java -cp ..\bin;..\..\sc-test\target\sc-lib-all.jar org.serviceconnector.util.KitUtility copyAndRenameKitToVersion ..\..\..\kit\ ..\..\..\
-java -cp ..\bin;..\..\sc-test\target\sc-lib-all.jar org.serviceconnector.util.KitUtility generateHashFile ..\..\..\
+java -cp ..\bin;..\..\sc-lib\target\sc-lib-all.jar org.serviceconnector.util.KitUtility copyAndRenameKitToVersion ..\..\..\kit\ ..\..\..\
+java -cp ..\bin;..\..\sc-lib\target\sc-lib-all.jar org.serviceconnector.util.KitUtility generateHashFile ..\..\..\
