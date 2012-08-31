@@ -22,7 +22,8 @@ md ..\kit-tmp\sources
 
 call mvn-all.bat
 
-copy ..\..\..\documents\SC_0_SCMP_E.pdf      	..\kit-tmp\doc\ /y
+copy ..\..\..\documents\SC_0_SCMP_E-v*.pdf     	..\kit-tmp\doc\ /y
+copy ..\..\..\documents\SC_CC_E-V*.pdf      	..\kit-tmp\doc\ /y
 copy ..\..\..\documents\SC_4_Operation_E.pdf 	..\kit-tmp\doc\ /y
 copy ..\..\..\documents\Open_Issues.xls			..\kit-tmp\doc\ /y
 copy ..\examples\*.*							..\kit-tmp\examples\ /y
