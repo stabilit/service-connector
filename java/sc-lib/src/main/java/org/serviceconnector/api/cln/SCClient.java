@@ -346,9 +346,9 @@ public class SCClient {
 	 * @param guardianCallback
 	 *            the guardian callback
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 */
 	public synchronized void startCacheGuardian(String guardianName, SCSubscribeMessage subscribeMessage,
 			SCGuardianMessageCallback guardianCallback) throws SCServiceException, SCMPValidatorException {
@@ -367,9 +367,9 @@ public class SCClient {
 	 * @param guardianCallback
 	 *            the guardian callback
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 */
 	public synchronized void startCacheGuardian(int operationTimeoutSeconds, String guardianName,
 			SCSubscribeMessage subscribeMessage, SCGuardianMessageCallback guardianCallback) throws SCServiceException,
@@ -397,9 +397,9 @@ public class SCClient {
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 */
 	public synchronized void changeCacheGuardian(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
 			SCServiceException {
@@ -414,9 +414,9 @@ public class SCClient {
 	 * @param scSubscribeMessage
 	 *            the sc subscribe message
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 */
 	public synchronized void changeGuardian(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws SCMPValidatorException, SCServiceException {
@@ -427,9 +427,9 @@ public class SCClient {
 	 * Stop cache guardian.
 	 * 
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 */
 	public synchronized void stopCacheGuardian() throws SCServiceException, SCMPValidatorException {
 		this.stopCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -441,9 +441,9 @@ public class SCClient {
 	 * @param operationTimeoutSeconds
 	 *            the operation timeout seconds
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validation exception
 	 */
 	public synchronized void stopCacheGuardian(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		if (this.attached == false) {
