@@ -75,6 +75,12 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
 					int bodyLength = scmpMsg.getBodyLength();
+					if (bodyLength == 0) {
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, headerSize, headerSize);
+						bw.write(sb.toString());
+						bw.flush();
+						return;
+					}
 					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
 						// message compression required
 						ba = this.compressBody(ba, 0, bodyLength);
@@ -89,6 +95,12 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				if (String.class == body.getClass()) {
 					String t = (String) body;
 					int bodyLength = t.length();
+					if (bodyLength == 0) {
+						this.writeHeadLine(scmpMsg.getSCMPVersion(), bw, headerKey, headerSize, headerSize);
+						bw.write(sb.toString());
+						bw.flush();
+						return;
+					}
 					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
 						// message compression required
 						byte[] ba = t.getBytes();
@@ -105,6 +117,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						bw.flush();
 					}
 					return;
+
 				}
 				throw new EncodingDecodingException("unsupported body type");
 			} else {

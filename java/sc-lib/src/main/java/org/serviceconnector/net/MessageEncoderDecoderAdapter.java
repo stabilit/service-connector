@@ -299,6 +299,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	 */
 	protected byte[] compressBody(byte[] bodyBuffer, int bodyOffset, int bodyLength) throws IOException {
 		byte[] output = null;
+		if (bodyLength == 0) {
+			// nothing to compress
+			return output;
+		}
 		// message compression required
 		output = new byte[bodyLength];
 		Deflater compresser = new Deflater();
