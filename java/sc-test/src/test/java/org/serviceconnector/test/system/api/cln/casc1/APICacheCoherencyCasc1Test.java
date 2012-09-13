@@ -433,13 +433,36 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 	/**
 	 * Description
-	 * 1: start cache guardian - publish 3 Appendix
+	 * 1: start cache guardian - publish 3 Appendix, no cacheId set!
 	 * 2: verify callback retrieval - 3 appendix within 10sec
 	 * 3: verify data is NOT in top level cache
 	 * Expectation: passes
 	 */
 	@Test
 	public void t11_cc_Publish3LargeAppendixNothingInCache() throws Exception {
+		// 1: start cache guardian - publish 3 Appendix, no cacheId set!
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 2: verify callback retrieval - 3 appendix within 10sec
+		cacheGuardianCbk.waitForAppendMessage(3, 10);
+
+		// 3: verify data is NOT in top level cache
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "notfound", SC_CACHE_ENTRY_STATE.UNDEFINDED, "", "", "", "");
+	}
+
+	/**
+	 * Description
+	 * 1: start cache guardian - publish 3 Appendix
+	 * 2: verify callback retrieval - 3 appendix within 10sec
+	 * 3: verify data is NOT in top level cache
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_cc_Publish3LargeAppendixNothingInCache() throws Exception {
 		// 1: start cache guardian - publish 3 Appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
@@ -464,14 +487,14 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t12_cc_Publish50Appendix() throws Exception {
+	public void t13_cc_Publish50Appendix() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
 		request.setData("cache10MBStringFor1Hour_managedData");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.execute(request);
-		
+
 		// 2: start cache guardian - publish 50 large appendix
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
@@ -484,7 +507,14 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 		// 3: verify data is in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
-		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "50", "700/0/0=51&700/1/0=1&700/2/0=1&700/3/0=1&700/4/0=1&700/5/0=1&700/6/0=1&700/7/0=1&700/8/0=1&700/9/0=1&700/10/0=1&700/11/0=1&700/12/0=1&700/13/0=1&700/14/0=1&700/15/0=1&700/16/0=1&700/17/0=1&700/18/0=1&700/19/0=1&700/20/0=1&700/21/0=1&700/22/0=1&700/23/0=1&700/24/0=1&700/25/0=1&700/26/0=1&700/27/0=1&700/28/0=1&700/29/0=1&700/30/0=1&700/31/0=1&700/32/0=1&700/33/0=1&700/34/0=1&700/35/0=1&700/36/0=1&700/37/0=1&700/38/0=1&700/39/0=1&700/40/0=1&700/41/0=1&700/42/0=1&700/43/0=1&700/44/0=1&700/45/0=1&700/46/0=1&700/47/0=1&700/48/0=1&700/49/0=1&700/50/0=1&", TestConstants.cacheGuardian1);
+		this.checkCacheInspectString(
+				inspectResponse,
+				"success",
+				SC_CACHE_ENTRY_STATE.LOADED,
+				"700",
+				"50",
+				"700/0/0=51&700/1/0=1&700/2/0=1&700/3/0=1&700/4/0=1&700/5/0=1&700/6/0=1&700/7/0=1&700/8/0=1&700/9/0=1&700/10/0=1&700/11/0=1&700/12/0=1&700/13/0=1&700/14/0=1&700/15/0=1&700/16/0=1&700/17/0=1&700/18/0=1&700/19/0=1&700/20/0=1&700/21/0=1&700/22/0=1&700/23/0=1&700/24/0=1&700/25/0=1&700/26/0=1&700/27/0=1&700/28/0=1&700/29/0=1&700/30/0=1&700/31/0=1&700/32/0=1&700/33/0=1&700/34/0=1&700/35/0=1&700/36/0=1&700/37/0=1&700/38/0=1&700/39/0=1&700/40/0=1&700/41/0=1&700/42/0=1&700/43/0=1&700/44/0=1&700/45/0=1&700/46/0=1&700/47/0=1&700/48/0=1&700/49/0=1&700/50/0=1&",
+				TestConstants.cacheGuardian1);
 	}
 
 	/**
@@ -497,7 +527,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t13_cc_smallInitialSmallInitial() throws Exception {
+	public void t14_cc_smallInitialSmallInitial() throws Exception {
 		// 1: load initial data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -535,7 +565,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t14_cc_smallInitialLargeInitial() throws Exception {
+	public void t15_cc_smallInitialLargeInitial() throws Exception {
 		// 1: load initial data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -573,7 +603,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t15_cc_smallInitial10BMInitial() throws Exception {
+	public void t16_cc_smallInitial10BMInitial() throws Exception {
 		// 1: load initial data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -612,7 +642,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t16_cc_10MBInitial3LargeAppendix1LargeInitial() throws Exception {
+	public void t17_cc_10MBInitial3LargeAppendix1LargeInitial() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -654,7 +684,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t17_cc_10MBInitial1SmallInitial3LargeAppendix() throws Exception {
+	public void t18_cc_10MBInitial1SmallInitial3LargeAppendix() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -693,7 +723,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t18_cc_PublishInitialsLoad10MBInitialNotPossible() throws Exception {
+	public void t19_cc_PublishInitialsLoad10MBInitialNotPossible() throws Exception {
 		// 1: start cache guardian - publish Initials (10000 with 1sec delay, cid=700)
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
@@ -723,7 +753,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t19_cc_readManagedData() throws Exception {
+	public void t20_cc_readManagedData() throws Exception {
 		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -761,7 +791,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t20_cc_readManagedData10MBInitial() throws Exception {
+	public void t21_cc_readManagedData10MBInitial() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -799,7 +829,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t21_cc_readManagedData10MBInitialLargeAppendix() throws Exception {
+	public void t22_cc_readManagedData10MBInitialLargeAppendix() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -837,7 +867,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t22_cc_readManagedData10MBInitial10MBAppendix() throws Exception {
+	public void t23_cc_readManagedData10MBInitial10MBAppendix() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
@@ -875,7 +905,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t23_cc_InitialMsgStopCacheGuardian() throws Exception {
+	public void t24_cc_InitialMsgStopCacheGuardian() throws Exception {
 		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
@@ -914,7 +944,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t24_cc_InitialMsg3AppendixStopCacheGuardian() throws Exception {
+	public void t25_cc_InitialMsg3AppendixStopCacheGuardian() throws Exception {
 		// 1: load data to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setData("cacheFor1Hour_managedData");
@@ -954,7 +984,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t25_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
+	public void t26_cc_RetrievingAppendixDuringLoadOfInitialMsg() throws Exception {
 		// 1: start cache guardian - publish Appendix (10000 with 1sec delay, cid=700)
 		SCSubscribeMessage subMsg = new SCSubscribeMessage();
 		subMsg.setMask(TestConstants.mask);
@@ -993,7 +1023,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t26_cc_CacheLoadingExceptionLoadingAppendix() throws Exception {
+	public void t27_cc_CacheLoadingExceptionLoadingAppendix() throws Exception {
 		// 1: load large data (10MB) to cache (cid=700)
 		SCMessage request = new SCMessage();
 		request.setCacheId("700");
