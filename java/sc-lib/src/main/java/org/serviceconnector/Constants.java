@@ -187,7 +187,7 @@ public final class Constants {
 	public static final String CC_CMD_STATE = "state";
 	/** The Constant CC_CMD_SC_VERSION. */
 	public static final String CC_CMD_SC_VERSION = "scVersion";
-	/** The Constant CC_CMD_SC_VERSION. */
+	/** The Constant CC_CMD_SERVICE_CONF. */
 	public static final String CC_CMD_SERVICE_CONF = "serviceConfiguration";
 	/** The Constant CC_CMD_SESSIONS. */
 	public static final String CC_CMD_SESSIONS = "sessions";
