@@ -351,7 +351,7 @@ public class InspectCommand extends CommandAdapter {
 		if (service == null) {
 			throw new NotFoundException("no service found serviceName=" + serviceName);
 		}
-		sb.append("serviceType=" + service.getType());
+		sb.append("serviceType=" + service.getType().getValue());
 		return sb.toString();
 	}
 }
