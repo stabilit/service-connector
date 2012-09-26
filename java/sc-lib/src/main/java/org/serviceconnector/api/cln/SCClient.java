@@ -337,18 +337,23 @@ public class SCClient {
 	}
 
 	/**
-	 * Start cache guardian.
+	 * Start cache guardian. After starting the cache guardian SC client is able to receive appendixes published by the server to
+	 * the cache. Once cache guardian is started a stop cache guardian must be done at the end of communication.
 	 * 
 	 * @param guardianName
 	 *            the guardian name
 	 * @param subscribeMessage
-	 *            the subscribe message
+	 *            the SC subscribe message
 	 * @param guardianCallback
 	 *            the guardian callback
-	 * @throws SCServiceException
-	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             subscribe message is null<br />
+	 *             callback is null<br />
+	 *             mask is invalid<br />
+	 * @throws SCServiceException
+	 *             instance already subscribed before<br />
+	 *             subscribe to host failed<br />
+	 *             error message received from SC <br />
 	 */
 	public synchronized void startCacheGuardian(String guardianName, SCSubscribeMessage subscribeMessage,
 			SCGuardianMessageCallback guardianCallback) throws SCServiceException, SCMPValidatorException {
@@ -356,20 +361,25 @@ public class SCClient {
 	}
 
 	/**
-	 * Start cache guardian.
+	 * Start cache guardian. After starting the cache guardian SC client is able to receive appendixes published by the server to
+	 * the cache. Once cache guardian is started a stop cache guardian must be done at the end of communication.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
+	 *            the allowed time in seconds to complete the operation
 	 * @param guardianName
 	 *            the guardian name
 	 * @param subscribeMessage
-	 *            the subscribe message
+	 *            the SC subscribe message
 	 * @param guardianCallback
 	 *            the guardian callback
-	 * @throws SCServiceException
-	 *             the SC service exception
 	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             subscribe message is null<br />
+	 *             callback is null<br />
+	 *             mask is invalid<br />
+	 * @throws SCServiceException
+	 *             instance already subscribed before<br />
+	 *             subscribe to host failed<br />
+	 *             error message received from SC <br />
 	 */
 	public synchronized void startCacheGuardian(int operationTimeoutSeconds, String guardianName,
 			SCSubscribeMessage subscribeMessage, SCGuardianMessageCallback guardianCallback) throws SCServiceException,
@@ -392,14 +402,17 @@ public class SCClient {
 	}
 
 	/**
-	 * Change cache guardian.
+	 * Change cache guardian with default operation timeout.
 	 * 
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             subscribe message is null<br />
+	 *             mask not valid<br />
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             instance not subscribed<br />
+	 *             change cache guardian failed<br />
+	 *             error message received from SC <br />
 	 */
 	public synchronized void changeCacheGuardian(SCSubscribeMessage scSubscribeMessage) throws SCMPValidatorException,
 			SCServiceException {
@@ -410,13 +423,16 @@ public class SCClient {
 	 * Change guardian.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
+	 *            the allowed time in seconds to complete the operation
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
+	 *            the SC subscribe message
 	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             subscribe message is null<br />
+	 *             mask not valid<br />
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             instance not subscribed<br />
+	 *             change cache guardian failed<br />
+	 *             error message received from SC <br />
 	 */
 	public synchronized void changeGuardian(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws SCMPValidatorException, SCServiceException {
@@ -424,14 +440,25 @@ public class SCClient {
 	}
 
 	/**
-	 * Stop cache guardian.
+	 * Checks if is cache guardian is active.
+	 * 
+	 * @return true, if is cache guardian active
+	 */
+	public synchronized boolean isCacheGuardianActive() {
+		if (this.cacheGuardian == null) {
+			return false;
+		}
+		return this.cacheGuardian.sessionActive;
+	}
+
+	/**
+	 * Stop cache guardian with default operation timeout.
 	 * 
 	 * @throws SCServiceException
-	 *             the SC service exception
-	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             stop cache guardian failed<br />
+	 *             error message received from SC <br />
 	 */
-	public synchronized void stopCacheGuardian() throws SCServiceException, SCMPValidatorException {
+	public synchronized void stopCacheGuardian() throws SCServiceException {
 		this.stopCacheGuardian(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -439,13 +466,12 @@ public class SCClient {
 	 * Stop cache guardian.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
+	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             the SC service exception
-	 * @throws SCMPValidatorException
-	 *             the SCMP validation exception
+	 *             stop cache guardian failed<br />
+	 *             error message received from SC <br />
 	 */
-	public synchronized void stopCacheGuardian(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
+	public synchronized void stopCacheGuardian(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("Stopping an Cache Guardian not possible - client not attached.");
 		}

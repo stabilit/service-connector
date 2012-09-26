@@ -71,6 +71,8 @@ public class FileDownloadCommand extends CommandAdapter {
 		}
 
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
+		// sets the time of last execution
+		session.resetExecuteTime();
 		// reset session timeout to OTI+ECI - during wait for server reply
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		double otiOnSCSeconds = (otiOnSCMillis / Constants.SEC_TO_MILLISEC_FACTOR);
