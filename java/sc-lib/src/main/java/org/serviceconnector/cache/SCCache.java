@@ -430,7 +430,7 @@ public class SCCache {
 
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
-			LOGGER.warn("Missing metaEntry message can not be applied, cid=" + metaEntryCid);
+			LOGGER.info("Missing metaEntry message can not be applied, cid=" + metaEntryCid);
 			this.removeMetaAndDataEntries(sid, metaEntryCid, "Missing metaEntry message can not be applied.");
 			return;
 		}
