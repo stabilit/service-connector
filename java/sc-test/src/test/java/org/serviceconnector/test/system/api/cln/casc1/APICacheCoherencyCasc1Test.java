@@ -97,7 +97,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
 		subMsg.setData("700");
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
-
+		Assert.assertTrue("Cache guardian not active", guardianClient.isCacheGuardianActive());
 		// 3: verify callback retrieval - 3 appendix within 10sec
 		cacheGuardianCbk.waitForAppendMessage(3, 10);
 
