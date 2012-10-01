@@ -462,7 +462,7 @@ public class SCCache {
 				// appendix is loading or initial message by another session - delete existing
 				this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Initial (replace) requested from server for cacheId="
 						+ metaEntryCid);
-				LOGGER.error("Initial message over guardian retrieved while initial messag over session service is still loading or appendix is loading. (metaEntryCacheId="
+				LOGGER.error("Initial message over guardian retrieved while initial message over session service is still loading or appendix is loading. (metaEntryCacheId="
 						+ metaEntryCid + ", guardianr=" + currGuardian + ")");
 				return;
 			}
