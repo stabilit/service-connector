@@ -456,6 +456,37 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 	/**
 	 * Description
+	 * 1: load large data to cache (cid=700) - unmanaged
+	 * 2: start cache guardian - publish 3 Appendix!
+	 * 3: verify callback retrieval - 3 appendix within 10sec
+	 * 4: verify data is NOT in top level cache
+	 * Expectation: passes
+	 */
+	@Test
+	public void t11b_cc_Publish3LargeAppendixNoManagedDataInCache() throws Exception {
+		// 1: load large data to cache (cid=700) - unmanaged
+		SCMessage request = new SCMessage();
+		request.setCacheId("700");
+		request.setData("hello world");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// 2: start cache guardian - publish 3 Appendix!
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 3: verify callback retrieval - 3 appendix within 10sec
+		cacheGuardianCbk.waitForAppendMessage(3, 10);
+
+		// 4: verify data is NOT in top level cache
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "0", "700/0/0=0&", "unset");
+	}
+
+	/**
+	 * Description
 	 * 1: start cache guardian - publish 3 Appendix
 	 * 2: verify callback retrieval - 3 appendix within 10sec
 	 * 3: verify data is NOT in top level cache
