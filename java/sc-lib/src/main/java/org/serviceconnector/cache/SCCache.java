@@ -440,7 +440,7 @@ public class SCCache {
 
 		if (resCachingMethod == SC_CACHING_METHOD.REMOVE) {
 			// remove received - remove existing
-			LOGGER.trace("Remove data received from server (cid=" + metaEntryCid + ", guardianr=" + currGuardian + ")");
+			LOGGER.trace("Remove data received from server (cid=" + metaEntryCid + ", guardian=" + currGuardian + ")");
 			this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Remove requested from server for cacheId=" + metaEntryCid);
 			return;
 		}
@@ -491,7 +491,7 @@ public class SCCache {
 				this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Initial (replace) requested from server for cacheId="
 						+ metaEntryCid);
 				// initial received - replace existing
-				LOGGER.trace("initial data received replace existing (cid=" + metaEntryCid + ", guardianr=" + currGuardian + ")");
+				LOGGER.trace("initial data received replace existing (cid=" + metaEntryCid + ", guardian=" + currGuardian + ")");
 				// create new metaEntry
 				affectedMetaEntry = new SCCacheMetaEntry(metaEntryCid);
 				affectedMetaEntry.setLoadingTimeoutMillis(metaEntry.getLoadingTimeoutMillis());
@@ -542,7 +542,7 @@ public class SCCache {
 			if (deleteResult == false) {
 				// deletion failed - update retrieved for non-managed data
 				LOGGER.error("Update retrieved for non-managed data, update ignored. (metaEntryCacheId=" + metaEntryCid
-						+ ", resCacheGuardianr=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
+						+ ", resCacheGuardian=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 				return;
 			}
 			// add cache id to assigned data list
@@ -553,7 +553,7 @@ public class SCCache {
 		} else if (guardianOfCachedMsg.equals(currGuardian) == false) {
 			// managed data retrieved of different cache guardian - ignore data
 			LOGGER.trace("Managed data ignored, different cache guardian responsible for treatment. (metaEntryCid=" + metaEntryCid
-					+ ", resCacheGuardianr=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
+					+ ", resCacheGuardian=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 			return;
 		}
 
