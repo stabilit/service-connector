@@ -19,27 +19,54 @@ package org.serviceconnector.api;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Class SCManagedMessage. Message which is managed by the cache module in SC.
+ */
 public class SCManagedMessage extends SCMessage {
 
+	/** The appendixes. */
 	private List<SCAppendMessage> appendixes;
 
+	/**
+	 * Instantiates a new SC managed message.
+	 */
 	public SCManagedMessage() {
 		this.appendixes = new ArrayList<SCAppendMessage>();
 	}
 
+	/**
+	 * Gets the appendixes.
+	 * 
+	 * @return the appendixes
+	 */
 	public List<SCAppendMessage> getAppendixes() {
 		return appendixes;
 	}
 
+	/**
+	 * Adds the appendix.
+	 * 
+	 * @param appendix
+	 *            the appendix
+	 */
 	public void addAppendix(SCAppendMessage appendix) {
 		this.appendixes.add(appendix);
 	}
 
+	/**
+	 * Gets the number of appendixes.
+	 * 
+	 * @return the number of appendixes
+	 */
 	public int getNrOfAppendixes() {
 		return this.appendixes.size();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks if is managed.
+	 * 
+	 * @return true, if is managed {@inheritDoc}
+	 */
 	@Override
 	public boolean isManaged() {
 		return true;
