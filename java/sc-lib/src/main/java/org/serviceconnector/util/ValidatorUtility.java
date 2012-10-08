@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
@@ -395,6 +396,36 @@ public final class ValidatorUtility {
 				throw new SCMPValidatorException(error, "Mask value contains forbidden character=" + mask);
 			}
 		}
+	}
+
+	/**
+	 * Validate caching method.
+	 * 
+	 * @param cachingMethod
+	 *            the caching method
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateCachingMethod(String cachingMethod, SCMPError error) throws SCMPValidatorException {
+		if (cachingMethod == null) {
+			// caching method not set - optional!
+			return;
+		}
+
+		if (cachingMethod.equals(SC_CACHING_METHOD.NOT_MANAGED.getValue())) {
+			return;
+		} else if (cachingMethod.equals(SC_CACHING_METHOD.APPEND.getValue())) {
+			return;
+		} else if (cachingMethod.equals(SC_CACHING_METHOD.INITIAL.getValue())) {
+			return;
+		} else if (cachingMethod.equals(SC_CACHING_METHOD.REMOVE.getValue())) {
+			return;
+		}
+
+		// wrong value for caching method - not allowed
+		throw new SCMPValidatorException(error, "Wrong value for caching method, cmt=" + cachingMethod);
 	}
 
 	/**

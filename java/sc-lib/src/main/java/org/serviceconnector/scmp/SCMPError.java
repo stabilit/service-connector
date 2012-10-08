@@ -114,6 +114,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	HV_WRONG_RECEIVE_PUBLICAION_TIMEOUT(451, "Invalid receivePublicationTimeout value."),
 	/** The HV_WRONG_CHECK_REGISTRATION_INTERVAL. */
 	HV_WRONG_CHECK_REGISTRATION_INTERVAL(452, "Invalid checkRegistrationInterval value."),
+	/** The HV_WRONG_CACHING_METHOD_VALUE. */
+	HV_WRONG_CACHING_METHOD_VALUE(453, "Invalid cachingMethod value."),
 
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE(460, "Invalid configuration file."),

@@ -58,8 +58,15 @@ public class PublishCommand extends CommandAdapter {
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
 
-		if (service.getType() == ServiceType.CASCADED_CACHE_GUARDIAN || service.getType() == ServiceType.CACHE_GUARDIAN) {
-			// Managed data arrived over cache guardian - handle caching
+		// Managed data arrived over cache guardian - handle caching
+		if (service.getType() == ServiceType.CACHE_GUARDIAN) {
+			if (service.getCountAllocatedSessions() > 0) {
+				// existing subscriptions on cache guardian - cache managed data
+				message.setSessionId("SPUnoSid"); // setting a dummy sid, is needed for the cache!
+				AppContext.getSCCache().cachedManagedData(message);
+			}
+		} else if (service.getType() == ServiceType.CASCADED_CACHE_GUARDIAN) {
+			// always cache managed data for cascaded cache guardian
 			message.setSessionId("SPUnoSid"); // setting a dummy sid, is needed for the cache!
 			AppContext.getSCCache().cachedManagedData(message);
 		}
@@ -106,6 +113,9 @@ public class PublishCommand extends CommandAdapter {
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256,
 					SCMPError.HV_WRONG_MESSAGE_INFO);
+			// caching method value
+			String cachingMethod = message.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD);
+			ValidatorUtility.validateCachingMethod(cachingMethod, SCMPError.HV_WRONG_CACHING_METHOD_VALUE);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
