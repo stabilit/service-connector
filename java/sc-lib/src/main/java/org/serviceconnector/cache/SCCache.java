@@ -220,7 +220,7 @@ public class SCCache {
 						// requested partNr does not match current loading state - remove message from cache
 						LOGGER.warn("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
 								+ nextPartNrToLoad + ").");
-						this.removeMetaAndDataEntries(sessionId, metaEntryCid, "Requested partNr=" + reqPartNr
+						this.removeMetaAndDataEntries(metaEntryCid, "Requested partNr=" + reqPartNr
 								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
 						// do return an error here to stop current request loading this message and avoid parallel loading problems
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
@@ -289,8 +289,8 @@ public class SCCache {
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
 			String scErrorCode = reqMessage.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			this.removeMetaAndDataEntries(loadingSid, reqCacheId, "Reply faulty (" + scErrorCode
-					+ ") or resCacheId=null and reqCacheId=" + reqCacheId);
+			this.removeMetaAndDataEntries(reqCacheId, "Reply faulty (" + scErrorCode + ") or resCacheId=null and reqCacheId="
+					+ reqCacheId);
 			return;
 		}
 
@@ -310,7 +310,7 @@ public class SCCache {
 			// requested cache id differs replied cache id, clean up
 			LOGGER.error("cache message (" + reqCacheId + ") removed, server did reply different cache key, cache (" + resCacheId
 					+ ")");
-			this.removeMetaAndDataEntries(loadingSid, reqCacheId, "cache message (" + reqCacheId
+			this.removeMetaAndDataEntries(reqCacheId, "cache message (" + reqCacheId
 					+ ") removed, server did reply different cache key, cache (" + resCacheId + ")");
 			return;
 		}
@@ -321,7 +321,7 @@ public class SCCache {
 		if (metaEntry == null) {
 			// no meta entry found, clean up
 			LOGGER.error("Missing metaEntry message can not be cached.");
-			this.removeMetaAndDataEntries(loadingSid, reqCacheId, "Missing metaEntry message can not be cached.");
+			this.removeMetaAndDataEntries(reqCacheId, "Missing metaEntry message can not be cached.");
 			return;
 		}
 
@@ -329,7 +329,7 @@ public class SCCache {
 			// meta entry gets loaded by another sessionId, not allowed clean up
 			LOGGER.error("MetaEntry gets loaded by wrong session, not allowed expected sid=" + metaEntry.getLoadingSessionId()
 					+ " loading sid= " + loadingSid);
-			this.removeMetaAndDataEntries(loadingSid, metaEntryCid,
+			this.removeMetaAndDataEntries(metaEntryCid,
 					"Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid=" + loadingSid);
 			return;
 		}
@@ -399,15 +399,15 @@ public class SCCache {
 			dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
 		} catch (ParseException e) {
 			LOGGER.error("Parsing of expirationDate failed", e);
-			this.removeMetaAndDataEntries(loadingSid, metaEntryCid, "Parsing of expirationDate failed");
+			this.removeMetaAndDataEntries(metaEntryCid, "Parsing of expirationDate failed");
 			return;
 		} catch (SCMPValidatorException e) {
 			LOGGER.error("Validation of expirationDate failed", e);
-			this.removeMetaAndDataEntries(loadingSid, metaEntryCid, "Validation of expirationDate failed");
+			this.removeMetaAndDataEntries(metaEntryCid, "Validation of expirationDate failed");
 			return;
 		} catch (Exception e) {
 			LOGGER.error("Caching message failed", e);
-			this.removeMetaAndDataEntries(loadingSid, metaEntryCid, "Caching message failed");
+			this.removeMetaAndDataEntries(metaEntryCid, "Caching message failed");
 			return;
 		}
 	}
@@ -431,7 +431,7 @@ public class SCCache {
 		if (metaEntry == null) {
 			// no meta entry found, clean up - no managing of cached data possible
 			LOGGER.info("Missing metaEntry message can not be applied, cid=" + metaEntryCid);
-			this.removeMetaAndDataEntries(sid, metaEntryCid, "Missing metaEntry message can not be applied.");
+			this.removeMetaAndDataEntries(metaEntryCid, "Missing metaEntry message can not be applied.");
 			return;
 		}
 
@@ -441,7 +441,7 @@ public class SCCache {
 		if (resCachingMethod == SC_CACHING_METHOD.REMOVE) {
 			// remove received - remove existing
 			LOGGER.trace("Remove data received from server (cid=" + metaEntryCid + ", guardian=" + currGuardian + ")");
-			this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Remove requested from server for cacheId=" + metaEntryCid);
+			this.removeMetaAndDataEntries(metaEntryCid, "Remove requested from server for cacheId=" + metaEntryCid);
 			return;
 		}
 
@@ -460,8 +460,7 @@ public class SCCache {
 			// initial received - replace existing
 			if (metaEntry.isLoadingAppendix() == true || (metaEntry.isLoading() && metaEntry.isLoadingSessionId(sid) == false)) {
 				// appendix is loading or initial message by another session - delete existing
-				this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Initial (replace) requested from server for cacheId="
-						+ metaEntryCid);
+				this.removeMetaAndDataEntries(metaEntryCid, "Initial (replace) requested from server for cacheId=" + metaEntryCid);
 				LOGGER.error("Initial message over guardian retrieved while initial message over session service is still loading or appendix is loading. (metaEntryCacheId="
 						+ metaEntryCid + ", guardian=" + currGuardian + ")");
 				return;
@@ -488,8 +487,7 @@ public class SCCache {
 				}
 			} else {
 				// no large request in process - delete existing
-				this.removeMetaAndDataEntries("sid unknown", metaEntryCid, "Initial (replace) requested from server for cacheId="
-						+ metaEntryCid);
+				this.removeMetaAndDataEntries(metaEntryCid, "Initial (replace) requested from server for cacheId=" + metaEntryCid);
 				// initial received - replace existing
 				LOGGER.trace("initial data received replace existing (cid=" + metaEntryCid + ", guardian=" + currGuardian + ")");
 				// create new metaEntry
@@ -560,7 +558,7 @@ public class SCCache {
 		if (metaEntry.isLoading() == true) {
 			// message is being loaded
 			LOGGER.error("Appendix reveived, base message still loading - delete data to avoid inconsistency.");
-			this.removeMetaAndDataEntries(sid, metaEntryCid, "Appendix reveived, base message still loading.");
+			this.removeMetaAndDataEntries(metaEntryCid, "Appendix reveived, base message still loading.");
 		} else if (resCachingMethod == SC_CACHING_METHOD.APPEND) {
 			// append received - append to existing
 			if (metaEntry.isLoadingAppendix() == true) {
@@ -634,7 +632,7 @@ public class SCCache {
 	 * @param removeReason
 	 *            the remove reason
 	 */
-	private synchronized void removeMetaAndDataEntries(String sessionId, String metaEntryCacheId, String removeReason) {
+	private synchronized void removeMetaAndDataEntries(String metaEntryCacheId, String removeReason) {
 		if (metaEntryCacheId == null) {
 			// cacheId null no remove possible
 			return;
@@ -689,8 +687,9 @@ public class SCCache {
 	public synchronized void removeManagedDataForGuardian(String cacheGuardian) {
 
 		// remove managed data in initial state
+		String[] metaEntryCacheIds = (String[]) this.mgdDataKeysInInitialState.toArray(new String[0]);
 		for (String metaEntryCacheId : this.mgdDataKeysInInitialState) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
+			this.removeMetaAndDataEntries(metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
 
 		// removed managed data assigned to cache guardian
@@ -698,9 +697,9 @@ public class SCCache {
 			// no managed data to delete
 			return;
 		}
-		String[] metaEntryCacheIds = (String[]) this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
+		metaEntryCacheIds = (String[]) this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
 		for (String metaEntryCacheId : metaEntryCacheIds) {
-			this.removeMetaAndDataEntries("unknown", metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
+			this.removeMetaAndDataEntries(metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
 		this.mgdDataAssignedToGuardian.remove(cacheGuardian);
 	}
@@ -807,7 +806,7 @@ public class SCCache {
 		String cachekey = this.loadingSessionIds.remove(sessionId);
 		if (cachekey != null) {
 			CacheLogger.abortLoadingMessage(cachekey, sessionId);
-			this.removeMetaAndDataEntries(sessionId, cachekey, "ClearLoading requested for sid=" + sessionId);
+			this.removeMetaAndDataEntries(cachekey, "ClearLoading requested for sid=" + sessionId);
 		}
 	}
 
