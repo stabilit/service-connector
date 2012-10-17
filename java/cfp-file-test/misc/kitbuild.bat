@@ -7,9 +7,9 @@ del ..\kit\* /F/Q
 rd ..\kit\logs\SC0 /S/Q
 rd ..\kit\logs /S/Q
 rd ..\kit\files /S/Q
-call mvn-assembly-cmd.bat 				..\..\fileUploader
+call mvn-assembly-cmd.bat 				..\..\cfp-file-test
 
-copy ..\target\fileUploader.jar			..\kit /y
+copy ..\target\cfpFileService.jar		..\kit /y
 copy ..\..\sc-lib\target\sc-lib-all.jar	..\kit /y
 copy sclist.php							..\kit /y
 copy scupload.php						..\kit /y
