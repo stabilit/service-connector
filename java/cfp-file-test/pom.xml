@@ -24,12 +24,12 @@
 					<descriptors>
 						<descriptor>src/main/resources/descriptor.xml</descriptor>
 					</descriptors>
-					<finalName>fileUploader</finalName>
+					<finalName>cfpFileService</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.stabilit.fileUploader.FileUploader</mainClass>
+							<mainClass>com.stabilit.cfpFileTest.FileServiceManager</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
