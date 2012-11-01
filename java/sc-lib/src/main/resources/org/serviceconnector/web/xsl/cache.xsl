@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:import href="template.xsl"/>
-    <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
+    <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="type" select="$head/query/param/@type"/>
 	<xsl:variable name="comp_page" select="/sc-web/head/query/param/@comp_page"/>
 	<xsl:variable name="comp_site" select="/sc-web/head/query/param/@comp_site"/>
@@ -12,7 +12,7 @@
     <xsl:variable name="query">page=<xsl:value-of select="$page"/>&amp;site=<xsl:value-of select="$site"/>&amp;</xsl:variable>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;cacheMessage=<xsl:value-of select="$head/query/param/@cacheMessage"/>&amp;type=<xsl:value-of select="$type"/>&amp;page=<xsl:value-of select="$page"/>&amp;comp_page=<xsl:value-of select="$comp_page"/>&amp;msg_page=<xsl:value-of select="$msg_page"/>&amp;site=<xsl:value-of select="$site"/>&amp;comp_site=<xsl:value-of select="$comp_site"/>&amp;msg_site=<xsl:value-of select="$msg_site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cacheModule=<xsl:value-of select="$head/query/param/@cacheModule"/>&amp;cacheMessageKey=<xsl:value-of select="$head/query/param/@cacheMessageKey"/>&amp;type=<xsl:value-of select="$type"/>&amp;page=<xsl:value-of select="$page"/>&amp;comp_page=<xsl:value-of select="$comp_page"/>&amp;msg_page=<xsl:value-of select="$msg_page"/>&amp;site=<xsl:value-of select="$site"/>&amp;comp_site=<xsl:value-of select="$comp_site"/>&amp;msg_site=<xsl:value-of select="$msg_site"/>&amp;sim=<xsl:value-of select="$sim"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
@@ -121,7 +121,12 @@
 	          <tr class="sc_table_header">
 	            <th class="sc_table">Key</th><!-- ID -->
 	            <th class="sc_table">Status</th>
-	            <th class="sc_table">Expiration Timeout (ms)</th>            
+	            <xsl:if test="details/cacheMessage/expiration">
+	            	<th class="sc_table">Expiration</th>
+	            </xsl:if>
+	             <xsl:if test="details/cacheMessage/expirationTimeout">
+	            	 <th class="sc_table">Expiration Timeout (ms)</th>  
+	            </xsl:if>          
 	            <th class="sc_table">Creation</th>            
 	            <th class="sc_table">Last Access</th>
 	            <xsl:if test="details/cacheMessage/nrOfAppendix">
@@ -184,7 +189,12 @@
 	        &#160;(<xsl:value-of select="loadingSessionId"/>)
 	      </xsl:if>
 	    </td>
-	    <td class="{$class}"><xsl:value-of select="expirationTimeout"/></td>
+	    <xsl:if test="expirationTimeout">
+		    <td class="{$class}"><xsl:value-of select="expirationTimeout"/></td>
+		</xsl:if>
+	    <xsl:if test="expiration">
+		    <td class="{$class}"><xsl:value-of select="expiration"/></td>
+		</xsl:if>
 	    <td class="{$class}"><xsl:value-of select="creation"/></td>
 	    <td class="{$class}"><xsl:value-of select="lastAccess"/></td>
     	<xsl:if test="nrOfAppendix">
