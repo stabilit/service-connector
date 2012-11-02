@@ -263,13 +263,12 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("loadingSessionId");
 		writer.writeCharacters(String.valueOf(metaEntry.getLoadingSessionId()));
 		writer.writeEndElement(); // end of loadingSessionId
-		writer.writeStartElement("expirationTimeout");
+		writer.writeStartElement("expiration");
 		Date expireDate = cacheModule.getExpirationTime(cacheKey);
-		Date creationDate = cacheModule.getCreationTime(cacheKey);
-		long expireTimeoutMillis = expireDate.getTime() - creationDate.getTime();
-		writer.writeCharacters(String.valueOf(expireTimeoutMillis));
+		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(expireDate));
 		writer.writeEndElement(); // end of expirationTimeout
 		writer.writeStartElement("creation");
+		Date creationDate = cacheModule.getCreationTime(cacheKey);
 		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(creationDate));
 		writer.writeEndElement(); // end of creation
 		writer.writeStartElement("lastAccess");
