@@ -25,7 +25,7 @@ public class SCGuardianService extends SCPublishService {
 		}
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCGuardianCallback callback = new SCGuardianCallback(this, this.messageCallback);
+		SCGuardianCallback callback = new SCGuardianCallback(this, (SCGuardianMessageCallback) this.messageCallback);
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
 				this.sessionId);
 		try {

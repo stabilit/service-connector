@@ -30,8 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 class SCGuardianCallback extends SCServiceCallback {
 
-	private SCGuardianMessageCallback guardianCallback;
-
 	/**
 	 * Instantiates a new guardian service callback.
 	 * 
@@ -40,9 +38,8 @@ class SCGuardianCallback extends SCServiceCallback {
 	 * @param messageCallback
 	 *            the message callback
 	 */
-	public SCGuardianCallback(SCPublishService service, SCMessageCallback messageCallback) {
+	public SCGuardianCallback(SCPublishService service, SCGuardianMessageCallback messageCallback) {
 		super(service, messageCallback);
-		this.guardianCallback = (SCGuardianMessageCallback) this.messageCallback;
 	}
 
 	/** {@inheritDoc} */
@@ -100,13 +97,13 @@ class SCGuardianCallback extends SCServiceCallback {
 			switch (cachingMethod) {
 			case INITIAL:
 			case NOT_MANAGED:
-				this.guardianCallback.receive(replyToClient);
+				this.messageCallback.receive(replyToClient);
 				break;
 			case APPEND:
-				this.guardianCallback.receiveAppendix((SCAppendMessage) replyToClient);
+				((SCGuardianMessageCallback) this.messageCallback).receiveAppendix((SCAppendMessage) replyToClient);
 				break;
 			case REMOVE:
-				this.guardianCallback.receiveRemove((SCRemovedMessage) replyToClient);
+				((SCGuardianMessageCallback) this.messageCallback).receiveRemove((SCRemovedMessage) replyToClient);
 				break;
 			}
 		}
