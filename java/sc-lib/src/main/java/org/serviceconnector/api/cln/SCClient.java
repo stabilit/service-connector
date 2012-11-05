@@ -87,9 +87,7 @@ public class SCClient {
 	protected SCRequester requester;
 	/** The attached flag. Indicates if a SCClient is already attached to SC */
 	protected boolean attached;
-
-	private boolean activeGuardian;
-
+	/** The cache guardian. */
 	private SCGuardianService cacheGuardian;
 
 	/**
@@ -121,7 +119,6 @@ public class SCClient {
 		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.keepAliveTimeoutSeconds = Constants.DEFAULT_KEEP_ALIVE_OTI_SECONDS;
 		this.attached = false;
-		this.activeGuardian = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.cacheGuardian = null;
 	}
@@ -387,7 +384,8 @@ public class SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("Starting a Cache Guardian not possible - client not attached.");
 		}
-		if (this.activeGuardian == true) {
+
+		if (this.cacheGuardian.isActive() == true) {
 			throw new SCServiceException("Cache Guardian already started.");
 		}
 		if (guardianName == null) {
@@ -398,7 +396,7 @@ public class SCClient {
 
 		this.cacheGuardian = new SCGuardianService(this, guardianName, this.requester);
 		this.cacheGuardian.subscribe(operationTimeoutSeconds, subscribeMessage, guardianCallback);
-		this.activeGuardian = true;
+		this.cacheGuardian.sessionActive = true;
 	}
 
 	/**
@@ -448,7 +446,7 @@ public class SCClient {
 		if (this.cacheGuardian == null) {
 			return false;
 		}
-		return this.cacheGuardian.sessionActive;
+		return this.cacheGuardian.isActive();
 	}
 
 	/**
@@ -475,14 +473,14 @@ public class SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("Stopping an Cache Guardian not possible - client not attached.");
 		}
-		if (this.activeGuardian == false) {
+		if (this.cacheGuardian.isActive() == false) {
 			// no active guardian to stop, ignore
 			return;
 		}
 		try {
 			this.cacheGuardian.unsubscribe(operationTimeoutSeconds);
 		} finally {
-			this.activeGuardian = false;
+			this.cacheGuardian.sessionActive = false;
 		}
 	}
 
