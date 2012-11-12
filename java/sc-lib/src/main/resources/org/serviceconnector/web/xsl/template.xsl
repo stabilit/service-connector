@@ -226,8 +226,8 @@
 	    <td class="sc_table_odd"><xsl:value-of select="totalBytes"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table_even">Cached Messages</td>	  
-	    <td class="sc_table_even"><xsl:value-of select="cachedMessages"/></td>	  
+	    <td class="sc_table_even">Messages in Cache</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="messagesInCache"/></td>	  
 	  </tr>
 	  <!-- 
 	  <tr class="sc_table_odd">

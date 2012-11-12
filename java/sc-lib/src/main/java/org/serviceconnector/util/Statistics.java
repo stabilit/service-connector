@@ -30,43 +30,47 @@ public final class Statistics {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Statistics.class);
-	
+
 	/** The instance. */
 	private static Statistics instance = new Statistics();
-	
 	/** The total messages. */
 	private double totalMessages = 0;
-	
 	/** The total bytes. */
 	private double totalBytes = 0;
-	
 	/** The startup date time. */
 	private Timestamp startupDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-	
-	/** The cached messages. */
-	private int cachedMessages = 0;
-	
-	/** The cached bytes. */
-	private long cachedBytes = 0;
-	
-	/** The cached files. */
-	private int cachedFiles = 0;
-	
+	/** The messages in cache. */
+	private int messagesInCache = 0;
+
 	/**
-	 * Instantiates a new statistic LOGGER. Private for singelton use.
+	 * Instantiates a new statistic LOGGER. Private for singleton use.
 	 */
 	private Statistics() {
 	}
 
 	/**
 	 * Gets the single instance of Statistics.
-	 *
+	 * 
 	 * @return single instance of Statistics
 	 */
 	public static Statistics getInstance() {
 		return instance;
 	}
-	
+
+	/**
+	 * Increment messages in cache.
+	 */
+	public void incrementMessagesInCache() {
+		this.messagesInCache++;
+	}
+
+	/**
+	 * Decrement messages in cache.
+	 */
+	public void decrementMessagesInCache() {
+		this.messagesInCache--;
+	}
+
 	/**
 	 * Increment total messages.
 	 * 
@@ -79,70 +83,8 @@ public final class Statistics {
 	}
 
 	/**
-	 * Increment cached messages.
-	 * 
-	 * @param msgLength
-	 *            the msg length
-	 */
-	public synchronized void incrementCachedMessages(long msgLength) {
-		cachedMessages++;
-		cachedBytes = cachedBytes + msgLength;
-	}
-
-	
-	/**
-	 * Increment cached messages.
-	 * 
-	 * @param msgLength
-	 *            the msg length
-	 */
-	public synchronized void decrementCachedMessages(long msgLength) {
-		cachedMessages--;
-		cachedBytes = cachedBytes - msgLength;
-	}
-
-	/**
-	 * Increment cached messages.
-	 * 
-	 * @param msgLength
-	 *            the msg length
-	 */
-	public synchronized void incrementCachedMessagesSize(long msgLength) {
-		cachedBytes = cachedBytes + msgLength;
-	}
-
-	
-	/**
-	 * Increment cached messages.
-	 * 
-	 * @param msgLength
-	 *            the msg length
-	 */
-	public synchronized void decrementCachedMessagesSize(long msgLength) {
-		cachedBytes = cachedBytes + msgLength;
-	}
-
-	/**
-	 * Increment cached files.
-	 *
-	 * @param nrFiles the nr files
-	 */
-	public synchronized void incrementCachedFiles(int nrFiles) {
-		cachedFiles = cachedFiles + nrFiles;
-	}
-	
-	/**
-	 * Decrement cached files.
-	 *
-	 * @param nrFiles the nr files
-	 */
-	public synchronized void decrementCachedFiles(int nrFiles) {
-		cachedFiles = cachedFiles - nrFiles;
-	}
-
-	/**
 	 * Gets the total messages.
-	 *
+	 * 
 	 * @return the total messages
 	 */
 	public double getTotalMessages() {
@@ -151,7 +93,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the total bytes.
-	 *
+	 * 
 	 * @return the total bytes
 	 */
 	public double getTotalBytes() {
@@ -160,16 +102,16 @@ public final class Statistics {
 
 	/**
 	 * Gets the startup date time.
-	 *
+	 * 
 	 * @return the startup date time
 	 */
 	public Timestamp getStartupDateTime() {
 		return startupDateTime;
 	}
-	
+
 	/**
 	 * Gets the runtime since startup millis.
-	 *
+	 * 
 	 * @return the runtime since startup millis
 	 */
 	public long getRuntimeSinceStartupSeconds() {
@@ -180,40 +122,20 @@ public final class Statistics {
 
 	/**
 	 * Sets the startup date time.
-	 *
-	 * @param startupDateTime the new startup date time
+	 * 
+	 * @param startupDateTime
+	 *            the new startup date time
 	 */
 	public void setStartupDateTime(Timestamp startupDateTime) {
 		this.startupDateTime = startupDateTime;
 	}
 
 	/**
-	 * Gets the cached messages.
-	 *
-	 * @return the cached messages
+	 * Gets the messages in cache.
+	 * 
+	 * @return the messages in cache
 	 */
-	public int getCachedMessages() {
-		return cachedMessages;
+	public int getMessagesInCache() {
+		return this.messagesInCache;
 	}
-
-	/**
-	 * Gets the cached bytes.
-	 *
-	 * @return the cached bytes
-	 */
-	public long getCachedBytes() {
-		return cachedBytes;
-	}
-
-	/**
-	 * Gets the cached files.
-	 *
-	 * @return the cached files
-	 */
-	public int getCachedFiles() {
-		return cachedFiles;
-	}
-	
-	
-	
 }

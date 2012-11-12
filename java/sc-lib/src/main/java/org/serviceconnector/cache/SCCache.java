@@ -374,7 +374,6 @@ public class SCCache {
 				metaEntry.setCachingMethod(recvCachingMethod);
 			}
 
-			Statistics.getInstance().incrementCachedMessages(resMessage.getBodyLength());
 			if (CacheLogger.isEnabled()) {
 				CacheLogger.putMessageToCache(dataEntryCid, nrOfParts, metaEntry.getLoadingSessionId(), resMessage.getBodyLength(),
 						metaEntry.getSCCacheEntryState().name(), recvCachingMethod.name());
@@ -390,6 +389,7 @@ public class SCCache {
 				loadingSessionIds.remove(loadingSid);
 				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(), nrOfParts,
 						metaEntry.getNrOfAppendix());
+				Statistics.getInstance().incrementMessagesInCache();
 			} else {
 				// refresh meta entry state
 				metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()

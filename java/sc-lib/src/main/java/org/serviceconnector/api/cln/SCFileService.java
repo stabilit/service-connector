@@ -44,7 +44,14 @@ public class SCFileService extends SCService {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(SCFileService.class);
-	
+	/**
+	 * The echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message
+	 * is sent only when no message is pending.
+	 */
+	private int echoIntervalSeconds;
+	/** The message part size. */
+	private int partSize;
+
 	/**
 	 * Instantiates a new SC file service. Should only be used by service connector internal classes. Instantiating
 	 * SCFileService should be done by the SCClient method newFileService().
@@ -58,6 +65,53 @@ public class SCFileService extends SCService {
 	 */
 	SCFileService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
+		this.echoIntervalSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
+		this.partSize = Constants.DEFAULT_MESSAGE_PART_SIZE;
+	}
+
+	/**
+	 * Sets the echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The
+	 * message is sent only when no message is pending.
+	 * 
+	 * @param echoIntervalSeconds
+	 *            Validation: echoIntervalSeconds > 1 and < 3600<br />
+	 *            Example: 360
+	 */
+	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
+		this.echoIntervalSeconds = echoIntervalSeconds;
+	}
+
+	/**
+	 * Gets the echo interval in seconds.
+	 * 
+	 * @return the echo interval in seconds
+	 */
+	public int getEchoIntervalSeconds() {
+		return this.echoIntervalSeconds;
+	}
+
+	/**
+	 * Gets the part size.
+	 * 
+	 * @return the size of the parts in which message will be broken when it is large
+	 */
+	public int getPartSize() {
+		return this.partSize;
+	}
+
+	/**
+	 * Sets the part size.
+	 * 
+	 * @param partSize
+	 *            the size in which message will be broken when it is large
+	 */
+	public void setPartSize(int partSize) {
+		// only value smaller then MAX_MESSAGE_SIZE is allowed
+		if (partSize < Constants.MAX_MESSAGE_SIZE) {
+			this.partSize = partSize;
+		} else {
+			this.partSize = Constants.MAX_MESSAGE_SIZE;
+		}
 	}
 
 	/**
@@ -102,7 +156,7 @@ public class SCFileService extends SCService {
 			SCMPFileUploadCall uploadFileCall = new SCMPFileUploadCall(this.requester, this.serviceName, this.sessionId);
 			uploadFileCall.setRequestBody(inStream);
 			uploadFileCall.setRemoteFileName(remoteFileName);
-			uploadFileCall.getRequest().setPartSize(Constants.SIZE_64KB);
+			uploadFileCall.getRequest().setPartSize(this.partSize);
 			try {
 				LOGGER.debug("SCFileService uploadFile begin");
 				uploadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -260,7 +314,7 @@ public class SCFileService extends SCService {
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, this.serviceName);
-		createSessionCall.setEchoIntervalSeconds(Constants.DEFAULT_FILE_SESSION_TIMEOUT_SECONDS);
+		createSessionCall.setEchoIntervalSeconds(this.echoIntervalSeconds);
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
