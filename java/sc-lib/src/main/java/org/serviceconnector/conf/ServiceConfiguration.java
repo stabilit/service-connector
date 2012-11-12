@@ -104,6 +104,10 @@ public class ServiceConfiguration {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 						+ Constants.PROPERTY_QUALIFIER_PATH + " is missing");
 			}
+			if (this.path.endsWith("/") == false) {
+				// adds a slash to the path
+				this.path += "/";
+			}
 			this.uploadScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT, null);
 			if (this.uploadScript == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
