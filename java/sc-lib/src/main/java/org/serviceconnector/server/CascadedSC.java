@@ -683,7 +683,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 			IRequest request = new NettyHttpRequest(null, null, null);
 			// SCMP Version current
-			SCMPMessage abortMessage = new SCMPMessage(SCMPVersion.CURRENT);
+			SCMPMessage abortMessage = new SCMPMessage(SCMPVersion.LOWEST);
 			abortMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, casService.getName());
 			// cascaded id will be set in following (cascadedSCAbortSubscription) method
