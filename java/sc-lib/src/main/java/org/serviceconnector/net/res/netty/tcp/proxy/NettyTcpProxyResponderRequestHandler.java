@@ -121,8 +121,6 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		// needs to set a key in thread local to identify thread later and get
-		// access to the responder
 		ChannelBuffer msg = (ChannelBuffer) event.getMessage();
 		outboundChannel.write(msg);
 	}
