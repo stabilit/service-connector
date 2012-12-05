@@ -385,7 +385,7 @@ public class SCClient {
 			throw new SCServiceException("Starting a Cache Guardian not possible - client not attached.");
 		}
 
-		if (this.cacheGuardian.isActive() == true) {
+		if (this.cacheGuardian != null && this.cacheGuardian.isActive() == true) {
 			throw new SCServiceException("Cache Guardian already started.");
 		}
 		if (guardianName == null) {
@@ -473,7 +473,7 @@ public class SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("Stopping an Cache Guardian not possible - client not attached.");
 		}
-		if (this.cacheGuardian.isActive() == false) {
+		if (this.cacheGuardian != null && this.cacheGuardian.isActive() == false) {
 			// no active guardian to stop, ignore
 			return;
 		}
