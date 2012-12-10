@@ -688,7 +688,7 @@ public class SCCache {
 
 		// remove managed data in initial state
 		String[] metaEntryCacheIds = (String[]) this.mgdDataKeysInInitialState.toArray(new String[0]);
-		for (String metaEntryCacheId : this.mgdDataKeysInInitialState) {
+		for (String metaEntryCacheId : metaEntryCacheIds) {
 			this.removeMetaAndDataEntries(metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
 
