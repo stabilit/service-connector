@@ -287,6 +287,11 @@ public class TestSessionServer extends TestStatefulServer {
 				LOGGER.info("cacheFor4Sec");
 				time.add(Calendar.SECOND, 4);
 				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("cacheFor1HourEmptyData")) {
+				LOGGER.info("cacheFor1HourEmptyData");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				request.setData(null);
 			} else if (dataString.startsWith("cacheFor1Hour")) {
 				LOGGER.info("cacheFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
