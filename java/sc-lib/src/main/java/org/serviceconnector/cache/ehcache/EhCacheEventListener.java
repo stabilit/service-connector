@@ -16,27 +16,31 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache.ehcache;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.event.CacheEventListener;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.util.Statistics;
 
 /**
- * The listener interface for receiving ehCacheEvent events.
- * The class that is interested in processing a ehCacheEvent
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addEhCacheEventListener<code> method. When
- * the ehCacheEvent event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving ehCacheEvent events. The class that is interested in processing a ehCacheEvent event
+ * implements this interface, and the object created with that class is registered with a component using the component's
+ * <code>addEhCacheEventListener<code> method. When the ehCacheEvent event occurs, that object's appropriate method is invoked.
  * 
  * @see EhCacheEventEvent
  */
 public class EhCacheEventListener implements CacheEventListener {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(EhCacheEventListener.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -56,11 +60,26 @@ public class EhCacheEventListener implements CacheEventListener {
 	/** {@inheritDoc} */
 	@Override
 	public void notifyElementExpired(Ehcache cache, Element element) {
-		Object entry = element.getObjectValue();
+		Object entry = element.getValue();
 		if (entry instanceof SCCacheMetaEntry) {
+			LOGGER.debug("notifyElementExpired: Value is my object type!!");
 			SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) entry;
 			CacheLogger.messageExpired(metaEntry.getCacheId());
 			AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) entry, "Meta Entry expired!");
+			Statistics.getInstance().decrementMessagesInCache();
+		} else if (entry instanceof byte[]) {
+			try {
+				ByteArrayInputStream b = new ByteArrayInputStream((byte[]) element.getValue());
+				ObjectInputStream o = new ObjectInputStream(b);
+				SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) o.readObject();
+				CacheLogger.messageExpired(metaEntry.getCacheId());
+				AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) entry, "Meta Entry expired!");
+				Statistics.getInstance().decrementMessagesInCache();
+			} catch (Exception e) {
+				LOGGER.debug("Deserializing of byte[] failed: " + e);
+			}
+		} else {
+			LOGGER.error("Cache element expired, could not be processed corretly.");
 		}
 	}
 
