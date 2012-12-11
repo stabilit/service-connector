@@ -1103,6 +1103,39 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 
 	/**
 	 * Description:
+	 * 01: cache managed message null body by sessionService1
+	 * 02: start cache guardian - publish 3 appendix
+	 * 03: verify callback retrieval - 3 appendixes within 10sec
+	 * 04: verify data is in top level cache
+	 * Expectation: passes
+	 */
+	@Test
+	public void t28_cc_cacheMsgNullBodyPublish3Appendix() throws Exception {
+		// 1: cache managed message null body by sessionService1
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1HourEmptyData:managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// 2: start cache guardian - publish 3 appendix
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		subMsg.setSessionInfo(TestConstants.publish3AppendixMsgCmd);
+		subMsg.setData("700");
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 3: verify callback retrieval - 3 appendixes within 10sec
+		cacheGuardianCbk.waitForAppendMessage(3, 10);
+
+		// 4: verify data is in top level cache
+		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
+		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
+				"700/0/0=0&700/1/0=0&700/2/0=0&700/3/0=0&", "cacheGuardian1");
+	}
+
+	/**
+	 * Description:
 	 * 01: connect new client2 to top level (cascaded) SC
 	 * 02: load data to cache (cid=700) by client1
 	 * 03: start cache guardian1 for client1 - do nothing
