@@ -63,19 +63,21 @@ public class EhCacheEventListener implements CacheEventListener {
 		Object entry = element.getValue();
 		if (entry instanceof SCCacheMetaEntry) {
 			SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) entry;
+			LOGGER.debug("Cache element of type SCCacheMetaEntry expired, cid: " + metaEntry.getCacheId());
 			CacheLogger.messageExpired(metaEntry.getCacheId());
-			AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) entry, "Meta Entry expired!");
+			AppContext.getSCCache().removeDataEntriesByMetaEntry(metaEntry, "Meta Entry expired!");
 			Statistics.getInstance().decrementMessagesInCache();
 		} else if (entry instanceof byte[]) {
+			LOGGER.debug("Cache element of type byte[] expired.");
 			try {
-				ByteArrayInputStream b = new ByteArrayInputStream((byte[]) element.getValue());
+				ByteArrayInputStream b = new ByteArrayInputStream((byte[]) entry);
 				ObjectInputStream o = new ObjectInputStream(b);
 				SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) o.readObject();
 				CacheLogger.messageExpired(metaEntry.getCacheId());
-				AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) entry, "Meta Entry expired!");
+				AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) metaEntry, "Meta Entry expired!");
 				Statistics.getInstance().decrementMessagesInCache();
 			} catch (Exception e) {
-				LOGGER.debug("Deserializing of byte[] failed: " + e);
+				LOGGER.error("Deserializing of byte[] failed: " + e);
 			}
 		} else {
 			LOGGER.error("Cache element expired, could not be processed corretly.");
