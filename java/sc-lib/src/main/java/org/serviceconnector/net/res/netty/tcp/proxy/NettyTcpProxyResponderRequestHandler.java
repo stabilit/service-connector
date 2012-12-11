@@ -103,7 +103,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 			try {
 				this.outboundChannel.close();
 			} catch (Exception ex) {
-                LOGGER.error("outboundChannel close", ex);
+				LOGGER.error("outboundChannel close", ex);
 			}
 		}
 		super.channelClosed(ctx, e);
@@ -184,7 +184,17 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		/** {@inheritDoc} */
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-			e.getCause().printStackTrace();
+			Throwable th = e.getCause();
+			if (th instanceof ClosedChannelException) {
+				// nothing special - just ignore.
+				return;
+			}
+			if (th instanceof java.io.IOException) {
+				// regular disconnect, nothing special - just ignore.
+				return;
+			} else {
+				LOGGER.error("Responder error", th);
+			}
 			closeOnFlush(e.getChannel());
 		}
 
