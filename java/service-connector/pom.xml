@@ -52,7 +52,7 @@
 				<version>2.2-beta-5</version>
 				<configuration>
 					<descriptors>
-						<descriptor>src/main/resources/descriptor.xml</descriptor>
+						<descriptor>src/main/assembly/descriptor.xml</descriptor>
 					</descriptors>
 					<finalName>sc</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
