@@ -26,12 +26,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
+import org.jboss.netty.handler.execution.OrderedMemoryAwareThreadPoolExecutor;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Log4JLoggerFactory;
 import org.serviceconnector.Constants;
@@ -59,7 +61,7 @@ import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
+ * The Class AppContext. The AppContext is singleton and holds all factories and registries. Its the top context in a service
  * connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
  */
 public final class AppContext {
@@ -130,6 +132,8 @@ public final class AppContext {
 	 */
 	private static ExecutorService threadPool;
 
+	private static ExecutorService orderedThreadPool;
+
 	// initialize configurations in every case
 	static {
 		// configures NETTY logging to use log4j framework
@@ -142,7 +146,7 @@ public final class AppContext {
 	}
 
 	/**
-	 * Instantiates a new AppContext. Singelton.
+	 * Instantiates a new AppContext. Singleton.
 	 */
 	private AppContext() {
 	}
@@ -165,6 +169,11 @@ public final class AppContext {
 			}
 			if (AppContext.threadPool == null) {
 				AppContext.threadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
+			}
+
+			if (AppContext.orderedThreadPool == null) {
+				AppContext.orderedThreadPool = new OrderedMemoryAwareThreadPoolExecutor(AppContext.getBasicConfiguration()
+						.getMaxIOThreads(), 0, 0, 10, TimeUnit.SECONDS, new NamedPriorityThreadFactory("ORDERED_SC_WORKER"));
 			}
 		}
 	}
@@ -411,6 +420,15 @@ public final class AppContext {
 	}
 
 	/**
+	 * Gets the ordered thread pool.
+	 * 
+	 * @return the ordered thread pool
+	 */
+	public static ExecutorService getOrderedThreadPool() {
+		return AppContext.orderedThreadPool;
+	}
+
+	/**
 	 * Destroy the whole application context and release resources.
 	 */
 	public static void destroy() {
@@ -435,6 +453,10 @@ public final class AppContext {
 				if (AppContext.threadPool != null) {
 					AppContext.threadPool.shutdownNow();
 					AppContext.threadPool = null;
+				}
+				if (AppContext.orderedThreadPool != null) {
+					AppContext.orderedThreadPool.shutdownNow();
+					AppContext.orderedThreadPool = null;
 				}
 			} else {
 				LOGGER.debug("resources can not be released - pending communicators active");
@@ -531,5 +553,16 @@ public final class AppContext {
 			writer.writeAttribute("scworker_activeCount", threadPoolEx.getActiveCount());
 		}
 		writer.writeEndElement(); // end of sc-worker-threadpool
+
+		writer.writeStartElement("sc-ordered-worker-threadpool");
+		if (AppContext.orderedThreadPool instanceof ThreadPoolExecutor) {
+			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.orderedThreadPool;
+			writer.writeAttribute("scorderedworker_poolSize", threadPoolEx.getPoolSize());
+			writer.writeAttribute("scorderedworker_maximumPoolSize", threadPoolEx.getMaximumPoolSize());
+			writer.writeAttribute("scorderedworker_corePoolSize", threadPoolEx.getCorePoolSize());
+			writer.writeAttribute("scorderedworker_largestPoolSize", threadPoolEx.getLargestPoolSize());
+			writer.writeAttribute("scorderedworker_activeCount", threadPoolEx.getActiveCount());
+		}
+		writer.writeEndElement(); // end of sc-ordered-worker-threadpool
 	}
 }
