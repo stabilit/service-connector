@@ -62,7 +62,6 @@ public class EhCacheEventListener implements CacheEventListener {
 	public void notifyElementExpired(Ehcache cache, Element element) {
 		Object entry = element.getValue();
 		if (entry instanceof SCCacheMetaEntry) {
-			LOGGER.debug("notifyElementExpired: Value is my object type!!");
 			SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) entry;
 			CacheLogger.messageExpired(metaEntry.getCacheId());
 			AppContext.getSCCache().removeDataEntriesByMetaEntry((SCCacheMetaEntry) entry, "Meta Entry expired!");
