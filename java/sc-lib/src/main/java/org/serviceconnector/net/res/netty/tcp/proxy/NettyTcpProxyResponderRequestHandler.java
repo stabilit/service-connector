@@ -143,7 +143,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.warn(th); // regular disconnect causes this expected exception
+			LOGGER.info(th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);
