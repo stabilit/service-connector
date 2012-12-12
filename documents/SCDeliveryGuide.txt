@@ -9,5 +9,6 @@
 6. Increase the SC Version (SCVersion.java) number, open the new version and commit java class.
 7. Copy the new kitbuild to the download site (S:\projects\WEB_STABILIT\download\sc). 4 Files (sc-bin_Vx.zip, sc-bin_Vx_SHA-1.txt, sc-src_Vx.zip, sc-src_Vx_SHA-1.txt)
 8. Send the mail to SIX. There is a distribution list on S-Contacts SC (new version notification).
+9. Upload version to sourceforge.
 
 written by JOT
