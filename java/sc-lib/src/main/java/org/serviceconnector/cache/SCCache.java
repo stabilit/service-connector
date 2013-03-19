@@ -413,14 +413,14 @@ public class SCCache {
 	}
 
 	/**
-	 * Cached managed data. Called for caching managed data. Never used in a polling procedure of a client.
+	 * Cache managed data. Called for caching managed data. Never used in a polling procedure of a client.
 	 * 
 	 * @param resMessage
 	 *            the res message
 	 * @throws ParseException
 	 * @throws SCMPValidatorException
 	 */
-	public synchronized void cachedManagedData(SCMPMessage resMessage) throws SCMPValidatorException, ParseException {
+	public synchronized void cacheManagedData(SCMPMessage resMessage) throws SCMPValidatorException, ParseException {
 		String metaEntryCid = resMessage.getCacheId();
 		String currGuardian = resMessage.getServiceName();
 		String sid = resMessage.getSessionId();

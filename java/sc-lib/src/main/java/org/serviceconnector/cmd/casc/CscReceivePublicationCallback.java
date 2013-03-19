@@ -89,7 +89,7 @@ public class CscReceivePublicationCallback implements ISCMPMessageCallback {
 				CascadedPublishService publishService = cascClient.getPublishService();
 				if (publishService.getType() == ServiceType.CASCADED_CACHE_GUARDIAN) {
 					// Managed data arrived over cache guardian - handle caching
-					AppContext.getSCCache().cachedManagedData(reply);
+					AppContext.getSCCache().cacheManagedData(reply);
 				}
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);

@@ -63,12 +63,12 @@ public class PublishCommand extends CommandAdapter {
 			if (service.getCountAllocatedSessions() > 0) {
 				// existing subscriptions on cache guardian - cache managed data
 				message.setSessionId("SPUnoSid"); // setting a dummy sid, is needed for the cache!
-				AppContext.getSCCache().cachedManagedData(message);
+				AppContext.getSCCache().cacheManagedData(message);
 			}
 		} else if (service.getType() == ServiceType.CASCADED_CACHE_GUARDIAN) {
 			// always cache managed data for cascaded cache guardian
 			message.setSessionId("SPUnoSid"); // setting a dummy sid, is needed for the cache!
-			AppContext.getSCCache().cachedManagedData(message);
+			AppContext.getSCCache().cacheManagedData(message);
 		}
 
 		// reset server timeout
