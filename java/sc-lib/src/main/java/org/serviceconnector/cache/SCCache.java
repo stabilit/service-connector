@@ -372,8 +372,10 @@ public class SCCache {
 				// managed data received add to data in initial state list
 				this.mgdDataKeysInInitialState.add(metaEntryCid);
 				metaEntry.setCachingMethod(recvCachingMethod);
+			} else {
+				// setting cacheGuardian to "static" for static data
+				metaEntry.setCacheGuardianName(Constants.STATIC);
 			}
-			//TODO JOT else - setting static in cache guardian for unmanaged data should be right here - check!
 
 			if (CacheLogger.isEnabled()) {
 				CacheLogger.putMessageToCache(dataEntryCid, nrOfParts, metaEntry.getLoadingSessionId(), resMessage.getBodyLength(),
