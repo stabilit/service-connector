@@ -37,7 +37,7 @@ public final class Constants {
 	}
 
 	/*
-	 *  Numbers.
+	 * Numbers.
 	 */
 	/** The Constant NUMBER_10. */
 	public static final int NUMBER_10 = 10;
@@ -70,6 +70,8 @@ public final class Constants {
 	public static final int SEC_TO_NANOSSEC_FACTOR = SEC_TO_MILLISEC_FACTOR * SEC_TO_MILLISEC_FACTOR;
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
+	/** The Constant STATIC. */
+	public static final String STATIC = "static";
 	/** The Constant SLASH. */
 	public static final String SLASH = "/";
 	/** The Constant UNDERLINE. */
