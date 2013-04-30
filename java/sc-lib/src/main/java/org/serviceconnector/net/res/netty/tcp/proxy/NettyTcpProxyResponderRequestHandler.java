@@ -80,7 +80,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		ClientBootstrap cb = new ClientBootstrap(cf);
 		cb.getPipeline().addLast("handler", new OutboundHandler(e.getChannel()));
 		ChannelFuture f = cb.connect(new InetSocketAddress(remoteHost, remotePort));
-
+		f.await(); // avoids writing before channel connect is completed
 		outboundChannel = f.getChannel();
 		f.addListener(new ChannelFutureListener() {
 			public void operationComplete(ChannelFuture future) throws Exception {
