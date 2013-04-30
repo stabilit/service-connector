@@ -373,7 +373,7 @@ public class SCCache {
 				this.mgdDataKeysInInitialState.add(metaEntryCid);
 				metaEntry.setCachingMethod(recvCachingMethod);
 			} else {
-				// setting cacheGuardian to "static" for static data
+				// setting cacheGuardian to "static" for static data already known in first reply
 				metaEntry.setCacheGuardianName(Constants.STATIC);
 			}
 
