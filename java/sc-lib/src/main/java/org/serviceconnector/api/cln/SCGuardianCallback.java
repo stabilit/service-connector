@@ -91,7 +91,7 @@ class SCGuardianCallback extends SCServiceCallback {
 			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			replyToClient.setCachingMethod(cachingMethod);
 			replyToClient.setCacheId(reply.getHeader(SCMPHeaderAttributeKey.CACHE_ID));
-
+			replyToClient.setCached(reply.getHeaderFlag(SCMPHeaderAttributeKey.CACHED));
 			// inform service request is completed
 			this.service.setRequestComplete();
 			switch (cachingMethod) {

@@ -286,6 +286,7 @@ public class SCSessionService extends SCService {
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setCacheId(reply.getCacheId());
+		replyToClient.setCached(reply.getHeaderFlag(SCMPHeaderAttributeKey.CACHED));
 		replyToClient.setCachePartNr(reply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
 		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -337,6 +338,7 @@ public class SCSessionService extends SCService {
 			appendix.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 			appendix.setSessionId(this.sessionId);
 			appendix.setCacheId(reply.getCacheId());
+			appendix.setCached(reply.getHeaderFlag(SCMPHeaderAttributeKey.CACHED));
 			appendix.setCachePartNr(reply.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
 			appendix.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 			appendix.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));

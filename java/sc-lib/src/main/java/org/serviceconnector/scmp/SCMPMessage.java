@@ -149,6 +149,25 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
+	 * Checks if is cached.
+	 * 
+	 * @return true, if is cached
+	 */
+	public boolean isCached() {
+		if (this.header.keySet().contains(SCMPHeaderAttributeKey.CACHED.getValue())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Sets the cached flag if messages is has been cached.
+	 */
+	public void setCached() {
+		this.setHeaderFlag(SCMPHeaderAttributeKey.CACHED);
+	}
+
+	/**
 	 * Checks if the message is a fault.
 	 * 
 	 * @return true, if is fault

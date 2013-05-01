@@ -52,6 +52,8 @@ public class SCMessage {
 	 * unique per service.
 	 */
 	private String cacheId;
+	/** Marks cached messages. Message comes from a cache. */
+	private boolean cached;
 	/**
 	 * The cache part nr.
 	 */
@@ -100,6 +102,7 @@ public class SCMessage {
 		this.sessionId = null;
 		this.sessionInfo = null;
 		this.cacheId = null;
+		this.cached = false;
 		this.cachePartNr = null;
 		this.appErrorCode = Constants.EMPTY_APP_ERROR_CODE;
 		this.appErrorText = null;
@@ -262,6 +265,25 @@ public class SCMessage {
 	 */
 	public String getCachePartNr() {
 		return cachePartNr;
+	}
+
+	/**
+	 * Checks if message has been cached and comes from a cache.
+	 * 
+	 * @return true, if message has been cached
+	 */
+	public boolean isCached() {
+		return this.cached;
+	}
+
+	/**
+	 * Marks the message as a cached message.
+	 * 
+	 * @param cached
+	 *            the new caching state
+	 */
+	public void setCached(boolean cached) {
+		this.cached = cached;
 	}
 
 	/**

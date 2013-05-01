@@ -192,6 +192,7 @@ public class SCCache {
 					cachedMessage.setMessageType(reqMessage.getMessageType());
 					cachedMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, reqMessage.getMessageSequenceNr());
 					cachedMessage.setSessionId(sessionId);
+					cachedMessage.setCached();
 					if (CacheLogger.isEnabled()) {
 						CacheLogger.gotMessageFromCache(dataEntryCid, sessionId, cachedMessage.getBodyLength());
 					}
@@ -372,8 +373,10 @@ public class SCCache {
 				// managed data received add to data in initial state list
 				this.mgdDataKeysInInitialState.add(metaEntryCid);
 				metaEntry.setCachingMethod(recvCachingMethod);
-			} else {
-				// setting cacheGuardian to "static" for static data already known in first reply
+			}
+
+			if (recvCachingMethod == SC_CACHING_METHOD.NOT_MANAGED) {
+				// setting cacheGuardian to "static" for static data
 				metaEntry.setCacheGuardianName(Constants.STATIC);
 			}
 

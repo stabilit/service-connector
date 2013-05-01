@@ -33,6 +33,8 @@ public enum SCMPHeaderAttributeKey {
 	CACHE_EXPIRATION_DATETIME("ced"),
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
+	/** The CACHED. */
+	CACHED("cac"),
 	/** The CACHE_PARTN_NUMBER. */
 	CACHE_PARTN_NUMBER("cpn"),
 	/** The CACHING_METHOD. */
