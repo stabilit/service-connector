@@ -3,7 +3,7 @@ SC Feature List
 - Session/subscription display in proxy SC
 - Message Queue in UI: Show peak and total amount of messages for queue
 - Display server timeout and last activity in UI
-- Make cache persistent on disk (its already the case bit it removes the files at startup/shutdown)
+- Make cache persistent on disk (its already the case but it removes the files at startup/shutdown)
 - SC client API isAttached() returns wrong information. Rename method or really check the SC state, how?
 - Visualize the topologie of SC's and proxy's in the UI (its more a marketing then a functional point, verification of configuration)
 - think about control stuff of proxies (layering, disabling cache on proxies etc)
@@ -18,3 +18,4 @@ SC Feature List
 - Load balancing for servers running on different nodes
 - Failover for services (primary / secondary service)
 - Java Script Library to connect to the SC
+- Configure cenralized DNS-like server to keep service configurations (routing table). SC nodes need to look up information on DNS_SC.
