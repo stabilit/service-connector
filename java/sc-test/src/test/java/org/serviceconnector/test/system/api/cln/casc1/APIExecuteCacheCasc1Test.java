@@ -667,4 +667,85 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		SCMessage response2 = sessionService2.execute(request);
 		Assert.assertEquals("cacheWait15sec", response.getData());
 	}
+
+	/**
+	 * Description: exchange message no caching<br>
+	 * Expectation: cache flag is set to false on message
+	 */
+	@Test
+	public void t29_cachedFlag() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		response = sessionService1.execute(request);
+		// inspect cache entry
+		Map<String, String> inspectResponse = client.inspectCache("700");
+		Assert.assertEquals(inspectResponse.get("return"), "notfound");
+		// get message from cache again
+		response = sessionService1.execute(request);
+		// Verify cached flag is set correctly
+		Assert.assertFalse("cached flag wrong value", response.isCached());
+	}
+
+	/**
+	 * Description: exchange message caching<br>
+	 * Expectation: cache flag is set to true on message
+	 */
+	@Test
+	public void t30_cachedFlag() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setMessageInfo(TestConstants.cacheCmd);
+		request.setData("cacheFor1Hour");
+		request.setCacheId("700");
+		response = sessionService1.execute(request);
+		// inspect cache entry
+		Map<String, String> inspectResponse = client.inspectCache("700");
+		Assert.assertEquals(inspectResponse.get("return"), "success");
+		// get message from cache again
+		response = sessionService1.execute(request);
+		// Verify cached flag is set correctly
+		Assert.assertTrue("cached flag wrong value", response.isCached());
+	}
+
+	/**
+	 * Description: sessionService exchange a large message, sessionService1 exchange a message, same cacheId's on two service
+	 * instances, sessionService two gets message from cache<br>
+	 * Expectation: get messages from cache
+	 */
+	@Test
+	public void t31_cachedFlag() throws Exception {
+		String largeMessage = TestUtil.get10MBString();
+		SCMessage request = new SCMessage();
+		request.setPartSize(1 << 16); // 64KB
+		request.setCompressed(false);
+		SCMessage response = null;
+		// session service stores large message with cacheId 700
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setData("cache10MBStringFor1Hour");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals(largeMessage, response.getData());
+		// Verify cached flag is set correctly
+		Assert.assertFalse("cached flag wrong value", response.isCached());
+
+		// session service2 starts getting large message from cache with cacheId 700
+		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
+		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
+		response = sessionService2.createSession(request, msgCallback2);
+		request.setData("randomContent");
+		request.setCacheId("700");
+		response = sessionService2.execute(request);
+		Assert.assertEquals(largeMessage, response.getData());
+		// Verify cached flag is set correctly
+		Assert.assertTrue("cached flag wrong value", response.isCached());
+	}
 }

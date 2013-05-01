@@ -754,7 +754,6 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		sessionService1.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		msgCallback1.waitForMessage(10);
 		response = msgCallback1.getResponse();
-		// TODO TRN check SC error
 	}
 
 	/**

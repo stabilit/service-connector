@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.test.unit.api;
 
@@ -110,7 +110,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set null value  as MessageInfo<br>
+	 * Description: Set null value as MessageInfo<br>
 	 * Expectation: MessageInfo is set to Null
 	 */
 	@Test
@@ -286,7 +286,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	public void t73_AppErrorText() throws Exception {
 		message.setAppErrorText("a");
 		Assert.assertEquals("string is not equal", "a", message.getAppErrorText());
-		Assert.assertEquals("length is not 1",1, message.getAppErrorText().length());
+		Assert.assertEquals("length is not 1", 1, message.getAppErrorText().length());
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 * Description: Set 32767 Chars as AppErrorText<br>
 	 * Expectation: passes, is checked in SC
 	 */
-	@Test 
+	@Test
 	public void t76_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
@@ -343,7 +343,7 @@ public class APISCMessageTest extends SuperUnitTest {
 		message.setAppErrorCode(-2);
 		Assert.assertEquals("is not -2", -2, message.getAppErrorCode());
 	}
-	
+
 	/**
 	 * Description: Set AppErrorCode 0<br>
 	 * Expectation: AppErrorCode is 0
@@ -369,7 +369,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	public void t91_CacheExpirationDateTime() throws Exception {
 		message.setCacheExpirationDateTime(null);
 	}
-	
+
 	/**
 	 * Description: Set reject true<br>
 	 * Expectation: reject is set to true
@@ -390,4 +390,23 @@ public class APISCMessageTest extends SuperUnitTest {
 		Assert.assertEquals("Reject", false, message.isReject());
 	}
 
+	/**
+	 * Description: Set cached state to true<br>
+	 * Expectation: cached flag is set to true
+	 */
+	@Test
+	public void t102_Cached() throws Exception {
+		message.setCached(true);
+		Assert.assertEquals("Cached", true, message.isCached());
+	}
+
+	/**
+	 * Description: Set cached state to false<br>
+	 * Expectation: cached flag is set to false
+	 */
+	@Test
+	public void t103_Cached() throws Exception {
+		message.setCached(false);
+		Assert.assertEquals("Cached", false, message.isCached());
+	}
 }
