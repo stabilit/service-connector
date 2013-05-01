@@ -1,0 +1,14 @@
+﻿SC delivery to SIX
+
+1. Finish the documents (OpenIssues/SC_0_SCMP_E-Vx), create pdf files and commit everything.
+2. Synchronize java projects with the repository and commit everything.
+3. Build the kit by starting external configuration kitbuild in eclipse.
+4. Verify everything by starting the script (start-sc.bat, start-demo-server.bat, start-demo-client.bat) in the kitbuild project (kitBuild\kit-tmp\bin).
+5. Commit files (sc-bin.zip, sc-src.zip) in kit Folder.
+5. Go the repository and tag the new version.
+6. Increase the SC Version (SCVersion.java) number, open the new version and commit java class.
+7. Copy the new kitbuild to the download site (S:\projects\WEB_STABILIT\download\sc). 4 Files (sc-bin_Vx.zip, sc-bin_Vx_SHA-1.txt, sc-src_Vx.zip, sc-src_Vx_SHA-1.txt)
+8. Send the mail to SIX. There is a distribution list on S-Contacts SC (new version notification).
+9. Upload version to sourceforge.
+
+written by JOT
