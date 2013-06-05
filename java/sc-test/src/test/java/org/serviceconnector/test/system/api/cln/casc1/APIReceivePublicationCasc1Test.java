@@ -74,7 +74,7 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_receive() throws Exception {
+	public void t02a_receive() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
@@ -92,6 +92,37 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		msgCallback.waitForMessage(20);
+		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
+		SCMessage response = msgCallback.getMessage();
+		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
+
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
+
+	/**
+	 * Description: receive 100000 messages<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t02b_receive() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		msgCallback = new MsgCallback(publishService);
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
+		int nrMessages = 5000;
+		subMsgRequest.setData(Integer.toString(nrMessages));
+		subMsgRequest.setDataLength(((String) subMsgRequest.getData()).length());
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
+
+		msgCallback.waitForMessage(5000);
 		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
 		SCMessage response = msgCallback.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);

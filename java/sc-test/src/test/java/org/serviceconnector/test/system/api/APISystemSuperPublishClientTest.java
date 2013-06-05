@@ -180,7 +180,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		public void receive(SCMessage msg) {
 			message = msg;
 			messageCounter++;
-			if (((messageCounter + 1) % 100) == 0) {
+			if (((messageCounter + 1) % 1000) == 0) {
 				APIReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
 			}
 		}

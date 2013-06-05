@@ -16,6 +16,7 @@
 package org.serviceconnector.test.system.api.cln.casc1;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;

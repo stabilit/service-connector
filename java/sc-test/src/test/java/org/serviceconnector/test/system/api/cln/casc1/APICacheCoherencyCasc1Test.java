@@ -1486,6 +1486,46 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3",
 				"700/0/0=0&700/1/0=1&700/2/0=1&700/3/0=1&");
 	}
+	
+	/**
+	 * Description:
+	 * 1: connect new client2 to top level (cascaded) SC
+	 * 2: load data to cache (cid=700) by client1
+	 * 3: start cache guardian1 - publish 3 large appendix
+	 * 4: start cache guardian2 - publish 3 large appendix
+	 * 5: verify callback of guardian1 retrieval - 30000 appendix within 360 secs
+	 * Expectation: passes
+	 */
+	@Test
+	public void t34_cc_2Clients2Server1Cache30000Msgs() throws Exception {
+		// 1: connect new client2 to top level (cascaded) SC
+		SCClient client2 = new SCClient(TestConstants.HOST, sessionClient.getPort(), ConnectionType.NETTY_TCP);
+		client2.attach();
+		SCSessionService sessionService2 = client2.newSessionService(TestConstants.sesServiceName1);
+		sessionService2.createSession(new SCMessage(), new SessionMsgCallback(sessionService2));
+
+		// 2: load data to cache (cid=700) by client1
+		SCMessage request = new SCMessage();
+		request.setData("cacheFor1Hour_managedData");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.execute(request);
+
+		// 3: start cache guardian1
+		SCSubscribeMessage subMsg = new SCSubscribeMessage();
+		subMsg.setMask(TestConstants.mask);
+		GuardianCbk cacheGuardianCbk2 = new GuardianCbk();
+		client2.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk2);
+		
+		// 3: start cache guardian2 - publish 30000 appendices
+		subMsg.setSessionInfo(TestConstants.publishAppendsWithDelayCmd);
+		subMsg.setData("30000|0|700|" + SC_CACHING_METHOD.APPEND.getValue());
+		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
+
+		// 4: verify performance - receiving 30000 in 360 secs
+		cacheGuardianCbk.waitForAppendMessage(30000, 360);
+		cacheGuardianCbk2.waitForAppendMessage(30000, 1);
+	}
 
 	/**
 	 * Description

@@ -235,8 +235,14 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 		@Override
 		public void receiveAppendix(SCAppendMessage appendix) {
-			SystemSuperTest.testLogger.info("receive append msg=" + appendix.toString());
+			// SystemSuperTest.testLogger.info("receive append msg=" + appendix.toString());
 			appendMsgRecvCounter++;
+			if (appendMsgRecvCounter == 1) {
+				SystemSuperTest.testLogger.info("Receiving message nr. " + appendMsgRecvCounter);
+			}
+			if (((appendMsgRecvCounter + 1) % 5000) == 0) {
+				SystemSuperTest.testLogger.info("Receiving message nr. " + (appendMsgRecvCounter + 1));
+			}
 		}
 
 		@Override
