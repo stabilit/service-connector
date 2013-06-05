@@ -341,6 +341,39 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
+		// publish n appends 128 byte long with delay w. n is defined in the request body, w in messageInfo
+		public void publishAppendsWithDelayCmd(SCMessage request, int operationTimeoutMillis) {
+			String[] dataString = ((String) request.getData()).split("\\|");
+			int count = Integer.parseInt(dataString[0]);
+			int waitTime = Integer.parseInt(dataString[1]);
+			SCAppendMessage pubMessage = new SCAppendMessage();
+			pubMessage.setCompressed(false);
+			pubMessage.setMask(TestConstants.maskSrv);
+			pubMessage.setCacheId((String) request.getData());
+			pubMessage.setData(new byte[128]);
+			if (dataString.length >= 3) {
+				String cacheId = dataString[2];
+				pubMessage.setCacheId(cacheId);
+			}
+			if (dataString.length >= 4) {
+				String cachingMethod = dataString[3];
+				pubMessage.setCachingMethod(SC_CACHING_METHOD.getCachingMethod(cachingMethod));
+			}
+			for (int i = 0; i < count; i++) {
+				try {
+					pubMessage.setData("publish message nr:" + i);
+					this.publishSrv.publish(pubMessage);
+					Thread.sleep(waitTime);
+					if (((i + 1) % 1000) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
+					}
+				} catch (Exception e) {
+					LOGGER.error("cannot publish", e);
+					break;
+				}
+			}
+		}
+
 		// publish a large message
 		public void publishLargeMessage(SCMessage request, int operationTimeoutMillis) {
 			String largeString = TestUtil.getLargeString();
