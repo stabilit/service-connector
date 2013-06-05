@@ -88,6 +88,32 @@ public class SCCacheMetaEntry implements Serializable {
 	}
 
 	/**
+	 * Instantiates a new meta entry. Copy constructor. Make a copy of given object.
+	 * 
+	 * @param toCopyObject
+	 *            the object to be copied
+	 */
+	public SCCacheMetaEntry(SCCacheMetaEntry toCopyObject) {
+		this(toCopyObject.getCacheId());
+		// putting the hashMap in order to make a proper copy
+		this.header.putAll(toCopyObject.getHeader());
+		this.setCacheEntryState(toCopyObject.getSCCacheEntryState());
+		this.setLoadingSessionId(toCopyObject.getLoadingSessionId());
+		this.setLoadingTimeoutMillis(toCopyObject.getLoadingTimeoutMillis());
+		// create new date object in order to make a proper copy of date
+		this.creationTime = new Date(toCopyObject.getCreationTime().getTime());
+		// create new date object in order to make a proper copy of date
+		this.lastModifiedTime = new Date(toCopyObject.getLastModifiedTime().getTime());
+		this.numberOfAppendix = toCopyObject.getNrOfAppendix();
+		this.setExpectedAppendix(toCopyObject.getExpectedAppendix());
+		this.setCacheGuardianName(toCopyObject.getCacheGuardianName());
+		// putting the hashMap in order to make a proper copy
+		this.dataMessagePartInfo.putAll(toCopyObject.dataMessagePartInfo);
+		this.setExpDateTimeStr(toCopyObject.getExpDateTimeStr());
+		this.setCachingMethod(toCopyObject.cachingMethod);
+	}
+
+	/**
 	 * Gets the cache id.
 	 * 
 	 * @return the cache id

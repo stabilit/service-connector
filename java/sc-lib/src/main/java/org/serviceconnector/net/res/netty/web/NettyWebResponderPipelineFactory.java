@@ -49,7 +49,7 @@ public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory 
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// executer to run NettyWebResponderRequestHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getThreadPool()));
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyWebResponderRequestHandler());
 		return pipeline;

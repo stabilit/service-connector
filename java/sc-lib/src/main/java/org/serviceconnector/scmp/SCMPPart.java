@@ -72,6 +72,18 @@ public class SCMPPart extends SCMPMessage {
 		this.header = new HashMap<String, String>(baseHeader);
 	}
 
+	/**
+	 * Instantiates a new SCMP part. Copy constructor. Make a copy of given object.
+	 * Uses SCMP Message copy constructor.
+	 * 
+	 * @param toCopyObject
+	 *            the object to be copied
+	 */
+	public SCMPPart(SCMPPart toCopyObject) {
+		super(toCopyObject);
+		this.pollRequest = toCopyObject.isPollRequest();
+	}
+
 	/** {@inheritDoc} */
 	public boolean isPart() {
 		return true;

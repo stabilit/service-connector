@@ -130,9 +130,11 @@ public final class AppContext {
 	/**
 	 * The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI.
 	 */
-	private static ExecutorService threadPool;
-
-	private static ExecutorService orderedThreadPool;
+	private static ExecutorService scWorkerThreadPool;
+	/**
+	 * The executor to submit runnable objects for Proxy handler of Netty. Ordered pool needed because of pipe logic.
+	 */
+	private static ExecutorService orderedSCWorkerThreadPool;
 
 	// initialize configurations in every case
 	static {
@@ -167,13 +169,14 @@ public final class AppContext {
 				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI",
 						Thread.MAX_PRIORITY));
 			}
-			if (AppContext.threadPool == null) {
-				AppContext.threadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
+			if (AppContext.scWorkerThreadPool == null) {
+				AppContext.scWorkerThreadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
 			}
 
-			if (AppContext.orderedThreadPool == null) {
-				AppContext.orderedThreadPool = new OrderedMemoryAwareThreadPoolExecutor(AppContext.getBasicConfiguration()
-						.getMaxIOThreads(), 0, 0, 10, TimeUnit.SECONDS, new NamedPriorityThreadFactory("ORDERED_SC_WORKER"));
+			if (AppContext.orderedSCWorkerThreadPool == null) {
+				AppContext.orderedSCWorkerThreadPool = new OrderedMemoryAwareThreadPoolExecutor(
+						Constants.DEFAULT_MAX_ORDERED_IO_THREADS, 0, 0, 10, TimeUnit.SECONDS, new NamedPriorityThreadFactory(
+								"ORDERED_SC_WORKER"));
 			}
 		}
 	}
@@ -411,21 +414,21 @@ public final class AppContext {
 	}
 
 	/**
-	 * Gets the thread pool.
+	 * Gets the SC worker thread pool.
 	 * 
-	 * @return the thread pool
+	 * @return the SC worker thread pool
 	 */
-	public static ExecutorService getThreadPool() {
-		return AppContext.threadPool;
+	public static ExecutorService getSCWorkerThreadPool() {
+		return AppContext.scWorkerThreadPool;
 	}
 
 	/**
-	 * Gets the ordered thread pool.
+	 * Gets the ordered SC worker thread pool.
 	 * 
-	 * @return the ordered thread pool
+	 * @return the ordered SC worker thread pool
 	 */
-	public static ExecutorService getOrderedThreadPool() {
-		return AppContext.orderedThreadPool;
+	public static ExecutorService getOrderedSCWorkerThreadPool() {
+		return AppContext.orderedSCWorkerThreadPool;
 	}
 
 	/**
@@ -450,13 +453,13 @@ public final class AppContext {
 					AppContext.eci_cri_Scheduler.shutdownNow();
 					AppContext.eci_cri_Scheduler = null;
 				}
-				if (AppContext.threadPool != null) {
-					AppContext.threadPool.shutdownNow();
-					AppContext.threadPool = null;
+				if (AppContext.scWorkerThreadPool != null) {
+					AppContext.scWorkerThreadPool.shutdownNow();
+					AppContext.scWorkerThreadPool = null;
 				}
-				if (AppContext.orderedThreadPool != null) {
-					AppContext.orderedThreadPool.shutdownNow();
-					AppContext.orderedThreadPool = null;
+				if (AppContext.orderedSCWorkerThreadPool != null) {
+					AppContext.orderedSCWorkerThreadPool.shutdownNow();
+					AppContext.orderedSCWorkerThreadPool = null;
 				}
 			} else {
 				LOGGER.debug("resources can not be released - pending communicators active");
@@ -544,8 +547,8 @@ public final class AppContext {
 	 */
 	private static void dumpAppContextInfos(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("sc-worker-threadpool");
-		if (AppContext.threadPool instanceof ThreadPoolExecutor) {
-			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.threadPool;
+		if (AppContext.scWorkerThreadPool instanceof ThreadPoolExecutor) {
+			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.scWorkerThreadPool;
 			writer.writeAttribute("scworker_poolSize", threadPoolEx.getPoolSize());
 			writer.writeAttribute("scworker_maximumPoolSize", threadPoolEx.getMaximumPoolSize());
 			writer.writeAttribute("scworker_corePoolSize", threadPoolEx.getCorePoolSize());
@@ -554,15 +557,15 @@ public final class AppContext {
 		}
 		writer.writeEndElement(); // end of sc-worker-threadpool
 
-		writer.writeStartElement("sc-ordered-worker-threadpool");
-		if (AppContext.orderedThreadPool instanceof ThreadPoolExecutor) {
-			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.orderedThreadPool;
-			writer.writeAttribute("scorderedworker_poolSize", threadPoolEx.getPoolSize());
-			writer.writeAttribute("scorderedworker_maximumPoolSize", threadPoolEx.getMaximumPoolSize());
-			writer.writeAttribute("scorderedworker_corePoolSize", threadPoolEx.getCorePoolSize());
-			writer.writeAttribute("scorderedworker_largestPoolSize", threadPoolEx.getLargestPoolSize());
-			writer.writeAttribute("scorderedworker_activeCount", threadPoolEx.getActiveCount());
+		writer.writeStartElement("ordered-sc-worker-threadpool");
+		if (AppContext.orderedSCWorkerThreadPool instanceof ThreadPoolExecutor) {
+			ThreadPoolExecutor threadPoolEx = (ThreadPoolExecutor) AppContext.orderedSCWorkerThreadPool;
+			writer.writeAttribute("orderedscworker_poolSize", threadPoolEx.getPoolSize());
+			writer.writeAttribute("orderedscworker_maximumPoolSize", threadPoolEx.getMaximumPoolSize());
+			writer.writeAttribute("orderedscworker_corePoolSize", threadPoolEx.getCorePoolSize());
+			writer.writeAttribute("orderedscworker_largestPoolSize", threadPoolEx.getLargestPoolSize());
+			writer.writeAttribute("orderedscworker_activeCount", threadPoolEx.getActiveCount());
 		}
-		writer.writeEndElement(); // end of sc-ordered-worker-threadpool
+		writer.writeEndElement(); // end of ordered-sc-worker-threadpool
 	}
 }

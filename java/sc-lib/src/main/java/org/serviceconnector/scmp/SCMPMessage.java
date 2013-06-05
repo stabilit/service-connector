@@ -67,6 +67,23 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
+	 * Instantiates a new SCMP. Copy constructor. Make a copy of given object.
+	 * Pay attention the body of type object is not properly copied here. Copying an instance of type object is not possible.
+	 * SCMPVersion and SCVersion are not copied as well knowing that runtime changes are forbidden anyway.
+	 * 
+	 * @param toCopyObject
+	 *            the object to be copied
+	 */
+	public SCMPMessage(SCMPMessage toCopyObject) {
+		this(toCopyObject.getSCMPVersion(), toCopyObject.getHeader());
+		this.setIsReply(toCopyObject.isReply());
+		this.setIsReqCompleteAfterMarshallingPart(toCopyObject.isReqCompleteAfterMarshallingPart());
+		this.setPartSize(toCopyObject.getPartSize());
+		this.setBody(toCopyObject.getBody());
+		this.setHttpUrlFileQualifier(toCopyObject.getHttpUrlFileQualifier());
+	}
+
+	/**
 	 * Instantiates a new SCMP message with given message key.
 	 * 
 	 * @param scmpVersion

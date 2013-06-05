@@ -69,7 +69,7 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 		// logging handler
 		pipeline.addLast("logger", new LoggingHandler());
 		// executer to run NettyTcpProxyResponderRequestHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getOrderedThreadPool()));
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getOrderedSCWorkerThreadPool()));
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;

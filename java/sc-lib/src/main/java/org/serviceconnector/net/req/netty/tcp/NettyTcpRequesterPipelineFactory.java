@@ -67,7 +67,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new NettySCMPFrameDecoder());
 		// executer to run NettyTcpRequesterResponseHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getThreadPool()));
+		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
 		// responsible for handle response - Stabilit
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;

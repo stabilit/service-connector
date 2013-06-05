@@ -23,7 +23,12 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.cache.ISCCacheModule;
+import org.serviceconnector.cache.SCCache;
+import org.serviceconnector.cache.SCCacheMetaEntry;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPPart;
 
 /**
  * The Class EHCacheSCMPCacheImpl. This class wraps the EHCache implementation of a cache.
@@ -31,6 +36,8 @@ import org.serviceconnector.cache.ISCCacheModule;
  * @param <T>
  */
 public class EHCacheImpl<T> implements ISCCacheModule<T> {
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(SCCache.class);
 	/** The cache. */
 	private Cache ehCache;
 
@@ -53,19 +60,60 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 		if (element == null) {
 			return null;
 		}
-		return (T) element.getObjectValue();
+		// Any object delivered by the cache should be copied to avoid modifications done by consumers
+		Object objectValue = element.getObjectValue();
+
+		if (objectValue instanceof SCMPPart) {
+			SCMPPart copiedSCMPPart = null;
+			copiedSCMPPart = new SCMPPart((SCMPPart) objectValue);
+			return (T) copiedSCMPPart;
+		} else if (objectValue instanceof SCMPMessage) {
+			SCMPMessage copiedSCMPMsg = null;
+			copiedSCMPMsg = new SCMPMessage((SCMPMessage) objectValue);
+			return (T) copiedSCMPMsg;
+		} else if (objectValue instanceof SCCacheMetaEntry) {
+			SCCacheMetaEntry copiedMetaEntry = null;
+			copiedMetaEntry = new SCCacheMetaEntry((SCCacheMetaEntry) objectValue);
+			return (T) copiedMetaEntry;
+		} else {
+			LOGGER.error("Unexpected instance copy procedure not properly done!");
+			return (T) objectValue;
+		}
 	}
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void putOrUpdate(Object key, T value, int timeToLiveSeconds) {
+		// Any object put to the cache should be copied to avoid modifications done by consumers
+		if (value instanceof SCMPPart) {
+			value = (T) new SCMPPart((SCMPPart) value);
+		} else if (value instanceof SCMPMessage) {
+			value = (T) new SCMPMessage((SCMPMessage) value);
+		} else if (value instanceof SCCacheMetaEntry) {
+			value = (T) new SCCacheMetaEntry((SCCacheMetaEntry) value);
+		} else {
+			LOGGER.error("Unexpected instance copy procedure not properly done!");
+		}
+
 		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive
 		Element element = new Element(key, value, false, 0, timeToLiveSeconds);
 		this.ehCache.put(element);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void replace(Object key, T value, int timeToLiveSeconds) {
+		// Any object put to the cache should be copied to avoid modifications done by consumers
+		if (value instanceof SCMPPart) {
+			value = (T) new SCMPPart((SCMPPart) value);
+		} else if (value instanceof SCMPMessage) {
+			value = (T) new SCMPMessage((SCMPMessage) value);
+		} else if (value instanceof SCCacheMetaEntry) {
+			value = (T) new SCCacheMetaEntry((SCCacheMetaEntry) value);
+		} else {
+			LOGGER.error("Unexpected instance copy procedure not properly done!");
+		}
 		// key, value, eternal, timeToIdle (0 = unlimited), timeToLive
 		Element element = new Element(key, value, false, 0, timeToLiveSeconds);
 		this.ehCache.replace(element);

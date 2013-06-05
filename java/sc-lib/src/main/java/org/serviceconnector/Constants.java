@@ -113,6 +113,8 @@ public final class Constants {
 	 */
 	/** Default value used if no DEFAULT_MAX_IO_THREADS is configured. */
 	public static final int DEFAULT_MAX_IO_THREADS = 30;
+	/** Default value used if no DEFAULT_MAX_ORDERED_IO_THREADS is configured. */
+	public static final int DEFAULT_MAX_ORDERED_IO_THREADS = 30;
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/** Default value used if no interval is passed in the API. */
@@ -292,9 +294,9 @@ public final class Constants {
 	/** The Constant DEFAULT_CACHE_ENABLED. */
 	public static final boolean DEFAULT_CACHE_ENABLED = true;
 	/** The Constant DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY. */
-	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 10000;
+	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 100000;
 	/** The Constant DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK. */
-	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
+	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 1000000;
 	/** The Constant DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS. */
 	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 30;
 	// for internal use in class Cache

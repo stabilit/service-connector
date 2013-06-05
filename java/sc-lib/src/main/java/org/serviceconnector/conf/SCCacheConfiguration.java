@@ -59,7 +59,7 @@ public class SCCacheConfiguration {
 	 * Service Connector cache parameters: <br />
 	 * cache.enabled=true<br />
 	 * cache.diskPath=../../dev/cache <br />
-	 * cache.maxElementsInMemory=10000 <br />
+	 * cache.maxElementsInMemory=100000 <br />
 	 * cache.maxElementsOnDisk=1000000 <br />
 	 * cache.expirationCheckIntervalSeconds=60 <br />
 	 * 

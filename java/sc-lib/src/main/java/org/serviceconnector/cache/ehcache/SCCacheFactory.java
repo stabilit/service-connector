@@ -21,8 +21,8 @@ import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
 
-import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.ISCCacheModule;
+import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.cache.SC_CACHE_MODULE_TYPE;
 import org.serviceconnector.conf.SCCacheConfiguration;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public final class SCCacheFactory {
 
 	/** The Constant DEFAULT_CACHE_DISK_PERSISTENT. */
-	private static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
+	private static final boolean DEFAULT_CACHE_DISK_PERSISTENT = false;
 	/** The Constant DEFAULT_CACHE_NAME. */
 	private static final String DEFAULT_CACHE_NAME = "SC_CACHE";
 	/** The EHCache manager. */
@@ -118,8 +118,8 @@ public final class SCCacheFactory {
 		ehCacheConfiguration.setDiskPersistent(SCCacheFactory.DEFAULT_CACHE_DISK_PERSISTENT);
 		ehCacheConfiguration.setDiskStorePath(diskPath);
 		ehCacheConfiguration.setName(cacheType.name());
-		ehCacheConfiguration.setCopyOnRead(true);
-		ehCacheConfiguration.setCopyOnWrite(true);
+		ehCacheConfiguration.setCopyOnRead(false);
+		ehCacheConfiguration.setCopyOnWrite(false);
 		ehCacheConfiguration.setDiskExpiryThreadIntervalSeconds(scCacheConfiguration.getExpirationCheckIntervalSeconds());
 		
 		// create cache
