@@ -93,6 +93,7 @@ public class TestConstants {
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
 	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";
+	public static final String publishAppendsWithDelayCmd = "publishAppendsWithDelayCmd";
 	public static final String publishLargeMsgCmd = "publishLargeMessage";
 	public static final String echoCmd = "echoMessage";
 	public static final String raiseExceptionCmd = "raiseException";
