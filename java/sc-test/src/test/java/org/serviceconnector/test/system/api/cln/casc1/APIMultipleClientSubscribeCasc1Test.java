@@ -24,6 +24,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
@@ -39,7 +40,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		super.beforeOneTest();
 		TestUtil.deleteLogDir(TestConstants.log4jClnProperties);
 	}
-	
+
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
@@ -180,5 +181,55 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+	}
+
+	/**
+	 * Description: 15clients Subscribe, receives 500 message and unsubscribe, stop sc0 and server, start and try to reestablish<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_15ClientsReceivingMessagesBetweenRebootOfSC() throws Exception {
+		int numberOfClients = 15;
+		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
+
+		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
+				TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+				"f_subscribeReceive500Unsubscribe");
+		clientCtxs[0] = clientCtx3;
+		for (int i = 1; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					"f_subscribeReceive500Unsubscribe");
+			clientCtxs[i] = clientCtx;
+		}
+
+		ProcessCtx sc0 = SystemSuperTest.scCtxs.remove("sc0");
+		SystemSuperTest.ctrl.stopSC(sc0);
+		SystemSuperTest.ctrl.stopServerEnvironment(SystemSuperTest.srvCtxs);
+
+		numberOfClients = 15;
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					"f_subscribeReceive500Unsubscribe");
+			clientCtxs[i] = clientCtx;
+		}
+
+		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		sc0Defs.add(sc0Def);
+
+		SystemSuperTest.scCtxs.putAll(SystemSuperTest.ctrl.startSCEnvironment(sc0Defs));
+		APIMultipleClientChangeSubscriptionCasc1Test.setUpServer();
+		srvCtxs = ctrl.startServerEnvironment(srvDefs);
+
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					"f_subscribeReceive500Unsubscribe");
+			clientCtxs[i] = clientCtx;
+		}
+		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtxs);
 	}
 }
