@@ -793,6 +793,28 @@ public class SCCache {
 	}
 
 	/**
+	 * Gets the off heap size.
+	 * 
+	 * @return the off heap size
+	 */
+	private long getOffHeapSize() {
+		long offHeapSizeDataCache = this.dataCacheModule.getOffHeapSize();
+		long offHeapSizeMetaCache = this.metaDataCacheModule.getOffHeapSize();
+		return offHeapSizeDataCache + offHeapSizeMetaCache;
+	}
+
+	/**
+	 * Gets the in memory size.
+	 * 
+	 * @return the in memory size
+	 */
+	private long getInMemorySize() {
+		long inMemorySizeDataCache = this.dataCacheModule.getInMemorySize();
+		long inMemorySizeMetaCache = this.metaDataCacheModule.getInMemorySize();
+		return inMemorySizeDataCache + inMemorySizeMetaCache;
+	}
+
+	/**
 	 * Gets the loading session ids.
 	 * 
 	 * @return the loading session ids
@@ -860,6 +882,8 @@ public class SCCache {
 		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
 		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
 		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
+		writer.writeAttribute("inMemorySize", this.getInMemorySize());
+		writer.writeAttribute("offHeapSize", this.getOffHeapSize());
 		writer.writeEndElement(); // end of cache
 	}
 }

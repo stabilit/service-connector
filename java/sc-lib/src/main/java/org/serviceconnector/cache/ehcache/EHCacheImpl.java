@@ -166,6 +166,16 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 		return this.ehCache.getDiskStoreSize();
 	}
 
+	@Override
+	public long getOffHeapSize() {
+		return this.ehCache.calculateOffHeapSize();
+	}
+
+	@Override
+	public long getInMemorySize() {
+		return this.ehCache.calculateInMemorySize();
+	}
+
 	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override

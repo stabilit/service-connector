@@ -169,18 +169,18 @@
 	    <td class="sc_table_even"><xsl:value-of select="availableProcessors"/></td>	  
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table_odd">Free Memory</td>	  
+	    <td class="sc_table_odd">Max Memory (MB)</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="maxMemory"/></td>	  
+	  </tr>
+	  <tr class="sc_table_even">
+	    <td class="sc_table_even">Used Memory (MB)</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="totalMemory"/></td>	  
+	  </tr>	  
+	  <tr class="sc_table_odd">
+	    <td class="sc_table_odd">Free Memory (MB)</td>	  
 	    <td class="sc_table_odd"><xsl:value-of select="freeMemory"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table_even">Total Memory</td>	  
-	    <td class="sc_table_even"><xsl:value-of select="totalMemory"/></td>	  
-	  </tr>
-	  <tr class="sc_table_odd">
-	    <td class="sc_table_odd">Max Memory</td>	  
-	    <td class="sc_table_odd"><xsl:value-of select="maxMemory"/></td>	  
-	  </tr>
-	  <tr class="sc_table_odd">
 	    <td class="sc_table_even">Thread Count</td>	  
 	    <td class="sc_table_even"><xsl:value-of select="threadCount"/></td>	  
 	  </tr>

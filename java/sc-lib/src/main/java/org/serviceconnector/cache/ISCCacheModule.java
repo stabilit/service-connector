@@ -114,6 +114,20 @@ public interface ISCCacheModule<T> {
 	public abstract long getNumberOfMessagesInDiskStore();
 
 	/**
+	 * Gets the off heap size.
+	 *
+	 * @return the off heap size
+	 */
+	public abstract long getOffHeapSize();
+
+	/**
+	 * Gets the in memory size.
+	 *
+	 * @return the in memory size
+	 */
+	public abstract long getInMemorySize();
+
+	/**
 	 * Removes the object from cache module.
 	 * 
 	 * @param key

@@ -559,15 +559,15 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("availableProcessors");
 		writer.writeCData(String.valueOf(SystemInfo.getAvailableProcessors()));
 		writer.writeEndElement(); // end of availableProcessors
+		writer.writeStartElement("totalMemory");
+		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()/1024/1024));
+		writer.writeEndElement(); // end of totalMemory
 		writer.writeStartElement("freeMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()));
+		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()/1024/1024));
 		writer.writeEndElement(); // end of freeMemory
 		writer.writeStartElement("maxMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()));
+		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()/1024/1024));
 		writer.writeEndElement(); // end of maxMemory
-		writer.writeStartElement("totalMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()));
-		writer.writeEndElement(); // end of totalMemory
 		// get thread info
 		writer.writeStartElement("threadCount");
 		writer.writeCData(String.valueOf(SystemInfo.getThreadCount()));
