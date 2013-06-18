@@ -189,7 +189,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 	 */
 	@Test
 	public void t12_15ClientsReceivingMessagesBetweenRebootOfSC() throws Exception {
-		int numberOfClients = 15;
+		int numberOfClients = 3;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
@@ -202,19 +202,23 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 					"f_subscribeReceive500Unsubscribe");
 			clientCtxs[i] = clientCtx;
 		}
-
+		// dont't check message.log might be an EXC because of broken CRP
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		// dont't check message.log might be an EXC because of broken CRP
+		TestUtil.checkLogFile(TestConstants.log4jSC1Properties, "sc.log");
+		
 		ProcessCtx sc0 = SystemSuperTest.scCtxs.remove("sc0");
 		SystemSuperTest.ctrl.stopSC(sc0);
 		SystemSuperTest.ctrl.stopServerEnvironment(SystemSuperTest.srvCtxs);
 
-		numberOfClients = 15;
+		numberOfClients = 3;
 		for (int i = 0; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
 					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
 					"f_subscribeReceive500Unsubscribe");
 			clientCtxs[i] = clientCtx;
 		}
-
+		
 		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
 		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
 				TestConstants.log4jSC0Properties);
