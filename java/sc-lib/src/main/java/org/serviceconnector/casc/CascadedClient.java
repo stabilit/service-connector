@@ -61,6 +61,8 @@ public class CascadedClient {
 	private SCMPMessageSequenceNr msgSequenceNr;
 	/** The permit denial count, counts how many times semaphore denies to give permits in time. */
 	private AtomicInteger permitDenialCounter;
+	/** The destroy lock object. */
+	private Object destroyLock = new Object();
 
 	/**
 	 * Instantiates a new cascaded client.
@@ -328,14 +330,18 @@ public class CascadedClient {
 	 * semaphore. It unsubscribes the current cascaded client.
 	 */
 	public void destroy() {
-		if (this.destroyed == true) {
-			// cascaded client got already destroyed
-			return;
+		// synchronization avoids changing destroyed of more than one thread at the same time
+		synchronized (this.destroyLock) {
+			if (this.destroyed == true) {
+				// cascaded client got already destroyed
+				return;
+			}
+			this.destroyed = true;
 		}
-		this.destroyed = true;
+		this.publishService.renewCascadedClient();
 		// release threads waiting for permits, just allow any thread to continue after destroy no one continues
-		this.cascClientSemaphore.release(Integer.MAX_VALUE);
-		LOGGER.debug("cascadedClient gets destroyed service=" + this.getServiceName());
+		this.cascClientSemaphore.release(this.cascClientSemaphore.getQueueLength());
+		LOGGER.info("cascadedClient gets destroyed service=" + this.getServiceName());
 		for (String clientSubscriptionId : this.clientSubscriptionIds.keySet()) {
 			// delete all client subscriptions
 			AppContext.getSubscriptionRegistry().removeSubscription(clientSubscriptionId);
@@ -347,7 +353,6 @@ public class CascadedClient {
 		// needs to be after unsubscribe
 		this.subscribed = false;
 		AppContext.getSCCache().removeManagedDataForGuardian(publishService.getName());
-		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;
 	}
