@@ -342,7 +342,9 @@ public class CascadedClient {
 		// release threads waiting for permits, just allow any thread to continue after destroy no one continues
 		this.cascClientSemaphore.release(this.cascClientSemaphore.getQueueLength());
 		LOGGER.info("cascadedClient gets destroyed service=" + this.getServiceName());
-		for (String clientSubscriptionId : this.clientSubscriptionIds.keySet()) {
+
+		String[] clientSubscriptionIdsArray = this.clientSubscriptionIds.keySet().toArray(new String[0]);
+		for (String clientSubscriptionId : clientSubscriptionIdsArray) {
 			// delete all client subscriptions
 			AppContext.getSubscriptionRegistry().removeSubscription(clientSubscriptionId);
 			// unsubscribe from queue
