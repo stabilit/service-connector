@@ -1493,7 +1493,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 	 * 2: load data to cache (cid=700) by client1
 	 * 3: start cache guardian1 - publish 3 large appendix
 	 * 4: start cache guardian2 - publish 3 large appendix
-	 * 5: verify callback of guardian1 retrieval - 30000 appendix within 360 secs
+	 * 5: verify callback of guardian1 retrieval - 30000 appendix within 420 secs
 	 * Expectation: passes
 	 */
 	@Test
@@ -1522,8 +1522,8 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		subMsg.setData("30000|0|700|" + SC_CACHING_METHOD.APPEND.getValue());
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
-		// 4: verify performance - receiving 30000 in 360 secs
-		cacheGuardianCbk.waitForAppendMessage(30000, 360);
+		// 4: verify performance - receiving 30000 in 420 secs
+		cacheGuardianCbk.waitForAppendMessage(30000, 420);
 		cacheGuardianCbk2.waitForAppendMessage(30000, 1);
 	}
 
