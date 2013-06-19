@@ -85,6 +85,12 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void putOrUpdate(Object key, T value, int timeToLiveSeconds) {
+
+		if (timeToLiveSeconds < 0) {
+			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + "caching key:" + key);
+			throw new IllegalArgumentException("timeToLive can't be negative");
+		}
+
 		// Any object put to the cache should be copied to avoid modifications done by consumers
 		if (value instanceof SCMPPart) {
 			value = (T) new SCMPPart((SCMPPart) value);
@@ -104,6 +110,12 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void replace(Object key, T value, int timeToLiveSeconds) {
+
+		if (timeToLiveSeconds < 0) {
+			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + "caching key:" + key);
+			throw new IllegalArgumentException("timeToLive can't be negative");
+		}
+
 		// Any object put to the cache should be copied to avoid modifications done by consumers
 		if (value instanceof SCMPPart) {
 			value = (T) new SCMPPart((SCMPPart) value);
