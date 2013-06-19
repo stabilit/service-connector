@@ -87,7 +87,7 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	public void putOrUpdate(Object key, T value, int timeToLiveSeconds) {
 
 		if (timeToLiveSeconds < 0) {
-			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + "caching key:" + key);
+			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + " caching key:" + key);
 			throw new IllegalArgumentException("timeToLive can't be negative");
 		}
 
@@ -112,7 +112,7 @@ public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	public void replace(Object key, T value, int timeToLiveSeconds) {
 
 		if (timeToLiveSeconds < 0) {
-			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + "caching key:" + key);
+			LOGGER.warn("Caching failed, time to live negative: " + timeToLiveSeconds + " caching key:" + key);
 			throw new IllegalArgumentException("timeToLive can't be negative");
 		}
 
