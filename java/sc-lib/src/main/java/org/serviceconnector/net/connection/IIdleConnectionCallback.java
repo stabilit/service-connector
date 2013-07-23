@@ -21,13 +21,6 @@ package org.serviceconnector.net.connection;
  * 
  * @author JTraber
  */
-public interface IIdleConnectionCallback {
-	
-	/**
-	 * Connection idle.
-	 * 
-	 * @param connection
-	 *            the connection
-	 */
-	public abstract void connectionIdle(IConnection connection);
+public interface IIdleConnectionCallback extends Runnable {
+
 }

@@ -163,7 +163,7 @@ public class ConnectionPool {
 		connection.setHost(this.host);
 		connection.setPort(this.port);
 		connection.setIdleTimeoutSeconds(this.keepAliveIntervalSeconds);
-		IIdleConnectionCallback idleCallback = new IdleCallback();
+		IIdleConnectionCallback idleCallback = new IdleCallback(connection);
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveIntervalSeconds);
 		connection.setContext(connectionContext);
 		try {
@@ -402,7 +402,8 @@ public class ConnectionPool {
 				// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
 				if ((this.freeConnections.size() + this.usedConnections.size()) >= this.minConnections) {
 					// there are still enough (totalCons > minConnections) free - disconnect this one
-					// don't forget current connection is not included in above size calculation ">=" after removing it 4 lines before!
+					// don't forget current connection is not included in above size calculation ">=" after removing it 4 lines
+					// before!
 					this.disconnectConnection(connection);
 					return;
 				}
@@ -485,9 +486,14 @@ public class ConnectionPool {
 	 */
 	private class IdleCallback implements IIdleConnectionCallback {
 
-		/** {@inheritDoc} */
+		private IConnection connection;
+
+		public IdleCallback(IConnection connection) {
+			this.connection = connection;
+		}
+
 		@Override
-		public void connectionIdle(IConnection connection) {
+		public void run() {
 			ConnectionPool.this.connectionIdle(connection);
 		}
 	}

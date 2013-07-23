@@ -26,6 +26,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
@@ -74,6 +75,6 @@ public class NettyIdleHandler extends IdleStateHandler {
 					.getConnection().getNrOfIdlesInSequence());
 		}
 		IIdleConnectionCallback callback = this.connectionContext.getIdleCallback();
-		callback.connectionIdle(connection);
+		AppContext.getSCWorkerThreadPool().execute(((Runnable)callback));
 	}
 }
