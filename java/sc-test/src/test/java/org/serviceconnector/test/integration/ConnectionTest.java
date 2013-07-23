@@ -40,7 +40,8 @@ import org.serviceconnector.util.DateTimeUtility;
  * <br/>
  * Browse to the HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters keys.<br />
  * <br />
- * MaxUserPort: This REG_DWORD parameter controls the maximum port number that is used when a program requests any available user port
+ * MaxUserPort: This REG_DWORD parameter controls the maximum port number that is used when a program requests any available user
+ * port
  * from the server. Typically, ephemeral (short-lived) ports are allocated between the values of 1024 and 5000 inclusive.<br />
  * <br />
  * TcpNumConnections: This REG_DWORD parameter limits the maximum number of connections that TCP can have open at the same time.<br />
@@ -130,7 +131,7 @@ public class ConnectionTest extends IntegrationSuperTest {
 	private class IdleCallback implements IIdleConnectionCallback {
 		/** {@inheritDoc} */
 		@Override
-		public void connectionIdle(IConnection connection) {
+		public void run() {
 		}
 	}
 }

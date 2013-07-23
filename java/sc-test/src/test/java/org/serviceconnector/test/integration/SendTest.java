@@ -72,9 +72,8 @@ public class SendTest extends IntegrationSuperTest {
 	 * The Class IdleCallback.
 	 */
 	private class IdleCallback implements IIdleConnectionCallback {
-		/** {@inheritDoc} */
 		@Override
-		public void connectionIdle(IConnection connection) {
+		public void run() {
 		}
 	}
 }
