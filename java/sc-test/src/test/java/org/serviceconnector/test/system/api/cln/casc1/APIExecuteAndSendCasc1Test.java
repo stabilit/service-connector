@@ -830,6 +830,8 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	/**
 	 * Description: send 1 uncompressed 20MB message with Constants.MAX_MESSAGE_SIZE parts<br>
 	 * Expectation: passes
+	 * Pay Attention: If this test is failing check the logging settings. Netty Logger in debug mode might produce to much data
+	 * which results in heap memory problems or delays.
 	 */
 	@Test
 	public void t155_sendMessageMaxPartSize() throws Exception {
