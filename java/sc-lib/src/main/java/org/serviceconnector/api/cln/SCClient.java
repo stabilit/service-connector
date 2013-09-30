@@ -450,6 +450,15 @@ public class SCClient {
 	}
 
 	/**
+	 * Gets the cache guardian.
+	 * 
+	 * @return the cache guardian
+	 */
+	public SCGuardianService getCacheGuardian() {
+		return this.cacheGuardian;
+	}
+
+	/**
 	 * Stop cache guardian with default operation timeout.
 	 * 
 	 * @throws SCServiceException
