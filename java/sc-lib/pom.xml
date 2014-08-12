@@ -154,8 +154,8 @@
 	</dependencies>
 	<distributionManagement>
 		<repository>
-			<id>ftp-repository</id>
-			<url>ftp://10.0.0.30/home/maven2/maven</url>
+			<id>ftp.repository.stabilit</id>
+			<url>ftp://10.0.0.30:8021/httpdownload</url>
 		</repository>
 	</distributionManagement>
 	<repositories>
