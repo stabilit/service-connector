@@ -43,6 +43,7 @@ import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.net.EncodingDecodingException;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
@@ -340,6 +341,18 @@ public abstract class SCBaseServlet extends HttpServlet {
 		SCMPMessage reqMessage = null;
 		try {
 			byte[] buffer = new byte[request.getContentLength()];
+			int readOffset = 0;
+			int readBytes = 0;
+			while (true) {
+				if (readOffset >= buffer.length) {
+					break;
+				}
+				readBytes = request.getInputStream().read(buffer, readOffset, buffer.length - readOffset);
+				if (readBytes <= 0) {
+					throw new EncodingDecodingException("input stream read failed at position " + readOffset);
+				}
+				readOffset += readBytes;
+			}
 			request.getInputStream().read(buffer);
 			Statistics.getInstance().incrementTotalMessages(buffer.length);
 			if (ConnectionLogger.isEnabledFull()) {
