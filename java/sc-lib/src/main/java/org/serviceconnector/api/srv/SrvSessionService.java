@@ -23,7 +23,7 @@ import org.serviceconnector.net.req.IRequester;
 public class SrvSessionService extends SrvService {
 
 	/** The callback. */
-	private SCSessionServerCallback callback;
+	private ISCSessionServerCallback callback;
 
 	/**
 	 * Instantiates a new srv session service.
@@ -40,7 +40,7 @@ public class SrvSessionService extends SrvService {
 	 *            the callback
 	 */
 	public SrvSessionService(String serviceName, int maxSessions, int maxConnections, IRequester requester,
-			SCSessionServerCallback callback) {
+			ISCSessionServerCallback callback) {
 		super(serviceName, maxSessions, maxConnections, requester);
 		this.callback = callback;
 	}
@@ -50,7 +50,7 @@ public class SrvSessionService extends SrvService {
 	 * 
 	 * @return the callback
 	 */
-	public SCSessionServerCallback getCallback() {
+	public ISCSessionServerCallback getCallback() {
 		return this.callback;
 	}
 }

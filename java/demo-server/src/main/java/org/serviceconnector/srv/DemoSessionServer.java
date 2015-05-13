@@ -64,6 +64,7 @@ public class DemoSessionServer extends Thread {
 			SCSessionServerCallback cbk = newSrvCallback(server);
 			try {
 				server.register(maxSess, maxConn, cbk); // regular
+				server.checkRegistration();
 				// server.registerServer(10, maxSess, maxConn, cbk); //
 				// alternative with operation timeout
 			} catch (Exception e) {

@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
@@ -281,6 +283,17 @@ public abstract class SCBaseServlet extends HttpServlet {
 				throw ex;
 			}
 			AppContext.attachedCommunicators.incrementAndGet();
+			SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+			
+			SrvService srvService = null;
+			if (this instanceof SCBaseSessionServlet) {
+				ISCSessionServerCallback servletCallback = (ISCSessionServerCallback) this;
+				srvService = new SrvSessionService(this.serviceName, maxSessions, maxConnections, this.requester, servletCallback);
+			} else if (this instanceof SCBasePublishServlet) {
+				ISCPublishServerCallback servletCallback = (ISCPublishServerCallback) this;
+				srvService = new SrvPublishService(this.serviceName, maxSessions, maxConnections, this.requester, servletCallback);
+			}
+			srvServiceRegistry.addSrvService(this.serviceName + "_" + this.urlPath, srvService);
 		}
 		// set up server timeout thread
 		this.triggerServerTimeout();
@@ -301,6 +314,9 @@ public abstract class SCBaseServlet extends HttpServlet {
 		synchronized (AppContext.communicatorsLock) {
 			// get communicator lock - avoids interference with other clients or scServers
 			try {
+				// remove srvService from registry
+				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+				srvServiceRegistry.removeSrvService(this.serviceName + "_" + this.urlPath);
 				SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, this.serviceName);
 				SCServerCallback callback = new SCServerCallback(true);
 				try {
@@ -686,15 +702,15 @@ public abstract class SCBaseServlet extends HttpServlet {
 			// send echo to SC
 			try {
 				SCBaseServlet.this.checkRegistration(SCBaseServlet.this.checkRegistrationIntervalSeconds);
-			} catch (SCServiceException e) {
+			} catch (Exception e) {
 				// check registration failed - inform callback
 				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 				SrvService srvService = srvServiceRegistry.getSrvService(SCBaseServlet.this.serviceName + Constants.UNDERLINE
-						+ SCBaseServlet.this.tomcatPort);
+						+ SCBaseServlet.this.urlPath);
 				if (srvService instanceof SrvSessionService) {
-					((SrvSessionService) srvService).getCallback().exceptionCaught(e);
+					((SrvSessionService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.",e));
 				} else if (srvService instanceof SrvPublishService) {
-					((SrvPublishService) srvService).getCallback().exceptionCaught(e);
+					((SrvPublishService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.",e));
 				}
 			}
 		}
