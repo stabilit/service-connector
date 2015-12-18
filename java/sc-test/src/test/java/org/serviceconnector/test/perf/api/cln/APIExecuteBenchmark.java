@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright Â© 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.perf.api.cln;
 
 import org.junit.Assert;
@@ -11,7 +27,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 
 
 	/**
-	 * Description: Send 10000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send 10000 message ï¿½ 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
@@ -40,12 +56,12 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		sessionService.deleteSession(10);
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg ï¿½ 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 400);
 	}
 
 	/**
-	 * Description: Send 10000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send 10000 message ï¿½ 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
@@ -75,7 +91,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		sessionService.deleteSession(10);
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg ï¿½ 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 600);
 	}
 

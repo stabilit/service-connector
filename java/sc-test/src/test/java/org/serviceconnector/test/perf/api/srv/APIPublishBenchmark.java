@@ -1,5 +1,6 @@
-/*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright Â© 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
  *  you may not use this file except in compliance with the License.           *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.perf.api.srv;
 
 import org.junit.Assert;
@@ -27,7 +28,7 @@ import org.serviceconnector.test.perf.api.APIPerfSuperServerTest;
 public class APIPublishBenchmark extends APIPerfSuperServerTest {
 
 	/**
-	 * Description:	publish 100000 compressed messages à 128 bytes to the server.<br>
+	 * Description:	publish 100000 compressed messages ï¿½ 128 bytes to the server.<br>
 	 * Expectation:	passes
 	 */
 	@Test
@@ -54,12 +55,12 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg ï¿½ 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
 	}
 
 	/**
-	 * Description:	publish 100000 uncompressed messages à 128 bytes to the server.<br>
+	 * Description:	publish 100000 uncompressed messages ï¿½ 128 bytes to the server.<br>
 	 * Expectation:	passes
 	 */
 	@Test
@@ -86,7 +87,7 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance=" + perf + " msg/sec.");
+		testLogger.info(nrMessages + "msg ï¿½ 128 byte performance=" + perf + " msg/sec.");
 		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1200);
 	}
 }
