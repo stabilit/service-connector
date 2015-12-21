@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------*
  *                                                                             *
- *       Copyright Â© 2010 STABILIT Informatik AG, Switzerland                  *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
  *  you may not use this file except in compliance with the License.           *

@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------*
  *                                                                             *
- *       Copyright Â© 2010 STABILIT Informatik AG, Switzerland                  *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
  *  you may not use this file except in compliance with the License.           *
@@ -37,9 +37,9 @@ import org.serviceconnector.scmp.SCMPError;
  * 
  * Version type designates the target and scope and can be: <br />
  * <ul>
- * <li>X ï¿½ experimental, usually not distributed</li>
- * <li>T ï¿½ field test, deployed to selected customers</li>
- * <li>V ï¿½ final version, publicly available</li>
+ * <li>X – experimental, usually not distributed</li>
+ * <li>T – field test, deployed to selected customers</li>
+ * <li>V – final version, publicly available</li>
  * </ul>
  *<p>
  * Release number designates the major release (design) of the product. It starts at 1 and is incremented by 1. New release is
