@@ -1,0 +1,1 @@
+call src/main/scripts/mvn-assembly-cmd.bat .

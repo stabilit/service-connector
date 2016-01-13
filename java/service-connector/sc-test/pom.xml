@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>sc-test</artifactId>
+	<packaging>jar</packaging>
+
+	<name>sc-test</name>
+	<description>Test project for SC</description>
+	<url>http://maven.apache.org</url>
+	
+	<parent>
+		<groupId>org.serviceconnector</groupId>
+		<artifactId>sc-parent</artifactId>
+		<version>2.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<!-- switch on dependency-driven aggregation -->
+					<includeDependencySources>true</includeDependencySources>
+
+					<dependencySourceIncludes>
+						<dependency-source>org.serviceconnector.*</dependency-source>
+					</dependencySourceIncludes>
+
+					<excludePackageNames>org.serviceconnector.cln</excludePackageNames>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-test-client-server</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+			              <goal>jar</goal>
+			            </goals>
+						<configuration>
+							<finalName>test-client-server</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<mainClass>org.serviceconnector.TestMainClass</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-sc</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+			              <goal>copy</goal>
+			            </goals>
+			            <configuration>
+			              <artifactItems>
+			                <artifactItem>
+			                  <groupId>org.serviceconnector</groupId>
+			                  <artifactId>sc</artifactId>
+			                  <version>${project.version}</version>
+			                  <type>jar</type>
+			                  <overWrite>true</overWrite>
+			                  <outputDirectory>${project.build.directory}</outputDirectory>
+			                  <destFileName>sc.jar</destFileName>
+			                </artifactItem>
+			              </artifactItems>
+			            </configuration>
+					</execution>
+					<execution>
+			            <id>copy-dependencies</id>
+			            <phase>generate-test-resources</phase>
+			            <goals>
+			              <goal>copy-dependencies</goal>
+			            </goals>
+			            <configuration>
+			              <outputDirectory>${project.build.directory}</outputDirectory>
+			              <overWriteReleases>false</overWriteReleases>
+			              <overWriteSnapshots>false</overWriteSnapshots>
+			              <overWriteIfNewer>true</overWriteIfNewer>
+<!-- 			              <excludeArtifactIds></excludeArtifactIds> -->
+			            </configuration>
+			         </execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.serviceconnector</groupId>
+			<artifactId>sc-lib</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.serviceconnector</groupId>
+			<artifactId>sc-console</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	
+</project>
