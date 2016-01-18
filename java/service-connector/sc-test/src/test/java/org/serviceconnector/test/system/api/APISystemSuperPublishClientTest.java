@@ -145,7 +145,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 	protected class MsgCallback extends SCMessageCallback {
 
 		private SCMessage message;
-		private int messageCounter;
+		private volatile int messageCounter;
 		private int expectedMessages;
 
 		public MsgCallback(SCPublishService service) {

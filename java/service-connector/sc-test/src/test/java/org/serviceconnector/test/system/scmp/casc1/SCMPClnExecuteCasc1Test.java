@@ -578,7 +578,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	 */
 	private class ExecuteCallback implements ISCMPMessageCallback {
 
-		public boolean messageReceived = false;
+		public volatile boolean messageReceived = false;
 		public SCMPMessage reply;
 
 		@Override

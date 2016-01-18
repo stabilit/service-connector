@@ -90,7 +90,7 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 		private final Logger LOGGER = Logger.getLogger(MsgCallback.class);
 
 		private SCMessage message;
-		private int messageCounter;
+		private volatile int messageCounter;
 		private int expectedMessages;
 		long start = System.currentTimeMillis();
 		long stop = 0;
