@@ -3,23 +3,32 @@ Service Connector - service oriented messaging middleware
 
  Kit structure:
  --------------
- sc-bin_V9.9-999.zip - kit containing only binaries 
+sc-bin-X.X.X.RELEASE.zip - kit containing only binaries 
  --/bin         (binaries a scripts to manage sc)
-       demo-client.jar 		(runnable client to verify the installation)
-       demo-server.jar 		(runnable server to verify the installation)
-       demo-web-server.war 	(demo web application servers implemented as servlets with sc-web-all.jar)
-       sc-lib-all.jar  		(SC library required for all components client, server, console and SC itself)
-       sc-web-all.jar  		(SC web library required for servers implemented as servlets)
-       sc.jar          		(runnable SC)
-       sc-console.jar  		(runnable console)
-       start-demo-client.bat (script to start demo client on Windows)
-       start-demo-client.sh  (script to start demo client on Unix)
-       start-demo-server.bat (script to start demo server on Windows)
-       start-demo-server.sh  (script to start demo server on Unix)
-       start-sc.bat    (script to start SC on Windows)
-       start-sc.sh     (script to start SC on Unix)
-       stop-sc.bat     (script to stop SC on Windows)
-       stop-sc.sh      (script to stop SC on Unix)
+       demo-client-X.X.X.RELEASE.jar 		  (runnable client to verify the installation)
+       demo-server-X.X.X.RELEASE.jar 		  (runnable server to verify the installation)
+       demo-web-server-X.X.X.RELEASE.war 	(demo web application servers implemented as servlets with sc-web-all.jar)
+       sc-lib-X.X.X.RELEASE.jar  		      (SC library required for all components client, server, console and SC itself)
+       sc-web-X.X.X.RELEASE.jar  		      (SC web library required for servers implemented as servlets)
+       sc-X.X.X.RELEASE.jar          		  (runnable SC)
+       sc-console-X.X.X.RELEASE.jar  		  (runnable console)
+       start-demo-client.bat              (script to start demo client on Windows)
+       start-demo-client.sh               (script to start demo client on Unix)
+       start-demo-server.bat              (script to start demo server on Windows)
+       start-demo-server.sh               (script to start demo server on Unix)
+       start-sc.bat                       (script to start SC on Windows)
+       start-sc.sh                        (script to start SC on Unix)
+       stop-sc.bat                        (script to stop SC on Windows)
+       stop-sc.sh                         (script to stop SC on Unix)
+       commons-collections-3.2.1.jar      (dependency)
+       commons-configuration-1.6.jar      (dependency)
+       commons-lang-2.4.jar               (dependency)
+       commons-logging-1.1.1.jar          (dependency)
+       ehcache-core-2.4.1.jar             (dependency)
+       log4j-1.2.15.jar                   (dependency)
+       netty-3.2.5.Final.jar              (dependency)
+       slf4j-api-1.7.2.jar                (dependency)
+       slf4j-log4j12-1.7.2.jar            (dependency)
    /bin/unix    (SC as deamon on unix/linux)
        readme.txt          (guide how to setup SC as a deamon on Unix)
        serviceconnector.sh (script to run sc as deamon on unix/linux)
@@ -50,11 +59,12 @@ Service Connector - service oriented messaging middleware
    /logs        (sc writes all log and dump files here. See log4j properties)
   
 
- sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
+ sc-src-X.X.X.RELEASE.zip - kit containing binaries and additional resources required for development
  --/doc         (documentation)
        Open_Issues.xls    	(release notes)
        SC_0_SCMP_E.pdf     	(SCMP documentation)
        SC_4_Operation_E.pdf (SC operation and administration guide)
+       SC_CC_E-V1.3.pdf     (Documentation to Service Connector Cache Coherency model)
    /doc/javadoc (java doc) 
    /examples    (additional script examples)
        example_sc-console.bat (script for sc-console - example)
@@ -65,15 +75,15 @@ Service Connector - service oriented messaging middleware
        scupload.php        (script to be used for SC file services)
        web.xml             (servlet configuration for SC services - example)
    /sources     (sources of sc-lib and the demo application)
-       demo-client-0-0-1-sources.jar  (source code of the demo client)
-       demo-server-0-0-1-sources.jar  (source code of the demo server)
-       demo-web-server-sources.jar	  (source code of the demo web application)
-       sc-lib-all-sources.jar         (source code of the SC library)
-       sc-web-sources.jar             (source code of the SC web library)
+       demo-client-X.X.X.RELEASE-sources.jar     (source code of the demo client)
+       demo-server-X.X.X.RELEASE-sources.jar     (source code of the demo server)
+       demo-web-server-X.X.X.RELEASE-sources.jar (source code of the demo web application)
+       sc-lib-X.X.X.RELEASE-sources.jar          (source code of the SC library)
+       sc-web-X.X.X.RELEASE-sources.jar          (source code of the SC web library)
  
  Kit download:
  -------------
-  http://www.stabilit.ch/download/sc/
+  https://www.stabilit.ch/download/public/sc/
   or 
   http://sourceforge.net/projects/serviceconnecto/files/ (selected versions)
  

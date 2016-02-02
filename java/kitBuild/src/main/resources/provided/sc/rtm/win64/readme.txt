@@ -3,9 +3,9 @@ Run Service Connector as Windows service on Win32
 
 1) install sc files to the directory of your choice usually C:\Program Files\sc\
 	The required files are:
-	bin\sc.jar
-	bin\sc-console.jar
-	bin\sc-lib-all.jar
+	bin\sc-X.X.X.RELEASE.jar
+	bin\sc-console-X.X.X.RELEASE.jar
+	bin\sc-lib-X.X.X.RELEASE.jar
 	bin\win32\jbosssvc.exe
 	bin\win32\service.bat
 	bin\win32\start.bat
