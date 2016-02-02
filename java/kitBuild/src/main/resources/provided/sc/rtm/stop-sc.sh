@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 #  ** ATTENTION **
 #  THIS SCRIPT MAY BE REFERENCED BY THE DEAMON SCRIPT
 # sc-console is used to send kill command to SC

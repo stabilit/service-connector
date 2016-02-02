@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # In order to start SC with remote JMX add the following parameters in the command line
 #		 -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 #
