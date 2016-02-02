@@ -217,6 +217,8 @@
 				<includes>
 					<include>**/start*.sh</include>
 					<include>**/start*.bat</include>
+					<include>**/stop*.sh</include>
+					<include>**/stop*.bat</include>
 				</includes>
 			</resource>
 			<resource>
@@ -225,6 +227,8 @@
 				<excludes>
 					<exclude>**/start*.sh</exclude>
 					<exclude>**/start*.bat</exclude>
+					<exclude>**/stop*.sh</exclude>
+					<exclude>**/stop*.bat</exclude>
 				</excludes>
 			</resource>
 		</resources>
