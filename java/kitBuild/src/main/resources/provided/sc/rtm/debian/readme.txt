@@ -1,5 +1,5 @@
-Run Service Connector as deamon on unix
-=======================================
+Run Service Connector as deamon on debian based linux
+=====================================================
 
 1) install sc files to the directory of your choice usually /home/sc/
 	The required files are:
