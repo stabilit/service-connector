@@ -57,6 +57,9 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		if (AppContext.getSCCache().isCacheEnabled() == false) {
+			return;
+		}
 		writer.writeStartElement("cache");
 		org.serviceconnector.cache.SCCache cache = AppContext.getSCCache();
 		SCCacheConfiguration cacheConfiguration = cache.getCacheConfiguration();
@@ -79,7 +82,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheConfiguration(XMLStreamWriter writer, SCCacheConfiguration cacheConfiguration) throws XMLStreamException {
+	private void writeCacheConfiguration(XMLStreamWriter writer, SCCacheConfiguration cacheConfiguration)
+			throws XMLStreamException {
 		writer.writeStartElement("config");
 		writer.writeStartElement("diskPath");
 		writer.writeCharacters(cacheConfiguration.getDiskPath());
@@ -114,7 +118,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		List<String> cacheModuleKeys = new ArrayList<String>();
 		cacheModuleKeys.add(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE.name());
 		cacheModuleKeys.add(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name());
-		Paging paging = this.writePagingAttributes(writer, request, cacheModuleKeys.size(), ""); // no prefix
+		Paging paging = this.writePagingAttributes(writer, request, cacheModuleKeys.size(), ""); // no
+																									// prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
@@ -152,7 +157,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache) throws XMLStreamException {
+	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache)
+			throws XMLStreamException {
 		HashMap<String, String> loadingSessionIds = cache.getLoadingSessionIds();
 		Set<String> sessionIds = loadingSessionIds.keySet();
 		for (String sid : sessionIds) {
@@ -204,7 +210,8 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 			writer.writeEndElement();
 			return;
 		}
-		Paging paging = this.writePagingAttributes(writer, request, cacheKeys.size(), "comp_"); // no prefix
+		Paging paging = this.writePagingAttributes(writer, request, cacheKeys.size(), "comp_"); // no
+																								// prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();
 		int endIndex = paging.getEndIndex();
