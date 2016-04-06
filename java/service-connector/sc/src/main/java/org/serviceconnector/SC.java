@@ -27,6 +27,7 @@ import javax.management.ObjectName;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -223,7 +224,11 @@ public final class SC {
 		@Override
 		public void run() {
 			String fs = System.getProperty("file.separator");
-			AppContext.getSCCache().destroy();
+			
+			SCCache cache = AppContext.getSCCache();
+			if(cache.isCacheEnabled() == true) {
+				cache.destroy();
+			}			
 			try {
 				if (this.fileCtx != null) {
 					// release the file lock
