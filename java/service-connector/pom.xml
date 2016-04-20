@@ -15,8 +15,8 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:http://10.0.0.30/svn/repos/sc/trunk/java/service-connector/</connection>
-		<developerConnection>scm:svn:http://10.0.0.30/svn/repos/sc/trunk/java/service-connector/</developerConnection>
+		<connection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</connection>
+		<developerConnection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</developerConnection>
 	</scm>
 
 	<modules>
