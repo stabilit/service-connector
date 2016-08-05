@@ -164,7 +164,7 @@ public final class Constants {
 
 	// ** ATTENTION ** SIX Exchange C-Servers depend on minimum = 1 !!
 	/** The default minimal connection pool size, 1 - means there is always one connection active. */
-	public static final int DEFAULT_MIN_CONNECTION_POOL_SIZE = 0;
+	public static final int DEFAULT_MIN_CONNECTION_POOL_SIZE = 1;
 	/** The default maximal file sessions. */
 	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
 	/** The message compression. */
