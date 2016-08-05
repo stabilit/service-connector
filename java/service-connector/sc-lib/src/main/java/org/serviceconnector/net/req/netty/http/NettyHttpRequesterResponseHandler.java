@@ -49,7 +49,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	/** The scmp callback. */
 	private ISCMPMessageCallback scmpCallback;
 	/** The pending request. */
-	private volatile boolean pendingRequest;
+	private volatile Boolean pendingRequest;
 
 	/**
 	 * Instantiates a new netty http requester response handler.
@@ -72,35 +72,37 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		if (this.pendingRequest) {
-			this.pendingRequest = false;
-			try {
-				HttpResponse httpResponse = (HttpResponse) e.getMessage();
-				ChannelBuffer content = httpResponse.getContent();
-				byte[] buffer = new byte[content.readableBytes()];
-				content.readBytes(buffer);
-				Statistics.getInstance().incrementTotalMessages(buffer.length);
-				if (ConnectionLogger.isEnabledFull()) {
-					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
-							remoteAddress.getPort(), buffer, 0, buffer.length);
-				}
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-				SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
-				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ret);
-			} catch (Throwable th) {
-				LOGGER.error("receive message", th);
-				if ((th instanceof Exception) == true) {
-					try {
-						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
-						NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
-					} catch (Throwable th1) {
-						LOGGER.error("receive exception", th1);
+		synchronized (this.pendingRequest) {
+			if (this.pendingRequest) {
+				this.pendingRequest = false;
+				try {
+					HttpResponse httpResponse = (HttpResponse) e.getMessage();
+					ChannelBuffer content = httpResponse.getContent();
+					byte[] buffer = new byte[content.readableBytes()];
+					content.readBytes(buffer);
+					Statistics.getInstance().incrementTotalMessages(buffer.length);
+					if (ConnectionLogger.isEnabledFull()) {
+						InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+						ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
+								remoteAddress.getPort(), buffer, 0, buffer.length);
+					}
+					ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+					IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+					SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
+					NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ret);
+				} catch (Throwable th) {
+					LOGGER.error("receive message", th);
+					if ((th instanceof Exception) == true) {
+						try {
+							SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
+							NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
+						} catch (Throwable th1) {
+							LOGGER.error("receive exception", th1);
+						}
 					}
 				}
+				return;
 			}
-			return;
 		}
 		// unsolicited input, message not expected - race condition
 		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
@@ -109,26 +111,30 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	@Override
 	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		super.channelDisconnected(ctx, e);
-		if (this.pendingRequest) {
-			this.pendingRequest = false;
-			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
-			if (ConnectionLogger.isEnabled()) {
-				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
-						remoteSocketAddress.getPort());
+		synchronized (this.pendingRequest) {
+			if (this.pendingRequest) {
+				this.pendingRequest = false;
+				LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular
+																								// disconnect
+				if (ConnectionLogger.isEnabled()) {
+					InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+					ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(),
+							remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
+				}
+				DisconnectException ex = new DisconnectException(
+						"Connection disconnect, reply is outstanding. Operation stopped.");
+				try {
+					NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
+				} catch (Throwable throwable) {
+					LOGGER.error("receive exception", throwable);
+				}
+				return;
 			}
-			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
-			try {
-				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
-			} catch (Throwable throwable) {
-				LOGGER.error("receive exception", throwable);
-			}
-			return;
 		}
 		if (ConnectionLogger.isEnabled()) {
 			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
-					remoteSocketAddress.getPort());
+			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(),
+					remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
 		}
 	}
 
@@ -148,19 +154,22 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
-				// idle timed out no pending request outstanding - ignore exception
+				// idle timed out no pending request outstanding - ignore
+				// exception
 				return;
 			}
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.warn(th); // regular disconnect causes this expected exception
+			LOGGER.warn(th); // regular disconnect causes this expected
+								// exception
 		} else {
 			LOGGER.error("Response error", th);
 		}
 	}
 
 	/**
-	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in
+	 * Connection disconnect. Method gets called when connection got
+	 * disconnected for some reason. This avoids receiving messages in
 	 * disconnect procedure.
 	 */
 	public void connectionDisconnect() {
