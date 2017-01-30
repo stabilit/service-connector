@@ -86,8 +86,7 @@ public final class Constants {
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-config";
 	/**
-	 * File containing the SC process PID. Created at startup and deleted on
-	 * exit or error. Used to check if SC is running.
+	 * File containing the SC process PID. Created at startup and deleted on exit or error. Used to check if SC is running.
 	 */
 	public static final String PID_FILE_NAME = "sc.pid";
 	/** File containing the SC dump. Created with the console command or WEB-GUI */
@@ -129,19 +128,15 @@ public final class Constants {
 	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
 	/**
-	 * Maximal time between subsequent receive publication.
-	 * After this time subscription is marked as dead.
-	 * This is analogous to echoInterval in session services
+	 * Maximal time between subsequent receive publication. After this time subscription is marked as dead. This is analogous to echoInterval in session services
 	 */
 	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 10000;
 	/**
-	 * Default interval used for publishing services if the NO_DATA_INTERVAL was
-	 * not set by API.
+	 * Default interval used for publishing services if the NO_DATA_INTERVAL was not set by API.
 	 */
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 	/**
-	 * Default value to wait in a receive publication call.
-	 * Careful: For the total OTI of RCP noDataInterval will be added.
+	 * Default value to wait in a receive publication call. Careful: For the total OTI of RCP noDataInterval will be added.
 	 */
 	public static final int DEFAULT_RECEIVE_PUBLICATION_OTI_MILLIS = 2000;
 	/**
@@ -324,13 +319,11 @@ public final class Constants {
 	/** The Constant DEFAULT_WEB_SITE_SIZE, the default visible site size in paging area */
 	public static final int DEFAULT_WEB_SITE_SIZE = 20;
 	/**
-	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS.
-	 * default session inactivity control schedule timeout (3 minutes)
+	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS. default session inactivity control schedule timeout (3 minutes)
 	 */
 	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180;
 	/**
-	 * The Constant DEFAULT_WEB_SESSION_TIMEOUT_MINUTES.
-	 * default session inactivity timeout 30 minutes web property keys
+	 * The Constant DEFAULT_WEB_SESSION_TIMEOUT_MINUTES. default session inactivity timeout 30 minutes web property keys
 	 */
 	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30;
 	/** XSL transformation cache enabled = transformation will be done every cycle. */

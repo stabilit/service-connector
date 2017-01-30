@@ -32,9 +32,8 @@ public abstract class SCService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SCService.class);
 
 	/**
-	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
-	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
-	 * level and are stored in the SC configuration.
+	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow message routing the name must be unique in scope
+	 * of the entire SC network. Service names must be agreed at the application level and are stored in the SC configuration.
 	 */
 	protected String serviceName;
 	/** The session id - identifies session context of communication. */
@@ -49,16 +48,13 @@ public abstract class SCService {
 	protected volatile boolean sessionActive = false;
 	/** The message callback to use for replies. */
 	protected SCMessageCallback messageCallback;
-	
+
 	/**
 	 * Instantiates a new service.
 	 * 
-	 * @param scClient
-	 *            the sc client
-	 * @param serviceName
-	 *            the service name
-	 * @param requester
-	 *            the requester
+	 * @param scClient the sc client
+	 * @param serviceName the service name
+	 * @param requester the requester
 	 */
 	public SCService(SCClient scClient, String serviceName, SCRequester requester) {
 		this.serviceName = serviceName;

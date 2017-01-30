@@ -37,8 +37,7 @@ public abstract class SCMessageCallback {
 	/**
 	 * Instantiates a new SCMessageCallback.
 	 * 
-	 * @param service
-	 *            the service
+	 * @param service the service
 	 */
 	public SCMessageCallback(SCService service) {
 		this.service = service;
@@ -47,17 +46,14 @@ public abstract class SCMessageCallback {
 	/**
 	 * Callback. Method gets called when reply arrives.
 	 * 
-	 * @param reply
-	 *            the reply
+	 * @param reply the reply
 	 */
 	public abstract void receive(SCMessage reply);
-	
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
 	 * 
-	 * @param ex
-	 *            the exception
+	 * @param ex the exception
 	 */
 	public abstract void receive(Exception ex);
 
