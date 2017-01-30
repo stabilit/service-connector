@@ -16,19 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * The class Constants. SC constants.
  * 
  * @author JTraber
  */
 public final class Constants {
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(Constants.class);
 
 	/**
 	 * Instantiates a new constants.

@@ -20,8 +20,6 @@ import java.text.DecimalFormat;
 
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides actual SC version and method to check compatibility. The SC versioning schema follows this philosophy <br />
@@ -61,10 +59,6 @@ public enum SCVersion {
 	CURRENT(2, 0, 3),
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
-
-	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SCVersion.class);
 
 	/** The Constant REVISION_FORMAT. */
 	private static final DecimalFormat REVISION_FORMAT = new DecimalFormat("000");
