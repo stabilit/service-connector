@@ -18,9 +18,10 @@ package org.serviceconnector;
 
 import java.text.DecimalFormat;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides actual SC version and method to check compatibility. 
@@ -65,7 +66,7 @@ public enum SCVersion {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCVersion.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCVersion.class);
 
 	/** The Constant REVISION_FORMAT. */
 	private static final DecimalFormat REVISION_FORMAT = new DecimalFormat("000");

@@ -19,7 +19,6 @@ package org.serviceconnector.api.cln;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCManagedMessage;
@@ -40,6 +39,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
@@ -67,7 +68,7 @@ public class SCSessionService extends SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCSessionService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCSessionService.class);
 	/** The sessionTimeout, timeout runs when session need to be refreshed. */
 	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
 	/** The echo timeout in seconds. Time to wait for the reply of SC in case of an echo until the session is marked as dead. */

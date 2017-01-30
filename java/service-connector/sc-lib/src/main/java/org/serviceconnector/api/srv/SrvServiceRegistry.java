@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.srv;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to registered services and their callback.
@@ -27,7 +28,7 @@ import org.serviceconnector.registry.Registry;
 public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SrvServiceRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SrvServiceRegistry.class);
 
 	/**
 	 * Adds the server service.

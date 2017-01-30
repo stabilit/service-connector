@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPCheckRegistrationCall;
@@ -37,6 +36,8 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
@@ -47,7 +48,7 @@ public class SCSessionServer {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCSessionServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCSessionServer.class);
 
 	/** The registered. Indicates if a server is already registered to an SC. */
 	protected boolean registered;

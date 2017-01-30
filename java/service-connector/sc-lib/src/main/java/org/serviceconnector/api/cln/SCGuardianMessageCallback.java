@@ -16,9 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCAppendMessage;
 import org.serviceconnector.api.SCRemovedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCGuardianCallback. Abstract class provides basic functions for a guardian callback.
@@ -29,7 +30,7 @@ public abstract class SCGuardianMessageCallback extends SCMessageCallback {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCGuardianMessageCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCGuardianMessageCallback.class);
 
 	/**
 	 * Instantiates a new SCGuardianCallback.

@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -37,6 +36,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The class SCClient. Client to a SC.
@@ -65,7 +66,7 @@ public class SCClient {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCClient.class);
 
 	/** The host of the SC. */
 	private String host;

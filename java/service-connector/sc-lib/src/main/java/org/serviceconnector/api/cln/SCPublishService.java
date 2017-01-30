@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -32,6 +31,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
@@ -59,7 +60,7 @@ public class SCPublishService extends SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCPublishService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCPublishService.class);
 	/**
 	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
 	 * set. Default = 0.

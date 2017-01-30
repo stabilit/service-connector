@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.SCRequester;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class Service. Provides basic stuff for every kind of remote service interfaces.<br />
@@ -28,7 +29,7 @@ public abstract class SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCService.class);
 
 	/**
 	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow

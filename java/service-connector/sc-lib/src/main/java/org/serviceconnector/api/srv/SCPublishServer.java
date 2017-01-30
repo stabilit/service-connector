@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.srv;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -26,6 +25,8 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to a SC.
@@ -34,7 +35,7 @@ public class SCPublishServer extends SCSessionServer {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCPublishServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCPublishServer.class);
 
 	/**
 	 * Instantiates a new SC publish server.

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
@@ -35,6 +34,8 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCFileService. SCFileService is a remote interface in client API to a file service and provides communication
@@ -43,7 +44,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class SCFileService extends SCService {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCFileService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCFileService.class);
 	/**
 	 * The echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message
 	 * is sent only when no message is pending.

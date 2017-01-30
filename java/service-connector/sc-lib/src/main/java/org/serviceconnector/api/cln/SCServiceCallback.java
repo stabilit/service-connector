@@ -16,12 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCServiceCallback. Base class for a service callback.
@@ -32,7 +33,7 @@ public class SCServiceCallback extends SynchronousCallback {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCServiceCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCServiceCallback.class);
 
 	/** The message callback. */
 	protected SCMessageCallback messageCallback;

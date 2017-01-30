@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The class Constants. SC constants.
@@ -27,7 +28,7 @@ public final class Constants {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Constants.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Constants.class);
 
 	/**
 	 * Instantiates a new constants.

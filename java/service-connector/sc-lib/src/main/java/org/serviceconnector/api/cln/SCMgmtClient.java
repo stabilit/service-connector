@@ -18,7 +18,6 @@ package org.serviceconnector.api.cln;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPManageCall;
@@ -27,6 +26,8 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.URLString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Management client to an SC.
@@ -36,7 +37,7 @@ import org.serviceconnector.util.URLString;
 public class SCMgmtClient extends SCClient {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCMgmtClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMgmtClient.class);
 
 	/**
 	 * Instantiates a new SC management client.

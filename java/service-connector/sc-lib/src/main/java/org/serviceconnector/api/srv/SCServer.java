@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -37,13 +36,15 @@ import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCServer. Server to a SC.
  */
 public class SCServer {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCServer.class);
 	/** The SC host. */
 	private String scHost;
 	/** The SC port. */
@@ -431,7 +432,7 @@ public class SCServer {
 					}
 				}
 			} catch (Exception e) {
-				LOGGER.fatal("unable to detect network interface", e);
+				LOGGER.error("unable to detect network interface", e);
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "Wrong interface.");
 			}
 		}
