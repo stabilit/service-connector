@@ -27,28 +27,28 @@
 
 		<!-- property files (end up in conf folder) -->		
 		<file>
-			<source>${collected.resources.src.path}/demo-client/log4j.properties</source>
+			<source>${collected.resources.src.path}/demo-client/logback.xml</source>
 			<outputDirectory>${conf.dest.path}</outputDirectory>
-			<destName>log4j-demo-client.properties</destName>
+			<destName>logback-demo-client.xml</destName>
 		</file>
 		<file>
-			<source>${collected.resources.src.path}/demo-server/log4j.properties</source>
+			<source>${collected.resources.src.path}/demo-server/logback.xml</source>
 			<outputDirectory>${conf.dest.path}</outputDirectory>
-			<destName>log4j-demo-server.properties</destName>
+			<destName>logback-demo-server.xml</destName>
 		</file>
 		<file>
 			<source>${collected.resources.src.path}/demo-web-server/WEB-INF/web.xml</source>
 			<outputDirectory>${conf.dest.path}</outputDirectory>
 		</file>
 		<file>
-			<source>${collected.resources.src.path}/sc-cosnole/log4j.properties</source>
+			<source>${collected.resources.src.path}/sc-cosnole/logback.xml</source>
 			<outputDirectory>${conf.dest.path}</outputDirectory>
-			<destName>log4j-console.properties</destName>
+			<destName>logback-console.xml</destName>
 		</file>
 		<file>
-			<source>${collected.resources.src.path}/sc/log4j.properties</source>
+			<source>${collected.resources.src.path}/sc/logback.xml</source>
 			<outputDirectory>${conf.dest.path}</outputDirectory>
-			<destName>log4j-sc.properties</destName>
+			<destName>logback-sc.xml</destName>
 		</file>
 		<file>
 			<source>${collected.resources.src.path}/sc/sc-specific.properties</source>

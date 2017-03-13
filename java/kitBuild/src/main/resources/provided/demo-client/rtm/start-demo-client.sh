@@ -1,3 +1,3 @@
 ﻿#!/bin/bash
 # start demo client
-java -Dlog4j.configuration=file:../conf/log4j-demo-client.properties -jar demo-client-${sc.version}.jar
+java -Dlogback.configurationFile=file:../conf/logback-demo-client.xml -jar demo-client-${sc.version}.jar

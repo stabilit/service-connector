@@ -9,7 +9,7 @@ rem you can pass parameters on the command line like
 rem     -DlogDirectory=c:/temp 
 rem or OS Environment variables like
 rem			-DlogDirectory=%OS_VARIABLE%
-rem and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
+rem and use them in the sc.properties files as ${sys:logDirectory} and in logback.xml as ${logDirectory}
 rem
 rem Adapt this script to optimize JVM parameters for SC
 rem  -Xmx512M	allow max 512MB heap size
@@ -20,5 +20,5 @@ rem set default directory
 set DIRNAME=%CD%
 cd "%~dp0"
 rem start sc
-java -Xmx512M -Xrs -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc-${sc.version}.jar -config ../conf/sc.properties
+java -Xmx512M -Xrs -Dlogback.configurationFile=file:../conf/logback-sc.xml -jar sc-${sc.version}.jar -config ../conf/sc.properties
 cd %DIRNAME%

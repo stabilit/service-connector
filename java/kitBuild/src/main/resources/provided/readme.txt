@@ -25,10 +25,10 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
        commons-lang-2.4.jar               (dependency)
        commons-logging-1.1.1.jar          (dependency)
        ehcache-core-2.4.1.jar             (dependency)
-       log4j-1.2.15.jar                   (dependency)
+       logback-classic-1.2.1.jar          (dependency)
+       logback-core-1.2.1.jar             (dependency)
        netty-3.2.5.Final.jar              (dependency)
        slf4j-api-1.7.2.jar                (dependency)
-       slf4j-log4j12-1.7.2.jar            (dependency)
    /bin/debian    (SC as deamon on debian based linux)
        readme.txt          (guide how to setup SC as a deamon)
        serviceconnector.sh (script to run sc as deamon)
@@ -49,17 +49,17 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
        stop.bat            (script to stop the service - example)
    /conf        (configuration)
        httpd-conf.sc       (Apache configuration for sc file services - example)
-       log4j-console.properties (SC console logging setup)
-       log4j-demo-client.properties (demo client logging setup)
-       log4j-demo-server.properties (demo server logging setup)
-       log4j-sc.properties (SC logging setup)
+       logback-console.xml (SC console logging setup)
+       logback-demo-client.xml (demo client logging setup)
+       logback-demo-server.xml (demo server logging setup)
+       logback-sc.xml (SC logging setup)
        sc-specific.properties (SC site specific configuration)
        sc.properties       (SC configuration)
        web.xml             (servlet configuration for SC services - example)
    /doc         (documentation)
        SC_4_Operation_E.pdf (SC operation and administration guide)
    /cache       (sc writes temporary cache-files here. See property cache.diskPath)
-   /logs        (sc writes all log and dump files here. See log4j properties)
+   /logs        (sc writes all log and dump files here. See logback configuration)
   
 
  sc-src-X.X.X.RELEASE.zip - kit containing binaries and additional resources required for development
@@ -108,7 +108,7 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
 
  Open Source components used inside SC:
  --------------------------------------
-  Log4J - logging.apache.org
+  logback - logging framework
   slf4j - org.slf4j
   Apache commons-configuration
   JBoss netty - org.jboss.netty
@@ -130,7 +130,7 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
  				logs/demo-client/client.log
  				logs/demo-server/server.log
  				logs/sc/sc.log
- 		"ERROR" or "FATAL" must not appear here, "WARN" are possible.
+ 		"ERROR" must not appear here, "WARN" are possible.
  8. Congratulation, you have successfully installed the sc!
 
 
@@ -145,7 +145,7 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
  Software removal
  ----------------
  1. Stop the running SC
- 2. Find directories configured in sc.properties or log4j-sc.properties as:
+ 2. Find directories configured in sc.properties or logback configuration file as:
  			- the log directory
  			- the root.pidPath
  			- the root.dumpPath
@@ -169,7 +169,7 @@ sc-bin-X.X.X.RELEASE.zip - kit containing only binaries
 
 --------------------------------------------------------------------------------
  *                                                                             *
- * Copyright © 2010 STABILIT Informatik AG, Switzerland                        *
+ * Copyright ï¿½ 2010 STABILIT Informatik AG, Switzerland                        *
  *                                                                             *
  * Licensed under the Apache License, Version 2.0 (the "License");             *
  * you may not use this file except in compliance with the License.            *

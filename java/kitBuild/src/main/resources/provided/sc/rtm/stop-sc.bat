@@ -11,5 +11,5 @@ rem 		 -config ../conf/sc.properties or
 rem or host and port
 rem 		-h localhost -p 9000
 rem must eb provided to reach the SC
-java -Dlog4j.configuration=file:..\conf\log4j-console.properties -jar sc-console-${sc.version}.jar -config ../conf/sc.properties kill
+java -Dlogback.configurationFile=file:..\conf\logback-console.xml -jar sc-console-${sc.version}.jar -config ../conf/sc.properties kill
 cd %DIRNAME%

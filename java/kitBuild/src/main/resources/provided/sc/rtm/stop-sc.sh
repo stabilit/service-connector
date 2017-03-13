@@ -7,4 +7,4 @@
 # or host and port
 # 		-h localhost -p 9000
 # must eb provided to reach the SC
-java -Dlog4j.configuration=file:../conf/log4j-console.properties -jar sc-console-${sc.version}.jar -config ../conf/sc.properties kill
+java -Dlogback.configurationFile=file:../conf/logback-console.xml -jar sc-console-${sc.version}.jar -config ../conf/sc.properties kill

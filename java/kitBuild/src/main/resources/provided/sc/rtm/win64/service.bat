@@ -72,7 +72,7 @@ if not errorlevel 1 (
 )
 echo Y > .r.lock
 echo Starting %SVCDISP%
-java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
+java -Xmx512M -Xrs -Dlogback.configurationFile=file:..\..\conf\logback-sc.xml -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 
@@ -84,7 +84,7 @@ if not errorlevel 1 (
   goto cmdEnd
 )
 echo Y > .s.lock
-java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
+java -Xrs -Dlogback.configurationFile=file:..\..\conf\logback-console.xml -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
 del .s.lock
 goto cmdEnd
 
@@ -97,7 +97,7 @@ if not errorlevel 1 (
   goto cmdEnd
 )
 echo Y > .s.lock
-java -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-console.properties -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
+java -Xrs -Dlogback.configurationFile=file:..\..\conf\logback-console.xml -jar ..\sc-console.jar -config ..\..\conf\sc.properties kill < .s.lock >> stop.log 2>&1 < .s.lock >> stop.log 2>&1
 del .s.lock
 :waitRun
 REM Delete lock file
@@ -107,7 +107,7 @@ jbosssvc.exe -s 1
 if exist ".r.lock" goto waitRun
 echo Y > .r.lock
 echo Starting %SVCDISP%
-java -Xmx512M -Xrs -Dlog4j.configuration=file:..\..\conf\log4j-sc.properties -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
+java -Xmx512M -Xrs -Dlogback.configurationFile=file:..\..\conf\logback-sc.xml -jar ..\sc.jar -config ..\..\conf\sc.properties < .r.lock >> run.log 2>&1 < .r.lock >> run.log 2>&1
 del .r.lock
 goto cmdEnd
 
