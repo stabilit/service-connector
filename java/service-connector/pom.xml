@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.serviceconnector</groupId> 
-  	<artifactId>sc-parent</artifactId> 
+	<groupId>org.serviceconnector</groupId>
+	<artifactId>sc-parent</artifactId>
 
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SC Parent POM</name>
-	
+
 	<organization>
 		<name>STABILIT Informatik AG</name>
 		<url>www.stabilit.ch</url>
@@ -24,10 +25,10 @@
 		<module>sc-lib</module>
 		<module>sc-web</module>
 		<module>sc-console</module>
-		<module>sc-test</module>		
-		<module>demo-client</module>		
-		<module>demo-server</module>		
-		<module>demo-web-server</module>		
+		<module>sc-test</module>
+		<module>demo-client</module>
+		<module>demo-server</module>
+		<module>demo-web-server</module>
 	</modules>
 
 	<properties>
@@ -40,7 +41,7 @@
 
 
 		<junit.version>4.8.1</junit.version>
-		<netty.version>3.2.5.Final</netty.version>		
+		<netty.version>3.2.5.Final</netty.version>
 		<logback.version>1.2.1</logback.version>
 		<commons-configuration.version>1.6</commons-configuration.version>
 		<ehcache.version>2.4.1</ehcache.version>
@@ -57,7 +58,7 @@
 			<url>http://10.0.0.28:8081/nexus/content/repositories/opensource.snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<repositories>
 		<repository>
 			<id>repository.stabilit.ch</id>
@@ -140,18 +141,21 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3.1</version>				
+					<version>2.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.7</version>
+					<version>2.9</version>
+					<configuration>
+						<additionalparam>-Xdoclint:none</additionalparam>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.7</version>
-				</plugin>				
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -197,7 +201,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 		<extensions>
 			<!-- Enabling the use of FTP -->
@@ -211,19 +215,19 @@
 
 	<dependencies>
 		<dependency>
-  			<groupId>ch.qos.logback</groupId>
-  			<artifactId>logback-classic</artifactId>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
 		</dependency>
-		
+
 
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-			  	<groupId>org.serviceconnector</groupId>
-				<artifactId>sc-lib</artifactId>			
-			  	<version>${project.version}</version>
+				<groupId>org.serviceconnector</groupId>
+				<artifactId>sc-lib</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.serviceconnector</groupId>
@@ -266,12 +270,12 @@
 				<version>${servlet-api.version}</version>
 			</dependency>
 			<dependency>
-	  			<groupId>ch.qos.logback</groupId>
-	  			<artifactId>logback-classic</artifactId>
-	  			<version>${logback.version}</version>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
 			</dependency>
-			
-		
+
+
 		</dependencies>
 	</dependencyManagement>
 
