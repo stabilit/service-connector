@@ -18,27 +18,26 @@ package org.serviceconnector.net.res;
 
 import java.security.InvalidParameterException;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.NettyTcpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.proxy.NettyTcpProxyEndpoint;
 import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown in key
- * string constants below.
+ * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown in key string constants below.
  */
 public class EndpointFactory {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(EndpointFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EndpointFactory.class);
 
 	/**
 	 * Creates a new Endpoint object.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the i endpoint
 	 */
 	public IEndpoint createEndpoint(String key) {
@@ -51,7 +50,7 @@ public class EndpointFactory {
 		} else if (ConnectionType.NETTY_PROXY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpProxyEndpoint();
 		} else {
-			LOGGER.fatal("key : " + key + " not found!");
+			LOGGER.error("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 	}

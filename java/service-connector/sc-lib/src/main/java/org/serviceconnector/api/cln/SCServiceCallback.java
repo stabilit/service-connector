@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCServiceCallback. Base class for a service callback.
- * 
+ *
  * @author JTraber
  */
 public class SCServiceCallback extends SynchronousCallback {
@@ -42,9 +42,8 @@ public class SCServiceCallback extends SynchronousCallback {
 
 	/**
 	 * Instantiates a new service callback.
-	 * 
-	 * @param synchronous
-	 *            the synchronous
+	 *
+	 * @param synchronous the synchronous
 	 */
 	public SCServiceCallback(boolean synchronous) {
 		this.synchronous = synchronous;
@@ -52,11 +51,9 @@ public class SCServiceCallback extends SynchronousCallback {
 
 	/**
 	 * Instantiates a new ServiceCallback.
-	 * 
-	 * @param service
-	 *            the service
-	 * @param messageCallback
-	 *            the message callback
+	 *
+	 * @param service the service
+	 * @param messageCallback the message callback
 	 */
 	public SCServiceCallback(SCService service, SCMessageCallback messageCallback) {
 		this.service = service;

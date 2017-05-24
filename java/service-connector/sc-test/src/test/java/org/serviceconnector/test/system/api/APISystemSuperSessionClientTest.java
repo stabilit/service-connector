@@ -36,6 +36,7 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	protected MsgCallback msgCallback1 = null;
 	protected static boolean messageReceived = false;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -43,7 +44,7 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	}
 
 	public void setUpClientToSC() throws Exception {
-		if (client == null) {	// client may be already created and attached because the of the class hierarchy
+		if (client == null) { // client may be already created and attached because the of the class hierarchy
 			if (cascadingLevel == 0) {
 				client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 				client.attach();
@@ -57,6 +58,7 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 		}
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -101,8 +103,7 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 		public void receive(Exception e) {
 			testLogger.info("Error received");
 			if (e instanceof SCServiceException) {
-				SystemSuperTest.testLogger.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text="
-						+ ((SCServiceException) e).getSCErrorText());
+				SystemSuperTest.testLogger.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text=" + ((SCServiceException) e).getSCErrorText());
 				scErrorCode = ((SCServiceException) e).getSCErrorCode();
 				scErrorText = ((SCServiceException) e).getSCErrorText();
 			} else {

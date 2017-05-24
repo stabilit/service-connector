@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -44,15 +45,15 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register backend server in
- * SC. Backend server will be registered in server registry of SC.
- * 
+ * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register backend server in SC. Backend server will be registered in server
+ * registry of SC.
+ *
  * @author JTraber
  */
 public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(RegisterServerCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegisterServerCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -92,9 +93,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		ListenerConfiguration listenerConfig = responder.getListenerConfig();
 		String connectionType = listenerConfig.getConnectionType();
 
-		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.STATEFUL_SERVER, serverKey,
-				socketAddress.getHostName(), portNr, connectionType, keepAliveIntervalSeconds, checkRegistrationIntervalSeconds,
-				maxConnections, maxSessions, httpUrlFileQualifier);
+		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.STATEFUL_SERVER, serverKey, socketAddress.getHostName(), portNr, connectionType,
+				keepAliveIntervalSeconds, checkRegistrationIntervalSeconds, maxConnections, maxSessions, httpUrlFileQualifier);
 		// create new server
 		StatefulServer server = new StatefulServer(remoteNodeConfiguration, serviceName, socketAddress);
 		try {
@@ -104,8 +104,7 @@ public class RegisterServerCommand extends CommandAdapter {
 			}
 		} catch (Exception ex) {
 			LOGGER.error("immediate connect", ex);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"immediate connect to server=" + serverKey);
+			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "immediate connect to server=" + serverKey);
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
@@ -128,12 +127,10 @@ public class RegisterServerCommand extends CommandAdapter {
 
 	/**
 	 * Validate server not registered.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the server by key and validate not registered
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	private Server getServerByKeyAndValidateNotRegistered(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);
@@ -153,8 +150,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
@@ -177,12 +173,10 @@ public class RegisterServerCommand extends CommandAdapter {
 			ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, portNr, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
 			// keepAliveInterval mandatory
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-			ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, kpi, Constants.MAX_KPI_VALUE,
-					SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_KPI_VALUE, kpi, Constants.MAX_KPI_VALUE, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 			// checkRegistrationInterval mandatory
 			String cri = message.getHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL);
-			ValidatorUtility.validateInt(Constants.MIN_CRI_VALUE, cri, Constants.MAX_CRI_VALUE,
-					SCMPError.HV_WRONG_CHECK_REGISTRATION_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_CRI_VALUE, cri, Constants.MAX_CRI_VALUE, SCMPError.HV_WRONG_CHECK_REGISTRATION_INTERVAL);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -19,33 +19,33 @@ package org.serviceconnector.cache.ehcache;
 import java.util.Date;
 import java.util.List;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.config.CacheConfiguration;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.config.CacheConfiguration;
+
 /**
  * The Class EHCacheSCMPCacheImpl. This class wraps the EHCache implementation of a cache.
- * 
+ *
  * @param <T>
  */
 public class EHCacheImpl<T> implements ISCCacheModule<T> {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCCache.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCCache.class);
 	/** The cache. */
 	private Cache ehCache;
 
 	/**
 	 * Instantiates a new EHCache.
-	 * 
-	 * @param cacheConfiguration
-	 *            the cache configuration
+	 *
+	 * @param cacheConfiguration the cache configuration
 	 */
 	EHCacheImpl(CacheConfiguration cacheConfiguration) {
 		this.ehCache = new Cache(cacheConfiguration);

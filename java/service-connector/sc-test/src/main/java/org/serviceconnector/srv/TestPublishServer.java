@@ -20,8 +20,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCAppendMessage;
@@ -40,34 +38,35 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unused")
 public class TestPublishServer extends TestStatefulServer {
 
 	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	protected static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	static {
-		TestStatefulServer.LOGGER = Logger.getLogger(TestPublishServer.class);
+		TestStatefulServer.LOGGER = LoggerFactory.getLogger(TestPublishServer.class);
 	}
 
 	/**
 	 * Main method if you like to start in debug mode.
-	 * 
-	 * @param args
-	 *            [0] serverName<br>
-	 *            [1] listenerPort<br>
-	 *            [2] SC port<br>
-	 *            [3] maxSessions<br>
-	 *            [4] maxConnections<br>
-	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [6] serviceNames (comma delimited list)<br>
-	 *            [7] nics (comma separated list)<br>
+	 *
+	 * @param args [0] serverName<br>
+	 *        [1] listenerPort<br>
+	 *        [2] SC port<br>
+	 *        [3] maxSessions<br>
+	 *        [4] maxConnections<br>
+	 *        [5] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [6] serviceNames (comma delimited list)<br>
+	 *        [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
-		LOGGER.log(Level.OFF, "TestPublishServer is starting ...");
+		LOGGER.debug("TestPublishServer is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 		TestPublishServer server = new TestPublishServer();
 		server.setServerName(args[0]);
@@ -115,10 +114,10 @@ public class TestPublishServer extends TestStatefulServer {
 			try {
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", fileCtx);
 			} catch (SCMPValidatorException e1) {
-				LOGGER.fatal("unable to get path to pid file", e1);
+				LOGGER.error("unable to get path to pid file", e1);
 			}
 
-			LOGGER.log(Level.OFF, "TestPublishServer is running ...");
+			LOGGER.debug("TestPublishServer is running ...");
 		} catch (Exception e) {
 			LOGGER.error("runPublishServer", e);
 		} finally {
@@ -140,13 +139,13 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
-			LOGGER.log(Level.OFF, "Subscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.debug("Subscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
-					LOGGER.log(Level.OFF, "Kill request received, exiting ...");
+					LOGGER.debug("Kill request received, exiting ...");
 					response.setReject(true);
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
@@ -164,8 +163,7 @@ public class TestPublishServer extends TestStatefulServer {
 					th.sleep(request, operationTimeoutMillis);
 					return response;
 				} else {
-					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
-							operationTimeoutMillis);
+					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request, operationTimeoutMillis);
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
@@ -197,8 +195,7 @@ public class TestPublishServer extends TestStatefulServer {
 					return response;
 				} else {
 					// invoking a method asynchronous
-					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
-							operationTimeoutMillis);
+					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request, operationTimeoutMillis);
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
@@ -212,13 +209,13 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
-			LOGGER.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.debug("Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 
 		@Override
 		public void abortSubscription(SCSubscribeMessage request, int operationTimeoutMillis) {
-			LOGGER.log(Level.OFF, "Abort subscription with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.debug("Abort subscription with sid=" + request.getSessionId() + " mask=" + request.getMask());
 		}
 
 		@Override

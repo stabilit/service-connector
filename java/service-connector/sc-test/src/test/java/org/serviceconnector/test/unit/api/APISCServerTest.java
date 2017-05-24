@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,16 +32,18 @@ public class APISCServerTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APISCServerTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APISCServerTest.class);
 
 	private SCServer server;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		server = null;
 	}
 
+	@Override
 	@After
 	public void afterOneTest() {
 		try {
@@ -61,8 +64,7 @@ public class APISCServerTest extends SuperUnitTest {
 		Assert.assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		Assert.assertEquals("Port not equal", TestConstants.PORT_SC0_TCP, server.getSCPort());
 		Assert.assertEquals("Listener Port not equal", TestConstants.PORT_SES_SRV_TCP, server.getListenerPort());
-		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server
-				.getConnectionType());
+		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		Assert.assertNotNull(server);
 		server.startListener();
 		Assert.assertEquals("Listener is not running", true, server.isListening());
@@ -78,8 +80,7 @@ public class APISCServerTest extends SuperUnitTest {
 		Assert.assertEquals("Host not equal", null, server.getSCHost());
 		Assert.assertEquals("Port not equal", TestConstants.PORT_SC0_TCP, server.getSCPort());
 		Assert.assertEquals("Listener Port not equal", TestConstants.PORT_SES_SRV_TCP, server.getListenerPort());
-		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server
-				.getConnectionType());
+		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		Assert.assertNotNull(server);
 		server.startListener();
 	}
@@ -94,8 +95,7 @@ public class APISCServerTest extends SuperUnitTest {
 		Assert.assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		Assert.assertEquals("Port not equal", Integer.MIN_VALUE, server.getSCPort());
 		Assert.assertEquals("Listener Port not equal", TestConstants.PORT_SES_SRV_TCP, server.getListenerPort());
-		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server
-				.getConnectionType());
+		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		Assert.assertNotNull(server);
 		server.startListener();
 	}
@@ -110,8 +110,7 @@ public class APISCServerTest extends SuperUnitTest {
 		Assert.assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		Assert.assertEquals("Port not equal", TestConstants.PORT_SC0_TCP, server.getSCPort());
 		Assert.assertEquals("Listener Port not equal", Integer.MIN_VALUE, server.getListenerPort());
-		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server
-				.getConnectionType());
+		Assert.assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		Assert.assertNotNull(server);
 		server.startListener();
 	}
@@ -122,8 +121,7 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t05_constructor() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		Assert.assertEquals("Port not equal", TestConstants.PORT_SC0_TCP, server.getSCPort());
 		Assert.assertEquals("Listener Port not equal", TestConstants.PORT_SES_SRV_TCP, server.getListenerPort());
@@ -275,8 +273,7 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t60_KeepAliveInterval() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.setKeepAliveIntervalSeconds(10);
 		Assert.assertEquals("KeepAliveInterval not equal", 10, server.getKeepAliveIntervalSeconds());
 		Assert.assertNotNull(server);
@@ -289,8 +286,7 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t61_KeepAliveInterval() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.setKeepAliveIntervalSeconds(-1);
 		Assert.assertEquals("KeepAliveInterval not equal", -1, server.getKeepAliveIntervalSeconds());
 		Assert.assertNotNull(server);
@@ -303,8 +299,7 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t70_ImmediateConnect() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		server.setImmediateConnect(true);
 		Assert.assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
@@ -320,8 +315,7 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t80_Listener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertNotNull("server exists", server);
 		server.startListener();
 		Assert.assertEquals("Listener is not running", true, server.isListening());
@@ -335,18 +329,19 @@ public class APISCServerTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t81_Listener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertNotNull("server exists", server);
 		int nr = 100;
 		int sleep = 0;
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 10) == 0)
+			if (((i + 1) % 10) == 0) {
 				testLogger.info("Start/stop listener nr. " + (i + 1) + "...");
+			}
 			server.startListener();
 			Assert.assertEquals("Listener is running", true, server.isListening());
-			if (sleep > 0)
+			if (sleep > 0) {
 				Thread.sleep(sleep);
+			}
 			server.stopListener();
 			Assert.assertEquals("Listener is not running", false, server.isListening());
 		}

@@ -48,9 +48,8 @@ public class ServiceConfiguration {
 
 	/**
 	 * The Constructor.
-	 * 
-	 * @param name
-	 *            the node name
+	 *
+	 * @param name the node name
 	 */
 	public ServiceConfiguration(String name) {
 		this.name = name;
@@ -65,19 +64,16 @@ public class ServiceConfiguration {
 
 	/**
 	 * Load the configured items.
-	 * 
-	 * @param compositeConfig
-	 *            the composite config
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *
+	 * @param compositeConfig the composite config
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 
 		// get type
 		this.type = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_TYPE);
 		if (type == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-					+ Constants.PROPERTY_QUALIFIER_TYPE + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name + Constants.PROPERTY_QUALIFIER_TYPE + " is missing");
 		}
 		ServiceType serviceType = ServiceType.getType(this.type);
 		if (serviceType == ServiceType.UNDEFINED) {
@@ -85,8 +81,7 @@ public class ServiceConfiguration {
 		}
 		String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 		if (remoteNode != null) {
-			RemoteNodeConfiguration remoteNodeConfigurationLocal = AppContext.getRequesterConfiguration()
-					.getRequesterConfigurations().get(remoteNode);
+			RemoteNodeConfiguration remoteNodeConfigurationLocal = AppContext.getRequesterConfiguration().getRequesterConfigurations().get(remoteNode);
 			if (remoteNodeConfigurationLocal == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown remoteNode=" + remoteNode);
 			}
@@ -94,15 +89,13 @@ public class ServiceConfiguration {
 		}
 
 		// get enabled
-		this.enabled = compositeConfig.getBoolean(this.name + Constants.PROPERTY_QUALIFIER_ENABLED,
-				Constants.DEFAULT_SERVICE_ENABLED);
+		this.enabled = compositeConfig.getBoolean(this.name + Constants.PROPERTY_QUALIFIER_ENABLED, Constants.DEFAULT_SERVICE_ENABLED);
 
 		// get path & uploadScript & listScript for file service
 		if (serviceType == ServiceType.FILE_SERVICE) {
 			this.path = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_PATH, null);
 			if (this.path == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_PATH + " is missing");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name + Constants.PROPERTY_QUALIFIER_PATH + " is missing");
 			}
 			if (this.path.endsWith("/") == false) {
 				// adds a slash to the path
@@ -110,23 +103,20 @@ public class ServiceConfiguration {
 			}
 			this.uploadScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT, null);
 			if (this.uploadScript == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+						"required property=" + this.name + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing");
 			}
 			this.listScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT, null);
 			if (this.listScript == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing");
 			}
 		}
 
 		// get remote host for file services or cascaded services
-		if ((serviceType == ServiceType.FILE_SERVICE) || (serviceType == ServiceType.CASCADED_SESSION_SERVICE)
-				|| (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_FILE_SERVICE)
-				|| (serviceType == ServiceType.CASCADED_CACHE_GUARDIAN)) {
+		if ((serviceType == ServiceType.FILE_SERVICE) || (serviceType == ServiceType.CASCADED_SESSION_SERVICE) || (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE)
+				|| (serviceType == ServiceType.CASCADED_FILE_SERVICE) || (serviceType == ServiceType.CASCADED_CACHE_GUARDIAN)) {
 			if (remoteNode == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
 			}
 			// create configuration for remote host
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(remoteNode);
@@ -134,8 +124,7 @@ public class ServiceConfiguration {
 			remoteNodeConfig.load(compositeConfig);
 			// remote node must be a web server
 			if (remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, this.name
-						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
 			}
 			// set remote host configuration into the listener configuration
 			this.remoteNodeConfiguration = remoteNodeConfig;
@@ -144,8 +133,7 @@ public class ServiceConfiguration {
 		if ((serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_CACHE_GUARDIAN)) {
 			Integer noDataIntervalSecondsInteger = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_NOI, null);
 			if (noDataIntervalSecondsInteger == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_NOI + " is missing");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name + Constants.PROPERTY_QUALIFIER_NOI + " is missing");
 			}
 			this.nodDataIntervalSeconds = noDataIntervalSecondsInteger;
 		}
@@ -154,7 +142,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * To string.
-	 * 
+	 *
 	 * @return the string {@inheritDoc}
 	 */
 	@Override
@@ -185,7 +173,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the name.
-	 * 
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -194,7 +182,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the type.
-	 * 
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -203,7 +191,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the enabled.
-	 * 
+	 *
 	 * @return the enabled
 	 */
 	public Boolean getEnabled() {
@@ -212,7 +200,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the path.
-	 * 
+	 *
 	 * @return the path
 	 */
 	public String getPath() {
@@ -221,7 +209,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the upload script.
-	 * 
+	 *
 	 * @return the upload script
 	 */
 	public String getUploadScript() {
@@ -230,7 +218,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the list script.
-	 * 
+	 *
 	 * @return the list script
 	 */
 	public String getListScript() {
@@ -239,7 +227,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the remote node configuration.
-	 * 
+	 *
 	 * @return the remote node configuration
 	 */
 	public RemoteNodeConfiguration getRemoteNodeConfiguration() {
@@ -248,7 +236,7 @@ public class ServiceConfiguration {
 
 	/**
 	 * Gets the no data interval seconds.
-	 * 
+	 *
 	 * @return the no data interval seconds
 	 */
 	public int getNoDataIntervalSeconds() {
@@ -256,40 +244,36 @@ public class ServiceConfiguration {
 	}
 
 	/**
-	 * Adapt service type if cascaded service. SC uses more service type internal. This method figures out if changing of service
-	 * type is necessary for current service.
-	 * 
-	 * @param serviceType
-	 *            the service type
-	 * @param remoteHost
-	 *            the remote host
+	 * Adapt service type if cascaded service. SC uses more service type internal. This method figures out if changing of service type is necessary for current service.
+	 *
+	 * @param serviceType the service type
+	 * @param remoteHost the remote host
 	 * @return the service type
 	 */
 	public static ServiceType adaptServiceTypeIfCascService(ServiceType serviceType, String remoteHost) {
 		switch (serviceType) {
-		case SESSION_SERVICE:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_SESSION_SERVICE;
-			}
-		case PUBLISH_SERVICE:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_PUBLISH_SERVICE;
-			}
-		case CACHE_GUARDIAN:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_CACHE_GUARDIAN;
-			}
-		case FILE_SERVICE:
-			if (remoteHost != null) {
-				RemoteNodeConfiguration remoteNodeConfiguration = AppContext.getRequesterConfiguration()
-						.getRequesterConfigurations().get(remoteHost);
-				if (remoteNodeConfiguration.getServerType() == ServerType.CASCADED_SC) {
-					return ServiceType.CASCADED_FILE_SERVICE;
+			case SESSION_SERVICE:
+				if (remoteHost != null) {
+					return ServiceType.CASCADED_SESSION_SERVICE;
 				}
-				return serviceType;
-			}
-		default:
-			break;
+			case PUBLISH_SERVICE:
+				if (remoteHost != null) {
+					return ServiceType.CASCADED_PUBLISH_SERVICE;
+				}
+			case CACHE_GUARDIAN:
+				if (remoteHost != null) {
+					return ServiceType.CASCADED_CACHE_GUARDIAN;
+				}
+			case FILE_SERVICE:
+				if (remoteHost != null) {
+					RemoteNodeConfiguration remoteNodeConfiguration = AppContext.getRequesterConfiguration().getRequesterConfigurations().get(remoteHost);
+					if (remoteNodeConfiguration.getServerType() == ServerType.CASCADED_SC) {
+						return ServiceType.CASCADED_FILE_SERVICE;
+					}
+					return serviceType;
+				}
+			default:
+				break;
 		}
 		return serviceType;
 	}

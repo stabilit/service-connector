@@ -36,6 +36,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -45,9 +46,8 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	/**
 	 * Description: exchange one uncompressed message<br>
 	 * Expectation: passes.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void t001_executeUncompressed() throws Exception {
@@ -266,8 +266,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
-		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE,
-				response.getAppErrorCode());
+		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
@@ -829,9 +828,8 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 
 	/**
 	 * Description: send 1 uncompressed 20MB message with Constants.MAX_MESSAGE_SIZE parts<br>
-	 * Expectation: passes
-	 * Pay Attention: If this test is failing check the logging settings. Netty Logger in debug mode might produce to much data
-	 * which results in heap memory problems or delays.
+	 * Expectation: passes Pay Attention: If this test is failing check the logging settings. Netty Logger in debug mode might produce to much data which results in heap memory
+	 * problems or delays.
 	 */
 	@Test
 	public void t155_sendMessageMaxPartSize() throws Exception {

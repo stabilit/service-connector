@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -46,13 +47,12 @@ import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows unsubscribing from a
- * publish service.
+ * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows unsubscribing from a publish service.
  */
 public class CscUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscUnsubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -78,34 +78,33 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		cascSubscription.removeCscSubscriptionId(reqMessage.getSessionId());
 
 		switch (abstractService.getType()) {
-		case CASCADED_PUBLISH_SERVICE:
-		case CASCADED_CACHE_GUARDIAN:
-			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
-			// publish service is cascaded
-			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
+			case CASCADED_PUBLISH_SERVICE:
+			case CASCADED_CACHE_GUARDIAN:
+				CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
+				// publish service is cascaded
+				CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
 
-			if (cascadedSCMask == null) {
-				// unsubscribe made by cascaded SC on behalf of his last client
-				this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
-				publishMessageQueue.unsubscribe(cascSubscription.getId());
-				cascSubscription.getServer().removeSession(cascSubscription);
-				SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
-			} else {
-				// unsubscribe made by cascaded SC on behalf of his clients
-				SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-				publishMessageQueue.changeSubscription(cascSubscription.getId(), cascSCMask);
-				cascSubscription.setMask(cascSCMask);
-				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
-			}
-			CscUnsubscribeCallbackForCasc callback = new CscUnsubscribeCallbackForCasc(request, response, responderCallback,
-					cascSubscription);
-			cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
-			// delete unreferenced nodes in queue
-			publishMessageQueue.removeNonreferencedNodes();
-			return;
-		default:
-			// code for other types of services is below
-			break;
+				if (cascadedSCMask == null) {
+					// unsubscribe made by cascaded SC on behalf of his last client
+					this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
+					publishMessageQueue.unsubscribe(cascSubscription.getId());
+					cascSubscription.getServer().removeSession(cascSubscription);
+					SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
+				} else {
+					// unsubscribe made by cascaded SC on behalf of his clients
+					SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
+					publishMessageQueue.changeSubscription(cascSubscription.getId(), cascSCMask);
+					cascSubscription.setMask(cascSCMask);
+					SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
+				}
+				CscUnsubscribeCallbackForCasc callback = new CscUnsubscribeCallbackForCasc(request, response, responderCallback, cascSubscription);
+				cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+				// delete unreferenced nodes in queue
+				publishMessageQueue.removeNonreferencedNodes();
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 
 		if (cascadedSCMask == null) {
@@ -165,8 +164,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 					}
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
-							+ reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -183,11 +181,9 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 
 	/**
 	 * Abort cascaded subscriptions.
-	 * 
-	 * @param cascSubscription
-	 *            the cascaded subscription
-	 * @param reqMessage
-	 *            the request message
+	 *
+	 * @param cascSubscription the cascaded subscription
+	 * @param reqMessage the request message
 	 */
 	private void abortCascSubscriptions(Subscription cascSubscription, SCMPMessage reqMessage) {
 		if (cascSubscription.isCascaded() == true) {
@@ -198,8 +194,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// set up abort message - SCMP Version request
 			SCMPMessage abortMessage = new SCMPMessage(reqMessage.getSCMPVersion());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT,
-					SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText("Cascaded subscription abort received."));
 			abortMessage.setServiceName(cascSubscription.getService().getName());
 			abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 
@@ -223,19 +218,16 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// cascadedSubscriptionId mandatory
 			String cascadedSubscriptionId = message.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
-			ValidatorUtility.validateStringLengthTrim(1, cascadedSubscriptionId, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, cascadedSubscriptionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// sessionInfo optional
-			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO),
-					Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO), Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

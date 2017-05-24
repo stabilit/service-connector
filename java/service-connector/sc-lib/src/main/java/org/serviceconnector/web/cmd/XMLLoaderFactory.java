@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.web.xml.AjaxContentXMLLoader;
 import org.serviceconnector.web.xml.AjaxMaintenanceXMLLoader;
 import org.serviceconnector.web.xml.AjaxResourceXMLLoader;
@@ -41,13 +42,12 @@ import org.serviceconnector.web.xml.TimerXMLLoader;
 public class XMLLoaderFactory {
 
 	/** The Constant LOGGER. */
-	public static final Logger LOGGER = Logger.getLogger(XMLLoaderFactory.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(XMLLoaderFactory.class);
 
 	/**
 	 * Gets the XML loader.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return the XML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {
@@ -89,7 +89,7 @@ public class XMLLoaderFactory {
 			return new AjaxContentXMLLoader();
 		} else if (url.equals("/ajax/maintenance")) {
 			return new AjaxMaintenanceXMLLoader();
-	} else {
+		} else {
 			return new DefaultXMLLoader();
 		}
 	}

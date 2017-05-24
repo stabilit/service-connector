@@ -19,7 +19,6 @@ package org.serviceconnector.net;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 /**
  * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.
  */
@@ -27,24 +26,19 @@ public interface IEncoderDecoder {
 
 	/**
 	 * Encode object to output stream.
-	 * 
-	 * @param os
-	 *            the os to fill
-	 * @param obj
-	 *            the obj to encode
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param os the os to fill
+	 * @param obj the obj to encode
+	 * @throws Exception the exception
 	 */
 	public void encode(OutputStream os, Object obj) throws Exception;
 
 	/**
 	 * Decode input stream.
-	 * 
-	 * @param is
-	 *            the is to decode
+	 *
+	 * @param is the is to decode
 	 * @return the object decoded
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public Object decode(InputStream is) throws Exception;
 }

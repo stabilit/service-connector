@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
@@ -30,13 +31,12 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionClient {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoSessionClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSessionClient.class);
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
@@ -121,9 +121,8 @@ public class DemoSessionClient {
 
 		/**
 		 * Instantiates a new demo session client callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);

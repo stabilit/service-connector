@@ -30,15 +30,12 @@ public interface ISCMPSynchronousCallback extends ISCMPMessageCallback {
 	public abstract void receive(Exception ex);
 
 	/**
-	 * Careful, be aware of timeout concept if you use this method. Gets the message synchronous. Waits until message/fault received
-	 * or time you hand over runs out.<br />
+	 * Careful, be aware of timeout concept if you use this method. Gets the message synchronous. Waits until message/fault received or time you hand over runs out.<br />
 	 * <br />
-	 * 
-	 * @param timeoutMillis
-	 *            the timeout in milliseconds
+	 *
+	 * @param timeoutMillis the timeout in milliseconds
 	 * @return the message sync
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public abstract SCMPMessage getMessageSync(int timeoutMillis) throws Exception;
 

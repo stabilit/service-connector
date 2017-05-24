@@ -20,7 +20,8 @@ import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -37,13 +38,13 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
- * 
+ *
  * @author JTraber
  */
 public class Requester implements IRequester {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(Requester.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Requester.class);
 	/** The remote node configuration. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 	/** The connection pool. */
@@ -51,15 +52,13 @@ public class Requester implements IRequester {
 
 	/**
 	 * Instantiates a new requester.
-	 * 
-	 * @param remoteNodeConfiguration
-	 *            the remote node configuration
+	 *
+	 * @param remoteNodeConfiguration the remote node configuration
 	 */
 	public Requester(RemoteNodeConfiguration remoteNodeConfiguration) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
-		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
-				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds(), AppContext
-						.getBasicConfiguration().getKeepAliveOTIMillis());
+		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
+				remoteNodeConfiguration.getKeepAliveIntervalSeconds(), AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
 		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
 	}
 
@@ -75,8 +74,7 @@ public class Requester implements IRequester {
 			TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 			@SuppressWarnings("unchecked")
-			ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-					timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
+			ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(timeoutWrapper, timeoutMillis, TimeUnit.MILLISECONDS);
 			reqCallback.setOperationTimeout(timeout);
 			reqCallback.setTimeoutMillis(timeoutMillis);
 			connection.send(message, requesterCallback);
@@ -99,8 +97,8 @@ public class Requester implements IRequester {
 	}
 
 	/**
-	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
-	 * received. Handles freeing up earlier requested connections.
+	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is received. Handles freeing up earlier requested
+	 * connections.
 	 */
 	private class RequesterSCMPCallback implements ISCMPMessageCallback, ITimeout {
 
@@ -115,11 +113,9 @@ public class Requester implements IRequester {
 
 		/**
 		 * Instantiates a new requester scmp callback.
-		 * 
-		 * @param scmpCallback
-		 *            the scmp callback
-		 * @param connectionCtx
-		 *            the connection ctx
+		 *
+		 * @param scmpCallback the scmp callback
+		 * @param connectionCtx the connection ctx
 		 */
 		public RequesterSCMPCallback(ISCMPMessageCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
@@ -170,11 +166,9 @@ public class Requester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
-		 * state.
-		 * 
-		 * @param quietDisconnect
-		 *            the quiet disconnect
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious state.
+		 *
+		 * @param quietDisconnect the quiet disconnect
 		 */
 		private void disconnectConnection(boolean quietDisconnect) {
 			try {
@@ -186,9 +180,8 @@ public class Requester implements IRequester {
 
 		/**
 		 * Sets the operation timeout.
-		 * 
-		 * @param operationTimeoutTask
-		 *            the new operation timeout
+		 *
+		 * @param operationTimeoutTask the new operation timeout
 		 */
 		public void setOperationTimeout(ScheduledFuture<TimeoutWrapper> operationTimeoutTask) {
 			this.operationTimeout = operationTimeoutTask;
@@ -202,9 +195,8 @@ public class Requester implements IRequester {
 
 		/**
 		 * Sets the timeout milliseconds.
-		 * 
-		 * @param timeoutMillis
-		 *            the new timeout seconds
+		 *
+		 * @param timeoutMillis the new timeout seconds
 		 */
 		public void setTimeoutMillis(int timeoutMillis) {
 			this.timeoutMillis = timeoutMillis;
@@ -236,11 +228,9 @@ public class Requester implements IRequester {
 
 	/**
 	 * Dump the requester into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("requester");

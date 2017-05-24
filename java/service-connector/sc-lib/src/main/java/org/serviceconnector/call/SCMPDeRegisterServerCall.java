@@ -16,29 +16,27 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPDeRegisterServerCall. Deregisters server.
- * 
+ *
  * @author JTraber
  */
 public class SCMPDeRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPDeRegisterServerCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPDeRegisterServerCall.class);
 
 	/**
 	 * Instantiates a new SCMPDeRegisterServerCall.
-	 * 
-	 * @param requester
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requester to use when invoking call
+	 * @param serviceName the service name
 	 */
 	public SCMPDeRegisterServerCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);

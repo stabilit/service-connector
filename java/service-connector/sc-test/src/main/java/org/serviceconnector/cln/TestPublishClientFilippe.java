@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestPublishServiceMessageCallback;
 import org.serviceconnector.TestSessionServiceMessageCallback;
@@ -30,7 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 public class TestPublishClientFilippe extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TestPublishClientFilippe.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPublishClientFilippe.class);
 
 	private String methodName;
 

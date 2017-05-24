@@ -28,7 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
@@ -66,22 +67,19 @@ import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SCBaseServlet. Base servlet for service implementations.
- * SCBaseServlet is implemented by SCBaseSessionServlet and SCBasePublishServlet. User of servlet API must extend
+ * The Class SCBaseServlet. Base servlet for service implementations. SCBaseServlet is implemented by SCBaseSessionServlet and SCBasePublishServlet. User of servlet API must extend
  * SCBaseSessionServlet or SCBasePublishServlet depending on kind of service he likes to implement.<br/>
  * <br/>
- * Communication between server and SC starts with registering the server for specific service on the SC. This initial steps are
- * done by SCBaseServlet in startup phase. Settings like keep alive interval or max number of connections are extracted from the
- * web.xml. After successful register the interfaces ISCSessionServerCallback/ISCPublishServerCallback implemented by the base
- * classes get informed about client actions (create session, execute, subscribe, abort session).<br />
+ * Communication between server and SC starts with registering the server for specific service on the SC. This initial steps are done by SCBaseServlet in startup phase. Settings
+ * like keep alive interval or max number of connections are extracted from the web.xml. After successful register the interfaces ISCSessionServerCallback/ISCPublishServerCallback
+ * implemented by the base classes get informed about client actions (create session, execute, subscribe, abort session).<br />
  * <br />
- * One servlet serves one service (defined in web.xml) at the time. However two servlets may serve the same service. Looks like two
- * different servers for an SC instance.<br />
+ * One servlet serves one service (defined in web.xml) at the time. However two servlets may serve the same service. Looks like two different servers for an SC instance.<br />
  * <br />
  * Deregister of the service is done by the SCBaseServlet and happens automatically when servlet gets destroyed. <br />
  * <br />
  * Required parameters in web.xml, example for service "session-1":<br />
- * 
+ *
  * <pre>
  *	<context-param>
  *		<param-name>scPort</param-name>
@@ -137,7 +135,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public abstract class SCBaseServlet extends HttpServlet {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCBaseServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCBaseServlet.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	/** The composite registry. */
@@ -201,11 +199,9 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Load configuration parameters.
-	 * 
-	 * @param config
-	 *            the configuration
-	 * @throws SCMPValidatorException
-	 *             validation of configuration parameters failed
+	 *
+	 * @param config the configuration
+	 * @throws SCMPValidatorException validation of configuration parameters failed
 	 */
 	private void loadConfigParams(ServletConfig config) throws SCMPValidatorException {
 		this.serviceName = config.getInitParameter(WebConstants.PROPERTY_SERVICE_NAME);
@@ -218,35 +214,30 @@ public abstract class SCBaseServlet extends HttpServlet {
 		String remotNodeName = this.tomcatPort + this.getServletName();
 		String scHost = context.getInitParameter(WebConstants.PROPERTY_SC_HOST);
 		int scPort = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_SC_PORT));
-		int keepAliveIntervalToSCSeconds = Integer
-				.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_INTERVAL_TOSC));
+		int keepAliveIntervalToSCSeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_INTERVAL_TOSC));
 		int keepAliveOTISeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_KEEPALIVE_OTI));
-		this.checkRegistrationIntervalSeconds = Integer.parseInt(context
-				.getInitParameter(WebConstants.PROPERTY_CHECK_REGRISTRATION_INTERVAL));
+		this.checkRegistrationIntervalSeconds = Integer.parseInt(context.getInitParameter(WebConstants.PROPERTY_CHECK_REGRISTRATION_INTERVAL));
 
 		if (scHost == null) {
 			throw new SCMPValidatorException("Host must be set.");
 		}
 		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, scPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility
-				.validateInt(Constants.MIN_PORT_VALUE, this.tomcatPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.tomcatPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
 		if (scPort == this.tomcatPort) {
 			throw new SCMPValidatorException("SC port and tomcat port must not be the same.");
 		}
 		// init the requester to communicate to SC
-		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(remotNodeName, scHost, scPort,
-				ConnectionType.NETTY_HTTP.getValue(), keepAliveIntervalToSCSeconds, checkRegistrationIntervalSeconds, 1);
+		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(remotNodeName, scHost, scPort, ConnectionType.NETTY_HTTP.getValue(), keepAliveIntervalToSCSeconds,
+				checkRegistrationIntervalSeconds, 1);
 		this.requester = new SCRequester(remoteNodeConf, keepAliveOTISeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**
 	 * Register servlet on SC.
-	 * 
-	 * @param config
-	 *            the configuration
-	 * @throws SCServiceException
-	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
+	 *
+	 * @param config the configuration
+	 * @throws SCServiceException register server on SC failed<br />
+	 *         error message received from SC <br />
 	 */
 	private void registerServletOnSC(ServletConfig config) throws SCServiceException {
 		int keepAliveFromSCSeconds = 0; // inactive keep alive from SC
@@ -274,8 +265,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 			} catch (Exception e) {
 				throw new SCServiceException("Register server failed. ", e);
 			}
-			SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("Register server failed.");
 				ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -284,7 +274,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 			}
 			AppContext.attachedCommunicators.incrementAndGet();
 			SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-			
+
 			SrvService srvService = null;
 			if (this instanceof SCBaseSessionServlet) {
 				ISCSessionServerCallback servletCallback = (ISCSessionServerCallback) this;
@@ -301,10 +291,9 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Deregister servlet from SC.
-	 * 
-	 * @throws SCServiceException
-	 *             deregister failed<br />
-	 *             error message received from SC<br />
+	 *
+	 * @throws SCServiceException deregister failed<br />
+	 *         error message received from SC<br />
 	 */
 	private void deregisterServletFromSC() throws SCServiceException {
 		if (this.registered == false) {
@@ -320,13 +309,11 @@ public abstract class SCBaseServlet extends HttpServlet {
 				SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, this.serviceName);
 				SCServerCallback callback = new SCServerCallback(true);
 				try {
-					deRegisterServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-							* Constants.SEC_TO_MILLISEC_FACTOR);
+					deRegisterServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 				} catch (Exception e) {
 					throw new SCServiceException("Deregister server failed. ", e);
 				}
-				SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-						* Constants.SEC_TO_MILLISEC_FACTOR);
+				SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 				if (reply.isFault()) {
 					SCServiceException ex = new SCServiceException("Deregister server failed.");
 					ex.setSCErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -343,6 +330,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// SC is never doing a GET. Process would be like doPost.
 		this.doPost(request, response);
@@ -351,6 +339,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		IEncoderDecoder encoderDecoder = null;
 		SCMPMessage scReply = null;
@@ -372,8 +361,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 			request.getInputStream().read(buffer);
 			Statistics.getInstance().incrementTotalMessages(buffer.length);
 			if (ConnectionLogger.isEnabledFull()) {
-				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), request.getServerName(), request.getServerPort(),
-						buffer, 0, buffer.length);
+				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), request.getServerName(), request.getServerPort(), buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
@@ -392,8 +380,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 				SCBaseServlet.compositeRegistry.removeSCMPLargeResponse(sessionId);
 				SCBaseServlet.compositeRegistry.removeSCMPLargeRequest(sessionId);
 				// fault received nothing to to return - delete largeRequest/largeResponse
-				SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType="
-						+ reqMessage.getMessageType());
+				SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType=" + reqMessage.getMessageType());
 				scmpFault.setMessageType(reqMessage.getMessageType());
 				scmpFault.setLocalDateTime();
 				// write reply to servlet output stream
@@ -419,39 +406,38 @@ public abstract class SCBaseServlet extends HttpServlet {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 			switch (SCMPMsgType.getMsgType(messageTypeString)) {
-			case SRV_CREATE_SESSION:
-				scReply = ((SCBaseSessionServlet) this).baseCreateSession(reqMessage, oti);
-				break;
-			case SRV_DELETE_SESSION:
-				scReply = ((SCBaseSessionServlet) this).baseDeleteSession(reqMessage, oti);
-				break;
-			case SRV_ABORT_SESSION:
-				scReply = ((SCBaseSessionServlet) this).baseAbortSession(reqMessage, oti);
-				break;
-			case SRV_EXECUTE:
-				scReply = ((SCBaseSessionServlet) this).baseExecute(reqMessage, oti);
-				break;
-			case SRV_SUBSCRIBE:
-				scReply = ((SCBasePublishServlet) this).baseSubscribe(reqMessage, oti);
-				break;
-			case SRV_CHANGE_SUBSCRIPTION:
-				scReply = ((SCBasePublishServlet) this).baseChangeSubscription(reqMessage, oti);
-				break;
-			case SRV_UNSUBSCRIBE:
-				scReply = ((SCBasePublishServlet) this).baseUnsubscribe(reqMessage, oti);
-				break;
-			case SRV_ABORT_SUBSCRIPTION:
-				scReply = ((SCBasePublishServlet) this).baseAbortSubscription(reqMessage, oti);
-				break;
-			default:
-				scReply = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "Unknown message type received.");
-				break;
+				case SRV_CREATE_SESSION:
+					scReply = ((SCBaseSessionServlet) this).baseCreateSession(reqMessage, oti);
+					break;
+				case SRV_DELETE_SESSION:
+					scReply = ((SCBaseSessionServlet) this).baseDeleteSession(reqMessage, oti);
+					break;
+				case SRV_ABORT_SESSION:
+					scReply = ((SCBaseSessionServlet) this).baseAbortSession(reqMessage, oti);
+					break;
+				case SRV_EXECUTE:
+					scReply = ((SCBaseSessionServlet) this).baseExecute(reqMessage, oti);
+					break;
+				case SRV_SUBSCRIBE:
+					scReply = ((SCBasePublishServlet) this).baseSubscribe(reqMessage, oti);
+					break;
+				case SRV_CHANGE_SUBSCRIPTION:
+					scReply = ((SCBasePublishServlet) this).baseChangeSubscription(reqMessage, oti);
+					break;
+				case SRV_UNSUBSCRIBE:
+					scReply = ((SCBasePublishServlet) this).baseUnsubscribe(reqMessage, oti);
+					break;
+				case SRV_ABORT_SUBSCRIPTION:
+					scReply = ((SCBasePublishServlet) this).baseAbortSubscription(reqMessage, oti);
+					break;
+				default:
+					scReply = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.BAD_REQUEST, "Unknown message type received.");
+					break;
 			}
 		} catch (Exception e) {
 			LOGGER.error("Processing message failed.", e);
 			// fault received nothing to to return - delete largeRequest/largeResponse
-			SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR,
-					"Processing message failed when calling servlet API");
+			SCMPMessageFault scmpFault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR, "Processing message failed when calling servlet API");
 			scmpFault.setMessageType(reqMessage.getMessageType());
 			scmpFault.setLocalDateTime();
 		}
@@ -460,13 +446,10 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Write response.
-	 * 
-	 * @param requestMessage
-	 *            the request message
-	 * @param responseMessage
-	 *            the message
-	 * @param response
-	 *            the response
+	 *
+	 * @param requestMessage the request message
+	 * @param responseMessage the message
+	 * @param response the response
 	 */
 	private void writeResponse(SCMPMessage requestMessage, SCMPMessage responseMessage, HttpServletResponse response) {
 		IEncoderDecoder encoderDecoder;
@@ -492,13 +475,10 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Handle large response.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param scmpReq
-	 *            the message of the request
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param scmpReq the message of the request
 	 * @return true, if successful
 	 */
 	private boolean handleLargeResponse(HttpServletRequest request, HttpServletResponse response, SCMPMessage scmpReq) {
@@ -524,13 +504,10 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Handle large request needed.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param scmpReq
-	 *            the message of the request
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param scmpReq the message of the request
 	 * @return true, if successful
 	 */
 	private boolean handleLargeRequestNeeded(HttpServletRequest request, HttpServletResponse response, SCMPMessage scmpReq) {
@@ -545,7 +522,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 				return false;
 			}
 			// first part of a large request received - create large request
-			largeRequest = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
+			largeRequest = new SCMPCompositeReceiver(scmpReq, scmpReq);
 			int oti = scmpReq.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			// add largeRequest to the registry
 			SCBaseServlet.compositeRegistry.addSCMPLargeRequest(sessionId, largeRequest, oti);
@@ -558,13 +535,10 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Handle large request.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param scmpReq
-	 *            the message of the request
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param scmpReq the message of the request
 	 * @return the sCMP message
 	 */
 	private SCMPMessage handleLargeRequest(HttpServletRequest request, HttpServletResponse response, SCMPMessage scmpReq) {
@@ -599,13 +573,11 @@ public abstract class SCBaseServlet extends HttpServlet {
 	}
 
 	/**
-	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to
-	 * check its registration.
-	 * 
-	 * @throws SCServiceException
-	 *             server is not registered for a service<br />
-	 *             check registration failed<br />
-	 *             error message received from SC <br />
+	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to check its registration.
+	 *
+	 * @throws SCServiceException server is not registered for a service<br />
+	 *         check registration failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void checkRegistration() throws SCServiceException {
 		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -613,13 +585,11 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 	/**
 	 * Check registration. This message can be sent from the registered server to SC in order to check its registration.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @throws SCServiceException
-	 *             server is not registered for a service<br />
-	 *             check registration failed<br />
-	 *             error message received from SC <br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @throws SCServiceException server is not registered for a service<br />
+	 *         check registration failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.registered == false) {
@@ -657,14 +627,13 @@ public abstract class SCBaseServlet extends HttpServlet {
 		SCServerTimeout serverTimeout = new SCServerTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(serverTimeout);
 		this.serverTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eci_cri_Scheduler.schedule(timeoutWrapper,
-				(int) (this.checkRegistrationIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
+				this.checkRegistrationIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR, TimeUnit.MILLISECONDS);
 	}
 
 	/**
 	 * Cancel server timeout.
-	 * 
-	 * @param mayInterruptIfRunning
-	 *            the may interrupt if running
+	 *
+	 * @param mayInterruptIfRunning the may interrupt if running
 	 */
 	private void cancelServerTimeout(boolean mayInterruptIfRunning) {
 		if (this.serverTimeout == null) {
@@ -689,8 +658,7 @@ public abstract class SCBaseServlet extends HttpServlet {
 	}
 
 	/**
-	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to
-	 * SC which gets the server entry on SC refreshed.
+	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to SC which gets the server entry on SC refreshed.
 	 */
 	private class SCServerTimeout implements ITimeout {
 
@@ -705,12 +673,11 @@ public abstract class SCBaseServlet extends HttpServlet {
 			} catch (Exception e) {
 				// check registration failed - inform callback
 				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-				SrvService srvService = srvServiceRegistry.getSrvService(SCBaseServlet.this.serviceName + Constants.UNDERLINE
-						+ SCBaseServlet.this.urlPath);
+				SrvService srvService = srvServiceRegistry.getSrvService(SCBaseServlet.this.serviceName + Constants.UNDERLINE + SCBaseServlet.this.urlPath);
 				if (srvService instanceof SrvSessionService) {
-					((SrvSessionService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.",e));
+					((SrvSessionService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.", e));
 				} else if (srvService instanceof SrvPublishService) {
-					((SrvPublishService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.",e));
+					((SrvPublishService) srvService).getCallback().exceptionCaught(new SCServiceException("Exception during check registration.", e));
 				}
 			}
 		}
@@ -729,9 +696,8 @@ public abstract class SCBaseServlet extends HttpServlet {
 
 		/**
 		 * Instantiates a new sC server callback.
-		 * 
-		 * @param synchronous
-		 *            the synchronous
+		 *
+		 * @param synchronous the synchronous
 		 */
 		public SCServerCallback(boolean synchronous) {
 			this.synchronous = synchronous;

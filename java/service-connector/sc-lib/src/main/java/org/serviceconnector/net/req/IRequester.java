@@ -22,22 +22,18 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Interface IRequester abstracts requester functionality.
- * 
+ *
  * @author JTraber
  */
 public interface IRequester {
 
 	/**
 	 * Send and receive response asynchronous.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @param timeoutMillis
-	 *            the timeout in seconds
-	 * @param callback
-	 *            the callback
-	 * @throws Exception
-	 *             exception in sending/receiving process
+	 *
+	 * @param scmp the scmp
+	 * @param timeoutMillis the timeout in seconds
+	 * @param callback the callback
+	 * @throws Exception exception in sending/receiving process
 	 */
 	public void send(SCMPMessage scmp, int timeoutMillis, ISCMPMessageCallback callback) throws Exception;
 
@@ -48,7 +44,7 @@ public interface IRequester {
 
 	/**
 	 * Gets the context.
-	 * 
+	 *
 	 * @return the context
 	 */
 	public RemoteNodeConfiguration getRemoteNodeConfiguration();

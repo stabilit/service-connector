@@ -19,7 +19,8 @@ package org.serviceconnector.log;
 import java.util.Date;
 import java.util.Formatter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.service.Session;
 
 /**
@@ -28,7 +29,7 @@ import org.serviceconnector.service.Session;
 public final class SessionLogger {
 
 	/** The Constant sessionLogger. */
-	private static final Logger SESSION_LOGGGER = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final Logger SESSION_LOGGGER = LoggerFactory.getLogger(Loggers.SESSION.getValue());
 
 	/** The create session string. */
 	private static String createSessionStr = "create session sid=%s eci=%sms";
@@ -53,7 +54,7 @@ public final class SessionLogger {
 
 	/**
 	 * Checks if is trace enabled.
-	 * 
+	 *
 	 * @return true, if is trace enabled
 	 */
 	public static boolean isTraceEnabled() {
@@ -62,7 +63,7 @@ public final class SessionLogger {
 
 	/**
 	 * Checks if is debug enabled.
-	 * 
+	 *
 	 * @return true, if is debug enabled
 	 */
 	public static boolean isDebugEnabled() {
@@ -71,11 +72,9 @@ public final class SessionLogger {
 
 	/**
 	 * Log create session.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param eci
-	 *            the eci
+	 *
+	 * @param sessionId the session id
+	 * @param eci the eci
 	 */
 	public static synchronized void logCreateSession(String sessionId, double eci) {
 		if (SESSION_LOGGGER.isDebugEnabled()) {
@@ -88,9 +87,8 @@ public final class SessionLogger {
 
 	/**
 	 * Log delete session.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logDeleteSession(String sessionId) {
 		if (SESSION_LOGGGER.isDebugEnabled()) {
@@ -103,9 +101,8 @@ public final class SessionLogger {
 
 	/**
 	 * Log start timeout scheduling.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logScheduleTimeout(String sessionId, double timeout, long delay) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
@@ -118,9 +115,8 @@ public final class SessionLogger {
 
 	/**
 	 * Log cancel timeout.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logCancelTimeout(String sessionId) {
 		if (SESSION_LOGGGER.isTraceEnabled()) {
@@ -133,9 +129,8 @@ public final class SessionLogger {
 
 	/**
 	 * Log timeout session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public static synchronized void logTimeoutSession(Session session) {
 		if (SESSION_LOGGGER.isInfoEnabled()) {
@@ -152,11 +147,9 @@ public final class SessionLogger {
 
 	/**
 	 * Log abort session.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param reason
-	 *            the reason
+	 *
+	 * @param session the session
+	 * @param reason the reason
 	 */
 	public static synchronized void logAbortSession(Session session, String reason) {
 		if (SESSION_LOGGGER.isInfoEnabled()) {
@@ -173,9 +166,8 @@ public final class SessionLogger {
 
 	/**
 	 * Log reject session.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logRejectSession(String sessionId) {
 		if (SESSION_LOGGGER.isDebugEnabled()) {

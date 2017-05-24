@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -29,15 +30,13 @@ public class SCMPFileListCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPFileListCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPFileListCall.class);
 
 	/**
 	 * Instantiates a new sCMP file list call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
 	 */
 	public SCMPFileListCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
@@ -45,11 +44,9 @@ public class SCMPFileListCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new sCMP file list call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToForward
-	 *            the message to forward
+	 *
+	 * @param requester the requester
+	 * @param msgToForward the message to forward
 	 */
 	public SCMPFileListCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);

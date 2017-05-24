@@ -20,21 +20,22 @@ import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
- * 
+ *
  * @author JTraber
  */
 public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KeepAliveMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.

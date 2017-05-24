@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
@@ -27,7 +28,7 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 	public static int lastNumber = -1;
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TestPublishServiceMessageCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPublishServiceMessageCallback.class);
 
 	public TestPublishServiceMessageCallback(SCPublishService service) {
 		super(service);
@@ -42,8 +43,7 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 			String number = responseString.substring(responseString.indexOf(":") + 1);
 			int currentNumber = Integer.valueOf(number);
 			if (currentNumber != lastNumber + 1) {
-				LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR="
-						+ currentNumber);
+				LOGGER.debug("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR=" + currentNumber);
 			}
 			lastNumber = currentNumber;
 		}

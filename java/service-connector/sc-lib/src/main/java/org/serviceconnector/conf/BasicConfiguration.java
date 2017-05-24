@@ -19,7 +19,8 @@ package org.serviceconnector.conf;
 import java.io.File;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
@@ -30,7 +31,7 @@ import org.serviceconnector.util.XMLDumpWriter;
  */
 public class BasicConfiguration {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(BasicConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
 	/** The Pid file path. */
@@ -38,13 +39,11 @@ public class BasicConfiguration {
 	/** The dump file path. */
 	private String dumpPath = null;
 	/**
-	 * The TCP keep alive initiator. True enables sending TCP keep alive (if underlying OS properly configures KA) on initiated
-	 * connections. False disables sending.
+	 * The TCP keep alive initiator. True enables sending TCP keep alive (if underlying OS properly configures KA) on initiated connections. False disables sending.
 	 */
 	private Boolean tcpKeepAliveInitiator = null;
 	/**
-	 * The TCP keep alive listener. True enables sending TCP keep alive (if underlying OS properly configures KA) on incoming
-	 * connections. False disables sending.
+	 * The TCP keep alive listener. True enables sending TCP keep alive (if underlying OS properly configures KA) on incoming connections. False disables sending.
 	 */
 	private Boolean tcpKeepAliveListener = null;
 	/**
@@ -69,8 +68,7 @@ public class BasicConfiguration {
 	/** Timeout to prevent stocking in technical connect process. */
 	private int connectionTimeoutMillis = Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS;
 	/**
-	 * The subscription timeout. Monitors the maximum time between receive publication. If this timeout expires, subscription is
-	 * deleted
+	 * The subscription timeout. Monitors the maximum time between receive publication. If this timeout expires, subscription is deleted
 	 */
 	private int subscriptionTimeoutMillis = Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The command validation. */
@@ -94,11 +92,9 @@ public class BasicConfiguration {
 
 	/**
 	 * inits the configuration.
-	 * 
-	 * @param compositeConfiguration
-	 *            the composite configuration
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *
+	 * @param compositeConfiguration the composite configuration
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 		// writePID
@@ -111,14 +107,12 @@ public class BasicConfiguration {
 		// pidPath
 		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_PATH, null);
 		if (localPidPath == null && this.writePID) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_PID_PATH
-					+ " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_PID_PATH + " is missing");
 		}
 		if (localPidPath != null && localPidPath.equals(this.pidPath) == false) {
 			File configFile = new File(localPidPath);
 			if (configFile.exists() == true && configFile.isDirectory() == false) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-						+ Constants.ROOT_PID_PATH + " is not a directory");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_PID_PATH + " is not a directory");
 			}
 			this.pidPath = configFile.getAbsolutePath();
 		}
@@ -127,14 +121,12 @@ public class BasicConfiguration {
 		// dumpPath
 		String localdumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_PATH, null);
 		if (localdumpPath == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_DUMP_PATH
-					+ " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_DUMP_PATH + " is missing");
 		}
 		if (localdumpPath.equals(this.dumpPath) == false) {
 			File dumpFile = new File(localdumpPath);
 			if (dumpFile.exists() == true && dumpFile.isDirectory() == false) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-						+ Constants.ROOT_DUMP_PATH + " is not a directory");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_DUMP_PATH + " is not a directory");
 			}
 			this.dumpPath = dumpFile.getAbsolutePath();
 		}
@@ -143,8 +135,7 @@ public class BasicConfiguration {
 		// maxIOThreads
 		Integer localMaxIOThreads = compositeConfiguration.getInteger(Constants.ROOT_MAX_IO_THREADS, null);
 		if (localMaxIOThreads == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.ROOT_MAX_IO_THREADS + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_MAX_IO_THREADS + " is missing");
 		}
 		this.maxIOThreads = localMaxIOThreads;
 		LOGGER.info("maxIOThreads=" + this.maxIOThreads);
@@ -157,10 +148,8 @@ public class BasicConfiguration {
 		LOGGER.info("operationTimeoutMultiplier=" + this.operationTimeoutMultiplier);
 
 		// checkRegistrationIntervalMultiplier
-		Double localCheckRegistrationIntervalMultiplier = compositeConfiguration.getDouble(
-				Constants.ROOT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER, null);
-		if (localCheckRegistrationIntervalMultiplier != null
-				&& this.checkRegistrationIntervalMultiplier != localCheckRegistrationIntervalMultiplier) {
+		Double localCheckRegistrationIntervalMultiplier = compositeConfiguration.getDouble(Constants.ROOT_CHECK_REGISTRATION_INTERVAL_MULTIPLIER, null);
+		if (localCheckRegistrationIntervalMultiplier != null && this.checkRegistrationIntervalMultiplier != localCheckRegistrationIntervalMultiplier) {
 			this.checkRegistrationIntervalMultiplier = localCheckRegistrationIntervalMultiplier;
 		}
 		LOGGER.info("checkRegistrationIntervalMultiplier=" + this.checkRegistrationIntervalMultiplier);
@@ -173,8 +162,7 @@ public class BasicConfiguration {
 		LOGGER.info("echoIntervalMultiplier=" + this.echoIntervalMultiplier);
 
 		// connectionTimeoutMillis
-		Integer localConnectionTimeoutMultiplier = compositeConfiguration
-				.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
+		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
 		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
 			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
 		}
@@ -226,7 +214,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Checks if is write pid.
-	 * 
+	 *
 	 * @return true, if is write pid
 	 */
 	public boolean isWritePID() {
@@ -235,7 +223,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the max io threads.
-	 * 
+	 *
 	 * @return the max io threads
 	 */
 	public int getMaxIOThreads() {
@@ -244,7 +232,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the operation timeout multiplier.
-	 * 
+	 *
 	 * @return the operation timeout multiplier
 	 */
 	public double getOperationTimeoutMultiplier() {
@@ -253,7 +241,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the check registration interval multiplier.
-	 * 
+	 *
 	 * @return the check registration interval multiplier
 	 */
 	public double getCheckRegistrationIntervalMultiplier() {
@@ -262,7 +250,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the echo interval multiplier.
-	 * 
+	 *
 	 * @return the echo interval multiplier
 	 */
 	public double getEchoIntervalMultiplier() {
@@ -271,7 +259,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the connection timeout milliseconds.
-	 * 
+	 *
 	 * @return the connection timeout milliseconds
 	 */
 	public int getConnectionTimeoutMillis() {
@@ -280,7 +268,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the subscription timeout.
-	 * 
+	 *
 	 * @return the subscription timeout
 	 */
 	public int getSubscriptionTimeoutMillis() {
@@ -289,7 +277,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Checks if is command validation.
-	 * 
+	 *
 	 * @return true, if is command validation
 	 */
 	public boolean isCommandValidation() {
@@ -298,7 +286,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the keep alive oti in milliseconds.
-	 * 
+	 *
 	 * @return the keep alive oti in milliseconds
 	 */
 	public int getKeepAliveOTIMillis() {
@@ -307,7 +295,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the srv abort timeout.
-	 * 
+	 *
 	 * @return the srv abort timeout
 	 */
 	public int getSrvAbortOTIMillis() {
@@ -316,7 +304,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the path to the directory where pid file should be written to.
-	 * 
+	 *
 	 * @return the pid path
 	 */
 	public String getPidPath() {
@@ -325,7 +313,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the path to the directory where dump file should be written to.
-	 * 
+	 *
 	 * @return the dump path
 	 */
 	public String getDumpPath() {
@@ -334,7 +322,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the TCP keep alive listener.
-	 * 
+	 *
 	 * @return the TCP keep alive listener
 	 */
 	public Boolean getTcpKeepAliveListener() {
@@ -343,9 +331,8 @@ public class BasicConfiguration {
 
 	/**
 	 * Sets the TCP keep alive listener. SC Server API is allowed to set this property.
-	 * 
-	 * @param tcpKeepAliveListener
-	 *            the new TCP keep alive listener
+	 *
+	 * @param tcpKeepAliveListener the new TCP keep alive listener
 	 */
 	public void setTcpKeepAliveListener(boolean tcpKeepAliveListener) {
 		this.tcpKeepAliveListener = tcpKeepAliveListener;
@@ -353,7 +340,7 @@ public class BasicConfiguration {
 
 	/**
 	 * Gets the tcp keep alive initiator.
-	 * 
+	 *
 	 * @return the tcp keep alive initiator
 	 */
 	public Boolean getTcpKeepAliveInitiator() {
@@ -362,9 +349,8 @@ public class BasicConfiguration {
 
 	/**
 	 * Sets the TCP keep alive initiator. SC Client/Server API is allowed to set this property.
-	 * 
-	 * @param tcpKeepAliveInitiator
-	 *            the new TCP keep alive initiator
+	 *
+	 * @param tcpKeepAliveInitiator the new TCP keep alive initiator
 	 */
 	public void setTcpKeepAliveInitiator(boolean tcpKeepAliveInitiator) {
 		this.tcpKeepAliveInitiator = tcpKeepAliveInitiator;
@@ -372,11 +358,9 @@ public class BasicConfiguration {
 
 	/**
 	 * Dump the basic configuration into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("configuration");

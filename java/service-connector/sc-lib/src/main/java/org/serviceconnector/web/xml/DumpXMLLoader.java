@@ -29,7 +29,7 @@ import org.serviceconnector.web.IWebRequest;
  * The Class DumpXMLLoader.
  */
 public class DumpXMLLoader extends AbstractXMLLoader {
-	
+
 	@Override
 	public void loadBody(Writer writer, IWebRequest request) throws Exception {
 		String name = request.getParameter("name");

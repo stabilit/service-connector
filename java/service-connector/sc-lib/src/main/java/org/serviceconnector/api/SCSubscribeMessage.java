@@ -24,8 +24,8 @@ import org.serviceconnector.Constants;
 public class SCSubscribeMessage extends SCMessage {
 
 	/**
-	 * The mask. The mask is used in SUBSCRIBE / CHANGE_SUBSCRIPTION to express the client interest and in PUBLISH to designate the
-	 * message contents. Only printable characters are allowed.
+	 * The mask. The mask is used in SUBSCRIBE / CHANGE_SUBSCRIPTION to express the client interest and in PUBLISH to designate the message contents. Only printable characters are
+	 * allowed.
 	 */
 	private String mask;
 	/**
@@ -33,8 +33,7 @@ public class SCSubscribeMessage extends SCMessage {
 	 */
 	private String actualMask;
 	/**
-	 * The no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
-	 * set.
+	 * The no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag set.
 	 */
 	private int noDataIntervalSeconds;
 
@@ -47,9 +46,8 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Instantiates a new sC subscribe message with byte[] data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCSubscribeMessage(byte[] data) {
 		super(data);
@@ -57,9 +55,8 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Instantiates a new sC subscribe message with String data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCSubscribeMessage(String data) {
 		super(data);
@@ -67,7 +64,7 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Gets the mask.
-	 * 
+	 *
 	 * @return the mask
 	 */
 	public String getMask() {
@@ -76,11 +73,10 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            Any printable character, length > 0 and < 256 Byte<br />
-	 *            Client may not subscribe with mask containing "%" character.<br />
-	 *            Example: "000012100012832102FADF-----------X-----------"
+	 *
+	 * @param mask Any printable character, length > 0 and < 256 Byte<br />
+	 *        Client may not subscribe with mask containing "%" character.<br />
+	 *        Example: "000012100012832102FADF-----------X-----------"
 	 */
 	public void setMask(String mask) {
 		this.mask = mask;
@@ -88,7 +84,7 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Gets the actual mask. The actual client subscription mask filled by SC in SRV_CHANGE_SUBSCRIPTION.
-	 * 
+	 *
 	 * @return the actual mask
 	 */
 	public String getActualMask() {
@@ -97,10 +93,9 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Sets the actual mask.
-	 * 
-	 * @param actualMask
-	 *            Validation: Any printable character, length < 256Byte.<br />
-	 *            Example: "000012100012832102FADF-----------X-----------"
+	 *
+	 * @param actualMask Validation: Any printable character, length < 256Byte.<br />
+	 *        Example: "000012100012832102FADF-----------X-----------"
 	 */
 	public void setActualMask(String actualMask) {
 		// mask is set only internally by SC
@@ -109,7 +104,7 @@ public class SCSubscribeMessage extends SCMessage {
 
 	/**
 	 * Gets the no data interval in seconds.
-	 * 
+	 *
 	 * @return the no data interval in seconds
 	 */
 	public int getNoDataIntervalSeconds() {
@@ -117,12 +112,10 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	/**
-	 * Sets the no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData
-	 * flag set.
-	 * 
-	 * @param noDataIntervalSeconds
-	 *            Validation: Number > 0 and < 3600<br />
-	 *            Example: 60
+	 * Sets the no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag set.
+	 *
+	 * @param noDataIntervalSeconds Validation: Number > 0 and < 3600<br />
+	 *        Example: 60
 	 */
 	public void setNoDataIntervalSeconds(Integer noDataIntervalSeconds) {
 		if (noDataIntervalSeconds == null) {

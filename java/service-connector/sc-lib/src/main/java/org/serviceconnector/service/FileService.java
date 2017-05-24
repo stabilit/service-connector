@@ -16,21 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
- * functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication functions.
  */
 public class FileService extends Service {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(FileService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
 	/** The server. */
 	private FileServer server;
@@ -43,17 +43,12 @@ public class FileService extends Service {
 
 	/**
 	 * Instantiates a new publish service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param server
-	 *            the server
-	 * @param path
-	 *            the path
-	 * @param scUploadScript
-	 *            the sc upload script
-	 * @param scGetFileListScript
-	 *            the sc get file list script
+	 *
+	 * @param name the name
+	 * @param server the server
+	 * @param path the path
+	 * @param scUploadScript the sc upload script
+	 * @param scGetFileListScript the sc get file list script
 	 */
 	public FileService(String name, FileServer server, String path, String scUploadScript, String scGetFileListScript) {
 		super(name, ServiceType.FILE_SERVICE);
@@ -65,7 +60,7 @@ public class FileService extends Service {
 
 	/**
 	 * Gets the path.
-	 * 
+	 *
 	 * @return the path
 	 */
 	public String getPath() {
@@ -74,7 +69,7 @@ public class FileService extends Service {
 
 	/**
 	 * Gets the server.
-	 * 
+	 *
 	 * @return the server
 	 */
 	public FileServer getServer() {
@@ -83,7 +78,7 @@ public class FileService extends Service {
 
 	/**
 	 * Gets the upload file script name.
-	 * 
+	 *
 	 * @return the upload file script name
 	 */
 	public String getUploadFileScriptName() {
@@ -92,7 +87,7 @@ public class FileService extends Service {
 
 	/**
 	 * Gets the gets the file list script name.
-	 * 
+	 *
 	 * @return the gets the file list script name
 	 */
 	public String getGetFileListScriptName() {
@@ -101,12 +96,10 @@ public class FileService extends Service {
 
 	/**
 	 * Allocate file server and create session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 * @return the file server
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public synchronized FileServer allocateFileServerAndCreateSession(FileSession session) throws Exception {
 		if (this.server.hasFreeSession()) {

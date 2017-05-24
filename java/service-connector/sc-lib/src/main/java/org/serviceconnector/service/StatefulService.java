@@ -36,11 +36,9 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Instantiates a new stateful service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
+	 *
+	 * @param name the name
+	 * @param type the type
 	 */
 	public StatefulService(String name, ServiceType type) {
 		super(name, type);
@@ -51,9 +49,8 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Adds the server.
-	 * 
-	 * @param server
-	 *            the server
+	 *
+	 * @param server the server
 	 */
 	public void addServer(StatefulServer server) {
 		this.listOfServers.add(server);
@@ -61,9 +58,8 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Removes the server. Removing server must be synchronized. Avoids exception for client in allocate server logic.
-	 * 
-	 * @param server
-	 *            the server
+	 *
+	 * @param server the server
 	 */
 	public synchronized void removeServer(StatefulServer server) {
 		this.listOfServers.remove(server);
@@ -71,7 +67,7 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Gets the server list.
-	 * 
+	 *
 	 * @return the server list
 	 */
 	public List<StatefulServer> getServerList() {
@@ -80,7 +76,7 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Gets the count servers.
-	 * 
+	 *
 	 * @return the count servers
 	 */
 	public int getCountServers() {
@@ -89,7 +85,7 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Gets the count allocated sessions.
-	 * 
+	 *
 	 * @return the count allocated sessions
 	 */
 	public int getCountAllocatedSessions() {
@@ -103,7 +99,7 @@ public abstract class StatefulService extends Service {
 
 	/**
 	 * Gets the count available sessions.
-	 * 
+	 *
 	 * @return the count available sessions
 	 */
 	public int getCountAvailableSessions() {

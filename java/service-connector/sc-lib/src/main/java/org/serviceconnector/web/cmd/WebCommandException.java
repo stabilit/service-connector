@@ -31,9 +31,8 @@ public class WebCommandException extends Exception {
 
 	/**
 	 * Instantiates a new not found exception.
-	 * 
-	 * @param msg
-	 *            the msg
+	 *
+	 * @param msg the msg
 	 */
 	public WebCommandException(String msg) {
 		super(msg);

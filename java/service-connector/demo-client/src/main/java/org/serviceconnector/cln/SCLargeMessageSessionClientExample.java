@@ -29,9 +29,8 @@ public class SCLargeMessageSessionClientExample {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SCLargeMessageSessionClientExample.runExample();
@@ -90,9 +89,8 @@ public class SCLargeMessageSessionClientExample {
 
 		/**
 		 * Instantiates a new example callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public ExampleCallback(SCSessionService service) {
 			super(service);

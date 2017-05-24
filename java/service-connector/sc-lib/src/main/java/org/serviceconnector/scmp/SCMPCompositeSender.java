@@ -16,15 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-
 /**
- * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides functionality
- * of splitting large SCMP into parts.
- * 
+ * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides functionality of splitting large SCMP into parts.
+ *
  * @author JTraber
  */
 public class SCMPCompositeSender extends SCMPMessage {
-	
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2950569709505656293L;
 
@@ -39,12 +37,11 @@ public class SCMPCompositeSender extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMPCompositeSender.
-	 * 
-	 * @param message
-	 *            the scmp message
+	 *
+	 * @param message the scmp message
 	 */
 	public SCMPCompositeSender(SCMPMessage message) {
-		// SCMP Version - version in request 
+		// SCMP Version - version in request
 		super(message.getSCMPVersion());
 		this.message = message;
 		this.largeMessageLength = this.message.getBodyLength();
@@ -54,7 +51,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 
 	/**
 	 * Gets the first part.
-	 * 
+	 *
 	 * @return the first
 	 */
 	public SCMPMessage getFirst() {
@@ -66,7 +63,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 
 	/**
 	 * Checks for next part.
-	 * 
+	 *
 	 * @return true, if successful
 	 */
 	public boolean hasNext() {
@@ -80,7 +77,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 
 	/**
 	 * Gets the next part.
-	 * 
+	 *
 	 * @return the next
 	 */
 	public SCMPMessage getNext() {

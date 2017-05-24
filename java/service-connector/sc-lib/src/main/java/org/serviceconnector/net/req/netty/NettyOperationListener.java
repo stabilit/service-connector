@@ -20,36 +20,33 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.serviceconnector.net.CommunicationException;
 
-
 /**
- * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework. BlockingQueue
- * is used for synchronization and waiting mechanism. Communication Exception is thrown when operation fails.
- * BlockingQueue only holds newest answer.
- * 
+ * The Class NettyOperationListener. Used to wait until operation us successfully done by netty framework. BlockingQueue is used for synchronization and waiting mechanism.
+ * Communication Exception is thrown when operation fails. BlockingQueue only holds newest answer.
+ *
  * @author JTraber
  */
 public class NettyOperationListener implements ChannelFutureListener {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyOperationListener.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyOperationListener.class);
+
 	/** Queue to store the answer. */
 	private final BlockingQueue<ChannelFuture> answer = new ArrayBlockingQueue<ChannelFuture>(1);
 
 	/**
 	 * Await unInterruptibly until operation is completed or time runs out.
-	 * 
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
+	 *
+	 * @param timeoutMillis the timeout milliseconds
 	 * @return the channel future
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public ChannelFuture awaitUninterruptibly(long timeoutMillis) throws Exception {
 		ChannelFuture response;

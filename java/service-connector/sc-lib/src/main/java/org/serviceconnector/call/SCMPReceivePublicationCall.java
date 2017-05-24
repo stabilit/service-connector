@@ -16,43 +16,39 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPReceivePublicationCall. Call receives publications from SC.
- * 
+ *
  * @author JTraber
  */
 public class SCMPReceivePublicationCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPReceivePublicationCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPReceivePublicationCall.class);
 
 	/**
 	 * Instantiates a new SCMP receive publication call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPReceivePublicationCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
 	}
-	
+
 	/**
 	 * Instantiates a new sCMP receive publication call.
-	 * 
-	 * @param req
-	 *            the req
-	 * @param msgToSend
-	 *            the msg to send
+	 *
+	 * @param req the req
+	 * @param msgToSend the msg to send
 	 */
 	public SCMPReceivePublicationCall(IRequester req, SCMPMessage msgToSend) {
 		super(req, msgToSend);

@@ -29,11 +29,9 @@ public class NoFreeServerException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new no free server exception.
-	 * 
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param error the error
+	 * @param additionalInfo the additional info
 	 */
 	public NoFreeServerException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);

@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
+
+import junit.framework.Assert;
 
 /**
  * @author JTraber
@@ -33,6 +33,7 @@ public class LinkedQueueTest extends SuperUnitTest {
 	private LinkedQueue<SCMPMessage> queue;
 	public boolean killThreads = false;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();

@@ -23,7 +23,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -36,18 +37,17 @@ import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform
- * subscriptions about new arrived messages, to observe there timeouts and to know there current position in queue
- * (TimeAwareDataPointer). The queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
- * 
- * @param <E>
- *            the element type to handle in the queue
+ * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform subscriptions about new arrived messages, to observe there
+ * timeouts and to know there current position in queue (TimeAwareDataPointer). The queue needs also to handle the deleting of consumed messages and to assure queue does not
+ * overflow.
+ *
+ * @param <E> the element type to handle in the queue
  * @author JTraber
  */
 public class PublishMessageQueue<E> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(PublishMessageQueue.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PublishMessageQueue.class);
 
 	/** The timeout scheduler. */
 	private ScheduledThreadPoolExecutor timeoutScheduler;
@@ -69,7 +69,7 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Iterator<LinkedNode<E>>.
-	 * 
+	 *
 	 * @return the iterator
 	 */
 	public Iterator<LinkedNode<E>> nodeIterator() {
@@ -78,7 +78,7 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Gets the total size of the queue.
-	 * 
+	 *
 	 * @return the size
 	 */
 	public int getTotalSize() {
@@ -87,7 +87,7 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Gets the referenced node count.
-	 * 
+	 *
 	 * @return the referenced node count
 	 */
 	public int getReferencedNodesCount() {
@@ -95,7 +95,7 @@ public class PublishMessageQueue<E> {
 		int nonRefElemCount = 0;
 		while (iter.hasNext()) {
 			// this loop stops when first referenced node in queue is found
-			LinkedNode<E> linkedNode = (LinkedNode<E>) iter.next();
+			LinkedNode<E> linkedNode = iter.next();
 			if (linkedNode.isReferenced() == false) {
 				nonRefElemCount++;
 			} else {
@@ -108,9 +108,8 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Inserts a new message into the queue.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public synchronized void insert(E message) {
 		if (message == null) {
@@ -133,9 +132,8 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Checks for next.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 * @return true, if successful
 	 */
 	public boolean hasNext(String sessionId) {
@@ -145,9 +143,8 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Return message if any. If no message is available null will be returned.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 * @return the e
 	 */
 	public synchronized E getMessage(String sessionId) {
@@ -173,13 +170,10 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Return message if any. If no message is available null will be returned.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
+	 *
+	 * @param sessionId the session id
+	 * @param request the request
+	 * @param response the response
 	 * @return the e
 	 */
 	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {
@@ -196,9 +190,7 @@ public class PublishMessageQueue<E> {
 	}
 
 	/**
-	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new
-	 * element
-	 * if necessary (mask matches & listening mode).
+	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new element if necessary (mask matches & listening mode).
 	 */
 	private synchronized void fireNewDataArrived() {
 		if (LOGGER.isTraceEnabled()) {
@@ -223,8 +215,7 @@ public class PublishMessageQueue<E> {
 	}
 
 	/**
-	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node is
-	 * referenced.
+	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node is referenced.
 	 */
 	public synchronized void removeNonreferencedNodes() {
 		LinkedNode<E> node = this.dataQueue.getFirst();
@@ -245,13 +236,10 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Listen. Indicates that client is ready for messages. Data pointer changes to listen mode and schedules timeout.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
+	 *
+	 * @param sessionId the session id
+	 * @param request the request
+	 * @param response the response
 	 */
 	private synchronized void listen(String sessionId, IRequest request, IResponse response) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
@@ -268,13 +256,10 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Subscribe. Sets up subscription, create data pointer.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param mask
-	 *            the filter mask
-	 * @param crpTimeout
-	 *            the timer run
+	 *
+	 * @param sessionId the session id
+	 * @param mask the filter mask
+	 * @param crpTimeout the timer run
 	 */
 	public synchronized void subscribe(String sessionId, SubscriptionMask mask, ReceivePublicationTimeout crpTimeout) {
 		if (LOGGER.isTraceEnabled()) {
@@ -287,11 +272,9 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Change subscription.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param mask
-	 *            the mask
+	 *
+	 * @param sessionId the session id
+	 * @param mask the mask
 	 */
 	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
 		if (LOGGER.isTraceEnabled()) {
@@ -305,9 +288,8 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Unsubscribe. Deletes subscription, remove data pointer.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public synchronized void unsubscribe(String sessionId) {
 		if (LOGGER.isTraceEnabled()) {
@@ -328,7 +310,7 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Gets the peak the queue ever reached.
-	 * 
+	 *
 	 * @return the peak
 	 */
 	public int getPeak() {
@@ -336,8 +318,8 @@ public class PublishMessageQueue<E> {
 	}
 
 	/**
-	 * The Class TimeAwareDataPointer. Points to a queue node. Knows mask for matching messages and state if subscription is
-	 * listening or not. Each subscription has his data pointer - its created when client subscribes.
+	 * The Class TimeAwareDataPointer. Points to a queue node. Knows mask for matching messages and state if subscription is listening or not. Each subscription has his data
+	 * pointer - its created when client subscribes.
 	 */
 	private class TimeAwareDataPointer {
 		/** The current node in queue. */
@@ -353,11 +335,9 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Instantiates a new TimeAwareDataPointer.
-		 * 
-		 * @param mask
-		 *            the filter mask
-		 * @param crpTimeout
-		 *            the publish timeout
+		 *
+		 * @param mask the filter mask
+		 * @param crpTimeout the publish timeout
 		 */
 		public TimeAwareDataPointer(SubscriptionMask mask, ReceivePublicationTimeout crpTimeout) {
 			this.crpTimeout = crpTimeout;
@@ -389,9 +369,8 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Change mask.
-		 * 
-		 * @param mask
-		 *            the mask
+		 *
+		 * @param mask the mask
 		 */
 		private void changeMask(SubscriptionMask mask) {
 			this.mask = mask;
@@ -411,7 +390,7 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Checks for next.
-		 * 
+		 *
 		 * @return true, if successful
 		 */
 		@SuppressWarnings("unused")
@@ -421,7 +400,7 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Gets the current node.
-		 * 
+		 *
 		 * @return the node
 		 */
 		public LinkedNode<E> getNode() {
@@ -444,7 +423,7 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Checks if is listen.
-		 * 
+		 *
 		 * @return true, if is listen
 		 */
 		public boolean listening() {
@@ -453,9 +432,8 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Sets the node.
-		 * 
-		 * @param node
-		 *            the new node
+		 *
+		 * @param node the new node
 		 * @return true, if successful
 		 */
 		public boolean setNode(LinkedNode<E> node) {
@@ -479,9 +457,8 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Schedule. Activate subscription timeout with a given time.
-		 * 
-		 * @param timeoutMillis
-		 *            the timeout
+		 *
+		 * @param timeoutMillis the timeout
 		 */
 		@SuppressWarnings("unchecked")
 		public synchronized void schedule(double timeoutMillis) {
@@ -489,8 +466,7 @@ public class PublishMessageQueue<E> {
 			this.cancel();
 			PublishTimeoutWrapper timeoutWrapper = new PublishTimeoutWrapper(this, this.crpTimeout);
 			// schedules timeoutTask on subscription queue executer
-			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis,
-					TimeUnit.MILLISECONDS);
+			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("schedule datapointer " + timeoutMillis);
 			}
@@ -536,8 +512,8 @@ public class PublishMessageQueue<E> {
 	}
 
 	/**
-	 * The Class PublishTimeoutWrapper. PublishTimeoutWrapper times out and calls the target ITimerRun. Important to store
-	 * subscription state in data pointer when time runs out listening becomes false.
+	 * The Class PublishTimeoutWrapper. PublishTimeoutWrapper times out and calls the target ITimerRun. Important to store subscription state in data pointer when time runs out
+	 * listening becomes false.
 	 */
 	private class PublishTimeoutWrapper implements Runnable {
 
@@ -548,11 +524,9 @@ public class PublishMessageQueue<E> {
 
 		/**
 		 * Instantiates a PublishTimeoutWrapper.
-		 * 
-		 * @param dataPointer
-		 *            the data pointer
-		 * @param target
-		 *            the target
+		 *
+		 * @param dataPointer the data pointer
+		 * @param target the target
 		 */
 		public PublishTimeoutWrapper(TimeAwareDataPointer dataPointer, ITimeout target) {
 			this.dataPointer = dataPointer;
@@ -573,11 +547,9 @@ public class PublishMessageQueue<E> {
 
 	/**
 	 * Dump publish message queue.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("publishMessageQueue");
@@ -610,7 +582,7 @@ public class PublishMessageQueue<E> {
 		writer.writeEndElement(); // dataPointerMap
 		Iterator<LinkedNode<E>> iter = this.nodeIterator();
 		while (iter.hasNext()) {
-			LinkedNode<E> linkedNode = (LinkedNode<E>) iter.next();
+			LinkedNode<E> linkedNode = iter.next();
 			writer.writeStartElement("linkedNode");
 			writer.writeAttribute("hashCode", linkedNode.hashCode());
 			writer.writeAttribute("referenceCounter", linkedNode.getReferenceCount());

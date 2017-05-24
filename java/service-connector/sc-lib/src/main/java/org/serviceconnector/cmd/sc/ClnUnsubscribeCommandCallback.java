@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -38,7 +39,7 @@ import org.serviceconnector.service.Subscription;
  */
 public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClnUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -50,18 +51,13 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 
 	/**
 	 * Instantiates a new cln unsubscribe command callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
+	 * @param subscription the subscription
 	 */
-	public ClnUnsubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
-			Subscription subscription) {
+	public ClnUnsubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback, Subscription subscription) {
 		this.responderCallback = responderCallback;
 		this.request = request;
 		this.response = response;

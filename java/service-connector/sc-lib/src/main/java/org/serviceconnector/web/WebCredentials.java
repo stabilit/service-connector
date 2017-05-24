@@ -29,11 +29,9 @@ public class WebCredentials {
 
 	/**
 	 * Instantiates a new web credentials.
-	 * 
-	 * @param userId
-	 *            the user id
-	 * @param password
-	 *            the password
+	 *
+	 * @param userId the user id
+	 * @param password the password
 	 */
 	public WebCredentials(String userId, String password) {
 		this.userId = userId;
@@ -42,7 +40,7 @@ public class WebCredentials {
 
 	/**
 	 * Gets the user id.
-	 * 
+	 *
 	 * @return the user id
 	 */
 	public String getUserId() {
@@ -51,7 +49,7 @@ public class WebCredentials {
 
 	/**
 	 * Gets the password.
-	 * 
+	 *
 	 * @return the password
 	 */
 	public String getPassword() {

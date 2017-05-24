@@ -27,7 +27,6 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestPublishServiceMessageCallback;
@@ -42,13 +41,15 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProcessesController {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ProcessesController.class);
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessesController.class);
+	private static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	private String fs;
 	private String userDir;
@@ -106,9 +107,9 @@ public class ProcessesController {
 
 		for (ServiceConnectorDefinition serviceConnectorDefinition : scDefs) {
 			String scName = serviceConnectorDefinition.getName();
-			String log4jSCProperties = serviceConnectorDefinition.getLog4jFileName();
+			String logbackSCXml = serviceConnectorDefinition.getLogbackFileName();
 			String scProperties = serviceConnectorDefinition.getProperyFileName();
-			proccessContexts.put(scName, this.startSC(scName, log4jSCProperties, scProperties));
+			proccessContexts.put(scName, this.startSC(scName, logbackSCXml, scProperties));
 		}
 		return proccessContexts;
 	}
@@ -119,7 +120,7 @@ public class ProcessesController {
 		}
 	}
 
-	public ProcessCtx startSC(String scName, String log4jSCProperties, String scProperties) throws Exception {
+	public ProcessCtx startSC(String scName, String logbackXml, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 		proc.setProcessName(scName);
@@ -137,12 +138,12 @@ public class ProcessesController {
 			throw new Exception("File=" + scPropertiesFullName + " does not exist!");
 		}
 		proc.setPropertyFileName(scPropertiesFullName);
-		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
-		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File=" + log4jFileFullName + " does not exist!");
-			throw new Exception("File=" + log4jFileFullName + " does not exist!");
+		String logbackFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + logbackXml;
+		if (FileUtility.notExists(logbackFileFullName)) {
+			testLogger.error("File=" + logbackFileFullName + " does not exist!");
+			throw new Exception("File=" + logbackFileFullName + " does not exist!");
 		}
-		proc.setLog4jFileName(log4jFileFullName);
+		proc.setLogbackFileName(logbackFileFullName);
 
 		String logDirPath = this.getPidPath(scProperties);
 		String pidFileFullName = logDirPath + fs + Constants.PID_FILE_NAME;
@@ -152,15 +153,10 @@ public class ProcessesController {
 		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
 		/*
-		 * start SC process Arguments:
-		 * [0] -Dlog4j.configuration=file
-		 * [1] log4jProperties
-		 * [2] -jar
-		 * [3] SC runnable
-		 * [4] -sc.configuration
+		 * start SC process Arguments: [0] -Dlogback.configurationFile=file [1] logback.xml [2] -jar [3] SC runnable [4] -sc.configuration
 		 */
-		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " "
-				+ Constants.CLI_CONFIG_ARG + " " + scPropertiesFullName;
+		String command = "java -Xmx1024M -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + scRunableFullName + " " + Constants.CLI_CONFIG_ARG + " "
+				+ scPropertiesFullName;
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
 		int timeout = 15; // seconds
@@ -211,9 +207,8 @@ public class ProcessesController {
 
 		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
 		for (ServerDefinition srvDef : serverDefs) {
-			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLog4jproperty(), srvDef.getServerName(),
-					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(),
-					srvDef.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
+			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLogbackFileName(), srvDef.getServerName(), srvDef.getServerPort(), srvDef.getScPort(),
+					srvDef.getMaxSessions(), srvDef.getMaxConnections(), srvDef.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
 			proccessContexts.put(srvDef.getServerName(), srvProcess);
 		}
 		return proccessContexts;
@@ -225,56 +220,49 @@ public class ProcessesController {
 		}
 	}
 
-	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames) throws Exception {
-		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, null, TestConstants.HOST);
+	public ProcessCtx startServer(String serverType, String logbackXml, String serverName, int listenerPort, int scPort, int maxSessions, int maxConnections, String serviceNames)
+			throws Exception {
+		return this.startServer(serverType, logbackXml, serverName, listenerPort, scPort, maxSessions, maxConnections, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames,
+				null, TestConstants.HOST);
 	}
 
 	/**
 	 * Start a server in a new JVM. Parameters controls the server execution.
-	 * 
-	 * @param serverType
-	 *            ("session" or "publish")
-	 * @param log4jProperties
-	 *            (file name)
+	 *
+	 * @param serverType ("session" or "publish")
+	 * @param logbackXml (file name)
 	 * @param serverName
 	 * @param listenerPort
 	 * @param SCport
 	 * @param maxSessions
 	 * @param maxConnections
-	 * @param serviceNames
-	 *            (comma delimited list)
+	 * @param serviceNames (comma delimited list)
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames, String timezone, String nics) throws Exception {
-		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, timezone, nics);
+	public ProcessCtx startServer(String serverType, String logbackXml, String serverName, int listenerPort, int scPort, int maxSessions, int maxConnections, String serviceNames,
+			String timezone, String nics) throws Exception {
+		return this.startServer(serverType, logbackXml, serverName, listenerPort, scPort, maxSessions, maxConnections, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames,
+				timezone, nics);
 	}
 
 	/**
 	 * Start a server in a new JVM. Parameters controls the server execution.
-	 * 
-	 * @param serverType
-	 *            ("session" or "publish")
-	 * @param log4jProperties
-	 *            (file name)
+	 *
+	 * @param serverType ("session" or "publish")
+	 * @param logbackSrvXml (file name)
 	 * @param serverName
 	 * @param listenerPort
 	 * @param SCport
 	 * @param maxSessions
 	 * @param maxConnections
 	 * @param connectionType
-	 * @param serviceNames
-	 *            (comma delimited list)
+	 * @param serviceNames (comma delimited list)
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames, String timezone, String nics)
-			throws Exception {
+	public ProcessCtx startServer(String serverType, String logbackSrvXml, String serverName, int listenerPort, int scPort, int maxSessions, int maxConnections,
+			ConnectionType connectionType, String serviceNames, String timezone, String nics) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -285,12 +273,12 @@ public class ProcessesController {
 		}
 		proc.setRunableName(srvRunablFullName);
 
-		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
-		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File=" + log4jFileFullName + " does not exist!");
-			throw new Exception("File=" + log4jFileFullName + " does not exist!");
+		String logbackFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + logbackSrvXml;
+		if (FileUtility.notExists(logbackFileFullName)) {
+			testLogger.error("File=" + logbackFileFullName + " does not exist!");
+			throw new Exception("File=" + logbackFileFullName + " does not exist!");
 		}
-		proc.setLog4jFileName(log4jFileFullName);
+		proc.setLogbackFileName(logbackFileFullName);
 
 		String pidFileNameFull = userDir + fs + "target" + fs + "logs" + fs + "srv" + fs + serverName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
@@ -301,19 +289,9 @@ public class ProcessesController {
 		proc.setCommunicatorType(serverType);
 		proc.setSCPort(scPort);
 		/*
-		 * start server process Arguments:
-		 * [0] -Dlog4j.configuration=file
-		 * [1] log4jProperties
-		 * [2] -jar [3] server runnable
-		 * [4] serverType ("session" or "publish")
-		 * [5] serverName
-		 * [6] listenerPort
-		 * [7] SC port
-		 * [8] maxSessions
-		 * [9] maxConnections
-		 * [10] connectionType ("netty.tcp" or "netty.http")
-		 * [11] serviceNames (comma delimited list)
-		 * [12] nics (comma separated list)
+		 * start server process Arguments: [0] -Dlogback.configurationFile=file [1] logbackXml [2] -jar [3] server runnable [4] serverType ("session" or "publish") [5] serverName
+		 * [6] listenerPort [7] SC port [8] maxSessions [9] maxConnections [10] connectionType ("netty.tcp" or "netty.http") [11] serviceNames (comma delimited list) [12] nics
+		 * (comma separated list)
 		 */
 		String timezoneParam = null;
 		if (timezone != null) {
@@ -323,9 +301,8 @@ public class ProcessesController {
 			// empty timezoneParam
 			timezoneParam = "";
 		}
-		String command = "java -Xmx1024M -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar "
-				+ srvRunablFullName + " " + serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions
-				+ " " + maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
+		String command = "java -Xmx1024M -Dlogback.configurationFile=file:" + logbackFileFullName + timezoneParam + " -jar " + srvRunablFullName + " " + serverType + " "
+				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
 		int timeout = 15;
@@ -347,8 +324,7 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(),
-						srvProcess.getConnectionType());
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
@@ -395,45 +371,29 @@ public class ProcessesController {
 
 	/**
 	 * Start client.
-	 * 
-	 * @param clientType
-	 *            the client type
-	 * @param log4jClnProperties
-	 *            the log4j cln properties
-	 * @param clientName
-	 *            the client name
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
-	 * @param connectionType
-	 *            the connection type
-	 * @param maxConnections
-	 *            the max connections
-	 * @param keepAliveIntervalSeconds
-	 *            the keep alive interval in seconds
-	 * @param serviceName
-	 *            the service name
-	 * @param echoIntervalSeconds
-	 *            the echo interval in seconds
-	 * @param echoTimeoutSeconds
-	 *            the echo timeout in seconds
-	 * @param noDataIntervalSeconds
-	 *            the no data interval seconds
-	 * @param methodsToInvoke
-	 *            the methods to invoke
+	 *
+	 * @param clientType the client type
+	 * @param logbackClnXml the logback configuration file
+	 * @param clientName the client name
+	 * @param scHost the sc host
+	 * @param scPort the sc port
+	 * @param connectionType the connection type
+	 * @param maxConnections the max connections
+	 * @param keepAliveIntervalSeconds the keep alive interval in seconds
+	 * @param serviceName the service name
+	 * @param echoIntervalSeconds the echo interval in seconds
+	 * @param echoTimeoutSeconds the echo timeout in seconds
+	 * @param noDataIntervalSeconds the no data interval seconds
+	 * @param methodsToInvoke the methods to invoke
 	 * @return the process ctx
-	 * @throws Exception
-	 *             the exception <br>
-	 * <br>
-	 *             Example to call: <br>
-	 *             ProcessCtx clnCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSCProperties,
-	 *             TestConstants.sesServiceName1, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, 10, 0,
-	 *             TestConstants.sesServiceName1, 300, 5, "\"initAttach|detach\"");
+	 * @throws Exception the exception <br>
+	 *         <br>
+	 *         Example to call: <br>
+	 *         ProcessCtx clnCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSC, TestConstants.sesServiceName1, TestConstants.HOST,
+	 *         TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, 10, 0, TestConstants.sesServiceName1, 300, 5, "\"initAttach|detach\"");
 	 */
-	private ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
-			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
-			int echoIntervalSeconds, int echoTimeoutSeconds, int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
+	private ProcessCtx startClient(String clientType, String logbackClnXml, String clientName, String scHost, int scPort, ConnectionType connectionType, int maxConnections,
+			int keepAliveIntervalSeconds, String serviceName, int echoIntervalSeconds, int echoTimeoutSeconds, int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -444,12 +404,12 @@ public class ProcessesController {
 		}
 		proc.setRunableName(clnRunablFullName);
 
-		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jClnProperties;
-		if (FileUtility.notExists(log4jFileFullName)) {
-			testLogger.error("File=" + log4jFileFullName + " does not exist!");
-			throw new Exception("File=" + log4jFileFullName + " does not exist!");
+		String logbackFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + logbackClnXml;
+		if (FileUtility.notExists(logbackFileFullName)) {
+			testLogger.error("File=" + logbackFileFullName + " does not exist!");
+			throw new Exception("File=" + logbackFileFullName + " does not exist!");
 		}
-		proc.setLog4jFileName(log4jFileFullName);
+		proc.setLogbackFileName(logbackFileFullName);
 
 		String pidFileNameFull = userDir + fs + "target" + fs + "logs" + fs + "cln" + fs + clientName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
@@ -459,28 +419,13 @@ public class ProcessesController {
 		proc.setConnectionType(connectionType);
 		proc.setCommunicatorType(clientType);
 		/*
-		 * start client process Arguments: 
-		 * [0] -Dlog4j.configuration=file 
-		 * [1] log4jProperties 
-		 * [2] -jar 
-		 * [3] client runnable
-		 * [4] clientType ("session" or "publish") 
-		 * [5] clientName 
-		 * [6] scHost 
-		 * [7] scPort 
-		 * [8] ConnectionType ("netty.tcp" or "netty.http") 
-		 * [9] maxConnections 
-		 * [10] keepAliveIntervalSeconds 
-		 * [11] serviceName 
-		 * [12] echoIntervalSeconds
-		 * [13] echoTimeoutSeconds
-		 * [14] noDataIntervalSeconds
-		 * [15] methodsToInvoke (split * by | "initAttach|detach")
+		 * start client process Arguments: [0] -Dlogback.configurationFile=file [1] logbackXml [2] -jar [3] client runnable [4] clientType ("session" or "publish") [5] clientName
+		 * [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or "netty.http") [9] maxConnections [10] keepAliveIntervalSeconds [11] serviceName [12] echoIntervalSeconds [13]
+		 * echoTimeoutSeconds [14] noDataIntervalSeconds [15] methodsToInvoke (split * by | "initAttach|detach")
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
-				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "
-				+ keepAliveIntervalSeconds + " " + serviceName + " " + echoIntervalSeconds + " " + echoTimeoutSeconds + " "
-				+ noDataIntervalSeconds + " " + methodsToInvoke;
+		String command = "java -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + clnRunablFullName + " " + clientType + " " + clientName + " " + scHost + " "
+				+ scPort + " " + connectionType.getValue() + " " + maxConnections + " " + keepAliveIntervalSeconds + " " + serviceName + " " + echoIntervalSeconds + " "
+				+ echoTimeoutSeconds + " " + noDataIntervalSeconds + " " + methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(clnProcess);
 		int timeout = 15;
@@ -497,21 +442,16 @@ public class ProcessesController {
 		return proc;
 	}
 
-	public ProcessCtx startSessionClient(String log4jClnProperties, String clientName, String scHost, int scPort,
-			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
-			int echoIntervalSeconds, int echoTimeoutSeconds, String methodsToInvoke) throws Exception {
-		return this.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, log4jClnProperties, clientName, scHost, scPort,
-				connectionType, maxConnections, keepAliveIntervalSeconds, serviceName, echoIntervalSeconds, echoTimeoutSeconds, 0,
-				methodsToInvoke);
+	public ProcessCtx startSessionClient(String logbackClnXml, String clientName, String scHost, int scPort, ConnectionType connectionType, int maxConnections,
+			int keepAliveIntervalSeconds, String serviceName, int echoIntervalSeconds, int echoTimeoutSeconds, String methodsToInvoke) throws Exception {
+		return this.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, logbackClnXml, clientName, scHost, scPort, connectionType, maxConnections, keepAliveIntervalSeconds,
+				serviceName, echoIntervalSeconds, echoTimeoutSeconds, 0, methodsToInvoke);
 	}
 
-	public ProcessCtx startPublishClient(String log4jClnProperties, String clientName, String scHost, int scPort,
-			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
-			int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
-		return this
-				.startClient(TestConstants.COMMUNICATOR_TYPE_PUBLISH, log4jClnProperties, clientName, scHost, scPort,
-						connectionType, maxConnections, keepAliveIntervalSeconds, serviceName, 0, 0, noDataIntervalSeconds,
-						methodsToInvoke);
+	public ProcessCtx startPublishClient(String logbackClnXml, String clientName, String scHost, int scPort, ConnectionType connectionType, int maxConnections,
+			int keepAliveIntervalSeconds, String serviceName, int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
+		return this.startClient(TestConstants.COMMUNICATOR_TYPE_PUBLISH, logbackClnXml, clientName, scHost, scPort, connectionType, maxConnections, keepAliveIntervalSeconds,
+				serviceName, 0, 0, noDataIntervalSeconds, methodsToInvoke);
 	}
 
 	public void stopClient(ProcessCtx clnProcess) throws Exception {

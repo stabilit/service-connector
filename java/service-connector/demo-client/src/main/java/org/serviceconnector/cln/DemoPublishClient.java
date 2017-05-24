@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
@@ -31,13 +32,12 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoPublishClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoPublishClient.class);
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
@@ -99,9 +99,8 @@ public class DemoPublishClient extends Thread {
 
 		/**
 		 * Instantiates a new demo publish client callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public DemoPublishClientCallback(SCPublishService service) {
 			super(service);

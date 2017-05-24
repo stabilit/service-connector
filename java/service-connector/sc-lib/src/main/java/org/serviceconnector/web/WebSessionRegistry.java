@@ -20,7 +20,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.util.ITimeout;
@@ -32,8 +33,8 @@ import org.serviceconnector.util.TimeoutWrapper;
 public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebSessionRegistry.class);
+
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
 
@@ -46,7 +47,7 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/**
 	 * Create new session.
-	 * 
+	 *
 	 * @return the i web session
 	 */
 	public WebSession createSession() {
@@ -58,9 +59,8 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/**
 	 * Gets the session.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 * @return the session
 	 */
 	public WebSession getSession(String sessionId) {
@@ -73,9 +73,8 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public void removeSession(WebSession session) {
 		if (session == null) {
@@ -87,9 +86,8 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 	/**
 	 * Schedule session timeout.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	@SuppressWarnings("unchecked")
 	private void scheduleSessionTimeout(WebSession session) {
@@ -102,17 +100,16 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new WebSessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
-				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter, (long) session.getSessionTimeoutSeconds(),
+				TimeUnit.SECONDS);
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
 	}
 
 	/**
 	 * Cancel session timeout.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	private void cancelSessionTimeout(WebSession session) {
 		if (session == null) {
@@ -125,12 +122,10 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 		}
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			LOGGER.error("cancel web session timeout failed sid=" + session.getId() + " delay="
-					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
+			LOGGER.error("cancel web session timeout failed sid=" + session.getId() + " delay=" + sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				LOGGER.error("remove web session timeout failed sid=" + session.getId() + " delay="
-						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS)+" ms");
+				LOGGER.error("remove web session timeout failed sid=" + session.getId() + " delay=" + sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			}
 		}
 		this.sessionScheduler.purge();
@@ -149,9 +144,8 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 
 		/**
 		 * Instantiates a new session timer run.
-		 * 
-		 * @param session
-		 *            the session
+		 *
+		 * @param session the session
 		 */
 		public WebSessionTimeout(WebSession session) {
 			this.session = session;

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -40,15 +41,15 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class CscExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
- * server. Execute command runs asynchronously and passes through any parts messages.
- * 
+ * The Class CscExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the server. Execute command runs asynchronously and
+ * passes through any parts messages.
+ *
  * @author JTraber
  */
 public class CscExecuteCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscExecuteCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscExecuteCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -68,21 +69,21 @@ public class CscExecuteCommand extends CommandAdapter {
 		SCCache cache = AppContext.getSCCache();
 
 		switch (abstractService.getType()) {
-		case CASCADED_SESSION_SERVICE:
-			if (cache.isCacheEnabled()) {
-				// try to load response from cache
-				SCMPMessage message = cache.tryGetMessageFromCacheOrLoad(reqMessage);
-				if (message != null) {
-					response.setSCMP(message);
-					responderCallback.responseCallback(request, response);
-					return;
+			case CASCADED_SESSION_SERVICE:
+				if (cache.isCacheEnabled()) {
+					// try to load response from cache
+					SCMPMessage message = cache.tryGetMessageFromCacheOrLoad(reqMessage);
+					if (message != null) {
+						response.setSCMP(message);
+						responderCallback.responseCallback(request, response);
+						return;
+					}
 				}
-			}
-			this.executeCascadedService(request, response, responderCallback);
-			return;
-		default:
-			// code for other types of services is below
-			break;
+				this.executeCascadedService(request, response, responderCallback);
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
@@ -90,8 +91,7 @@ public class CscExecuteCommand extends CommandAdapter {
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
 			LOGGER.warn("sid=" + sessionId + " has pending request");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service="
-					+ reqMessage.getServiceName() + " sid=" + sessionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.PARALLEL_REQUEST, "service=" + reqMessage.getServiceName() + " sid=" + sessionId);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
@@ -149,8 +149,7 @@ public class CscExecuteCommand extends CommandAdapter {
 						session.setPendingRequest(false); // IMPORTANT - set false after reset - because of parallel echo call
 					}
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
-							+ reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -162,18 +161,13 @@ public class CscExecuteCommand extends CommandAdapter {
 
 	/**
 	 * Execute cascaded service.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
+	 * @throws Exception the exception
 	 */
-	private void executeCascadedService(IRequest request, IResponse response, IResponderCallback responderCallback)
-			throws Exception {
+	private void executeCascadedService(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -194,23 +188,19 @@ public class CscExecuteCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// message info optional
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_MESSAGE_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			// cacheId optional
 			String cacheId = message.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, cacheId, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, cacheId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

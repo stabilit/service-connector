@@ -21,68 +21,67 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIStressExecutionCasc1Test;
 
 public class APIStressExecutionCasc2Test extends APIStressExecutionCasc1Test {
 
 	public APIStressExecutionCasc2Test() {
-		APIStressExecutionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: Create session (regular)<br>
 	 * Expectation: passes
 	 */
+	@Override
 	@Test
 	public void t01_2Clients10000Messages() throws Exception {
 		int numberOfClients = 2;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
-					"f_execute1000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client" + i, TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP,
+					10, 0, TestConstants.sesServerName1, 50, 60, "f_execute1000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
 	}
 
 	/**
 	 * Description: Create session (regular)<br>
 	 * Expectation: passes
 	 */
+	@Override
 	@Test
 	public void t05_10Clients100000Messages() throws Exception {
 		int numberOfClients = 10;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
-					"f_execute100000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client" + i, TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP,
+					10, 0, TestConstants.sesServerName1, 10, 60, "f_execute100000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
 	}
-	
 
 	/**
 	 * Description: Exchanges a 10MB message with the server<br>
 	 * Expectation: passes
 	 */
+	@Override
 	@Test
 	public void t160_10MBMessageExchange() throws Exception {
-		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
-				TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
-				"f_execute10MBMessageAndExit");
+		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client", TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP, 10, 0,
+				TestConstants.sesServerName1, 50, 60, "f_execute10MBMessageAndExit");
 
-		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtx);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
 	}
 }

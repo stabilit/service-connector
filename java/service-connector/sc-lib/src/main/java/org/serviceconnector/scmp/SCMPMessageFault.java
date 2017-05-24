@@ -31,9 +31,8 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP fault.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
+	 *
+	 * @param scmpVersion the SCMP version
 	 */
 	public SCMPMessageFault(SCMPVersion scmpVersion) {
 		super(scmpVersion);
@@ -41,13 +40,10 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP fault message.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
-	 * @param error
-	 *            the error code
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param scmpVersion the SCMP version
+	 * @param error the error code
+	 * @param additionalInfo the additional info
 	 */
 	public SCMPMessageFault(SCMPVersion scmpVersion, SCMPError error, String additionalInfo) {
 		super(scmpVersion);
@@ -56,11 +52,9 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP fault.
-	 * 
-	 * @param exception
-	 *            the exception
-	 * @param error
-	 *            the error
+	 *
+	 * @param exception the exception
+	 * @param error the error
 	 */
 	public SCMPMessageFault(SCMPVersion scmpVersion, Exception exception, SCMPError error) {
 		super(scmpVersion);
@@ -70,7 +64,7 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Gets the cause.
-	 * 
+	 *
 	 * @return the exception
 	 */
 	public Exception getCause() {
@@ -98,11 +92,9 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Sets the error code and text.
-	 * 
-	 * @param errorCode
-	 *            the error code
-	 * @param errorText
-	 *            the error text
+	 *
+	 * @param errorCode the error code
+	 * @param errorText the error text
 	 */
 	public void setError(String errorCode, String errorText) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), errorCode);
@@ -111,11 +103,9 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Sets the error.
-	 * 
-	 * @param scmpError
-	 *            the scmp error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param scmpError the scmp error
+	 * @param additionalInfo the additional info
 	 */
 	public void setError(SCMPError scmpError, String additionalInfo) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), String.valueOf(scmpError.getErrorCode()));
@@ -124,9 +114,8 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Sets the error code and text based on scmp error.
-	 * 
-	 * @param scmpError
-	 *            the new error code
+	 *
+	 * @param scmpError the new error code
 	 */
 	public void setError(SCMPError scmpError) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), String.valueOf(scmpError.getErrorCode()));

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -42,7 +43,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class FileUploadCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FileUploadCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -60,14 +61,14 @@ public class FileUploadCommand extends CommandAdapter {
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
-		case CASCADED_FILE_SERVICE:
-			CascadedSC cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
-			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
-			cascadedSC.serverUploadFile(message, callback, oti);
-			return;
-		default:
-			// code for other types of services is below
-			break;
+			case CASCADED_FILE_SERVICE:
+				CascadedSC cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+				CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
+				cascadedSC.serverUploadFile(message, callback, oti);
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
@@ -83,8 +84,7 @@ public class FileUploadCommand extends CommandAdapter {
 			FileServer fileServer = session.getFileServer();
 			reply = fileServer.serverUploadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.FILE_UPLOAD_FAILED,
-					"Error occured in file server on SC.");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.FILE_UPLOAD_FAILED, "Error occured in file server on SC.");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -103,16 +103,13 @@ public class FileUploadCommand extends CommandAdapter {
 			SCMPMessage message = request.getMessage();
 			// remoteFileName mandatory
 			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
-			ValidatorUtility.validateStringLengthTrim(1, remoteFileName, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_REMOTE_FILE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, remoteFileName, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_REMOTE_FILE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);

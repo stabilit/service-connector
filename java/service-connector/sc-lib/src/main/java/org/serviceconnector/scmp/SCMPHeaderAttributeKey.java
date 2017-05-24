@@ -18,7 +18,7 @@ package org.serviceconnector.scmp;
 
 /**
  * The Enum SCMPHeaderAttributeKey. Defines possible header attributes in SCMP.
- * 
+ *
  * @author JTraber
  */
 public enum SCMPHeaderAttributeKey {
@@ -109,9 +109,8 @@ public enum SCMPHeaderAttributeKey {
 
 	/**
 	 * Instantiates a SCMPHeaderAttributeKey.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private SCMPHeaderAttributeKey(String value) {
 		this.value = value;
@@ -119,7 +118,7 @@ public enum SCMPHeaderAttributeKey {
 
 	/**
 	 * Gets the value.
-	 * 
+	 *
 	 * @return the value
 	 */
 	public String getValue() {

@@ -25,7 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class WebUtil.
@@ -43,13 +44,12 @@ public final class WebUtil {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(WebUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebUtil.class);
 
 	/**
 	 * Load resource.
-	 * 
-	 * @param name
-	 *            the name
+	 *
+	 * @param name the name
 	 * @return the input stream
 	 */
 	public static InputStream loadResource(String name) {
@@ -77,10 +77,9 @@ public final class WebUtil {
 
 	/**
 	 * get size of resource.
-	 * 
-	 * @param name
-	 *            the name
-	 * @return the size 
+	 *
+	 * @param name the name
+	 * @return the size
 	 */
 	public static long getResourceSize(String name) {
 		if (name == null) {
@@ -107,9 +106,8 @@ public final class WebUtil {
 
 	/**
 	 * Gets the resource url.
-	 * 
-	 * @param name
-	 *            the name
+	 *
+	 * @param name the name
 	 * @return the resource url
 	 */
 	public static URL getResourceURL(String name) {
@@ -137,9 +135,8 @@ public final class WebUtil {
 
 	/**
 	 * Gets the xML date as string.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return the xML date as string
 	 */
 	public static String getXMLDateAsString(Date date) {
@@ -150,9 +147,8 @@ public final class WebUtil {
 
 	/**
 	 * Gets the xML date from string.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return the xML date from string
 	 */
 	public static Date getXMLDateFromString(String date) {
@@ -167,9 +163,8 @@ public final class WebUtil {
 
 	/**
 	 * Gets the xML next date as string.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return the xML next date as string
 	 */
 	public static String getXMLNextDateAsString(Date date) {
@@ -181,9 +176,8 @@ public final class WebUtil {
 
 	/**
 	 * Gets the xML previous date as string.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return the xML previous date as string
 	 */
 	public static String getXMLPreviousDateAsString(Date date) {

@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.ehcache.SCCacheFactory;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -42,43 +43,31 @@ import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class SCCache. The cache is responsible for handling caching actions in the Service Connector. The AppContext gives
- * access to the SC cache instance.
- * It controls the life cycles of caching. Loading and destroying procedure are important to be called. <br>
+ * The Class SCCache. The cache is responsible for handling caching actions in the Service Connector. The AppContext gives access to the SC cache instance. It controls the life
+ * cycles of caching. Loading and destroying procedure are important to be called. <br>
  * <br>
- * The cache contains two physical cache modules (SC_CACHE_TYPE.DATA_CACHE_MODULE, SC_CACHE_TYPE.META_DATA_CACHE_MODULE).
- * Whenever someone is interested to insert or load from cache the META_DATA_CACHE_MODULE gets accessed first. It contains a list of
- * CacheMetaEntry instances, which holds information about the stored SCMPMessage in DATA_CACHE_MODULE. CacheMetaEntry are
- * identified by the cacheKey cachedId, cached messages in DATA_CACHE_MODULE by the cacheKey cacheId/appendixNr/partNr.
- * A meta cache entry gets created and cached when client request contains a cacheId. Other clients requesting the same cacheId
- * later, return with "cache retry later" error. This error is returned as long as the first client is not finished with loading the
- * message completely. Only the first client (session) is allowed to load the message. At the time the message is complete and all
- * parts transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an
- * expiration time of OTI given by the client. After completion it gets expiration time of the message given by the server. Control
- * of the expiration is done by the ISCCacheModule implementation. Data entries never (0 means forever) have an expiration time.
- * When a meta entry expires every data entry belonging to this meta entry will be deleted. Managed (loaded with cmt=initial) data
- * with an empty expiration never expire. They stay as long as no remove is received.<br>
+ * The cache contains two physical cache modules (SC_CACHE_TYPE.DATA_CACHE_MODULE, SC_CACHE_TYPE.META_DATA_CACHE_MODULE). Whenever someone is interested to insert or load from
+ * cache the META_DATA_CACHE_MODULE gets accessed first. It contains a list of CacheMetaEntry instances, which holds information about the stored SCMPMessage in DATA_CACHE_MODULE.
+ * CacheMetaEntry are identified by the cacheKey cachedId, cached messages in DATA_CACHE_MODULE by the cacheKey cacheId/appendixNr/partNr. A meta cache entry gets created and
+ * cached when client request contains a cacheId. Other clients requesting the same cacheId later, return with "cache retry later" error. This error is returned as long as the
+ * first client is not finished with loading the message completely. Only the first client (session) is allowed to load the message. At the time the message is complete and all
+ * parts transfered, it is ready to be loaded from the cache. As long as the message is not completely loaded the meta entry has an expiration time of OTI given by the client.
+ * After completion it gets expiration time of the message given by the server. Control of the expiration is done by the ISCCacheModule implementation. Data entries never (0 means
+ * forever) have an expiration time. When a meta entry expires every data entry belonging to this meta entry will be deleted. Managed (loaded with cmt=initial) data with an empty
+ * expiration never expire. They stay as long as no remove is received.<br>
  * <br>
- * Cache identifiers naming:
- * cacheId/appendixNr/partNr
- * |---baseDataCid---|
- * |--------dataCid--------| <br>
+ * Cache identifiers naming: cacheId/appendixNr/partNr |---baseDataCid---| |--------dataCid--------| <br>
  * <br>
  * The cache identifier with appendix zero and part number zero (e.g. 700/0/0) is called initialDataCid.<br>
  * <br>
- * There are several circumstances they can stop the loading process and clear the message:
- * - Server returns a fault message.
- * - Server returns no cacheId.
- * - Server returns a different cacheId than the requested one.
- * - Server returns no expirationDate.
- * - Server returns expirationDate with wrong format.
- * - Server returns expirationDate in the past.
- * - Caching of message fails for some reason.
+ * There are several circumstances they can stop the loading process and clear the message: - Server returns a fault message. - Server returns no cacheId. - Server returns a
+ * different cacheId than the requested one. - Server returns no expirationDate. - Server returns expirationDate with wrong format. - Server returns expirationDate in the past. -
+ * Caching of message fails for some reason.
  */
 public class SCCache {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCCache.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCCache.class);
 	/** The cache configuration. */
 	private SCCacheConfiguration scCacheConfiguration;
 	/** Map of current session id's which are loading messages into cache, (sid, cid). */
@@ -106,9 +95,8 @@ public class SCCache {
 
 	/**
 	 * Loads the SCCache. Initializes the cache modules and removes old cache files.
-	 * 
-	 * @param cacheConfiguration
-	 *            the cache configuration
+	 *
+	 * @param cacheConfiguration the cache configuration
 	 */
 	@SuppressWarnings("unchecked")
 	public void load(SCCacheConfiguration cacheConfiguration) {
@@ -126,21 +114,17 @@ public class SCCache {
 			ISCCacheModule<?> cacheModule = SCCacheFactory.createDefaultSCCache(cacheConfiguration, cacheModuleType);
 			cacheModules.addCacheModule(cacheModuleType.name(), cacheModule);
 		}
-		metaDataCacheModule = (ISCCacheModule<SCCacheMetaEntry>) cacheModules.getCache(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE
-				.name());
+		metaDataCacheModule = (ISCCacheModule<SCCacheMetaEntry>) cacheModules.getCache(SC_CACHE_MODULE_TYPE.META_DATA_CACHE_MODULE.name());
 		dataCacheModule = (ISCCacheModule<SCMPMessage>) cacheModules.getCache(SC_CACHE_MODULE_TYPE.DATA_CACHE_MODULE.name());
 	}
 
 	/**
-	 * Try get message from cache. Returns the requested message if already stored in cache. If requested message is in loaded state
-	 * because it gets loaded by another client an SCMPCommandException is returned. Otherwise cache marks requested message to be
-	 * in loaded state and returns null.
-	 * 
-	 * @param reqMessage
-	 *            the request message
+	 * Try get message from cache. Returns the requested message if already stored in cache. If requested message is in loaded state because it gets loaded by another client an
+	 * SCMPCommandException is returned. Otherwise cache marks requested message to be in loaded state and returns null.
+	 *
+	 * @param reqMessage the request message
 	 * @return the SCMP message
-	 * @throws SCMPCommandException
-	 *             requested message in loading state, gets already loaded by another client<br>
+	 * @throws SCMPCommandException requested message in loading state, gets already loaded by another client<br>
 	 */
 	public synchronized SCMPMessage tryGetMessageFromCacheOrLoad(SCMPMessage reqMessage) throws SCMPCommandException {
 
@@ -162,8 +146,7 @@ public class SCCache {
 				return null;
 			}
 
-			if (reqMessage.isReqCompleteAfterMarshallingPart() == true && metaEntry.isLoading() == true
-					&& metaEntry.isLoadingSessionId(sessionId) == true) {
+			if (reqMessage.isReqCompleteAfterMarshallingPart() == true && metaEntry.isLoading() == true && metaEntry.isLoadingSessionId(sessionId) == true) {
 				// REQ & sid is loading session - ending REQ of large request, forward to next node!
 				return null;
 			}
@@ -204,8 +187,7 @@ public class SCCache {
 
 			if (metaEntry.isLoadingAppendix() == true) {
 				// requested message gets an updated by an appendix (loading appendix)
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-						+ serviceName + " cacheId=" + metaEntryCid);
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service=" + serviceName + " cacheId=" + metaEntryCid);
 				scmpCommandException.setMessageType(reqMessage.getMessageType());
 				throw scmpCommandException;
 			}
@@ -214,26 +196,22 @@ public class SCCache {
 				// requested message is loading
 				if (metaEntry.isLoadingSessionId(sessionId) == true) {
 					// requested message is being loaded by current session - continue loading
-					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCid + Constants.SLASH + appendixNr + Constants.SLASH
-							+ "0") + 1;
+					int nextPartNrToLoad = metaEntry.getNrOfParts(metaEntryCid + Constants.SLASH + appendixNr + Constants.SLASH + "0") + 1;
 					int reqPartNrInt = Integer.parseInt(reqPartNr);
 					if (reqPartNrInt != nextPartNrToLoad) {
 						// requested partNr does not match current loading state - remove message from cache
-						LOGGER.warn("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts="
-								+ nextPartNrToLoad + ").");
-						this.removeMetaAndDataEntries(metaEntryCid, "Requested partNr=" + reqPartNr
-								+ " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
+						LOGGER.warn("Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
+						this.removeMetaAndDataEntries(metaEntryCid,
+								"Requested partNr=" + reqPartNr + " does not match current loading state (numberOfParts=" + nextPartNrToLoad + ").");
 						// do return an error here to stop current request loading this message and avoid parallel loading problems
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId="
-										+ metaEntryCid);
+								"cache cleared message invalid partNr in request service=" + serviceName + " cacheId=" + metaEntryCid);
 						scmpCommandException.setMessageType(reqMessage.getMessageType());
 						throw scmpCommandException;
 					}
 					return null;
 				}
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-						+ serviceName + " cacheId=" + metaEntryCid);
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service=" + serviceName + " cacheId=" + metaEntryCid);
 				scmpCommandException.setMessageType(reqMessage.getMessageType());
 				throw scmpCommandException;
 			} else {
@@ -264,14 +242,11 @@ public class SCCache {
 	}
 
 	/**
-	 * Cache message. Tries to cache a message. If caching the message for some reason fails, the meta entry of specific cachId gets
-	 * removed. Basically a clean up is done! Cache message is called in a polling procedure of a client. Published appendices are
-	 * cached by the method "cacheManagedData".
-	 * 
-	 * @param reqMessage
-	 *            the request message
-	 * @param resMessage
-	 *            the response message
+	 * Cache message. Tries to cache a message. If caching the message for some reason fails, the meta entry of specific cachId gets removed. Basically a clean up is done! Cache
+	 * message is called in a polling procedure of a client. Published appendices are cached by the method "cacheManagedData".
+	 *
+	 * @param reqMessage the request message
+	 * @param resMessage the response message
 	 */
 	public synchronized void cacheMessage(SCMPMessage reqMessage, SCMPMessage resMessage) {
 		if (resMessage.isPollRequest() == true) {
@@ -284,14 +259,12 @@ public class SCCache {
 		String reqCacheId = reqMessage.getCacheId();
 		String resCacheId = resMessage.getCacheId();
 		String loadingSid = reqMessage.getSessionId();
-		SC_CACHING_METHOD recvCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
-				.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+		SC_CACHING_METHOD recvCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 		if (resMessage.isFault() == true || (resCacheId == null && reqCacheId != null)) {
 			// response is faulty, clean up
 			String scErrorCode = reqMessage.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			this.removeMetaAndDataEntries(reqCacheId, "Reply faulty (" + scErrorCode + ") or resCacheId=null and reqCacheId="
-					+ reqCacheId);
+			this.removeMetaAndDataEntries(reqCacheId, "Reply faulty (" + scErrorCode + ") or resCacheId=null and reqCacheId=" + reqCacheId);
 			return;
 		}
 
@@ -302,17 +275,14 @@ public class SCCache {
 
 		// this happens here because fault replies doesn't have serviceName set.
 		if (resServiceName == null) {
-			LOGGER.error("server did not reply service name (null), response service name set to request serviceName="
-					+ reqServiceName);
+			LOGGER.error("server did not reply service name (null), response service name set to request serviceName=" + reqServiceName);
 			resServiceName = reqServiceName;
 		}
 
 		if (resCacheId.equals(reqCacheId) == false) {
 			// requested cache id differs replied cache id, clean up
-			LOGGER.error("cache message (" + reqCacheId + ") removed, server did reply different cache key, cache (" + resCacheId
-					+ ")");
-			this.removeMetaAndDataEntries(reqCacheId, "cache message (" + reqCacheId
-					+ ") removed, server did reply different cache key, cache (" + resCacheId + ")");
+			LOGGER.error("cache message (" + reqCacheId + ") removed, server did reply different cache key, cache (" + resCacheId + ")");
+			this.removeMetaAndDataEntries(reqCacheId, "cache message (" + reqCacheId + ") removed, server did reply different cache key, cache (" + resCacheId + ")");
 			return;
 		}
 		// lookup up meta entry
@@ -328,10 +298,8 @@ public class SCCache {
 
 		if (metaEntry.isLoadingSessionId(loadingSid) == false) {
 			// meta entry gets loaded by another sessionId, not allowed clean up
-			LOGGER.error("MetaEntry gets loaded by wrong session, not allowed expected sid=" + metaEntry.getLoadingSessionId()
-					+ " loading sid= " + loadingSid);
-			this.removeMetaAndDataEntries(metaEntryCid,
-					"Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid=" + loadingSid);
+			LOGGER.error("MetaEntry gets loaded by wrong session, not allowed expected sid=" + metaEntry.getLoadingSessionId() + " loading sid= " + loadingSid);
+			this.removeMetaAndDataEntries(metaEntryCid, "Wrong sid loads MetaEntry, expected sid=" + metaEntry.getLoadingSessionId() + " loading sid=" + loadingSid);
 			return;
 		}
 
@@ -381,8 +349,8 @@ public class SCCache {
 			}
 
 			if (CacheLogger.isEnabled()) {
-				CacheLogger.putMessageToCache(dataEntryCid, nrOfParts, metaEntry.getLoadingSessionId(), resMessage.getBodyLength(),
-						metaEntry.getSCCacheEntryState().name(), recvCachingMethod.name());
+				CacheLogger.putMessageToCache(dataEntryCid, nrOfParts, metaEntry.getLoadingSessionId(), resMessage.getBodyLength(), metaEntry.getSCCacheEntryState().name(),
+						recvCachingMethod.name());
 			}
 
 			if (resMessage.isPart() == false && metaEntry.getNrOfAppendix() == metaEntry.getExpectedAppendix()) {
@@ -393,13 +361,11 @@ public class SCCache {
 
 				// remove sessionId from loading sessionIds map
 				loadingSessionIds.remove(loadingSid);
-				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(), nrOfParts,
-						metaEntry.getNrOfAppendix());
+				CacheLogger.finishLoadingCacheMessage(metaEntry.getCacheId(), metaEntry.getLoadingSessionId(), nrOfParts, metaEntry.getNrOfAppendix());
 				Statistics.getInstance().incrementMessagesInCache();
 			} else {
 				// refresh meta entry state
-				metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
-						/ Constants.SEC_TO_MILLISEC_FACTOR);
+				metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis() / Constants.SEC_TO_MILLISEC_FACTOR);
 			}
 			// cache data entry - expiration time forever for data entries
 			dataCacheModule.putOrUpdate(dataEntryCid, resMessage, 0);
@@ -420,9 +386,8 @@ public class SCCache {
 
 	/**
 	 * Cache managed data. Called for caching managed data. Never used in a polling procedure of a client.
-	 * 
-	 * @param resMessage
-	 *            the res message
+	 *
+	 * @param resMessage the res message
 	 * @throws ParseException
 	 * @throws SCMPValidatorException
 	 */
@@ -441,8 +406,7 @@ public class SCCache {
 			return;
 		}
 
-		SC_CACHING_METHOD resCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage
-				.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+		SC_CACHING_METHOD resCachingMethod = SC_CACHING_METHOD.getCachingMethod(resMessage.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 		if (resCachingMethod == SC_CACHING_METHOD.REMOVE) {
 			// remove received - remove existing
@@ -485,8 +449,7 @@ public class SCCache {
 					// large replacement finished
 					affectedMetaEntry.setCacheEntryState(SC_CACHE_ENTRY_STATE.LOADED);
 					timeToLiveSeconds = this.evalTimeToLiveSeconds(metaEntry.getExpDateTimeStr());
-					CacheLogger.stopLoadingReplacement(metaEntryCid, currGuardian,
-							affectedMetaEntry.getNrOfParts(initialDataCid) + 1);
+					CacheLogger.stopLoadingReplacement(metaEntryCid, currGuardian, affectedMetaEntry.getNrOfParts(initialDataCid) + 1);
 				} else {
 					// large replacements continues
 					timeToLiveSeconds = metaEntry.getLoadingTimeoutMillis() / Constants.SEC_TO_MILLISEC_FACTOR;
@@ -545,8 +508,8 @@ public class SCCache {
 
 			if (deleteResult == false) {
 				// deletion failed - update retrieved for non-managed data
-				LOGGER.error("Update retrieved for non-managed data, update ignored. (metaEntryCacheId=" + metaEntryCid
-						+ ", resCacheGuardian=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
+				LOGGER.error("Update retrieved for non-managed data, update ignored. (metaEntryCacheId=" + metaEntryCid + ", resCacheGuardian=" + currGuardian
+						+ ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 				return;
 			}
 			// add cache id to assigned data list
@@ -556,8 +519,8 @@ public class SCCache {
 			this.mgdDataAssignedToGuardian.get(currGuardian).add(metaEntryCid);
 		} else if (guardianOfCachedMsg.equals(currGuardian) == false) {
 			// managed data retrieved of different cache guardian - ignore data
-			LOGGER.trace("Managed data ignored, different cache guardian responsible for treatment. (metaEntryCid=" + metaEntryCid
-					+ ", resCacheGuardian=" + currGuardian + ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
+			LOGGER.trace("Managed data ignored, different cache guardian responsible for treatment. (metaEntryCid=" + metaEntryCid + ", resCacheGuardian=" + currGuardian
+					+ ", guardianOfCachedMsg=" + guardianOfCachedMsg + ")");
 			return;
 		}
 
@@ -581,8 +544,7 @@ public class SCCache {
 
 				if (resMessage.isPart() == true) {
 					// part of large appendix received, update meta entry
-					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
-							/ Constants.SEC_TO_MILLISEC_FACTOR);
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis() / Constants.SEC_TO_MILLISEC_FACTOR);
 					CacheLogger.putManagedDataToCache(dataEntryCid, currGuardian, appendixNr, nrOfPartsForAppendix);
 				} else {
 					// end of large appendix received
@@ -612,10 +574,8 @@ public class SCCache {
 					// set the correct partNr+1 in received message and cache it, partNr points to the next part!
 					resMessage.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, nrOfPart + 1);
 					// update meta entry, expiration time
-					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis()
-							/ Constants.SEC_TO_MILLISEC_FACTOR);
-					CacheLogger.startCachingAppendix(dataEntryCid, currGuardian, metaEntry.getLoadingTimeoutMillis()
-							/ Constants.SEC_TO_MILLISEC_FACTOR);
+					metaDataCacheModule.replace(metaEntryCid, metaEntry, metaEntry.getLoadingTimeoutMillis() / Constants.SEC_TO_MILLISEC_FACTOR);
+					CacheLogger.startCachingAppendix(dataEntryCid, currGuardian, metaEntry.getLoadingTimeoutMillis() / Constants.SEC_TO_MILLISEC_FACTOR);
 				} else {
 					// appendix received, update meta entry, expiration time
 					int timeToLive = this.evalTimeToLiveSeconds(metaEntry.getExpDateTimeStr());
@@ -630,13 +590,10 @@ public class SCCache {
 
 	/**
 	 * Removes the meta and data entries. Cleans up the cache for given cacheId.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @param metaEntryCacheId
-	 *            the cache id
-	 * @param removeReason
-	 *            the remove reason
+	 *
+	 * @param sessionId the session id
+	 * @param metaEntryCacheId the cache id
+	 * @param removeReason the remove reason
 	 */
 	private synchronized void removeMetaAndDataEntries(String metaEntryCacheId, String removeReason) {
 		if (metaEntryCacheId == null) {
@@ -655,11 +612,9 @@ public class SCCache {
 
 	/**
 	 * Removes the data entries by meta entry.
-	 * 
-	 * @param metaEntry
-	 *            the meta entry
-	 * @param removeReason
-	 *            the remove reason
+	 *
+	 * @param metaEntry the meta entry
+	 * @param removeReason the remove reason
 	 */
 	public synchronized void removeDataEntriesByMetaEntry(SCCacheMetaEntry metaEntry, String removeReason) {
 		String metaEntryCid = metaEntry.getCacheId();
@@ -686,14 +641,13 @@ public class SCCache {
 
 	/**
 	 * Removes the managed data for guardian. Any data assigned to the specific cache guardian will be deleted.
-	 * 
-	 * @param cacheGuardian
-	 *            the cache guardian
+	 *
+	 * @param cacheGuardian the cache guardian
 	 */
 	public synchronized void removeManagedDataForGuardian(String cacheGuardian) {
 
 		// remove managed data in initial state
-		String[] metaEntryCacheIds = (String[]) this.mgdDataKeysInInitialState.toArray(new String[0]);
+		String[] metaEntryCacheIds = this.mgdDataKeysInInitialState.toArray(new String[0]);
 		for (String metaEntryCacheId : metaEntryCacheIds) {
 			this.removeMetaAndDataEntries(metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
@@ -703,7 +657,7 @@ public class SCCache {
 			// no managed data to delete
 			return;
 		}
-		metaEntryCacheIds = (String[]) this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
+		metaEntryCacheIds = this.mgdDataAssignedToGuardian.get(cacheGuardian).toArray(new String[0]);
 		for (String metaEntryCacheId : metaEntryCacheIds) {
 			this.removeMetaAndDataEntries(metaEntryCacheId, "Broken or inactive Cache Guardian, name=" + cacheGuardian);
 		}
@@ -712,15 +666,11 @@ public class SCCache {
 
 	/**
 	 * Evaluates time to live in seconds.
-	 * 
-	 * @param messageToCache
-	 *            the message to cache
-	 * @return number of seconds to live
-	 *         0 if forever
-	 * @throws SCMPValidatorException
-	 *             the SCMP validator exception
-	 * @throws ParseException
-	 *             the parse exception
+	 *
+	 * @param messageToCache the message to cache
+	 * @return number of seconds to live 0 if forever
+	 * @throws SCMPValidatorException the SCMP validator exception
+	 * @throws ParseException the parse exception
 	 */
 	private int evalTimeToLiveSeconds(String cacheExpirationDateTime) throws SCMPValidatorException, ParseException {
 		if (cacheExpirationDateTime == null) {
@@ -763,9 +713,9 @@ public class SCCache {
 				}
 			});
 
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].isFile()) {
-					files[i].delete();
+			for (File file : files) {
+				if (file.isFile()) {
+					file.delete();
 				}
 			}
 		}
@@ -773,7 +723,7 @@ public class SCCache {
 
 	/**
 	 * Checks if is cache enabled.
-	 * 
+	 *
 	 * @return true, if is cache enabled
 	 */
 	public boolean isCacheEnabled() {
@@ -785,7 +735,7 @@ public class SCCache {
 
 	/**
 	 * Gets the cache configuration.
-	 * 
+	 *
 	 * @return the cache configuration
 	 */
 	public SCCacheConfiguration getCacheConfiguration() {
@@ -794,7 +744,7 @@ public class SCCache {
 
 	/**
 	 * Gets the off heap size.
-	 * 
+	 *
 	 * @return the off heap size
 	 */
 	private long getOffHeapSize() {
@@ -805,7 +755,7 @@ public class SCCache {
 
 	/**
 	 * Gets the in memory size.
-	 * 
+	 *
 	 * @return the in memory size
 	 */
 	private long getInMemorySize() {
@@ -816,7 +766,7 @@ public class SCCache {
 
 	/**
 	 * Gets the loading session ids.
-	 * 
+	 *
 	 * @return the loading session ids
 	 */
 	public HashMap<String, String> getLoadingSessionIds() {
@@ -824,11 +774,9 @@ public class SCCache {
 	}
 
 	/**
-	 * Clear loading cache message for session. Clears every cache message in loading state which is related to given sessionId.
-	 * Useful when session times out and gets destroyed.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 * Clear loading cache message for session. Clears every cache message in loading state which is related to given sessionId. Useful when session times out and gets destroyed.
+	 *
+	 * @param sessionId the session id
 	 */
 	public synchronized void clearLoading(String sessionId) {
 		String cachekey = this.loadingSessionIds.remove(sessionId);
@@ -868,11 +816,9 @@ public class SCCache {
 
 	/**
 	 * Dump the cache into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 

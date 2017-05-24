@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCGuardianCallback. Abstract class provides basic functions for a guardian callback.
- * 
+ *
  * @author JTraber
  */
 public abstract class SCGuardianMessageCallback extends SCMessageCallback {
@@ -41,17 +41,15 @@ public abstract class SCGuardianMessageCallback extends SCMessageCallback {
 
 	/**
 	 * Receive appendix.
-	 * 
-	 * @param appendix
-	 *            the appendix
+	 *
+	 * @param appendix the appendix
 	 */
 	public abstract void receiveAppendix(SCAppendMessage appendix);
 
 	/**
 	 * Receive remove.
-	 * 
-	 * @param remove
-	 *            the remove
+	 *
+	 * @param remove the remove
 	 */
 	public abstract void receiveRemove(SCRemovedMessage remove);
 }

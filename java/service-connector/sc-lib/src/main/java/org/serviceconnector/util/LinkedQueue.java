@@ -18,23 +18,22 @@ package org.serviceconnector.util;
 
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class LinkedQueue. Base Queue to implement consumer/producer modules.
- * 
- * @param <E>
- *            the element type
+ *
+ * @param <E> the element type
  */
 public class LinkedQueue<E> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(LinkedQueue.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LinkedQueue.class);
 
 	/**
-	 * The first actual node, if it exists, is always at this.head.next. After
-	 * each take, the old first node becomes the this.head.
+	 * The first actual node, if it exists, is always at this.head.next. After each take, the old first node becomes the this.head.
 	 */
 	private LinkedNode<E> head;
 	/** The this.last node of list. Put() appends to list, so modifies this.last */
@@ -54,7 +53,7 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Gets the first node.
-	 * 
+	 *
 	 * @return the first
 	 */
 	public LinkedNode<E> getFirst() {
@@ -63,7 +62,7 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Gets the this.last.
-	 * 
+	 *
 	 * @return the this.last
 	 */
 	public LinkedNode<E> getLast() {
@@ -72,7 +71,7 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Node iterator.
-	 * 
+	 *
 	 * @return the iterator
 	 */
 	public Iterator<LinkedNode<E>> nodeIterator() {
@@ -81,7 +80,7 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Gets the this.size.
-	 * 
+	 *
 	 * @return the this.size
 	 */
 	public int getSize() {
@@ -90,9 +89,8 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Main mechanics to insert in queue. Null value not allowed.
-	 * 
-	 * @param value
-	 *            the value for new node
+	 *
+	 * @param value the value for new node
 	 * @return the linked node
 	 */
 	public LinkedNode<E> insert(E value) {
@@ -106,9 +104,8 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Main mechanics for extract from queue. If no message in queue null will
-	 * be returned.
-	 * 
+	 * Main mechanics for extract from queue. If no message in queue null will be returned.
+	 *
 	 * @return the object
 	 */
 	public synchronized E extract() {
@@ -126,9 +123,8 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Peek. Returns first value - if there is no first node null will be
-	 * returned.
-	 * 
+	 * Peek. Returns first value - if there is no first node null will be returned.
+	 *
 	 * @return the object
 	 */
 	public E peek() {
@@ -144,7 +140,7 @@ public class LinkedQueue<E> {
 
 	/**
 	 * Checks if is empty.
-	 * 
+	 *
 	 * @return true, if is empty
 	 */
 	public boolean isEmpty() {
@@ -155,9 +151,8 @@ public class LinkedQueue<E> {
 
 	/**
 	 * The Class LinkedQueueNodeIterator.
-	 * 
-	 * @param <E>
-	 *            the element type
+	 *
+	 * @param <E> the element type
 	 */
 	@SuppressWarnings("hiding")
 	private class LinkedQueueNodeIterator<E> implements Iterator<LinkedNode<E>> {
@@ -173,7 +168,9 @@ public class LinkedQueue<E> {
 			this.node = (LinkedNode<E>) LinkedQueue.this.getFirst();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.util.Iterator#hasNext()
 		 */
 		@Override
@@ -181,7 +178,9 @@ public class LinkedQueue<E> {
 			return this.node != null;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.util.Iterator#next()
 		 */
 		@Override
@@ -192,7 +191,9 @@ public class LinkedQueue<E> {
 			return ret;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.util.Iterator#remove()
 		 */
 		@Override

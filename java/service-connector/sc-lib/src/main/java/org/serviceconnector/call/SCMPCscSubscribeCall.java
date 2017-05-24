@@ -32,11 +32,9 @@ public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMP cascaded subscribe call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToSend
-	 *            the message to send
+	 *
+	 * @param requester the requester
+	 * @param msgToSend the message to send
 	 */
 	public SCMPCscSubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
@@ -58,12 +56,11 @@ public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_SUBSCRIBE;
 	}
-	
+
 	/**
 	 * Sets the version.
-	 * 
-	 * @param version
-	 *            the new version
+	 *
+	 * @param version the new version
 	 */
 	private void setVersion(String version) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);

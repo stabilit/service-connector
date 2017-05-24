@@ -22,7 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.cache.ISCCacheModule;
@@ -51,15 +52,15 @@ import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.web.NotFoundException;
 
 /**
- * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
- * testing/maintaining reasons. Returns dumps of internal stuff to requester.
- * 
+ * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for testing/maintaining reasons. Returns dumps of internal stuff
+ * to requester.
+ *
  * @author JTraber
  */
 public class InspectCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(InspectCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(InspectCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -69,8 +70,7 @@ public class InspectCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public final void run(final IRequest request, final IResponse response, final IResponderCallback responderCallback)
-			throws Exception {
+	public final void run(final IRequest request, final IResponse response, final IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
@@ -179,19 +179,14 @@ public class InspectCommand extends CommandAdapter {
 
 	/**
 	 * Gets the cache inspect string for given serviceName and cacheId.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param cacheKey
-	 *            the cache key
+	 *
+	 * @param serviceName the service name
+	 * @param cacheKey the cache key
 	 * @return the cache inspect string
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 * @throws UnsupportedEncodingException
-	 *             encoding response string failed
+	 * @throws SCMPCommandException the SCMP command exception
+	 * @throws UnsupportedEncodingException encoding response string failed
 	 */
-	private String getCacheInspectString(final String serviceName, final String cacheKey) throws SCMPCommandException,
-			UnsupportedEncodingException {
+	private String getCacheInspectString(final String serviceName, final String cacheKey) throws SCMPCommandException, UnsupportedEncodingException {
 		SCCache cache = AppContext.getSCCache();
 		if (cache == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, "no cache (null)");
@@ -206,7 +201,7 @@ public class InspectCommand extends CommandAdapter {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		SCCacheMetaEntry metaEntry = (SCCacheMetaEntry) scCacheModule.get(cacheKey);
+		SCCacheMetaEntry metaEntry = scCacheModule.get(cacheKey);
 		if (metaEntry == null) {
 			return URLString.toURLResponseString(Constants.CACHE_ID, cacheKey, "return", "notfound");
 		}
@@ -232,12 +227,10 @@ public class InspectCommand extends CommandAdapter {
 
 	/**
 	 * Gets the sessions of services string.
-	 * 
-	 * @param serviceNameRegex
-	 *            the service name regex
+	 *
+	 * @param serviceNameRegex the service name regex
 	 * @return the sessions of services string
-	 * @throws NotFoundException
-	 *             pattern not found
+	 * @throws NotFoundException pattern not found
 	 */
 	private String getSessionsOfServicesString(String serviceNameRegex) throws NotFoundException {
 		boolean found = false;
@@ -246,8 +239,7 @@ public class InspectCommand extends CommandAdapter {
 		Service[] services = this.serviceRegistry.getServices();
 		int counter = 0;
 		for (Service service : services) {
-			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE
-					&& service.getType() != ServiceType.CACHE_GUARDIAN) {
+			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE && service.getType() != ServiceType.CACHE_GUARDIAN) {
 				continue;
 			}
 			if (service.getName().matches(serviceNameRegex) == false) {
@@ -255,38 +247,38 @@ public class InspectCommand extends CommandAdapter {
 				continue;
 			}
 			switch (service.getType()) {
-			case SESSION_SERVICE:
-			case PUBLISH_SERVICE:
-			case CACHE_GUARDIAN:
-				if (counter != 0) {
-					sb.append(Constants.AMPERSAND_SIGN);
-				}
-				counter++;
-				StatefulService statefulService = (StatefulService) service;
-				sb.append(statefulService.getName());
-				sb.append(Constants.EQUAL_SIGN);
-				sb.append(statefulService.getCountAllocatedSessions());
-				sb.append(Constants.SLASH);
-				sb.append(statefulService.getCountAvailableSessions());
-				found = true;
-				break;
-			case FILE_SERVICE:
-			case CASCADED_FILE_SERVICE:
-			case CASCADED_PUBLISH_SERVICE:
-			case CASCADED_SESSION_SERVICE:
-			case CASCADED_CACHE_GUARDIAN:
-				if (counter != 0) {
-					sb.append(Constants.AMPERSAND_SIGN);
-				}
-				counter++;
-				statefulService = (StatefulService) service;
-				sb.append(statefulService.getName());
-				sb.append(Constants.EQUAL_SIGN);
-				sb.append("-/-");
-				found = true;
-				break;
-			default:
-				continue;
+				case SESSION_SERVICE:
+				case PUBLISH_SERVICE:
+				case CACHE_GUARDIAN:
+					if (counter != 0) {
+						sb.append(Constants.AMPERSAND_SIGN);
+					}
+					counter++;
+					StatefulService statefulService = (StatefulService) service;
+					sb.append(statefulService.getName());
+					sb.append(Constants.EQUAL_SIGN);
+					sb.append(statefulService.getCountAllocatedSessions());
+					sb.append(Constants.SLASH);
+					sb.append(statefulService.getCountAvailableSessions());
+					found = true;
+					break;
+				case FILE_SERVICE:
+				case CASCADED_FILE_SERVICE:
+				case CASCADED_PUBLISH_SERVICE:
+				case CASCADED_SESSION_SERVICE:
+				case CASCADED_CACHE_GUARDIAN:
+					if (counter != 0) {
+						sb.append(Constants.AMPERSAND_SIGN);
+					}
+					counter++;
+					statefulService = (StatefulService) service;
+					sb.append(statefulService.getName());
+					sb.append(Constants.EQUAL_SIGN);
+					sb.append("-/-");
+					found = true;
+					break;
+				default:
+					continue;
 			}
 		}
 		if (found == false) {
@@ -297,12 +289,10 @@ public class InspectCommand extends CommandAdapter {
 
 	/**
 	 * Gets the state of services string.
-	 * 
-	 * @param serviceNameRegex
-	 *            the service name regex
+	 *
+	 * @param serviceNameRegex the service name regex
 	 * @return the state of services string
-	 * @throws NotFoundException
-	 *             pattern not found
+	 * @throws NotFoundException pattern not found
 	 */
 	private String getStateOfServicesString(String serviceNameRegex) throws NotFoundException {
 		boolean found = false;
@@ -336,12 +326,10 @@ public class InspectCommand extends CommandAdapter {
 
 	/**
 	 * Gets the service configuration string. No regex allowed for service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the service configuration string
-	 * @throws NotFoundException
-	 *             service name not found
+	 * @throws NotFoundException service name not found
 	 */
 	private String getServiceConfigurationString(String serviceName) throws NotFoundException {
 		StringBuilder sb = new StringBuilder();

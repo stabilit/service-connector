@@ -30,9 +30,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import net.sf.ehcache.config.InvalidConfigurationException;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
@@ -44,17 +43,17 @@ import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.xml.IXMLLoader;
 
+import net.sf.ehcache.config.InvalidConfigurationException;
+
 /**
- * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based model
- * and the view is built using
- * xsl transformation.
- * 
+ * The Class WebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based model and the view is built using xsl transformation.
+ *
  * @author JTraber
  */
 public class WebCommand {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(WebCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebCommand.class);
 
 	public void run(IWebRequest request, IWebResponse response) throws Exception {
 		// check if session is available
@@ -136,9 +135,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is xML view.
-	 * 
-	 * @param request
-	 *            the request
+	 *
+	 * @param request the request
 	 * @return true, if is xML view
 	 */
 	private boolean isXMLView(IWebRequest request) {
@@ -148,9 +146,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is login action.
-	 * 
-	 * @param request
-	 *            the request
+	 *
+	 * @param request the request
 	 * @return true, if is login action
 	 */
 	private boolean isLoginAction(IWebRequest request) {
@@ -160,9 +157,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is logout action.
-	 * 
-	 * @param request
-	 *            the request
+	 *
+	 * @param request the request
 	 * @return true, if is logout action
 	 */
 	private boolean isLogoutAction(IWebRequest request) {
@@ -172,13 +168,10 @@ public class WebCommand {
 
 	/**
 	 * Dump stream.
-	 * 
-	 * @param is
-	 *            the is
-	 * @param os
-	 *            the os
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param is the is
+	 * @param os the os
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void dumpStream(InputStream is, OutputStream os) throws IOException {
 		byte[] buffer = new byte[Constants.SIZE_64KB];
@@ -191,9 +184,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is resource.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return true, if is resource
 	 */
 	private boolean isResource(String url) {
@@ -202,9 +194,8 @@ public class WebCommand {
 
 	/**
 	 * Gets the resource path.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return the resource path
 	 */
 	public String getResourcePath(String url) {
@@ -223,9 +214,8 @@ public class WebCommand {
 
 	/**
 	 * Gets the resource type
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return the resource type
 	 */
 	public String getResourceType(String url) {
@@ -252,9 +242,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is cSS.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return true, if is cSS
 	 */
 	private boolean isCSS(String url) {
@@ -266,9 +255,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is script.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return true, if is script
 	 */
 	private boolean isScript(String url) {
@@ -280,9 +268,8 @@ public class WebCommand {
 
 	/**
 	 * Checks if is image.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return true, if is image
 	 */
 	private boolean isImage(String url) {
@@ -312,9 +299,8 @@ public class WebCommand {
 
 		/**
 		 * Instantiates a new xML document.
-		 * 
-		 * @param request
-		 *            the request
+		 *
+		 * @param request the request
 		 */
 		public XMLDocument(IWebRequest request) {
 			this.request = request;
@@ -326,7 +312,7 @@ public class WebCommand {
 
 		/**
 		 * Checks if is text.
-		 * 
+		 *
 		 * @return true, if is text
 		 */
 		public boolean isText() {
@@ -335,9 +321,8 @@ public class WebCommand {
 
 		/**
 		 * Sets the credentials.
-		 * 
-		 * @param credentials
-		 *            the new credentials
+		 *
+		 * @param credentials the new credentials
 		 */
 		public void setCredentials(WebCredentials credentials) {
 			this.credentials = credentials;
@@ -345,9 +330,8 @@ public class WebCommand {
 
 		/**
 		 * Adds the exception which will be render into xml meta tag.
-		 * 
-		 * @param ex
-		 *            the ex
+		 *
+		 * @param ex the ex
 		 */
 		public void addException(Exception ex) {
 			this.exceptionList.add(ex);
@@ -355,9 +339,8 @@ public class WebCommand {
 
 		/**
 		 * Adds the message.
-		 * 
-		 * @param msg
-		 *            the msg
+		 *
+		 * @param msg the msg
 		 */
 		@SuppressWarnings("unused")
 		public void addMessage(String msg) {
@@ -366,9 +349,8 @@ public class WebCommand {
 
 		/**
 		 * Adds the error message.
-		 * 
-		 * @param msg
-		 *            the msg
+		 *
+		 * @param msg the msg
 		 */
 		public void addErrorMessage(String msg) {
 			this.messageList.add(new Message(msg, "error"));
@@ -376,11 +358,9 @@ public class WebCommand {
 
 		/**
 		 * Load.
-		 * 
-		 * @param os
-		 *            the os
-		 * @throws Exception
-		 *             the exception
+		 *
+		 * @param os the os
+		 * @throws Exception the exception
 		 */
 		public void load(OutputStream os) throws Exception {
 			for (Exception e : exceptionList) {
@@ -408,11 +388,9 @@ public class WebCommand {
 
 			/**
 			 * Instantiates a new message.
-			 * 
-			 * @param text
-			 *            the text
-			 * @param type
-			 *            the type
+			 *
+			 * @param text the text
+			 * @param type the type
 			 */
 			public Message(String text, String type) {
 				this.map = new HashMap<String, String>();
@@ -422,7 +400,7 @@ public class WebCommand {
 
 			/**
 			 * Gets the map.
-			 * 
+			 *
 			 * @return the map
 			 */
 			public Map<String, String> getMap() {
@@ -444,9 +422,8 @@ public class WebCommand {
 
 		/**
 		 * Instantiates a new xSL document.
-		 * 
-		 * @param request
-		 *            the request
+		 *
+		 * @param request the request
 		 */
 		public XSLDocument(IWebRequest request) {
 			this.request = request;
@@ -455,9 +432,8 @@ public class WebCommand {
 
 		/**
 		 * Sets the credentials.
-		 * 
-		 * @param credentials
-		 *            the new credentials
+		 *
+		 * @param credentials the new credentials
 		 */
 		public void setCredentials(WebCredentials credentials) {
 			this.credentials = credentials;
@@ -465,9 +441,8 @@ public class WebCommand {
 
 		/**
 		 * Gets the xSL path.
-		 * 
-		 * @param url
-		 *            the url
+		 *
+		 * @param url the url
 		 * @return the xSL path
 		 */
 		private String getXSLPath(String url) {
@@ -498,9 +473,8 @@ public class WebCommand {
 
 		/**
 		 * Checks if is ajax.
-		 * 
-		 * @param url
-		 *            the url
+		 *
+		 * @param url the url
 		 * @return true, if is ajax
 		 */
 		private boolean isAjax(String url) {
@@ -512,13 +486,10 @@ public class WebCommand {
 
 		/**
 		 * Transform.
-		 * 
-		 * @param xmlInputStream
-		 *            the xml input stream
-		 * @param resultOutputStream
-		 *            the result output stream
-		 * @throws Exception
-		 *             the exception
+		 *
+		 * @param xmlInputStream the xml input stream
+		 * @param resultOutputStream the result output stream
+		 * @throws Exception the exception
 		 */
 		public void transform(InputStream xmlInputStream, OutputStream resultOutputStream) throws Exception {
 			String xslPath = this.getXSLPath(null);

@@ -16,30 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPSrvDeleteSessionCall. Call deletes session on backend server.
- * 
+ *
  * @author JTraber
  */
 public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSrvDeleteSessionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSrvDeleteSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvDeleteSessionCall.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *
+	 * @param req the requester
+	 * @param receivedMessage the received message
 	 */
 	public SCMPSrvDeleteSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);

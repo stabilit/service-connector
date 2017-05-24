@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -31,13 +32,12 @@ public class SCMPManageCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPManageCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPManageCall.class);
 
 	/**
 	 * Instantiates a new SCMPManageCall.
-	 * 
-	 * @param req
-	 *            the client to use when invoking call
+	 *
+	 * @param req the client to use when invoking call
 	 */
 	public SCMPManageCall(IRequester req) {
 		super(req);
@@ -59,9 +59,8 @@ public class SCMPManageCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

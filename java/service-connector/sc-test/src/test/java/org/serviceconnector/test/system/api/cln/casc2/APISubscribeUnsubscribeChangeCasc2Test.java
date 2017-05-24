@@ -24,18 +24,20 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 public class APISubscribeUnsubscribeChangeCasc2Test extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeCasc2Test() {
-		APISubscribeUnsubscribeChangeCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		APISystemSuperPublishClientTest.setUp2CascadedServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: two clients subscribe to a message queue, the server gets destroyed<br>
 	 * Expectation: clients get a not found error, passes
 	 */
+	@Override
 	@Test
 	public void t95_TwoSubscribersServerGetsDestroyed() throws Exception {
 		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC2_TCP, ConnectionType.NETTY_TCP);

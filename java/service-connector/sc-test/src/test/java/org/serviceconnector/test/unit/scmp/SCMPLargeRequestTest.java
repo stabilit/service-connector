@@ -16,17 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.scmp;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPOffsetPart;
 import org.serviceconnector.scmp.SCMPVersion;
 
+import junit.framework.Assert;
+
 /**
  * The Class SCMPLargeRequestTest.
- * 
+ *
  * @author JTraber
  */
 public class SCMPLargeRequestTest {

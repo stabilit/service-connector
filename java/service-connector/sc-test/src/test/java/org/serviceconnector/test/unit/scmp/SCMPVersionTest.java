@@ -22,7 +22,7 @@ import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPVersionTest.
- * 
+ *
  * @author JTrnka
  */
 public class SCMPVersionTest {

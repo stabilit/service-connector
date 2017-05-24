@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
@@ -39,7 +40,7 @@ import org.serviceconnector.service.Session;
 public class ExecuteCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ExecuteCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -59,15 +60,11 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Instantiates a new ExecuteCommandCallback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param sessionId the session id
 	 */
 	public ExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback, String sessionId) {
 		this.responderCallback = callback;
@@ -111,8 +108,7 @@ public class ExecuteCommandCallback implements ISCMPMessageCallback {
 		SCMPVersion scmpVersion = this.requestMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMPVersion request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid="
-					+ this.sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC sid=" + this.sid);
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection to server sid=" + this.sid);
 		} else {

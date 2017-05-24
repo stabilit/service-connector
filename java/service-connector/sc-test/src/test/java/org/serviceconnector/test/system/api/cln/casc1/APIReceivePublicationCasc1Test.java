@@ -30,9 +30,10 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientTest {
 
 	public APIReceivePublicationCasc1Test() {
-		APIReceivePublicationCasc1Test.setUp1CascadedServiceConnectorAndServer();
+		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -247,8 +248,7 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 	}
 
 	/**
-	 * Description: two message receives - waitTime on server is longer than subscriptionTimeout, it verifies timer are scheduled
-	 * correctly<br>
+	 * Description: two message receives - waitTime on server is longer than subscriptionTimeout, it verifies timer are scheduled correctly<br>
 	 * Expectation: passes
 	 */
 	@Test

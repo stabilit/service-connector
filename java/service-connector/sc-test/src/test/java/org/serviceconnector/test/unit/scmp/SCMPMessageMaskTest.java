@@ -68,7 +68,7 @@ public class SCMPMessageMaskTest {
 	/**
 	 * Description: Combine to masks<br>
 	 * Expectation: passes
-	 * 
+	 *
 	 * @throws InvalidMaskLengthException
 	 */
 	@Test

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.ctx.AppContext;
@@ -39,14 +40,12 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.scmp.SCMPVersion;
 
 /**
- * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY
- * threading concept.
- * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.
- * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
+ * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY threading concept. A worker thread owns a channel
+ * pipeline. If block the thread nothing will be sent on that channel. More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
  */
 public class NettyResponderRequestHandlerTask implements IResponderCallback {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyResponderRequestHandlerTask.class);
 	/** The composite registry. */
 	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
 
@@ -57,11 +56,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 
 	/**
 	 * Instantiates a new netty responder request handler task.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
+	 *
+	 * @param request the request
+	 * @param response the response
 	 */
 	public NettyResponderRequestHandlerTask(IRequest request, IResponse response) {
 		this.request = request;
@@ -77,8 +74,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 			request.load();
 			SCMPMessage scmpReq = request.getMessage();
 			String sessionId = scmpReq.getSessionId();
-			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry
-					.getSCMPMsgSequenceNr(sessionId);
+			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPMsgSequenceNr(sessionId);
 
 			if (scmpReq.isKeepAlive()) {
 				scmpReq.setIsReply(true);
@@ -108,8 +104,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 
 			if (command.isPassThroughPartMsg() == false) {
 				// large messages needs to be handled
-				SCMPCompositeSender largeResponse = NettyResponderRequestHandlerTask.compositeRegistry
-						.getSCMPLargeResponse(sessionId);
+				SCMPCompositeSender largeResponse = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPLargeResponse(sessionId);
 
 				if (largeResponse != null && scmpReq.isPart()) {
 					// sending of a large response has already been started and incoming scmp is a pull request
@@ -169,20 +164,16 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 
 	/**
 	 * Gets the SCMP large request.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
+	 *
+	 * @param request the request
+	 * @param response the response
 	 * @return the SCMP large response
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private SCMPCompositeReceiver getSCMPLargeRequest(IRequest request, IResponse response) throws Exception {
 		SCMPMessage scmpReq = request.getMessage();
 		String sessionId = scmpReq.getSessionId();
-		SCMPCompositeReceiver largeRequest = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPLargeRequest(scmpReq
-				.getSessionId());
+		SCMPCompositeReceiver largeRequest = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPLargeRequest(scmpReq.getSessionId());
 
 		if (largeRequest == null) {
 			// no compositeReceiver used before
@@ -250,17 +241,13 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback {
 
 	/**
 	 * Send bad request error.
-	 * 
-	 * @param response
-	 *            the response
-	 * @param scmpReq
-	 *            the SCMP request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param response the response
+	 * @param scmpReq the SCMP request
+	 * @throws Exception the exception
 	 */
 	protected void sendBadRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPMessageFault scmpFault = new SCMPMessageFault(scmpReq.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType="
-				+ scmpReq.getMessageType());
+		SCMPMessageFault scmpFault = new SCMPMessageFault(scmpReq.getSCMPVersion(), SCMPError.BAD_REQUEST, "messagType=" + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);

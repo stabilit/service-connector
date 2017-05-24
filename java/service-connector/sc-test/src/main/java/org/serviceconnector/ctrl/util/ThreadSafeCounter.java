@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.ctrl.util;
 
-
 public class ThreadSafeCounter {
 	private volatile int counter = 0;
 

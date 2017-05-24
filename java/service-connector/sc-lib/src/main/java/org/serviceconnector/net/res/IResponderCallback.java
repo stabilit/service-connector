@@ -20,18 +20,16 @@ import org.serviceconnector.net.req.IRequest;
 
 /**
  * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous commands.
- * 
+ *
  * @author JTraber
  */
 public interface IResponderCallback {
 
 	/**
 	 * Response callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
+	 *
+	 * @param request the request
+	 * @param response the response
 	 */
 	public abstract void responseCallback(IRequest request, IResponse response);
 }

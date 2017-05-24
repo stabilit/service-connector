@@ -20,8 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +42,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
+import junit.framework.Assert;
+
 /**
  * @author JTraber
  */
@@ -56,12 +56,13 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SCMPClnExecuteCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		if (cascadingLevel == 1) {
-			this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+			this.requester = new SCRequester(
+					new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 			AppContext.init();
 			this.createSession();
 		}
@@ -85,13 +86,13 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	public static void setUpServer() {
 		// needs a server with 1 session/connection
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		this.deleteSession();
@@ -139,8 +140,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: execute - message of type stream is always exchanged
-	 * uncompressed, ignores compression<br>
+	 * Description: execute - message of type stream is always exchanged uncompressed, ignores compression<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -170,8 +170,9 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		for (int i = 0; i < 100; i++) {
 			callback.messageReceived = false;
 			clnExecuteCall.invoke(callback, 3000);
-			while (callback.messageReceived == false)
+			while (callback.messageReceived == false) {
 				;
+			}
 			Assert.assertEquals(TestConstants.pangram, callback.reply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
@@ -179,8 +180,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: execute 100 times large messages - message received by
-	 * callback<br>
+	 * Description: execute 100 times large messages - message received by callback<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -194,8 +194,9 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		for (int i = 0; i < 100; i++) {
 			callback.messageReceived = false;
 			clnExecuteCall.invoke(callback, 3000);
-			while (callback.messageReceived == false)
+			while (callback.messageReceived == false) {
 				;
+			}
 			Assert.assertEquals(largeString, callback.reply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
@@ -214,13 +215,11 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		clnExecuteCall.invoke(cbk, 3000);
 		SCMPMessage scmpReply = cbk.getMessageSync(3000);
 		Assert.assertTrue(scmpReply.isFault());
-		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE)
-				.intValue());
+		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply.getHeaderInt(SCMPHeaderAttributeKey.SC_ERROR_CODE).intValue());
 	}
 
 	/**
-	 * Description: execute - application error code and application error text
-	 * returned by server<br>
+	 * Description: execute - application error code and application error text returned by server<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -392,8 +391,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: execute - waits 2 seconds - another execute times out when
-	 * waiting for free connection<br>
+	 * Description: execute - waits 2 seconds - another execute times out when waiting for free connection<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -447,8 +445,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: execute - waits 2 seconds - another execute times out when
-	 * waiting for free connection<br>
+	 * Description: execute - waits 2 seconds - another execute times out when waiting for free connection<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -545,9 +542,8 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 
 	/**
 	 * create session.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	protected void createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
@@ -561,13 +557,11 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 
 	/**
 	 * delete session.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	private void deleteSession() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1,
-				this.sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk = new TestCallback();
 		deleteSessionCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);

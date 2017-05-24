@@ -25,8 +25,6 @@ import java.util.Map;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
@@ -43,16 +41,18 @@ import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.ctx.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.
- * 
+ *
  * @author JTraber
  */
 public final class SC {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SC.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SC.class);
 
 	/**
 	 * Instantiates a new service connector.
@@ -62,11 +62,9 @@ public final class SC {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
 	 */
 	public static void main(String[] args) throws Exception {
 		// check arguments
@@ -74,13 +72,13 @@ public final class SC {
 			showError("no argumments");
 			System.exit(1);
 		}
-		LOGGER.log(Level.OFF, ">>>");
-		LOGGER.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
+		LOGGER.info(">>>");
+		LOGGER.info("Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
 			SC.run(configFileName);
 		} catch (Exception ex) {
-			LOGGER.fatal(ex.getMessage(), ex);
+			LOGGER.error(ex.getMessage(), ex);
 			showError(ex.toString());
 			System.exit(1);
 		}
@@ -88,11 +86,9 @@ public final class SC {
 
 	/**
 	 * Run SC responders.
-	 * 
-	 * @param configFileName
-	 *            the config file name
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param configFileName the config file name
+	 * @throws Exception the exception
 	 */
 	private static void run(String configFileName) throws Exception {
 		if (configFileName == null) {
@@ -139,18 +135,16 @@ public final class SC {
 		// Write PID file
 		if (AppContext.getBasicConfiguration().isWritePID()) {
 			String fs = System.getProperty("file.separator");
-			FileCtx fileCtx = FileUtility.createPIDfileAndLock(AppContext.getBasicConfiguration().getPidPath() + fs
-					+ Constants.PID_FILE_NAME);
+			FileCtx fileCtx = FileUtility.createPIDfileAndLock(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);
 			SC.addExitHandler(fileCtx);
 		}
-		LOGGER.log(Level.OFF, "Service Connector is running ...");
+		LOGGER.info("Service Connector is running ...");
 	}
 
 	/**
 	 * Initialize java management interface stuff.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	private static void initializeJMX() throws Exception {
 		// Necessary to make access for JMX client available
@@ -172,9 +166,8 @@ public final class SC {
 
 	/**
 	 * Write system info to log.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
 		LOGGER.info("SC configuration=" + SystemInfo.getConfigFileName());
@@ -224,11 +217,11 @@ public final class SC {
 		@Override
 		public void run() {
 			String fs = System.getProperty("file.separator");
-			
+
 			SCCache cache = AppContext.getSCCache();
-			if(cache.isCacheEnabled() == true) {
+			if (cache.isCacheEnabled() == true) {
 				cache.destroy();
-			}			
+			}
 			try {
 				if (this.fileCtx != null) {
 					// release the file lock
@@ -241,8 +234,8 @@ public final class SC {
 				}
 			} catch (Exception e) {
 			}
-			LOGGER.log(Level.OFF, "Service Connector exit");
-			LOGGER.log(Level.OFF, "<<<");
+			LOGGER.info("Service Connector exit");
+			LOGGER.info("<<<");
 		}
 	}
 }

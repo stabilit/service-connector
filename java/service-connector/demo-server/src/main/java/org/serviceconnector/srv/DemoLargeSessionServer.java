@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -24,7 +25,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 
 public class DemoLargeSessionServer extends DemoSessionServer {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoLargeSessionServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoLargeSessionServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -34,6 +35,7 @@ public class DemoLargeSessionServer extends DemoSessionServer {
 		sessionServer.run();
 	}
 
+	@Override
 	public SCSessionServerCallback newSrvCallback(SCSessionServer server) {
 		SCSessionServerCallback cbk = new SrvLargeCallback(server);
 		return cbk;

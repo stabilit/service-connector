@@ -19,7 +19,6 @@ package org.serviceconnector.net.res.netty.web;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
@@ -50,6 +49,8 @@ import org.serviceconnector.web.cmd.WebCommand;
 import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.netty.NettyWebRequest;
 import org.serviceconnector.web.netty.NettyWebResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyWebResponderRequestHandler.
@@ -57,7 +58,7 @@ import org.serviceconnector.web.netty.NettyWebResponse;
 public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyWebResponderRequestHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebResponderRequestHandler.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -99,7 +100,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info(th); // regular disconnect causes this expected exception
+			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);
@@ -109,8 +110,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			response.write();
 			return;
 		}
-		SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.SC_ERROR, th.getMessage()
-				+ " caught exception in web responder request handler");
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.SC_ERROR, th.getMessage() + " caught exception in web responder request handler");
 		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();

@@ -20,19 +20,18 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time. Factory is
- * always
- * returning the same instance from a map.
+ * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are
+ * only instantiated one time. Factory is always returning the same instance from a map.
  */
 public abstract class FlyweightCommandFactory {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FlyweightCommandFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FlyweightCommandFactory.class);
 	/** The map stores base instances by a key. */
 	protected static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 
@@ -44,11 +43,9 @@ public abstract class FlyweightCommandFactory {
 
 	/**
 	 * Adds the command.
-	 * 
-	 * @param messageType
-	 *            the message type
-	 * @param command
-	 *            the command
+	 *
+	 * @param messageType the message type
+	 * @param command the command
 	 */
 	public void addCommand(SCMPMsgType messageType, ICommand command) {
 		FlyweightCommandFactory.commands.put(messageType.getValue(), command);
@@ -56,9 +53,8 @@ public abstract class FlyweightCommandFactory {
 
 	/**
 	 * Gets the command.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the command
 	 */
 	public ICommand getCommand(SCMPMsgType key) {

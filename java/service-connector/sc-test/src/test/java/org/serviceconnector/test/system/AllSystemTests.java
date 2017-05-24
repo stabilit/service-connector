@@ -34,32 +34,23 @@ import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 import org.serviceconnector.test.system.scmp.SCMPClnSubscribeTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( {
+@Suite.SuiteClasses({
 		// API session tests
-		APICreateDeleteSessionTest.class,
-		APIExecuteAndSendTest.class,
-		APIAfterSCAbortOrRestartSessionTest.class,
-		APIAfterAbortOrRestartSessionTest.class,
+		APICreateDeleteSessionTest.class, APIExecuteAndSendTest.class, APIAfterSCAbortOrRestartSessionTest.class, APIAfterAbortOrRestartSessionTest.class,
 
 		// API publish tests
-		APISubscribeUnsubscribeChangeTest.class,
-		APIReceivePublicationTest.class,
-		APIMultipleClientSubscribeTest.class,
-		APIMultipleClientChangeSubscriptionTest.class,
+		APISubscribeUnsubscribeChangeTest.class, APIReceivePublicationTest.class, APIMultipleClientSubscribeTest.class, APIMultipleClientChangeSubscriptionTest.class,
 
 		// API cache test
 		APIExecuteCacheTest.class,
 
 		// SCMP session test
-		SCMPClnCreateSessionTest.class,
-		SCMPClnExecuteTest.class,
-		
+		SCMPClnCreateSessionTest.class, SCMPClnExecuteTest.class,
+
 		// SCMP publish test
-		SCMPClnChangeSubscriptionTest.class,
-		SCMPClnSubscribeTest.class,
-		
+		SCMPClnChangeSubscriptionTest.class, SCMPClnSubscribeTest.class,
+
 		// SCMP cache test
-		SCMPClnExecuteCacheTest.class
-		})
+		SCMPClnExecuteCacheTest.class })
 public class AllSystemTests {
 }

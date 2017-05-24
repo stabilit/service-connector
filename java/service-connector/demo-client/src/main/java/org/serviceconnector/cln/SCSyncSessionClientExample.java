@@ -28,9 +28,8 @@ public class SCSyncSessionClientExample {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SCSyncSessionClientExample.runExample();
@@ -84,9 +83,8 @@ public class SCSyncSessionClientExample {
 
 		/**
 		 * Instantiates a new example callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public ExampleCallback(SCSessionService service) {
 			super(service);

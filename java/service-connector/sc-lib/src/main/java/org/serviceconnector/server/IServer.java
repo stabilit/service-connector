@@ -26,29 +26,24 @@ public interface IServer {
 
 	/**
 	 * Gets the server type.
-	 * 
+	 *
 	 * @return the type
 	 */
 	public abstract ServerType getType();
 
 	/**
 	 * Abort session on server.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param reason
-	 *            the reason
+	 *
+	 * @param session the session
+	 * @param reason the reason
 	 */
 	public abstract void abortSession(AbstractSession session, String reason);
-	
-	
+
 	/**
 	 * Dump the server into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }

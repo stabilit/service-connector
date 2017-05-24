@@ -28,12 +28,12 @@ import org.serviceconnector.test.perf.api.APIPerfSuperServerTest;
 public class APIPublishBenchmark extends APIPerfSuperServerTest {
 
 	/**
-	 * Description:	publish 100000 compressed messages � 128 bytes to the server.<br>
-	 * Expectation:	passes
+	 * Description: publish 100000 compressed messages � 128 bytes to the server.<br>
+	 * Expectation: passes
 	 */
 	@Test
 	public void publish_100000_msg_compressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -46,9 +46,9 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
 		for (int i = 0; i < nrMessages; i++) {
-			if (((i+1) % 1000) == 0) {
+			if (((i + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				testLogger.info("Publishing message nr. " + (i+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				testLogger.info("Publishing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
 			publishServer.publish(publishMessage);
@@ -56,16 +56,16 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
 		testLogger.info(nrMessages + "msg � 128 byte performance=" + perf + " msg/sec.");
-		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
+		Assert.assertEquals("Performence not fast enough, only" + perf + " msg/sec.", true, perf > 1000);
 	}
 
 	/**
-	 * Description:	publish 100000 uncompressed messages � 128 bytes to the server.<br>
-	 * Expectation:	passes
+	 * Description: publish 100000 uncompressed messages � 128 bytes to the server.<br>
+	 * Expectation: passes
 	 */
 	@Test
 	public void publish_100000_msg_uncompressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -78,9 +78,9 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
 		for (int i = 0; i < nrMessages; i++) {
-			if (((i+1) % 1000) == 0) {
+			if (((i + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				testLogger.info("Publishing message nr. " + (i+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				testLogger.info("Publishing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
 			publishServer.publish(publishMessage);
@@ -88,6 +88,6 @@ public class APIPublishBenchmark extends APIPerfSuperServerTest {
 		long stop = System.currentTimeMillis();
 		long perf = nrMessages * 1000 / (stop - start);
 		testLogger.info(nrMessages + "msg � 128 byte performance=" + perf + " msg/sec.");
-		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1200);
+		Assert.assertEquals("Performence not fast enough, only" + perf + " msg/sec.", true, perf > 1200);
 	}
 }

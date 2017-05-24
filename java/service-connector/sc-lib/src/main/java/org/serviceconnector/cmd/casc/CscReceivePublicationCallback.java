@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.ctx.AppContext;
@@ -34,16 +35,15 @@ import org.serviceconnector.service.ServiceType;
 public class CscReceivePublicationCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscReceivePublicationCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscReceivePublicationCallback.class);
 
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 
 	/**
 	 * Instantiates a new cascaded receive publication callback.
-	 * 
-	 * @param cascClient
-	 *            the cascaded client
+	 *
+	 * @param cascClient the cascaded client
 	 */
 	public CscReceivePublicationCallback(CascadedClient cascClient) {
 		this.cascClient = cascClient;
@@ -67,15 +67,13 @@ public class CscReceivePublicationCallback implements ISCMPMessageCallback {
 			// got permit to continue
 			// 3. receiving reply and error handling
 			if (this.cascClient.isSubscribed() == false) {
-				LOGGER.debug("receive publication for cascaded client which is not subscribed anymore service="
-						+ cascClient.getServiceName() + " sid=" + sid);
+				LOGGER.debug("receive publication for cascaded client which is not subscribed anymore service=" + cascClient.getServiceName() + " sid=" + sid);
 				// cascaded client is not subscribed anymore - stop continuing
 				return;
 			}
 			if (reply.isFault()) {
 				// operation failed
-				LOGGER.warn("receive publication failed for cascaded client (set to be unsubscribed) service="
-						+ cascClient.getServiceName() + " sid=" + sid);
+				LOGGER.warn("receive publication failed for cascaded client (set to be unsubscribed) service=" + cascClient.getServiceName() + " sid=" + sid);
 				this.cascClient.destroy();
 				return;
 			}
@@ -83,8 +81,7 @@ public class CscReceivePublicationCallback implements ISCMPMessageCallback {
 			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 			if (noData == false) {
 				// message received,insert in queue
-				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName()
-						+ " sid=" + sid);
+				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName() + " sid=" + sid);
 
 				CascadedPublishService publishService = cascClient.getPublishService();
 				if (publishService.getType() == ServiceType.CASCADED_CACHE_GUARDIAN) {

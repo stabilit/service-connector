@@ -23,7 +23,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
-public class APIAttachBenchmark extends APIPerfSuperClientTest{
+public class APIAttachBenchmark extends APIPerfSuperClientTest {
 
 	/**
 	 * Description: Attach/detach 10000 times to SC on localhost and tcp-connection type. Measure performance <br>
@@ -36,12 +36,14 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		int sleep = 0;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 200) == 0)
+			if (((i + 1) % 200) == 0) {
 				testLogger.info("Attach/detach nr. " + (i + 1) + "...");
+			}
 			client.attach();
 			Assert.assertEquals("Client is attached", true, client.isAttached());
-			if (sleep > 0)
+			if (sleep > 0) {
 				Thread.sleep(sleep);
+			}
 			client.detach();
 			Assert.assertEquals("Client is detached", false, client.isAttached());
 		}
@@ -62,12 +64,14 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		int sleep = 0;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 200) == 0)
+			if (((i + 1) % 200) == 0) {
 				testLogger.info("Attach/detach nr. " + (i + 1) + "...");
+			}
 			client.attach();
 			Assert.assertEquals("Client is attached", true, client.isAttached());
-			if (sleep > 0)
+			if (sleep > 0) {
 				Thread.sleep(sleep);
+			}
 			client.detach();
 			Assert.assertEquals("Client is detached", false, client.isAttached());
 		}
@@ -77,29 +81,32 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		Assert.assertEquals(true, perf > 50);
 	}
 
-
 	/**
 	 * Description: Attach 5000 clients then detach them all.<br>
-	 * Expectation:	All clients are detached.
+	 * Expectation: All clients are detached.
 	 */
 	@Test
 	public void t_5000_clients_http() throws Exception {
 		int nr = 5000;
 		SCClient[] clients = new SCClient[nr];
 		// create clients
-		for (int i= 0; i < nr; i++) {
+		for (int i = 0; i < nr; i++) {
 			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP);
 		}
-		//attach
+		// attach
 		long start = System.currentTimeMillis();
-		for (int i= 0; i < nr; i++) {
-			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
+		for (int i = 0; i < nr; i++) {
+			if (((i + 1) % 200) == 0) {
+				testLogger.info("Attaching client nr. " + (i + 1));
+			}
 			clients[i].attach();
 			Assert.assertEquals("Client is not attached", true, clients[i].isAttached());
 		}
-		//detach
+		// detach
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
+			if (((i + 1) % 200) == 0) {
+				testLogger.info("Detaching client nr. " + (i + 1) + "...");
+			}
 			clients[i].detach();
 			Assert.assertEquals("Client is attached", false, clients[i].isAttached());
 		}
@@ -112,26 +119,30 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 
 	/**
 	 * Description: Attach 5000 clients then detach them all.<br>
-	 * Expectation:	All clients are detached.
+	 * Expectation: All clients are detached.
 	 */
 	@Test
 	public void t_5000_clients_tcp() throws Exception {
 		int nr = 5000;
 		SCClient[] clients = new SCClient[nr];
 		// create clients
-		for (int i= 0; i < nr; i++) {
+		for (int i = 0; i < nr; i++) {
 			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		}
-		//attach
+		// attach
 		long start = System.currentTimeMillis();
-		for (int i= 0; i < nr; i++) {
-			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
+		for (int i = 0; i < nr; i++) {
+			if (((i + 1) % 200) == 0) {
+				testLogger.info("Attaching client nr. " + (i + 1));
+			}
 			clients[i].attach();
 			Assert.assertEquals("Client is not attached", true, clients[i].isAttached());
 		}
-		//detach
+		// detach
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
+			if (((i + 1) % 200) == 0) {
+				testLogger.info("Detaching client nr. " + (i + 1) + "...");
+			}
 			clients[i].detach();
 			Assert.assertEquals("Client is attached", false, clients[i].isAttached());
 		}

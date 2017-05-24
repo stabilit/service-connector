@@ -26,20 +26,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class URLString supports the following format:
- * key1=value1&key2=value2&...
- * All keys and values url encoded (see {@link java.net.URLEncoder}) using default encoding
- * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using default encoding
- * This class is not synchronized.
+ * The Class URLString supports the following format: key1=value1&key2=value2&... All keys and values url encoded (see {@link java.net.URLEncoder}) using default encoding The parse
+ * Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using default encoding This class is not synchronized.
  */
 public class URLString {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(URLString.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(URLString.class);
 	/** The parameters. */
 	private Map<String, String> map;
 	/** The call key. */
@@ -54,9 +52,8 @@ public class URLString {
 
 	/**
 	 * Gets the value for given key if found or null.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the value
 	 */
 	public String getParamValue(String key) {
@@ -65,7 +62,7 @@ public class URLString {
 
 	/**
 	 * Gets the response parameters.
-	 * 
+	 *
 	 * @return the entries
 	 */
 	public Set<Entry<String, String>> getParameterSet() {
@@ -74,7 +71,7 @@ public class URLString {
 
 	/**
 	 * Gets the parameter map.
-	 * 
+	 *
 	 * @return the parameter map
 	 */
 	public Map<String, String> getParameterMap() {
@@ -83,11 +80,9 @@ public class URLString {
 
 	/**
 	 * Put key and value, if same key exists then replace its value.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public void putParam(String key, String value) {
 		this.map.put(key, value);
@@ -95,7 +90,7 @@ public class URLString {
 
 	/**
 	 * Gets the call key.
-	 * 
+	 *
 	 * @return the call key
 	 */
 	public String getCallKey() {
@@ -104,9 +99,8 @@ public class URLString {
 
 	/**
 	 * Sets the call key.
-	 * 
-	 * @param callKey
-	 *            the new call key
+	 *
+	 * @param callKey the new call key
 	 */
 	public void setCallKey(String callKey) {
 		this.callKey = callKey;
@@ -114,11 +108,9 @@ public class URLString {
 
 	/**
 	 * Parses the url encoded parameter string into this instance.
-	 * 
-	 * @param encodedString
-	 *            the encoded string
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
+	 *
+	 * @param encodedString the encoded string
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
 	public void parseResponseURLString(String encodedString) throws UnsupportedEncodingException {
 		if (encodedString == null) {
@@ -127,8 +119,8 @@ public class URLString {
 		try {
 			String[] parameterStringArray = encodedString.split(Constants.AMPERSAND_SIGN);
 			this.map = new HashMap<String, String>();
-			for (int i = 0; i < parameterStringArray.length; i++) {
-				String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
+			for (String element : parameterStringArray) {
+				String[] splitted = element.split(Constants.EQUAL_SIGN);
 				if (splitted.length == 2) {
 					String key = URLDecoder.decode(splitted[0], Constants.SC_CHARACTER_SET);
 					String value = URLDecoder.decode(splitted[1], Constants.SC_CHARACTER_SET);
@@ -136,18 +128,16 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug(String.format("An exception occured while parsing the following string: ", encodedString), e);
 			throw new UnsupportedEncodingException("unsupported url response string");
 		}
 	}
 
 	/**
 	 * Parses the request url string.
-	 * 
-	 * @param encodedString
-	 *            the encoded string
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
+	 *
+	 * @param encodedString the encoded string
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
 	public void parseRequestURLString(String encodedString) throws UnsupportedEncodingException {
 		if (encodedString == null) {
@@ -166,8 +156,7 @@ public class URLString {
 			String params = encodedString.substring(posQuestionMark + 1);
 			LOGGER.trace("params found: params=" + params);
 			String[] keyValuePairs = params.split("\\" + Constants.AMPERSAND_SIGN);
-			for (int i = 0; i < keyValuePairs.length; i++) {
-				String keyValuePair = keyValuePairs[i];
+			for (String keyValuePair : keyValuePairs) {
 				String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
 				String key = URLDecoder.decode(keyValue[0], Constants.SC_CHARACTER_SET);
 				String value = URLDecoder.decode(keyValue[1], Constants.SC_CHARACTER_SET);
@@ -175,17 +164,17 @@ public class URLString {
 				this.map.put(key, value);
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug(String.format("An exception occured while parsing the following string: ", encodedString), e);
 			throw new UnsupportedEncodingException("unsupported url encoding format");
 		}
 	}
 
 	/**
-	 * return url encoded string
-	 * callKey=parameter1&parameter2&parameter3&...
-	 * 
+	 * return url encoded string callKey=parameter1&parameter2&parameter3&...
+	 *
 	 * @return the string
 	 */
+	@Override
 	public String toString() {
 		try {
 			int index = 0;
@@ -208,7 +197,6 @@ public class URLString {
 			}
 			return sb.toString();
 		} catch (Exception e) {
-			LOGGER.debug(e);
 			LOGGER.debug("unsupported url encoding format", e);
 		}
 		return null;
@@ -216,12 +204,10 @@ public class URLString {
 
 	/**
 	 * Converts the key value map into a URL response string.
-	 * 
-	 * @param parameters
-	 *            the parameters
+	 *
+	 * @param parameters the parameters
 	 * @return the string
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
 	public static String toURLResponseString(String... parameters) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
@@ -235,7 +221,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug("An exception occured", e);
 			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
@@ -243,12 +229,10 @@ public class URLString {
 
 	/**
 	 * Converts the key value map into a URL response string.
-	 * 
-	 * @param responseParameter
-	 *            the response parameter
+	 *
+	 * @param responseParameter the response parameter
 	 * @return the string
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
 	public static String toURLResponseString(Map<String, String> responseParameter) throws UnsupportedEncodingException {
 		int index = 0;
@@ -272,7 +256,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug("An exception occured", e);
 			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
@@ -280,12 +264,10 @@ public class URLString {
 
 	/**
 	 * To url request string.
-	 * 
-	 * @param parameters
-	 *            the parameters
+	 *
+	 * @param parameters the parameters
 	 * @return the string
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
 	public static String toURLRequestString(String... parameters) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
@@ -303,7 +285,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug("An exception occured", e);
 			throw new UnsupportedEncodingException("unsupported request parameters");
 		}
 		return sb.toString();

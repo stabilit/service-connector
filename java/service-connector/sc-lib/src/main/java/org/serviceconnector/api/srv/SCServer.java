@@ -74,13 +74,10 @@ public class SCServer {
 
 	/**
 	 * Instantiates a new SC server.
-	 * 
-	 * @param scHost
-	 *            the SC host
-	 * @param scPort
-	 *            the SC port
-	 * @param listenerPort
-	 *            the listener port
+	 *
+	 * @param scHost the SC host
+	 * @param scPort the SC port
+	 * @param listenerPort the listener port
 	 */
 	public SCServer(String scHost, int scPort, int listenerPort) {
 		this(scHost, scPort, null, listenerPort, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
@@ -88,15 +85,11 @@ public class SCServer {
 
 	/**
 	 * Instantiates a new SC server.
-	 * 
-	 * @param scHost
-	 *            the SC host
-	 * @param scPort
-	 *            the SC port
-	 * @param listenerPort
-	 *            the listener port
-	 * @param connectionType
-	 *            the connection type
+	 *
+	 * @param scHost the SC host
+	 * @param scPort the SC port
+	 * @param listenerPort the listener port
+	 * @param connectionType the connection type
 	 */
 	public SCServer(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
 		this(scHost, scPort, null, listenerPort, connectionType);
@@ -104,17 +97,12 @@ public class SCServer {
 
 	/**
 	 * Instantiates a new SC server.
-	 * 
-	 * @param scHost
-	 *            the SC host
-	 * @param scPort
-	 *            the SC port
-	 * @param networkInterfaces
-	 *            the network interfaces
-	 * @param listenerPort
-	 *            the listener port
-	 * @param connectionType
-	 *            the connection type
+	 *
+	 * @param scHost the SC host
+	 * @param scPort the SC port
+	 * @param networkInterfaces the network interfaces
+	 * @param listenerPort the listener port
+	 * @param connectionType the connection type
 	 */
 	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort, ConnectionType connectionType) {
 		this.nics = networkInterfaces;
@@ -133,7 +121,7 @@ public class SCServer {
 
 	/**
 	 * Gets the connection type.
-	 * 
+	 *
 	 * @return the connection type
 	 */
 	public ConnectionType getConnectionType() {
@@ -142,7 +130,7 @@ public class SCServer {
 
 	/**
 	 * Gets the SC host.
-	 * 
+	 *
 	 * @return the SC host
 	 */
 	public String getSCHost() {
@@ -151,7 +139,7 @@ public class SCServer {
 
 	/**
 	 * Gets the SC port.
-	 * 
+	 *
 	 * @return the SC port
 	 */
 	public int getSCPort() {
@@ -160,7 +148,7 @@ public class SCServer {
 
 	/**
 	 * Gets the listener port.
-	 * 
+	 *
 	 * @return the listener port
 	 */
 	public int getListenerPort() {
@@ -169,7 +157,7 @@ public class SCServer {
 
 	/**
 	 * Gets the listener interfaces.
-	 * 
+	 *
 	 * @return the listener interfaces
 	 */
 	public List<String> getListenerInterfaces() {
@@ -177,13 +165,10 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to
-	 * server at the time registerServer is received.
-	 * 
-	 * @param immediateConnect
-	 *            immediate connect
-	 * @throws SCServiceException
-	 *             listener is already started<br />
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to server at the time registerServer is received.
+	 *
+	 * @param immediateConnect immediate connect
+	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setImmediateConnect(boolean immediateConnect) throws SCServiceException {
 		if (this.listening == true) {
@@ -194,7 +179,7 @@ public class SCServer {
 
 	/**
 	 * Checks if is immediate connect flag is set.
-	 * 
+	 *
 	 * @return true, if is immediate connect
 	 */
 	public boolean isImmediateConnect() {
@@ -203,7 +188,7 @@ public class SCServer {
 
 	/**
 	 * Checks if server is listening.
-	 * 
+	 *
 	 * @return true, if is listening
 	 */
 	public boolean isListening() {
@@ -212,7 +197,7 @@ public class SCServer {
 
 	/**
 	 * Gets the keep alive interval seconds.
-	 * 
+	 *
 	 * @return the keep alive interval seconds
 	 */
 	public int getKeepAliveIntervalSeconds() {
@@ -220,14 +205,11 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive
-	 * message is solely used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle
-	 * connection. The value = 0 means no keep alive messages will be sent.
-	 * 
-	 * @param keepAliveIntervalSeconds
-	 *            Example: 360
-	 * @throws SCServiceException
-	 *             listener is already started<br />
+	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive message is solely used to refresh the firewall
+	 * timeout on the network path. KeepAlive message is only sent on an idle connection. The value = 0 means no keep alive messages will be sent.
+	 *
+	 * @param keepAliveIntervalSeconds Example: 360
+	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCServiceException {
 		if (this.listening == true) {
@@ -237,30 +219,24 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the keep alive timeout in seconds. Time in seconds a keep alive request waits to be confirmed. If no confirmation is
-	 * received single connection gets closed.
-	 * 
-	 * @param keepAliveTimeoutSeconds
-	 *            time to wait for completion of a keep alive request
-	 *            Example: 10
-	 * @throws SCMPValidatorException
-	 *             keepAliveTimeoutSeconds > 1 and < 3600<br />
-	 * @throws SCServiceException
-	 *             listener is already started<br />
+	 * Sets the keep alive timeout in seconds. Time in seconds a keep alive request waits to be confirmed. If no confirmation is received single connection gets closed.
+	 *
+	 * @param keepAliveTimeoutSeconds time to wait for completion of a keep alive request Example: 10
+	 * @throws SCMPValidatorException keepAliveTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
 		if (this.listening == true) {
 			throw new SCServiceException("Listener is already started not allowed to set property.");
 		}
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, keepAliveTimeoutSeconds, Constants.MAX_KP_TIMEOUT_VALUE,
-				SCMPError.HV_WRONG_KEEPALIVE_TIMEOUT);
+		ValidatorUtility.validateInt(1, keepAliveTimeoutSeconds, Constants.MAX_KP_TIMEOUT_VALUE, SCMPError.HV_WRONG_KEEPALIVE_TIMEOUT);
 		this.keepAliveTimeoutSeconds = keepAliveTimeoutSeconds;
 	}
 
 	/**
 	 * Gets the keep alive timeout seconds.
-	 * 
+	 *
 	 * @return the keep alive timeout seconds
 	 */
 	public int getKeepAliveTimeoutSeconds() {
@@ -268,13 +244,10 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on initiated connections (if underlying OS properly
-	 * configures keep alive). False to disable sending.
-	 * 
-	 * @param tcpKeepAliveInitiator
-	 *            the new TCP keep alive
-	 * @throws SCServiceException
-	 *             called method after attach
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on initiated connections (if underlying OS properly configures keep alive). False to disable sending.
+	 *
+	 * @param tcpKeepAliveInitiator the new TCP keep alive
+	 * @throws SCServiceException called method after attach
 	 */
 	public void setTCPKeepAliveInitiator(boolean tcpKeepAliveInitiator) throws SCServiceException {
 		if (this.listening == true) {
@@ -286,10 +259,8 @@ public class SCServer {
 
 	/**
 	 * Gets the TCP keep alive setting for initiated connections.
-	 * 
-	 * @return the TCP keep alive
-	 *         TRUE - TCP keep alive is enabled
-	 *         FALSE - TCP keep alive is disabled
+	 *
+	 * @return the TCP keep alive TRUE - TCP keep alive is enabled FALSE - TCP keep alive is disabled
 	 */
 	public Boolean getTCPKeepAliveInitiator() {
 		// returns TCP keep alive for initiating connections from basic configuration
@@ -297,13 +268,10 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on incoming connections (if underlying OS properly
-	 * configures keep alive). False to disable sending.
-	 * 
-	 * @param tcpKeepAliveListener
-	 *            the new TCP keep alive
-	 * @throws SCServiceException
-	 *             called method after attach
+	 * Sets the TCP keep alive. True to enable sending of TCP keep alive on incoming connections (if underlying OS properly configures keep alive). False to disable sending.
+	 *
+	 * @param tcpKeepAliveListener the new TCP keep alive
+	 * @throws SCServiceException called method after attach
 	 */
 	public void setTCPKeepAliveListener(boolean tcpKeepAliveListener) throws SCServiceException {
 		if (this.listening == true) {
@@ -315,10 +283,8 @@ public class SCServer {
 
 	/**
 	 * Gets the TCP keep alive setting for incoming connections.
-	 * 
-	 * @return the TCP keep alive
-	 *         TRUE - TCP keep alive is enabled
-	 *         FALSE - TCP keep alive is disabled
+	 *
+	 * @return the TCP keep alive TRUE - TCP keep alive is enabled FALSE - TCP keep alive is disabled
 	 */
 	public Boolean getTCPKeepAliveListener() {
 		// returns TCP keep alive for initiating connections from basic configuration
@@ -326,31 +292,25 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the check registration timeout in seconds. Time in seconds a check registration request waits to be confirmed. If no
-	 * confirmation is received server for specific service is dead.
-	 * 
-	 * @param checkRegistrationTimeoutSeconds
-	 *            time to wait for completion of a check registration request
-	 *            Example: 10
-	 * @throws SCMPValidatorException
-	 *             checkRegistrationTimeoutSeconds > 1 and < 3600<br />
-	 * @throws SCServiceException
-	 *             listener is already started<br />
+	 * Sets the check registration timeout in seconds. Time in seconds a check registration request waits to be confirmed. If no confirmation is received server for specific
+	 * service is dead.
+	 *
+	 * @param checkRegistrationTimeoutSeconds time to wait for completion of a check registration request Example: 10
+	 * @throws SCMPValidatorException checkRegistrationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException listener is already started<br />
 	 */
-	public void setCheckRegistrationTimeoutSeconds(int checkRegistrationTimeoutSeconds) throws SCMPValidatorException,
-			SCServiceException {
+	public void setCheckRegistrationTimeoutSeconds(int checkRegistrationTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
 		if (this.listening == true) {
 			throw new SCServiceException("Listener is already started not allowed to set property.");
 		}
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, checkRegistrationTimeoutSeconds, Constants.MAX_CRG_TIMEOUT_VALUE,
-				SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(1, checkRegistrationTimeoutSeconds, Constants.MAX_CRG_TIMEOUT_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.checkRegistraionTimeoutSeconds = checkRegistrationTimeoutSeconds;
 	}
 
 	/**
 	 * Gets the check registration timeout seconds.
-	 * 
+	 *
 	 * @return the check registration timeout seconds
 	 */
 	public int getCheckRegistrationTimeoutSeconds() {
@@ -358,15 +318,12 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the check registration interval in seconds. Interval in seconds between two subsequent check registration requests
-	 * (CRG). The check registration message is used to refresh the server timeout on the SC. If the SC no check registration
-	 * message receives within the interval the server gets destroyed. The value = 0 means no observation will be active on SC.
-	 * Check registration message can be sent any time to verify SC is alive and Server is registered properly.
-	 * 
-	 * @param checkRegistrationIntervalSeconds
-	 *            Example: 360
-	 * @throws SCServiceException
-	 *             listener is already started<br />
+	 * Sets the check registration interval in seconds. Interval in seconds between two subsequent check registration requests (CRG). The check registration message is used to
+	 * refresh the server timeout on the SC. If the SC no check registration message receives within the interval the server gets destroyed. The value = 0 means no observation will
+	 * be active on SC. Check registration message can be sent any time to verify SC is alive and Server is registered properly.
+	 *
+	 * @param checkRegistrationIntervalSeconds Example: 360
+	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) throws SCServiceException {
 		if (this.listening == true) {
@@ -377,7 +334,7 @@ public class SCServer {
 
 	/**
 	 * Gets the check registration interval seconds.
-	 * 
+	 *
 	 * @return the check registration interval seconds
 	 */
 	public int getCheckRegistrationIntervalSeconds() {
@@ -386,17 +343,15 @@ public class SCServer {
 
 	/**
 	 * Start listener.
-	 * 
-	 * @throws SCServiceException
-	 *             listener is already started<br />
-	 *             SC host not set<br />
-	 *             ConnectionType not set<br />
-	 *             starting listener fails<br />
-	 * @throws SCMPValidatorException
-	 *             scPort Number > 1 and < 65535<br />
-	 *             listenerPort Number > 1 and < 65535<br />
-	 *             SC port and listener port are the same<br />
-	 *             bind to interface failed<be>
+	 *
+	 * @throws SCServiceException listener is already started<br />
+	 *         SC host not set<br />
+	 *         ConnectionType not set<br />
+	 *         starting listener fails<br />
+	 * @throws SCMPValidatorException scPort Number > 1 and < 65535<br />
+	 *         listenerPort Number > 1 and < 65535<br />
+	 *         SC port and listener port are the same<br />
+	 *         bind to interface failed<be>
 	 */
 	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
 		if (this.listening == true) {
@@ -409,8 +364,7 @@ public class SCServer {
 			throw new SCMPValidatorException("ConnectionType must be set.");
 		}
 		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.scPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.listenerPort, Constants.MAX_PORT_VALUE,
-				SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(Constants.MIN_PORT_VALUE, this.listenerPort, Constants.MAX_PORT_VALUE, SCMPError.HV_WRONG_PORTNR);
 
 		if (this.scPort == this.listenerPort) {
 			throw new SCMPValidatorException("SC port and listener port must not be the same.");
@@ -452,9 +406,8 @@ public class SCServer {
 			throw new SCServiceException("Unable to start listener.", ex);
 		}
 		this.listening = true;
-		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(this.listenerPort + "server", this.scHost,
-				this.scPort, this.connectionType.getValue(), this.keepAliveIntervalSeconds, this.checkRegistrationIntervalSeconds,
-				1);
+		RemoteNodeConfiguration remoteNodeConf = new RemoteNodeConfiguration(this.listenerPort + "server", this.scHost, this.scPort, this.connectionType.getValue(),
+				this.keepAliveIntervalSeconds, this.checkRegistrationIntervalSeconds, 1);
 		// initialize requester, maxConnection = 1 only 1 connection allowed for register server
 		this.requester = new SCRequester(remoteNodeConf, this.keepAliveTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
@@ -473,8 +426,8 @@ public class SCServer {
 	}
 
 	/**
-	 * Destroy server. Destroys server and releases all resources. No more communication to SC is possible after calling destroy.
-	 * Deregister servers and stop listener before calling destroy.
+	 * Destroy server. Destroys server and releases all resources. No more communication to SC is possible after calling destroy. Deregister servers and stop listener before
+	 * calling destroy.
 	 */
 	public synchronized void destroy() {
 		if (this.requester != null) {
@@ -485,14 +438,11 @@ public class SCServer {
 
 	/**
 	 * New session server.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the SC session server
-	 * @throws SCServiceException
-	 *             server not listening<br />
-	 * @throws SCMPValidatorException
-	 *             service name not set<br />
+	 * @throws SCServiceException server not listening<br />
+	 * @throws SCMPValidatorException service name not set<br />
 	 */
 	public SCSessionServer newSessionServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
@@ -506,14 +456,11 @@ public class SCServer {
 
 	/**
 	 * New publish server.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the SC publish server
-	 * @throws SCServiceException
-	 *             server not listening<br />
-	 * @throws SCMPValidatorException
-	 *             service name not set<br />
+	 * @throws SCServiceException server not listening<br />
+	 * @throws SCMPValidatorException service name not set<br />
 	 */
 	public SCPublishServer newPublishServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {

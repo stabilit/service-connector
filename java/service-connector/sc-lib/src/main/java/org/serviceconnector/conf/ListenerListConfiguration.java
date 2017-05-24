@@ -21,21 +21,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class ResponderConfiguration. It may hold more than one configuration for a responder, is represented by
- * <code>ResponderConfig</code>.
- * 
+ * The Class ResponderConfiguration. It may hold more than one configuration for a responder, is represented by <code>ResponderConfig</code>.
+ *
  * @author JTraber
  */
 public class ListenerListConfiguration {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ListenerListConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListenerListConfiguration.class);
 
 	/** The listener configurations. */
 	private Map<String, ListenerConfiguration> listenerConfigurations;
@@ -48,21 +48,16 @@ public class ListenerListConfiguration {
 
 	/**
 	 * Load.
-	 * 
-	 * @param compositeConfig
-	 *            the composite config
-	 * @param remoteNodeListConfiguration
-	 *            the remote node list configuration
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *
+	 * @param compositeConfig the composite config
+	 * @param remoteNodeListConfiguration the remote node list configuration
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
-	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration)
-			throws SCMPValidatorException {
+	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> listeners = compositeConfig.getList(Constants.PROPERTY_LISTENERS, null);
 		if (listeners == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.PROPERTY_LISTENERS + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_LISTENERS + " is missing");
 		}
 
 		// load all communicators in the list into the array
@@ -73,8 +68,7 @@ public class ListenerListConfiguration {
 			// load it with the configurated items
 			listenerConfig.load(compositeConfig, remoteNodeListConfiguration);
 			if (this.listenerConfigurations.containsKey(listenerName) == true) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-						"listener already in registry name must be unique listenerName=" + listenerName);
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "listener already in registry name must be unique listenerName=" + listenerName);
 			}
 			// adding listener to the list
 			this.listenerConfigurations.put(listenerName, listenerConfig);
@@ -85,7 +79,7 @@ public class ListenerListConfiguration {
 
 	/**
 	 * Gets the listener configurations.
-	 * 
+	 *
 	 * @return the listener configurations
 	 */
 	public Map<String, ListenerConfiguration> getListenerConfigurations() {

@@ -17,9 +17,9 @@
 package org.serviceconnector.util;
 
 /**
- * The Interface ITimeout. Instances of type ITimeout can be hand over to a TimeoutWrapper which takes responsibility of timing
- * stuff. If time runs out TimeoutWrapper informs ITimeout by calling timeout() method.
- * 
+ * The Interface ITimeout. Instances of type ITimeout can be hand over to a TimeoutWrapper which takes responsibility of timing stuff. If time runs out TimeoutWrapper informs
+ * ITimeout by calling timeout() method.
+ *
  * @author JTraber
  */
 public interface ITimeout {
@@ -31,7 +31,7 @@ public interface ITimeout {
 
 	/**
 	 * Gets the timeout.
-	 * 
+	 *
 	 * @return the timeout
 	 */
 	public abstract int getTimeoutMillis();

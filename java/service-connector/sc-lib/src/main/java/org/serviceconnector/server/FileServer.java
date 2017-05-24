@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -46,7 +47,7 @@ import org.serviceconnector.util.XMLDumpWriter;
 public class FileServer extends Server {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FileServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileServer.class);
 	/** The sessions, list of sessions allocated to the server. */
 	private List<FileSession> sessions;
 	/** The max sessions. */
@@ -54,11 +55,9 @@ public class FileServer extends Server {
 
 	/**
 	 * Instantiates a new file server.
-	 * 
-	 * @param remoteNodeConfiguration
-	 *            the remote node configuration
-	 * @param socketAddress
-	 *            the socket address
+	 *
+	 * @param remoteNodeConfiguration the remote node configuration
+	 * @param socketAddress the socket address
 	 */
 	public FileServer(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, socketAddress);
@@ -69,21 +68,15 @@ public class FileServer extends Server {
 
 	/**
 	 * Server upload file.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param message
-	 *            the message
-	 * @param remoteFileName
-	 *            the remote file name
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
+	 *
+	 * @param session the session
+	 * @param message the message
+	 * @param remoteFileName the remote file name
+	 * @param timeoutMillis the timeout milliseconds
 	 * @return the sCMP message
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
-	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis)
-			throws Exception {
+	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis) throws Exception {
 		OutputStream out = null;
 		HttpURLConnection httpCon = null;
 
@@ -93,9 +86,9 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-					+ Constants.SLASH + path + session.getUploadFileScriptName() + "?" + Constants.UPLOAD_FILE_PARAM_NAME + "="
-					+ remoteFileName + "&" + Constants.UPLOAD_SERVICE_PARAM_NAME + "=" + message.getServiceName());
+			URL url = new URL(
+					"http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort() + Constants.SLASH + path + session.getUploadFileScriptName()
+							+ "?" + Constants.UPLOAD_FILE_PARAM_NAME + "=" + remoteFileName + "&" + Constants.UPLOAD_SERVICE_PARAM_NAME + "=" + message.getServiceName());
 			LOGGER.debug("file upload url = " + url.toString());
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -124,8 +117,7 @@ public class FileServer extends Server {
 			httpCon = session.getHttpURLConnection();
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling - SCMP Version request
-				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.FILE_UPLOAD_FAILED,
-						httpCon.getResponseMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.FILE_UPLOAD_FAILED, httpCon.getResponseMessage());
 				LOGGER.warn("Upload file failed =" + httpCon.getResponseMessage());
 				return fault;
 			}
@@ -142,21 +134,15 @@ public class FileServer extends Server {
 
 	/**
 	 * Server download file.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param message
-	 *            the message
-	 * @param remoteFileName
-	 *            the remote file name
-	 * @param timeoutSeconds
-	 *            the timeout seconds
+	 *
+	 * @param session the session
+	 * @param message the message
+	 * @param remoteFileName the remote file name
+	 * @param timeoutSeconds the timeout seconds
 	 * @return the sCMP message
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
-	public SCMPMessage serverDownloadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutSeconds)
-			throws Exception {
+	public SCMPMessage serverDownloadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutSeconds) throws Exception {
 		InputStream in = null;
 		HttpURLConnection httpCon = null;
 
@@ -167,15 +153,13 @@ public class FileServer extends Server {
 			// download request arrived - set up URL connection
 			String path = session.getPath();
 			try {
-				URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-						+ Constants.SLASH + path + remoteFileName);
+				URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort() + Constants.SLASH + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
 				httpCon.connect();
 				in = httpCon.getInputStream();
 			} catch (Exception e) {
 				// SCMP Version request
-				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.SERVER_ERROR,
-						httpCon.getResponseMessage() + " " + e.getMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " " + e.getMessage());
 				LOGGER.warn("Download file request failed " + httpCon.getResponseMessage());
 				return fault;
 			}
@@ -205,21 +189,15 @@ public class FileServer extends Server {
 
 	/**
 	 * Server get file list.
-	 * 
-	 * @param path
-	 *            the path
-	 * @param listScriptName
-	 *            the list script name
-	 * @param serviceName
-	 *            the service name
-	 * @param timeoutSeconds
-	 *            the timeout seconds
+	 *
+	 * @param path the path
+	 * @param listScriptName the list script name
+	 * @param serviceName the service name
+	 * @param timeoutSeconds the timeout seconds
 	 * @return the SCMP message
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
-	public SCMPMessage serverGetFileList(String path, String listScriptName, SCMPMessage reqMessage, int timeoutSeconds)
-			throws Exception {
+	public SCMPMessage serverGetFileList(String path, String listScriptName, SCMPMessage reqMessage, int timeoutSeconds) throws Exception {
 		HttpURLConnection httpCon = null;
 		String serviceName = reqMessage.getServiceName();
 		String urlPath = URLUtility.makePath(path, listScriptName);
@@ -237,8 +215,7 @@ public class FileServer extends Server {
 			in = httpCon.getInputStream();
 		} catch (Exception e) {
 			// SCMP Version request
-			SCMPMessageFault fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR,
-					httpCon.getResponseMessage() + " " + e.getMessage());
+			SCMPMessageFault fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " " + e.getMessage());
 			LOGGER.warn("List file request failed " + httpCon.getResponseMessage());
 			return fault;
 		}
@@ -269,11 +246,9 @@ public class FileServer extends Server {
 
 	/**
 	 * Abort session.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param reason
-	 *            the reason
+	 *
+	 * @param session the session
+	 * @param reason the reason
 	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
@@ -288,7 +263,7 @@ public class FileServer extends Server {
 
 	/**
 	 * Checks for free session.
-	 * 
+	 *
 	 * @return true, if successful
 	 */
 	public boolean hasFreeSession() {
@@ -297,9 +272,8 @@ public class FileServer extends Server {
 
 	/**
 	 * Adds the session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public void addSession(FileSession session) {
 		this.sessions.add(session);
@@ -307,9 +281,8 @@ public class FileServer extends Server {
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public void removeSession(Session session) {
 		if (this.sessions == null) {
@@ -321,7 +294,7 @@ public class FileServer extends Server {
 
 	/**
 	 * Gets the max sessions.
-	 * 
+	 *
 	 * @return the max sessions
 	 */
 	public int getMaxSessions() {
@@ -330,12 +303,11 @@ public class FileServer extends Server {
 
 	/**
 	 * Dump the server into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("file-server");
 		writer.writeAttribute("key", this.serverKey);

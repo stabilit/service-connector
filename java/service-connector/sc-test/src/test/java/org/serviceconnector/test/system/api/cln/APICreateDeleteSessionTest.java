@@ -16,9 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
@@ -26,6 +23,8 @@ import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
+
+import junit.framework.Assert;
 
 @SuppressWarnings("unused")
 public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test {

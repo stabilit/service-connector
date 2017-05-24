@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -35,15 +36,14 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription command. Allows
- * changing subscription mask of a subscription.
- * 
+ * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription command. Allows changing subscription mask of a subscription.
+ *
  * @author JTraber
  */
 public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SrvChangeSubscriptionCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SrvChangeSubscriptionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -73,11 +73,9 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		scMessage.setActualMask(reqMessage.getHeader(SCMPHeaderAttributeKey.ACTUAL_MASK));
 
 		// inform callback with scMessages
-		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage,
-				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage, Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		// handling msgSequenceNr
-		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(reqMessage
-				.getSessionId());
+		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(reqMessage.getSessionId());
 		msgSequenceNr.incrementAndGetMsgSequenceNr();
 		// set up reply - SCMP Version request
 		SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
@@ -121,12 +119,10 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -138,8 +134,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			ValidatorUtility.validateStringLength(1, actualMask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

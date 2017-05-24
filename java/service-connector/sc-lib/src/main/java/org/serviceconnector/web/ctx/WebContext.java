@@ -48,7 +48,7 @@ public final class WebContext {
 
 	/**
 	 * Gets the web configuration.
-	 * 
+	 *
 	 * @return the web configuration
 	 */
 	public static WebConfiguration getWebConfiguration() {
@@ -61,9 +61,8 @@ public final class WebContext {
 
 	/**
 	 * Gets the web command.
-	 * 
-	 * @param webRequest
-	 *            the web request
+	 *
+	 * @param webRequest the web request
 	 * @return the web command
 	 */
 	public static WebCommand getWebCommand() {
@@ -72,9 +71,8 @@ public final class WebContext {
 
 	/**
 	 * Gets the XML loader.
-	 * 
-	 * @param url
-	 *            the url
+	 *
+	 * @param url the url
 	 * @return the xML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {
@@ -83,7 +81,7 @@ public final class WebContext {
 
 	/**
 	 * Gets the web context credentials.
-	 * 
+	 *
 	 * @return the web context credentials
 	 */
 	public static WebCredentials getWebSCContextCredentials() {
@@ -92,9 +90,8 @@ public final class WebContext {
 
 	/**
 	 * Sets the SC web credentials.
-	 * 
-	 * @param webCredentials
-	 *            the new SC web credentials
+	 *
+	 * @param webCredentials the new SC web credentials
 	 */
 	public static void setSCWebCredentials(WebCredentials webCredentials) {
 		WebContext.webContextCredentials = webCredentials;

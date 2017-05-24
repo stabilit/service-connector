@@ -18,7 +18,8 @@ package org.serviceconnector.web.example;
 
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.web.SCBaseSessionServlet;
@@ -27,7 +28,7 @@ public class DemoSCSessionServlet extends SCBaseSessionServlet {
 
 	private static final long serialVersionUID = 1L;
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoSCSessionServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSCSessionServlet.class);
 
 	public DemoSCSessionServlet() {
 		super("/demo-web-server/DemoSCSessionServlet");
@@ -49,6 +50,7 @@ public class DemoSCSessionServlet extends SCBaseSessionServlet {
 		LOGGER.info("Session aborted");
 	}
 
+	@Override
 	public void exceptionCaught(SCServiceException ex) {
 		LOGGER.error("exception caught");
 	}

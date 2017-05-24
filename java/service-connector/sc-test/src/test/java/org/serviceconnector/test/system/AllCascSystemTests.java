@@ -46,58 +46,45 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 import org.serviceconnector.test.system.scmp.casc2.SCMPClnSubscribeCasc2Test;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( {
+@Suite.SuiteClasses({
 		// test need to be at the begin, they check log files for EXC
-		APIMultipleClientSubscribeCasc1Test.class,
-		APIMultipleClientChangeSubscriptionCasc1Test.class,
-		APIMultipleClientSubscribeCasc2Test.class,
+		APIMultipleClientSubscribeCasc1Test.class, APIMultipleClientChangeSubscriptionCasc1Test.class, APIMultipleClientSubscribeCasc2Test.class,
 		APIMultipleClientChangeSubscriptionCasc2Test.class,
 
 		// API session tests
-		APICreateDeleteSessionCasc1Test.class,
-		APIExecuteAndSendCasc1Test.class,
-		
+		APICreateDeleteSessionCasc1Test.class, APIExecuteAndSendCasc1Test.class,
+
 		// cache coherency tests
 		APICacheCoherencyCasc1Test.class,
 
 		// API publish tests
-		APISubscribeUnsubscribeChangeCasc1Test.class,
-		APIReceivePublicationCasc1Test.class,
-		APIExecuteCacheCasc1Test.class,
+		APISubscribeUnsubscribeChangeCasc1Test.class, APIReceivePublicationCasc1Test.class, APIExecuteCacheCasc1Test.class,
 
 		// SCMP session test
-		SCMPClnCreateSessionCasc1Test.class,
-		SCMPClnExecuteCasc1Test.class,
-		SCMPClnChangeSubscriptionCasc1Test.class,
-		
+		SCMPClnCreateSessionCasc1Test.class, SCMPClnExecuteCasc1Test.class, SCMPClnChangeSubscriptionCasc1Test.class,
+
 		// SCMP publish test
 		SCMPClnSubscribeCasc1Test.class,
-		
+
 		// SCMP cache test
 		SCMPClnExecuteCacheCasc1Test.class,
-		
+
 		// API session tests for cascaded 2 mode
-		APICreateDeleteSessionCasc2Test.class,
-		APIExecuteAndSendCasc2Test.class,
+		APICreateDeleteSessionCasc2Test.class, APIExecuteAndSendCasc2Test.class,
 
 		// cache coherency tests
 		APICacheCoherencyCasc2Test.class,
-		
+
 		// API publish tests for cascaded 2 mode
-		APISubscribeUnsubscribeChangeCasc2Test.class,
-		APIReceivePublicationCasc2Test.class,
-		APIExecuteCacheCasc2Test.class,
-		
+		APISubscribeUnsubscribeChangeCasc2Test.class, APIReceivePublicationCasc2Test.class, APIExecuteCacheCasc2Test.class,
+
 		// SCMP session test for cascaded 2 mode
-		SCMPClnCreateSessionCasc2Test.class,
-		SCMPClnExecuteCasc2Test.class,
-		SCMPClnChangeSubscriptionCasc2Test.class,
-		
+		SCMPClnCreateSessionCasc2Test.class, SCMPClnExecuteCasc2Test.class, SCMPClnChangeSubscriptionCasc2Test.class,
+
 		// SCMP publish test for cascaded 2 mode
 		SCMPClnSubscribeCasc2Test.class,
-		
+
 		// SCMP cache tests for cascaded 2 mode
-		SCMPClnExecuteCacheCasc2Test.class
-		})
+		SCMPClnExecuteCacheCasc2Test.class })
 public class AllCascSystemTests {
 }

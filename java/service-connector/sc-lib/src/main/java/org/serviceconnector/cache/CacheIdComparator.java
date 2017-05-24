@@ -21,8 +21,7 @@ import java.util.Comparator;
 import org.serviceconnector.Constants;
 
 /**
- * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys. It compares serviceName + cacheId.
- * If both are the same value partNr is considered.
+ * The Class CacheKeyComparator. The key comparator contains knowledge of sorting the keys. It compares serviceName + cacheId. If both are the same value partNr is considered.
  */
 public class CacheIdComparator implements Comparator<String> {
 
@@ -53,10 +52,12 @@ public class CacheIdComparator implements Comparator<String> {
 		int partNr1Int = new Integer(partNr1);
 		int partNr2Int = new Integer(partNr2);
 
-		if (partNr1Int == partNr2Int)
+		if (partNr1Int == partNr2Int) {
 			return 0;
-		if (partNr1Int > partNr2Int)
+		}
+		if (partNr1Int > partNr2Int) {
 			return 1;
+		}
 		return -1;
 	}
 }

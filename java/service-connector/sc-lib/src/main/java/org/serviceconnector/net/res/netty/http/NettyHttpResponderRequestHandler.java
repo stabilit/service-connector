@@ -19,7 +19,6 @@ package org.serviceconnector.net.res.netty.http;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -34,17 +33,19 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the Netty
- * framework by catching events (message received, exception caught). Functionality to handle large messages is also inside.
- * 
+ * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the Netty framework by catching events (message received,
+ * exception caught). Functionality to handle large messages is also inside.
+ *
  * @author JTraber
  */
 public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandlerAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponderRequestHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpResponderRequestHandler.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -69,7 +70,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info(th); // regular disconnect causes this expected exception
+			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);

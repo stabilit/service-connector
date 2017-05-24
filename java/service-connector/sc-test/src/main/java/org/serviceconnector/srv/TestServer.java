@@ -16,34 +16,33 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.srv;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.TestConstants;
 
 public class TestServer {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TestServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestServer.class);
 
 	/**
 	 * start server process
-	 * 
-	 * @param args
-	 *            [0] serverType ("session" or "publish")<br>
-	 *            [1] serverName<br>
-	 *            [2] listenerPort<br>
-	 *            [3] SC port<br>
-	 *            [4] maxSessions<br>
-	 *            [5] maxConnections<br>
-	 *            [6] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [7] serviceNames (comma delimited list)<br>
-	 *            [8] nics (comma separated list)<br>
+	 *
+	 * @param args [0] serverType ("session" or "publish")<br>
+	 *        [1] serverName<br>
+	 *        [2] listenerPort<br>
+	 *        [3] SC port<br>
+	 *        [4] maxSessions<br>
+	 *        [5] maxConnections<br>
+	 *        [6] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [7] serviceNames (comma delimited list)<br>
+	 *        [8] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) {
-		LOGGER.log(Level.OFF, "TestServer starting ...");
+		LOGGER.debug("TestServer starting ...");
 
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 
 		TestStatefulServer server = null;

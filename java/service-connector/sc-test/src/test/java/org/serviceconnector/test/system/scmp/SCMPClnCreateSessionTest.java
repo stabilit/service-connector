@@ -19,8 +19,6 @@ package org.serviceconnector.test.system.scmp;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
@@ -38,27 +36,29 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 
+import junit.framework.Assert;
+
 /**
  * The Class ClnCreateSessionTestCase.
  */
 public class SCMPClnCreateSessionTest extends SCMPClnCreateSessionCasc1Test {
 
 	public SCMPClnCreateSessionTest() {
-		SCMPClnCreateSessionTest.setUpServiceConnectorAndServer();
+		SystemSuperTest.setUpServiceConnectorAndServer();
 		// server definitions needs to be different
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
 		AppContext.init();
 	}
 
@@ -141,8 +141,9 @@ public class SCMPClnCreateSessionTest extends SCMPClnCreateSessionCasc1Test {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 98 << 10; i++) {
 			sb.append(i);
-			if (sb.length() > 10000)
+			if (sb.length() > 10000) {
 				break;
+			}
 		}
 		createSessionCall.getRequest().setServiceName(sb.toString());
 		createSessionCall.setEchoIntervalSeconds(300);

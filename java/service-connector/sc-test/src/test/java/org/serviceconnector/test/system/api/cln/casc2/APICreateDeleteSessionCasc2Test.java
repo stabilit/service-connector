@@ -16,12 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
 public class APICreateDeleteSessionCasc2Test extends APICreateDeleteSessionCasc1Test {
 
 	public APICreateDeleteSessionCasc2Test() {
-		APICreateDeleteSessionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 	}
 
 }

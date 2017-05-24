@@ -32,11 +32,9 @@ class SCPublishServiceCallback extends SCServiceCallback {
 
 	/**
 	 * Instantiates a new publish service callback.
-	 * 
-	 * @param service
-	 *            the service
-	 * @param messageCallback
-	 *            the message callback
+	 *
+	 * @param service the service
+	 * @param messageCallback the message callback
 	 */
 	public SCPublishServiceCallback(SCPublishService service, SCMessageCallback messageCallback) {
 		super(service, messageCallback);
@@ -64,24 +62,23 @@ class SCPublishServiceCallback extends SCServiceCallback {
 		boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 		if (noData == false) {
 			// data reply received - pass to application
-			SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.getCachingMethod(reply
-					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+			SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.getCachingMethod(reply.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 			SCPublishMessage replyToClient = null;
 
 			switch (cachingMethod) {
-			case INITIAL:
-			case NOT_MANAGED:
-				replyToClient = new SCPublishMessage();
-				break;
-			case APPEND:
-				replyToClient = new SCAppendMessage();
-				break;
-			case REMOVE:
-				replyToClient = new SCRemovedMessage();
-				break;
-			default:
-				replyToClient = new SCPublishMessage();
+				case INITIAL:
+				case NOT_MANAGED:
+					replyToClient = new SCPublishMessage();
+					break;
+				case APPEND:
+					replyToClient = new SCAppendMessage();
+					break;
+				case REMOVE:
+					replyToClient = new SCRemovedMessage();
+					break;
+				default:
+					replyToClient = new SCPublishMessage();
 			}
 			replyToClient.setData(reply.getBody());
 			replyToClient.setDataLength(reply.getBodyLength());

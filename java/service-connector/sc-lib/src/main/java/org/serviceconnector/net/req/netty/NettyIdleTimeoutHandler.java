@@ -18,7 +18,8 @@ package org.serviceconnector.net.req.netty;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.timeout.IdleState;
@@ -32,45 +33,37 @@ public class NettyIdleTimeoutHandler extends IdleStateHandler {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyIdleTimeoutHandler.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyIdleTimeoutHandler.class);
+
 	/**
 	 * Instantiates a new NETTY idle timeout handler.
-	 * 
-	 * @param timer
-	 *            the timer
-	 * @param readerIdleTime
-	 *            the reader idle time
-	 * @param writerIdleTime
-	 *            the writer idle time
-	 * @param allIdleTime
-	 *            the all idle time
-	 * @param unit
-	 *            the unit
+	 *
+	 * @param timer the timer
+	 * @param readerIdleTime the reader idle time
+	 * @param writerIdleTime the writer idle time
+	 * @param allIdleTime the all idle time
+	 * @param unit the unit
 	 */
-	public NettyIdleTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime,
-			TimeUnit unit) {
+	public NettyIdleTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime, TimeUnit unit) {
 		super(timer, readerIdleTime, writerIdleTime, allIdleTime, unit);
 	}
 
 	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
-			throws Exception {
+	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis) throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 
 		switch (state) {
-		case WRITER_IDLE:
-			// ignore writer idle
-			return;
-		case READER_IDLE:
-			// ignore reader idle
-			return;
-		case ALL_IDLE:
-			Channels.fireExceptionCaught(ctx, new IdleTimeoutException(
-			"idle timeout. operation - could not be completed."));
-			break;
-		default:
-			break;
+			case WRITER_IDLE:
+				// ignore writer idle
+				return;
+			case READER_IDLE:
+				// ignore reader idle
+				return;
+			case ALL_IDLE:
+				Channels.fireExceptionCaught(ctx, new IdleTimeoutException("idle timeout. operation - could not be completed."));
+				break;
+			default:
+				break;
 		}
 	}
 }

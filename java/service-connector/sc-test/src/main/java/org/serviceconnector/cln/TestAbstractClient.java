@@ -20,8 +20,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -29,6 +27,7 @@ import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
+import org.slf4j.Logger;
 
 public class TestAbstractClient extends Thread {
 
@@ -57,9 +56,9 @@ public class TestAbstractClient extends Thread {
 				// add exit handler
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid", fileChannel);
 			} catch (SCMPValidatorException e1) {
-				LOGGER.fatal("unable to get path to pid file", e1);
+				LOGGER.error("unable to get path to pid file", e1);
 			} catch (Exception e) {
-				LOGGER.fatal("unable to create pid file", e);
+				LOGGER.error("unable to create pid file", e);
 			}
 			ctr = new ThreadSafeCounter();
 
@@ -161,15 +160,14 @@ public class TestAbstractClient extends Thread {
 			try {
 				this.fileCtx.releaseFileLockAndCloseChannel();
 			} catch (Exception e) {
-				LOGGER.log(Level.OFF, "Releasing file lock failed");
+				LOGGER.debug("Releasing file lock failed");
 			}
 			File pidFile = this.fileCtx.getFile();
 			if (pidFile.exists()) {
 				pidFile.delete();
-				LOGGER.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
+				LOGGER.debug("Delete PID-file: " + this.pidFileNameFull);
 			}
-			LOGGER.log(Level.OFF, "TestClient exiting");
-			LOGGER.log(Level.OFF, "<<<");
+			LOGGER.debug("TestClient exiting");
 		}
 	}
 }

@@ -28,7 +28,8 @@ import java.util.Set;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
@@ -43,13 +44,13 @@ import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class MessageEncoderDecoderAdapter.
- * 
+ *
  * @author JTraber
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(MessageEncoderDecoderAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MessageEncoderDecoderAdapter.class);
 	/** The Constant FORMAT_MSG_SIZE_IN_HEADER. */
 	private static final DecimalFormat FORMAT_MSG_SIZE_IN_HEADER = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	/** The Constant FORMAT_HEADER_SIZE_IN_HEADER. */
@@ -72,40 +73,40 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		// evaluating header key and creating corresponding SCMP type
 		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(headline);
 		switch (headerKey) {
-		case RES:
-			scmpMsg = new SCMPMessage(receivedVersion);
-			scmpMsg.setIsReply(true);
-			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
-			break;
-		case REQ:
-			scmpMsg = new SCMPMessage(receivedVersion);
-			scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
-			break;
-		case KRS:
-		case KRQ:
-			scmpMsg = new SCMPKeepAlive(receivedVersion);
-			return scmpMsg;
-		case PRQ:
-			// no poll request
-			scmpMsg = new SCMPPart(receivedVersion, false);
-			scmpMsg.setIsReply(false);
-			break;
-		case PRS:
-			// no poll response
-			scmpMsg = new SCMPPart(receivedVersion, false);
-			scmpMsg.setIsReply(true);
-			break;
-		case PAC:
-			// poll request
-			scmpMsg = new SCMPPart(receivedVersion, true);
-			break;
-		case EXC:
-			scmpMsg = new SCMPMessageFault(receivedVersion);
-			break;
-		case UNDEF:
-			throw new EncodingDecodingException("wrong protocol in message not possible to decode");
-		default:
-			scmpMsg = new SCMPMessage(receivedVersion);
+			case RES:
+				scmpMsg = new SCMPMessage(receivedVersion);
+				scmpMsg.setIsReply(true);
+				scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
+				break;
+			case REQ:
+				scmpMsg = new SCMPMessage(receivedVersion);
+				scmpMsg.setIsReqCompleteAfterMarshallingPart(true);
+				break;
+			case KRS:
+			case KRQ:
+				scmpMsg = new SCMPKeepAlive(receivedVersion);
+				return scmpMsg;
+			case PRQ:
+				// no poll request
+				scmpMsg = new SCMPPart(receivedVersion, false);
+				scmpMsg.setIsReply(false);
+				break;
+			case PRS:
+				// no poll response
+				scmpMsg = new SCMPPart(receivedVersion, false);
+				scmpMsg.setIsReply(true);
+				break;
+			case PAC:
+				// poll request
+				scmpMsg = new SCMPPart(receivedVersion, true);
+				break;
+			case EXC:
+				scmpMsg = new SCMPMessageFault(receivedVersion);
+				break;
+			case UNDEF:
+				throw new EncodingDecodingException("wrong protocol in message not possible to decode");
+			default:
+				scmpMsg = new SCMPMessage(receivedVersion);
 		}
 
 		// parse headerSize & bodySize
@@ -126,8 +127,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (header[inLoopIndex] == Constants.SCMP_LF) {
 						// <LF> found
-						metaMap.put(new String(header, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(header,
-								index + 1, (inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
+						metaMap.put(new String(header, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET),
+								new String(header, index + 1, (inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -185,16 +186,16 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			}
 
 			switch (scmpBodyType) {
-			case BINARY:
-			case INPUT_STREAM:
-			case UNDEFINED:
-				scmpMsg.setBody(body, 0, bodySize);
-				return scmpMsg;
-			case TEXT:
-				scmpMsg.setBody(new String(body, 0, bodySize));
-				return scmpMsg;
-			default:
-				throw new EncodingDecodingException("unknown body type of SCMP type=" + scmpBodyTypeString);
+				case BINARY:
+				case INPUT_STREAM:
+				case UNDEFINED:
+					scmpMsg.setBody(body, 0, bodySize);
+					return scmpMsg;
+				case TEXT:
+					scmpMsg.setBody(new String(body, 0, bodySize));
+					return scmpMsg;
+				default:
+					throw new EncodingDecodingException("unknown body type of SCMP type=" + scmpBodyTypeString);
 			}
 		} catch (Exception ex) {
 			LOGGER.error("decode", ex);
@@ -204,16 +205,12 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/**
 	 * Read buffer from stream.
-	 * 
-	 * @param is
-	 *            the is
-	 * @param buffer
-	 *            the buffer
+	 *
+	 * @param is the is
+	 * @param buffer the buffer
 	 * @return the int
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws EncodingDecodingException
-	 *             the encoding decoding exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws EncodingDecodingException the encoding decoding exception
 	 */
 	private int readBufferFromStream(InputStream is, byte[] buffer) throws IOException, EncodingDecodingException {
 		int readOffset = 0;
@@ -233,22 +230,15 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/**
 	 * Write head line.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
-	 * @param bw
-	 *            the bufferedWriter
-	 * @param headerKey
-	 *            the header key
-	 * @param messageSize
-	 *            the message size
-	 * @param headerSize
-	 *            the header size
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param scmpVersion the SCMP version
+	 * @param bw the bufferedWriter
+	 * @param headerKey the header key
+	 * @param messageSize the message size
+	 * @param headerSize the header size
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void writeHeadLine(SCMPVersion scmpVersion, BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize,
-			int headerSize) throws IOException {
+	protected void writeHeadLine(SCMPVersion scmpVersion, BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(FORMAT_MSG_SIZE_IN_HEADER.format(messageSize));
 		bw.write(FORMAT_HEADER_SIZE_IN_HEADER.format(headerSize));
@@ -262,9 +252,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/**
 	 * Write header.
-	 * 
-	 * @param metaMap
-	 *            the meta map
+	 *
+	 * @param metaMap the meta map
 	 * @return the string builder
 	 */
 	protected StringBuilder writeHeader(Map<String, String> metaMap) {
@@ -286,16 +275,12 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/**
 	 * Compress body.
-	 * 
-	 * @param bodyBuffer
-	 *            the body buffer
-	 * @param bodyOffset
-	 *            the body offset
-	 * @param bodyLength
-	 *            the body length
+	 *
+	 * @param bodyBuffer the body buffer
+	 * @param bodyOffset the body offset
+	 * @param bodyLength the body length
 	 * @return the byte[]
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected byte[] compressBody(byte[] bodyBuffer, int bodyOffset, int bodyLength) throws IOException {
 		byte[] output = null;

@@ -19,8 +19,6 @@ package org.serviceconnector.test.integration.scmp;
 import java.util.Arrays;
 import java.util.Collection;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +39,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.integration.IntegrationSuperTest;
 import org.serviceconnector.util.ValidatorUtility;
 
+import junit.framework.Assert;
+
 @RunWith(Parameterized.class)
 public class SCMPAttachDetachTest extends IntegrationSuperTest {
 
@@ -60,6 +60,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 				new Object[] { new Integer(TestConstants.PORT_SC0_HTTP), ConnectionType.NETTY_HTTP });
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -76,8 +77,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t01_AttachDetach() throws Exception {
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, this.port,
-				this.connectionType.getValue(), 0, 0, 1), 0);
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, this.port, this.connectionType.getValue(), 0, 0, 1), 0);
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback1 = new TestCallback();
 		attachCall.invoke(callback1, 10000);

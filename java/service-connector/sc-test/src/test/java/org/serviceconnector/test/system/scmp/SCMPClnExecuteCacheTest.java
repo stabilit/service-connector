@@ -30,14 +30,15 @@ import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCacheCasc1Test;
 public class SCMPClnExecuteCacheTest extends SCMPClnExecuteCacheCasc1Test {
 
 	public SCMPClnExecuteCacheTest() {
-		SCMPClnExecuteCacheTest.setUpServiceConnectorAndServer();
+		SCMPClnExecuteCacheCasc1Test.setUpServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 		this.createSession();
 	}

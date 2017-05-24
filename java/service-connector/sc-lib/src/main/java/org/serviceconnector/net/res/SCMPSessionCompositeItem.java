@@ -18,23 +18,23 @@ package org.serviceconnector.net.res;
 
 import java.util.concurrent.ScheduledFuture;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.util.TimeoutWrapper;
 
 /**
- * The Class SCMPSessionCompositeItem. Item represents a value in SCMPSessionCompositeRegistry. Gives access to composite
- * receiver/sender and in the context used SCMPMessageId.
- * 
+ * The Class SCMPSessionCompositeItem. Item represents a value in SCMPSessionCompositeRegistry. Gives access to composite receiver/sender and in the context used SCMPMessageId.
+ *
  * @author JTraber
  */
 public class SCMPSessionCompositeItem {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSessionCompositeItem.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSessionCompositeItem.class);
 
 	/** The large response. */
 	private SCMPCompositeReceiver largeRequest;
@@ -51,9 +51,8 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Instantiates a new SCMP session composite item.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public SCMPSessionCompositeItem(String sessionId) {
 		this.largeRequest = null;
@@ -64,7 +63,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the SCMP large response.
-	 * 
+	 *
 	 * @return the SCMP large response
 	 */
 	public SCMPCompositeReceiver getSCMPLargeRequest() {
@@ -73,7 +72,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the SCMP large request.
-	 * 
+	 *
 	 * @return the SCMP large request
 	 */
 	public SCMPCompositeSender getSCMPLargeResponse() {
@@ -82,7 +81,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the msg sequence nr.
-	 * 
+	 *
 	 * @return the msg sequence nr
 	 */
 	public SCMPMessageSequenceNr getMsgSequenceNr() {
@@ -91,9 +90,8 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Sets the SCMP large response.
-	 * 
-	 * @param largeRequest
-	 *            the new SCMP large response
+	 *
+	 * @param largeRequest the new SCMP large response
 	 */
 	public void setSCMPLargeRequest(SCMPCompositeReceiver largeRequest) {
 		this.largeRequest = largeRequest;
@@ -101,9 +99,8 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Sets the large request.
-	 * 
-	 * @param largeResponse
-	 *            the new large request
+	 *
+	 * @param largeResponse the new large request
 	 */
 	public void setSCMPLargeResponse(SCMPCompositeSender largeResponse) {
 		this.largeResponse = largeResponse;
@@ -111,9 +108,8 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Sets the large message timeout millis.
-	 * 
-	 * @param largeMessageTimeoutMillis
-	 *            the new large message timeout millis
+	 *
+	 * @param largeMessageTimeoutMillis the new large message timeout millis
 	 */
 	public void setLargeMessageTimeoutMillis(int largeMessageTimeoutMillis) {
 		this.largeMessageTimeoutMillis = largeMessageTimeoutMillis;
@@ -121,7 +117,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the large message timeout.
-	 * 
+	 *
 	 * @return the large message timeout
 	 */
 	public int getLargeMessageTimeoutMillis() {
@@ -130,7 +126,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the session id.
-	 * 
+	 *
 	 * @return the session id
 	 */
 	public String getSessionId() {
@@ -139,7 +135,7 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Gets the session timeout.
-	 * 
+	 *
 	 * @return the session timeout
 	 */
 	public ScheduledFuture<TimeoutWrapper> getTimeout() {
@@ -148,9 +144,8 @@ public class SCMPSessionCompositeItem {
 
 	/**
 	 * Sets the session timeout.
-	 * 
-	 * @param timeout
-	 *            the new session timeout
+	 *
+	 * @param timeout the new session timeout
 	 */
 	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
 		this.timeout = timeout;

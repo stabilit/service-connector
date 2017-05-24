@@ -20,9 +20,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A {@link ThreadFactory} that sets names and priority to the threads created by this factory. Threads created by this factory
- * will take names in the form of the string <code>namePrefix + " thread-" + threadNum</code> where <tt>threadNum</tt> is the
- * count of threads created by this type of factory.
+ * A {@link ThreadFactory} that sets names and priority to the threads created by this factory. Threads created by this factory will take names in the form of the string
+ * <code>namePrefix + " thread-" + threadNum</code> where <tt>threadNum</tt> is the count of threads created by this type of factory.
  */
 public class NamedPriorityThreadFactory implements ThreadFactory {
 
@@ -35,9 +34,8 @@ public class NamedPriorityThreadFactory implements ThreadFactory {
 
 	/**
 	 * Constructor accepting the prefix and priority of the threads that will be created by this {@link ThreadFactory}
-	 * 
-	 * @param namePrefix
-	 *            Prefix for names of threads
+	 *
+	 * @param namePrefix Prefix for names of threads
 	 */
 	public NamedPriorityThreadFactory(String namePrefix, int threadPrio) {
 		this.namePrefix = namePrefix;
@@ -46,9 +44,8 @@ public class NamedPriorityThreadFactory implements ThreadFactory {
 
 	/**
 	 * Constructor accepting the prefix of the threads that will be created by this {@link ThreadFactory}
-	 * 
-	 * @param namePrefix
-	 *            the name prefix
+	 *
+	 * @param namePrefix the name prefix
 	 */
 	public NamedPriorityThreadFactory(String namePrefix) {
 		this(namePrefix, Thread.NORM_PRIORITY);
@@ -57,6 +54,7 @@ public class NamedPriorityThreadFactory implements ThreadFactory {
 	/**
 	 * Returns a new thread using a name and priority as specified by this factory {@inheritDoc}
 	 */
+	@Override
 	public Thread newThread(Runnable runnable) {
 		Thread th = new Thread(runnable, namePrefix + " thread-" + threadNumber.getAndIncrement());
 		th.setPriority(this.threadPrio);

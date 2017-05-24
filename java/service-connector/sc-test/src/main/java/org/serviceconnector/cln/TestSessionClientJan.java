@@ -16,15 +16,16 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
 @SuppressWarnings("unused")
 public class TestSessionClientJan extends Thread {
-	
+
 	/** The Constant LOGGER. */
 
-	private static final Logger LOGGER = Logger.getLogger(TestSessionClientJan.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestSessionClientJan.class);
 
 	private ThreadSafeCounter ctr;
 	private String scHost;
@@ -34,187 +35,186 @@ public class TestSessionClientJan extends Thread {
 
 	/**
 	 * Main method if you like to start in debug mode.
-	 * 
-	 * @param args
-	 *            [0] SC host<br>
-	 *            [1] SC port<br>
-	 *            [2] connectionType<br>
-	 *            [3] maxConnections<br>
-	 *            [4] keepAliveIntervalSeconds (0 = disabled)<br>
-	 *            [5] serviceName
+	 *
+	 * @param args [0] SC host<br>
+	 *        [1] SC port<br>
+	 *        [2] connectionType<br>
+	 *        [3] maxConnections<br>
+	 *        [4] keepAliveIntervalSeconds (0 = disabled)<br>
+	 *        [5] serviceName
 	 */
 	public static void main(String[] args) throws Exception {
-//		TestSessionClient server = new TestSessionClient();
-//		server.setListenerPort(Integer.parseInt(args[0]));
-//		server.setPort(Integer.parseInt(args[1]));
-//		server.setMaxSessions(Integer.parseInt(args[2]));
-//		server.setMaxConnections(Integer.parseInt(args[3]));
-//		server.setServiceNames(args[4]);
-//		server.run();
+		// TestSessionClient server = new TestSessionClient();
+		// server.setListenerPort(Integer.parseInt(args[0]));
+		// server.setPort(Integer.parseInt(args[1]));
+		// server.setMaxSessions(Integer.parseInt(args[2]));
+		// server.setMaxConnections(Integer.parseInt(args[3]));
+		// server.setServiceNames(args[4]);
+		// server.run();
 	}
 }
-		
-//	@Override
-//	public void run() {
-//		LOGGER.log(Level.OFF, "TestSessionServer is running ...");
-//		ctr = new ThreadSafeCounter();
-//		SCClient sc = new SCClient(TestConstants.HOST, this.scPort);
-//		try {
-//			sc.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
+
+// @Override
+// public void run() {
+// LOGGER.debug("TestSessionServer is running ...");
+// ctr = new ThreadSafeCounter();
+// SCClient sc = new SCClient(TestConstants.HOST, this.scPort);
+// try {
+// sc.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
 //
-//<<<<<<< .mine		} catch (Exception e) {
-//			LOGGER.error("runSessionServer", e);
-//		} finally {
-//			try {
-//				sc.detach();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-//=======			if (getMethodName() == "createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage();
-//				scMessage.setSessionInfo(" ");
-//				sessionService.createSession(60, scMessage);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	public void setListenerPort(int listenerPort) {
-//		this.scPort = listenerPort;
-//	}
-//=======			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage();
-//				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-//				sessionService.createSession(60, scMessage);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	public void setPort(int port) {
-//		this.scPort = port;
-//	}
-//=======			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage("a");
-//				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-//				sessionService.createSession(10, scMessage);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	public void setMaxSessions(int maxSessions) {
-//		this.keepAliveIntervalSeconds = maxSessions;
-//	}
-//=======			} else if (getMethodName() == "createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
-//				scMessage.setSessionInfo(TestConstants.stringLength256);
-//				sessionService.createSession(60, scMessage);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	public void setMaxConnections(int maxConnections) {
-//		this.maxConnections = maxConnections;
-//	}
-//=======			} else if (getMethodName() == "deleteSession_beforeCreateSession_noSessionId") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	public void setServiceNames(String serviceNames) {
-//		this.serviceName = serviceNames;
-//	}
-//=======			} else if (getMethodName() == "deleteSession_afterValidNewSessionService_noSessionId") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage();
-//				scMessage.setSessionInfo("sessionInfo");
-//				sessionService.createSession(60, scMessage);
-//				sessionService.deleteSession();
-//>>>>>>> .theirs
-//<<<<<<< .mine	/**
-//	 * Callback handling all server events
-//	 * 
-//	 * @author JTrnka
-//	 */
-//	class SrvCallback extends SCSessionServerCallback {
-//=======			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//>>>>>>> .theirs
-//		public SrvCallback(SCSessionServer server) {
-//			super(server);
-//		}
+// <<<<<<< .mine } catch (Exception e) {
+// LOGGER.error("runSessionServer", e);
+// } finally {
+// try {
+// sc.detach();
+// } catch (Exception e) {
+// e.printStackTrace();
+// }
+// }
+// }
+// ======= if (getMethodName() == "createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage();
+// scMessage.setSessionInfo(" ");
+// sessionService.createSession(60, scMessage);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine public void setListenerPort(int listenerPort) {
+// this.scPort = listenerPort;
+// }
+// ======= } else if (getMethodName() == "createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage();
+// scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
+// sessionService.createSession(60, scMessage);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine public void setPort(int port) {
+// this.scPort = port;
+// }
+// ======= } else if (getMethodName() == "createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage("a");
+// scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
+// sessionService.createSession(10, scMessage);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine public void setMaxSessions(int maxSessions) {
+// this.keepAliveIntervalSeconds = maxSessions;
+// }
+// ======= } else if (getMethodName() == "createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
+// scMessage.setSessionInfo(TestConstants.stringLength256);
+// sessionService.createSession(60, scMessage);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine public void setMaxConnections(int maxConnections) {
+// this.maxConnections = maxConnections;
+// }
+// ======= } else if (getMethodName() == "deleteSession_beforeCreateSession_noSessionId") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine public void setServiceNames(String serviceNames) {
+// this.serviceName = serviceNames;
+// }
+// ======= } else if (getMethodName() == "deleteSession_afterValidNewSessionService_noSessionId") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage();
+// scMessage.setSessionInfo("sessionInfo");
+// sessionService.createSession(60, scMessage);
+// sessionService.deleteSession();
+// >>>>>>> .theirs
+// <<<<<<< .mine /**
+// * Callback handling all server events
+// *
+// * @author JTrnka
+// */
+// class SrvCallback extends SCSessionServerCallback {
+// ======= } else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// >>>>>>> .theirs
+// public SrvCallback(SCSessionServer server) {
+// super(server);
+// }
 //
-//		@Override
-//		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
-//			Object data = request.getData();
+// @Override
+// public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
+// Object data = request.getData();
 //
-//<<<<<<< .mine			SCMessage response = request;
-//			// watch out for kill server message
-//			if (data.getClass() == String.class) {
-//				String dataString = (String) data;
-//=======			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage();
-//				scMessage.setSessionInfo("sessionInfo");
-//				sessionService.createSession(60, scMessage);
-//>>>>>>> .theirs
-//				if (dataString.equals(TestConstants.killServerCmd)) {
-//					response = new SCMessageFault();
-//					try {
-//						((SCMessageFault) response).setAppErrorCode(1050);
-//						((SCMessageFault) response).setAppErrorText("create session rejected - kill server requested!");
-//					} catch (SCMPValidatorException e) {
-//					}
-//					KillThread kill = new KillThread(this.scSessionServer);
-//					kill.start();
-//				}
-//			}
-//			sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
-//			return response;
-//		}
+// <<<<<<< .mine SCMessage response = request;
+// // watch out for kill server message
+// if (data.getClass() == String.class) {
+// String dataString = (String) data;
+// ======= } else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage();
+// scMessage.setSessionInfo("sessionInfo");
+// sessionService.createSession(60, scMessage);
+// >>>>>>> .theirs
+// if (dataString.equals(TestConstants.killServerCmd)) {
+// response = new SCMessageFault();
+// try {
+// ((SCMessageFault) response).setAppErrorCode(1050);
+// ((SCMessageFault) response).setAppErrorText("create session rejected - kill server requested!");
+// } catch (SCMPValidatorException e) {
+// }
+// KillThread kill = new KillThread(this.scSessionServer);
+// kill.start();
+// }
+// }
+// sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
+// return response;
+// }
 //
-//		@Override
-//		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
-//			sessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
-//		}
+// @Override
+// public void deleteSession(SCMessage request, int operationTimeoutMillis) {
+// sessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
+// }
 //
-//<<<<<<< .mine		@Override
-//		public void abortSession(SCMessage request, int operationTimeoutMillis) {
-//			sessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
-//		}
-//=======			} else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//>>>>>>> .theirs
-//		@Override
-//		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
-//			return request;
-//		}
-//	}
+// <<<<<<< .mine @Override
+// public void abortSession(SCMessage request, int operationTimeoutMillis) {
+// sessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
+// }
+// ======= } else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// >>>>>>> .theirs
+// @Override
+// public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
+// return request;
+// }
+// }
 //
-//	private class KillThread extends Thread {
-//		private SCSessionServer server;
+// private class KillThread extends Thread {
+// private SCSessionServer server;
 //
-//<<<<<<< .mine		public KillThread(SCSessionServer server) {
-//			this.server = server;
-//		}
-//=======			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
-//				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//				SCMessage scMessage = new SCMessage();
-//				scMessage.setSessionInfo("sessionInfo");
-//				sessionService.createSession(1, scMessage);
-//				Thread.sleep(6000);
-//				sessionService.deleteSession();
-//			}
-//>>>>>>> .theirs
-//		@Override
-//		public void run() {
-//			// sleep for 2 seconds before killing the server
-//			try {
-//				Thread.sleep(2000);
-//				this.server.deregister();
-//				this.server.getSCServer().stopListener();
-//				System.exit(0);
-//			} catch (Exception e) {
-//				LOGGER.error("run", e);
-//			}
-//		}
-//	}
-//}
+// <<<<<<< .mine public KillThread(SCSessionServer server) {
+// this.server = server;
+// }
+// ======= } else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
+// SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
+// SCMessage scMessage = new SCMessage();
+// scMessage.setSessionInfo("sessionInfo");
+// sessionService.createSession(1, scMessage);
+// Thread.sleep(6000);
+// sessionService.deleteSession();
+// }
+// >>>>>>> .theirs
+// @Override
+// public void run() {
+// // sleep for 2 seconds before killing the server
+// try {
+// Thread.sleep(2000);
+// this.server.deregister();
+// this.server.getSCServer().stopListener();
+// System.exit(0);
+// } catch (Exception e) {
+// LOGGER.error("run", e);
+// }
+// }
+// }
+// }
 
 // class SrvCallback extends SCSessionServerCallback {
 // private SessionServerContext outerContext;

@@ -18,27 +18,26 @@ package org.serviceconnector.net.res.netty;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
 /**
- * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss
- * Netty.
+ * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss Netty.
  */
 public class NettyTcpResponse extends ResponseAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpResponse.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpResponse.class);
 
 	/**
 	 * Instantiates a new netty tcp response.
-	 * 
-	 * @param channel
-	 *            the channel
+	 *
+	 * @param channel the channel
 	 */
 	public NettyTcpResponse(Channel channel) {
 		super(channel);
@@ -51,9 +50,8 @@ public class NettyTcpResponse extends ResponseAdapter {
 		// Write the response.
 		channel.write(buffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress())
-					.getHostName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(),
-					0, buffer.toByteBuffer().array().length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getHostName(),
+					((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
 		}
 	}
 }

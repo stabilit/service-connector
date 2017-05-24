@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
@@ -31,13 +32,13 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
- * 
+ *
  * @author JTraber
  */
 public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DefaultMessageEncoderDecoder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.

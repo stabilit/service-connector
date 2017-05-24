@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -28,6 +26,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
+import junit.framework.Assert;
+
 @SuppressWarnings("unused")
 public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionClientTest {
 
@@ -35,12 +35,13 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.setUpClientToSC();
 	}
-	
+
 	/**
 	 * Description: client has session and gets notified after SC was aborted<br>
 	 * Expectation: passes
@@ -65,8 +66,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 	}
 
 	/**
-	 * Description: client crashes (server gets stopped, session destroyed) in loading cache process, another client loads same
-	 * cacheId<br>
+	 * Description: client crashes (server gets stopped, session destroyed) in loading cache process, another client loads same cacheId<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -84,8 +84,8 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		sessionService1.send(message);
 		// stop test server now, session on SC gets deleted
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
-		ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 
 		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService2);

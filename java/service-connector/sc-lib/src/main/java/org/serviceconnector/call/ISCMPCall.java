@@ -23,48 +23,44 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Interface ISCMPCall. Basic functionality of a SCMPCall.
- * 
+ *
  * @author JTraber
  */
 public interface ISCMPCall {
 
 	/**
 	 * Invoke asynchronous.
-	 * 
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout in milliseconds
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout in milliseconds
+	 * @throws Exception the exception
 	 */
 	public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception;
 
 	/**
 	 * Sets the body.
-	 * 
-	 * @param body
-	 *            the new body
+	 *
+	 * @param body the new body
 	 */
 	public void setRequestBody(Object body);
 
 	/**
 	 * Gets the call.
-	 * 
+	 *
 	 * @return the call
 	 */
 	public SCMPMessage getRequest();
 
 	/**
 	 * Gets the result.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public SCMPMessage getResponse();
 
 	/**
 	 * Gets the message type.
-	 * 
+	 *
 	 * @return the message type
 	 */
 	public SCMPMsgType getMessageType();

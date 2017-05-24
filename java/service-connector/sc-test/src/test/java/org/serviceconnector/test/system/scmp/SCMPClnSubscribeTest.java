@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
@@ -36,17 +34,20 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnSubscribeCasc1Test;
 
+import junit.framework.Assert;
+
 public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 
 	public SCMPClnSubscribeTest() {
-		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();
+		SCMPClnSubscribeCasc1Test.setUpServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 
@@ -110,8 +111,7 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 
 		Thread.sleep(55000);
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);

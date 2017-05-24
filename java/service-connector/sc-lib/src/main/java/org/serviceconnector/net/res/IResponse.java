@@ -25,30 +25,28 @@ public interface IResponse {
 
 	/**
 	 * Gets the scmp.
-	 * 
+	 *
 	 * @return the scmp
 	 */
 	public SCMPMessage getSCMP();
 
 	/**
 	 * Sets the scmp.
-	 * 
-	 * @param scmp
-	 *            the new scmp
+	 *
+	 * @param scmp the new scmp
 	 */
 	public void setSCMP(SCMPMessage scmp);
 
 	/**
 	 * Write the response.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void write() throws Exception;
 
 	/**
 	 * Checks if is response content is large.
-	 * 
+	 *
 	 * @return true, if is large
 	 */
 	public boolean isLarge();

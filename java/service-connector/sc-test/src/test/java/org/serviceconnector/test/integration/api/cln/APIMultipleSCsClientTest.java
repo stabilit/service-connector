@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,21 +32,23 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APIMultipleSCsClientTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APIMultipleSCsClientTest.class);
 
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;
 	private SCClient client1;
 	private SCClient client2;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
-		scCtx1 = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
-		scCtx2 = ctrl.startSC(TestConstants.SC1, TestConstants.log4jSC1Properties, TestConstants.SC1Properties);
+		scCtx1 = ctrl.startSC(TestConstants.SC0, TestConstants.logbackSC0, TestConstants.SC0Properties);
+		scCtx2 = ctrl.startSC(TestConstants.SC1, TestConstants.logbackSC1, TestConstants.SC1Properties);
 		client1 = null;
 		client2 = null;
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -243,8 +246,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 		int nr = 500;
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Attach/detach. " + (i + 1) + "...");
+			}
 			client1.attach();
 			Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 			client2.attach();
@@ -293,8 +297,9 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 		int nr = 500;
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Attach/detach. " + (i + 1) + "...");
+			}
 			client1.attach();
 			Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 			client2.attach();

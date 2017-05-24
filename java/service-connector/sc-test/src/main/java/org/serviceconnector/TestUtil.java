@@ -19,19 +19,27 @@ package org.serviceconnector;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.serviceconnector.net.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPError;
@@ -40,6 +48,11 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import junit.framework.Assert;
 
 public class TestUtil {
 	private static final String EXC_REGEX = ".*<-EXC.*";
@@ -66,8 +79,7 @@ public class TestUtil {
 		}
 		int messageSize = headerSize + bodySize;
 
-		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize) + " "
-				+ SCMPVersion.CURRENT + "\n" + msgString;
+		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize) + " " + SCMPVersion.CURRENT + "\n" + msgString;
 		return scmpString;
 	}
 
@@ -108,7 +120,7 @@ public class TestUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	public static String get50MBString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Integer.MAX_VALUE; i++) {
@@ -120,35 +132,39 @@ public class TestUtil {
 		return sb.toString();
 	}
 
-
-	public static void checkLogFile(String log4jProperties, String logFileToCheck) throws Exception {
+	public static void checkLogFile(String logbackFileName, String logFileToCheck) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
-		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		// read the logPath from logback configurationFile file
+		Configuration logbackConfig = readPropertiesFromLogbackXml(logbackFileName);
+		compositeConfig.addConfiguration(logbackConfig);
 		compositeConfig.addConfiguration(new SystemConfiguration());
-		// Read & parse properties file.
+		// retrieve the logDir property
 		String logDirPath = userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
 
 		File fileToCheck = new File(logDirPath + fs + logFileToCheck);
-		BufferedReader br = new BufferedReader(new FileReader(fileToCheck));
-		String strLine;
+		try (FileReader fr = new FileReader(fileToCheck); BufferedReader br = new BufferedReader(fr)) {
+			String strLine;
 
-		while ((strLine = br.readLine()) != null) {
-			Matcher mEXC = PAT_EXC.matcher(strLine);
-			if (mEXC.matches()) {
-				throw new Exception("EXC found in " + fileToCheck.getPath() + "\n" + strLine);
-			}
-			Matcher mERROR = PAT_ERROR.matcher(strLine);
-			if (mERROR.matches()) {
-				throw new Exception("ERROR found in " + fileToCheck.getPath() + "\n" + strLine);
+			while ((strLine = br.readLine()) != null) {
+				Matcher mEXC = PAT_EXC.matcher(strLine);
+				if (mEXC.matches()) {
+					throw new Exception("EXC found in " + fileToCheck.getPath() + "\n" + strLine);
+				}
+				Matcher mERROR = PAT_ERROR.matcher(strLine);
+				if (mERROR.matches()) {
+					throw new Exception("ERROR found in " + fileToCheck.getPath() + "\n" + strLine);
+				}
 			}
 		}
 	}
 
-	public static void deleteLogDir(String log4jProperties) throws ConfigurationException {
+	public static void deleteLogDir(String logbackFileName) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
-		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		// read the logPath from logback configurationFile file
+		Configuration logbackConfig = readPropertiesFromLogbackXml(logbackFileName);
+		compositeConfig.addConfiguration(logbackConfig);
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		// Read & parse properties file.
 		String logDirPath = userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
@@ -160,8 +176,8 @@ public class TestUtil {
 	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
-			for (int i = 0; i < children.length; i++) {
-				boolean success = deleteDir(new File(dir, children[i]));
+			for (String element : children) {
+				boolean success = deleteDir(new File(dir, element));
 				if (!success) {
 					return false;
 				}
@@ -185,4 +201,31 @@ public class TestUtil {
 		}
 		out.close();
 	}
+
+	private static Configuration readPropertiesFromLogbackXml(String logbackFileName)
+			throws FileNotFoundException, UnsupportedEncodingException, XPathExpressionException, Exception {
+		// read the logback XML file
+		InputStream inputStream = new FileInputStream(new File("src/main/resources/", logbackFileName));
+		InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
+		InputSource inputSource = new InputSource(inputReader);
+		inputSource.setEncoding("UTF-8");
+		// XPath query to retrieve all property elements
+		String xpath = "/configuration/property";
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList propertyNodes = (NodeList) xPath.evaluate(xpath, inputSource, XPathConstants.NODESET);
+		int length = propertyNodes.getLength();
+		if (length == 0) {
+			throw new Exception("No properties defined in the file " + logbackFileName);
+		}
+		// go through all the properties from the logback file and add them to the configuration
+		Configuration configuration = new BaseConfiguration();
+		for (int i = 0; i < length; i++) {
+			Node item = propertyNodes.item(i);
+			String key = item.getAttributes().getNamedItem("name").getNodeValue();
+			String value = item.getAttributes().getNamedItem("value").getNodeValue();
+			configuration.addProperty(key, value);
+		}
+		return configuration;
+	}
+
 }

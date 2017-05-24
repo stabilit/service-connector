@@ -27,49 +27,49 @@ public interface IWebRequest {
 
 	/**
 	 * Gets the local server address.
-	 * 
+	 *
 	 * @return the local address
 	 */
 	public InetSocketAddress getLocalAddress();
 
 	/**
 	 * Gets the remote address.
-	 * 
+	 *
 	 * @return the remote address
 	 */
 	public InetSocketAddress getRemoteAddress();
 
 	/**
 	 * Gets the host.
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getHost();
 
 	/**
 	 * Gets the port.
-	 * 
+	 *
 	 * @return the port
 	 */
 	public int getPort();
 
 	/**
 	 * Gets the remote host.
-	 * 
+	 *
 	 * @return the remote host
 	 */
 	public String getRemoteHost();
 
 	/**
 	 * Gets the remote port.
-	 * 
+	 *
 	 * @return the remote port
 	 */
 	public int getRemotePort();
 
 	/**
 	 * Returns the URI (or path) of this request.
-	 * 
+	 *
 	 * @return the uRL
 	 */
 	public abstract String getURL();
@@ -84,53 +84,47 @@ public interface IWebRequest {
 
 	/**
 	 * Gets the parameter.
-	 * 
-	 * @param string
-	 *            the string
+	 *
+	 * @param string the string
 	 * @return the parameter
 	 */
 	public abstract String getParameter(String string);
 
 	/**
 	 * Gets the parameter list.
-	 * 
-	 * @param string
-	 *            the string
+	 *
+	 * @param string the string
 	 * @return the parameter list
 	 */
 	public abstract List<String> getParameterList(String string);
 
 	/**
 	 * Gets the attribute.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the attribute
 	 */
 	public abstract Object getAttribute(String key);
 
 	/**
 	 * Sets the attribute.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public abstract void setAttribute(String key, Object value);
 
 	/**
 	 * Gets the session.
-	 * 
-	 * @param create
-	 *            the create
+	 *
+	 * @param create the create
 	 * @return the session
 	 */
 	public abstract WebSession getSession(boolean create);
 
 	/**
 	 * Gets the parameter map.
-	 * 
+	 *
 	 * @return the parameter map
 	 */
 	public abstract Map<String, List<String>> getParameterMap();

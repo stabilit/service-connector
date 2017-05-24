@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -28,7 +29,7 @@ import org.serviceconnector.util.XMLDumpWriter;
  */
 public class CascadedPublishService extends Service implements IPublishService {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CascadedPublishService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CascadedPublishService.class);
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 	/** The cascaded sc. */
@@ -40,13 +41,10 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	/**
 	 * Instantiates a new cascaded publish service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param cascadedSC
-	 *            the cascaded sc
-	 * @param noDataIntervalSeconds
-	 *            the no data interval seconds
+	 *
+	 * @param name the name
+	 * @param cascadedSC the cascaded sc
+	 * @param noDataIntervalSeconds the no data interval seconds
 	 */
 	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalSeconds) {
 		super(name, ServiceType.CASCADED_PUBLISH_SERVICE);
@@ -57,15 +55,15 @@ public class CascadedPublishService extends Service implements IPublishService {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public PublishMessageQueue<SCMPMessage> getMessageQueue() {
 		return this.publishMessageQueue;
 	}
 
 	/**
 	 * Sets the cascaded sc.
-	 * 
-	 * @param cascadedSC
-	 *            the new cascaded sc
+	 *
+	 * @param cascadedSC the new cascaded sc
 	 */
 	public void setCascadedSC(CascadedSC cascadedSC) {
 		this.cascadedSC = cascadedSC;
@@ -73,7 +71,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	/**
 	 * Gets the cascaded sc.
-	 * 
+	 *
 	 * @return the cascaded sc
 	 */
 	public CascadedSC getCascadedSC() {
@@ -82,7 +80,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	/**
 	 * Gets the cascaded client. Synchronization avoids returning the client in renew process.
-	 * 
+	 *
 	 * @return the cascaded client
 	 */
 	public synchronized CascadedClient getCascClient() {
@@ -91,7 +89,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	/**
 	 * Gets the no data interval seconds.
-	 * 
+	 *
 	 * @return the no data interval seconds
 	 */
 	public int getNoDataIntervalSeconds() {
@@ -105,7 +103,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 		LOGGER.trace("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
 	}
-	
+
 	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("service");

@@ -34,11 +34,9 @@ public class XMLDumpWriter {
 
 	/**
 	 * Instantiates a new XML dump writer.
-	 * 
-	 * @param fos
-	 *            the fos
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param fos the fos
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public XMLDumpWriter(FileOutputStream fos) throws XMLStreamException {
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -47,9 +45,8 @@ public class XMLDumpWriter {
 
 	/**
 	 * Starts new document. writes the encoding, sc version and current timestamp
-	 * 
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void startDocument() throws XMLStreamException {
 		writer.writeStartDocument();
@@ -59,11 +56,9 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write comment.
-	 * 
-	 * @param comment
-	 *            the comment
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param comment the comment
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeComment(String comment) throws XMLStreamException {
 		writer.writeComment(comment);
@@ -71,9 +66,8 @@ public class XMLDumpWriter {
 
 	/**
 	 * write the end tag to the document and flush it.
-	 * 
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void endDocument() throws XMLStreamException {
 		writer.writeEndDocument();
@@ -82,11 +76,9 @@ public class XMLDumpWriter {
 
 	/**
 	 * Starts a new element.
-	 * 
-	 * @param value
-	 *            the value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param value the value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeStartElement(String value) throws XMLStreamException {
 		writer.writeStartElement(value);
@@ -94,9 +86,8 @@ public class XMLDumpWriter {
 
 	/**
 	 * Closes the actual element.
-	 * 
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeEndElement() throws XMLStreamException {
 		writer.writeEndElement();
@@ -104,13 +95,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write element.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeElement(String name, String value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -122,13 +110,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write element converting int value to String.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the int value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param name the name
+	 * @param value the int value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeElement(String name, int value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -138,13 +123,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write element converting long value to String.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the long value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param name the name
+	 * @param value the long value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeElement(String name, long value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -154,13 +136,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write element converting double value to String.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the double value
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param name the name
+	 * @param value the double value
+	 * @throws Exception the exception
 	 */
 	public void writeElement(String name, double value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -170,13 +149,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write element converting boolean value to String.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeElement(String name, boolean value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -186,13 +162,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write string attribute value.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param value
-	 *            the attribute value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param value the attribute value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeAttribute(String attributeName, String value) throws XMLStreamException {
 		if (value != null) {
@@ -202,13 +175,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write boolean attribute value converting it to string.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param value
-	 *            the attribute value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param value the attribute value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeAttribute(String attributeName, Boolean value) throws XMLStreamException {
 		if (value != null) {
@@ -218,13 +188,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write int attribute value converting it to string.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param value
-	 *            the attribute value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param value the attribute value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeAttribute(String attributeName, int value) throws XMLStreamException {
 		writer.writeAttribute(attributeName, String.valueOf(value));
@@ -232,13 +199,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write long attribute value converting it to string.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param value
-	 *            the attribute value
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param value the attribute value
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeAttribute(String attributeName, Long value) throws XMLStreamException {
 		if (value != null) {
@@ -248,13 +212,10 @@ public class XMLDumpWriter {
 
 	/**
 	 * Write double attribute value converting it to string
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param value
-	 *            the attribute value
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param value the attribute value
+	 * @throws Exception the exception
 	 */
 	public void writeAttribute(String attributeName, double value) throws XMLStreamException {
 		writer.writeAttribute(attributeName, String.valueOf(value));

@@ -19,8 +19,6 @@ package org.serviceconnector.test.system.scmp.casc1;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +38,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
+
+import junit.framework.Assert;
 
 public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
@@ -67,21 +67,22 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	public static void setUpServer() {
 		// need to have a publish service here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 2, 2, TestConstants.pubServiceName1);
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1,
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 2, 2, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -108,8 +109,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(30000);
@@ -142,8 +142,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 2000);
 		reply = cbk.getMessageSync(20000);
 		TestUtil.checkReply(reply);
@@ -156,9 +155,8 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: subscribe - waits 2 seconds - another subscribe fails because operation times out. We are in cascaded mode means
-	 * only one client request can reach the server. The other client requests wait on proxy's and an get back with operation time
-	 * out. It differs from direct test.<br>
+	 * Description: subscribe - waits 2 seconds - another subscribe fails because operation times out. We are in cascaded mode means only one client request can reach the server.
+	 * The other client requests wait on proxy's and an get back with operation time out. It differs from direct test.<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -211,8 +209,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		cbk = new TestCallback();
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(20000);
@@ -244,8 +241,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 20000);
 		reply = cbk.getMessageSync(15000);
 		TestUtil.checkReply(reply);
@@ -291,8 +287,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		// sleep 50 seconds - then send RCP for client1
 		Thread.sleep(50000);
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall1 = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId1);
+		SCMPReceivePublicationCall receivePublicationCall1 = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId1);
 		cbk1 = new TestCallback();
 		receivePublicationCall1.invoke(cbk1, 20000);
 		reply1 = cbk1.getMessageSync(15000);
@@ -301,15 +296,13 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 		// sleep 15 seconds - client2 timed out
 		Thread.sleep(15000);
-		SCMPReceivePublicationCall receivePublicationCall2 = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId2);
+		SCMPReceivePublicationCall receivePublicationCall2 = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId2);
 		cbk1 = new TestCallback();
 		receivePublicationCall2.invoke(cbk1, 2000);
 		reply1 = cbk1.getMessageSync(1000);
 		TestUtil.verifyError(reply1, SCMPError.SUBSCRIPTION_NOT_FOUND, SCMPMsgType.RECEIVE_PUBLICATION);
 
-		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1,
-				sessionId1);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId1);
 		unSubscribeCall.invoke(new TestCallback(false), 3000);
 		unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId2);
 		unSubscribeCall.invoke(new TestCallback(false), 3000);

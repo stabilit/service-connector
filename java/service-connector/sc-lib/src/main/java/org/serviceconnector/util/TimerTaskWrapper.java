@@ -18,27 +18,25 @@ package org.serviceconnector.util;
 
 import java.util.TimerTask;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class TimerTaskWrapper. Wraps TimerTaks from JDK. Is used to time a process. TimerTaks times out and calls the
- * target ITimerRun.
+ * The Class TimerTaskWrapper. Wraps TimerTaks from JDK. Is used to time a process. TimerTaks times out and calls the target ITimerRun.
  */
 public class TimerTaskWrapper extends TimerTask {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(TimerTaskWrapper.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimerTaskWrapper.class);
+
 	/** The target to run when time is out. */
 	private ITimeout target;
 
 	/**
 	 * Instantiates a TimerTaskWrapper.
-	 * 
-	 * @param target
-	 *            the target
+	 *
+	 * @param target the target
 	 */
 	public TimerTaskWrapper(ITimeout target) {
 		this.target = target;

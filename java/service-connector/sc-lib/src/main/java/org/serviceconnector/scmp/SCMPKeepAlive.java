@@ -23,11 +23,11 @@ public class SCMPKeepAlive extends SCMPMessage {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6178848400686789871L;
-	
+
 	public SCMPKeepAlive(SCMPVersion scmpVersion) {
 		super(scmpVersion);
 	}
-		
+
 	@Override
 	public boolean isKeepAlive() {
 		return true;

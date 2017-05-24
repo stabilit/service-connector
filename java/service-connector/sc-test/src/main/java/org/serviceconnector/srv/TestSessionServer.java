@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -35,30 +33,30 @@ import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
+import org.slf4j.LoggerFactory;
 
 public class TestSessionServer extends TestStatefulServer {
 
 	static {
-		TestStatefulServer.LOGGER = Logger.getLogger(TestSessionServer.class);
+		TestStatefulServer.LOGGER = LoggerFactory.getLogger(TestSessionServer.class);
 	}
 
 	/**
 	 * Main method if you like to start in debug mode.
-	 * 
-	 * @param args
-	 *            [0] serverName<br>
-	 *            [1] listenerPort<br>
-	 *            [2] SC port<br>
-	 *            [3] maxSessions<br>
-	 *            [4] maxConnections<br>
-	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [6] serviceNames (comma delimited list)<br>
-	 *            [7] nics (comma separated list)<br>
+	 *
+	 * @param args [0] serverName<br>
+	 *        [1] listenerPort<br>
+	 *        [2] SC port<br>
+	 *        [3] maxSessions<br>
+	 *        [4] maxConnections<br>
+	 *        [5] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [6] serviceNames (comma delimited list)<br>
+	 *        [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
-		LOGGER.log(Level.OFF, "TestSessionServer is starting ...");
+		LOGGER.debug("TestSessionServer is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 		TestSessionServer server = new TestSessionServer();
 		server.setServerName(args[0]);
@@ -103,9 +101,9 @@ public class TestSessionServer extends TestStatefulServer {
 			try {
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", fileCtx);
 			} catch (SCMPValidatorException e1) {
-				LOGGER.fatal("unable to get path to pid file", e1);
+				LOGGER.error("unable to get path to pid file", e1);
 			}
-			LOGGER.log(Level.OFF, "TestSessionServer is running ...");
+			LOGGER.debug("TestSessionServer is running ...");
 			// server.destroy();
 		} catch (Exception e) {
 			LOGGER.error("runSessionServer", e);
@@ -116,7 +114,7 @@ public class TestSessionServer extends TestStatefulServer {
 
 	/**
 	 * Callback handling all server events
-	 * 
+	 *
 	 * @author JTrnka
 	 */
 	class SrvCallback extends SCSessionServerCallback {
@@ -132,7 +130,7 @@ public class TestSessionServer extends TestStatefulServer {
 			if (sessionInfo != null) {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
-					LOGGER.log(Level.OFF, "Kill request received, exiting ...");
+					LOGGER.debug("Kill request received, exiting ...");
 					response.setReject(true);
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();

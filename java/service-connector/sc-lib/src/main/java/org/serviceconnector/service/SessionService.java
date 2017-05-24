@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.CreateSessionCommandCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -30,13 +31,12 @@ public class SessionService extends StatefulService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SessionService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
 	/**
 	 * Instantiates a new session service.
-	 * 
-	 * @param name
-	 *            the name
+	 *
+	 * @param name the name
 	 */
 	public SessionService(String name) {
 		super(name, ServiceType.SESSION_SERVICE);
@@ -44,25 +44,18 @@ public class SessionService extends StatefulService {
 
 	/**
 	 * Allocate server and create session.
-	 * 
-	 * @param msgToForward
-	 *            the message to forward
-	 * @param callback
-	 *            the callback
-	 * @param session
-	 *            the session
-	 * @param timeoutMillis
-	 *            the timeout in milliseconds
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param msgToForward the message to forward
+	 * @param callback the callback
+	 * @param session the session
+	 * @param timeoutMillis the timeout in milliseconds
+	 * @throws Exception the exception
 	 */
-	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, CreateSessionCommandCallback callback,
-			Session session, int timeoutMillis) throws Exception {
+	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, CreateSessionCommandCallback callback, Session session, int timeoutMillis) throws Exception {
 		int numberOfServer = this.listOfServers.size();
 		if (numberOfServer == 0) {
 			// no server registered for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service="
-					+ msgToForward.getServiceName());
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service=" + msgToForward.getServiceName());
 			scmpCommandException.setMessageType(msgToForward.getMessageType());
 			throw scmpCommandException;
 		}
@@ -87,8 +80,7 @@ public class SessionService extends StatefulService {
 			}
 		}
 		// no free session available
-		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service="
-				+ msgToForward.getServiceName());
+		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service=" + msgToForward.getServiceName());
 		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
 		throw noFreeSessionExc;
 	}

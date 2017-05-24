@@ -40,20 +40,14 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 
 	/**
 	 * Instantiates a new csc change subscription callback for casc.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param cascSCSubscription
-	 *            the casc sc subscription
-	 * @param cascSCMaksString
-	 *            the casc sc maks string
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param cascSCSubscription the casc sc subscription
+	 * @param cascSCMaksString the casc sc maks string
 	 */
-	public CscChangeSubscriptionCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription cascSCSubscription, String cascSCMaksString) {
+	public CscChangeSubscriptionCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback, Subscription cascSCSubscription, String cascSCMaksString) {
 		super(request, response, callback);
 		this.cascSCSubscription = cascSCSubscription;
 		this.cascSCMaskString = cascSCMaksString;
@@ -61,9 +55,8 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 
 	/**
 	 * Receive.
-	 * 
-	 * @param reply
-	 *            the reply {@inheritDoc}
+	 *
+	 * @param reply the reply {@inheritDoc}
 	 */
 	@Override
 	public void receive(SCMPMessage reply) {
@@ -73,8 +66,7 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 		if (reply.isFault() == false && reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION) == false) {
 			if (cascSCSubscription.isCascaded() == true) {
 				// update csc subscription id list for cascaded subscription
-				cascSCSubscription.addCscSubscriptionId(reqMessage.getSessionId(),
-						new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
+				cascSCSubscription.addCscSubscriptionId(reqMessage.getSessionId(), new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
 			}
 			// change subscription for cascaded SC
 			PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSCSubscription.getService()).getMessageQueue();
@@ -93,7 +85,7 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 
 	/**
 	 * Gets the subscription.
-	 * 
+	 *
 	 * @return the subscription {@inheritDoc}
 	 */
 	@Override
@@ -102,6 +94,7 @@ public class CscChangeSubscriptionCallbackForCasc extends CommandCascCallback im
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public IRequest getRequest() {
 		return this.request;
 	}

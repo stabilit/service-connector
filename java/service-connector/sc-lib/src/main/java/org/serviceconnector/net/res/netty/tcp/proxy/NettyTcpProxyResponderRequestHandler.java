@@ -19,7 +19,6 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -32,6 +31,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyTcpProxyResponderRequestHandler.
@@ -39,7 +40,7 @@ import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpProxyResponderRequestHandler.class);
 
 	/** The cf. */
 	private final ClientSocketChannelFactory cf;
@@ -55,13 +56,10 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 	/**
 	 * Instantiates a new netty tcp proxy responder request handler.
-	 * 
-	 * @param cf
-	 *            the cf
-	 * @param remoteHost
-	 *            the remote host
-	 * @param remotePort
-	 *            the remote port
+	 *
+	 * @param cf the cf
+	 * @param remoteHost the remote host
+	 * @param remotePort the remote port
 	 */
 	public NettyTcpProxyResponderRequestHandler(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
@@ -83,6 +81,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		f.await(); // avoids writing before channel connect is completed
 		outboundChannel = f.getChannel();
 		f.addListener(new ChannelFutureListener() {
+			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					// Connection attempt succeeded:
@@ -111,13 +110,10 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 	/**
 	 * Message received.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param event
-	 *            the event
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 *
+	 * @param ctx the ctx
+	 * @param event the event
+	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
@@ -127,13 +123,10 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 	/**
 	 * Exception caught.
-	 * 
-	 * @param ctx
-	 *            the ctx
-	 * @param e
-	 *            the e
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 *
+	 * @param ctx the ctx
+	 * @param e the e
+	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
@@ -143,7 +136,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info(th); // regular disconnect causes this expected exception
+			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);
@@ -160,9 +153,8 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 		/**
 		 * Instantiates a new outbound handler.
-		 * 
-		 * @param inboundChannel
-		 *            the inbound channel
+		 *
+		 * @param inboundChannel the inbound channel
 		 */
 		OutboundHandler(Channel inboundChannel) {
 			this.inboundChannel = inboundChannel;
@@ -200,9 +192,8 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 		/**
 		 * Closes the specified channel after all queued write requests are flushed.
-		 * 
-		 * @param ch
-		 *            the ch
+		 *
+		 * @param ch the ch
 		 */
 		static void closeOnFlush(Channel ch) {
 			if (ch.isConnected()) {

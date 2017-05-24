@@ -42,22 +42,15 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Instantiates a new subscription.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param sessionInfo
-	 *            the session info
-	 * @param ipAddressList
-	 *            the ip address list
-	 * @param noDataInterval
-	 *            the no data interval
-	 * @param subscriptionTimeoutMillis
-	 *            the subscription timeout millis
-	 * @param cascaded
-	 *            the cascaded
+	 *
+	 * @param mask the mask
+	 * @param sessionInfo the session info
+	 * @param ipAddressList the ip address list
+	 * @param noDataInterval the no data interval
+	 * @param subscriptionTimeoutMillis the subscription timeout millis
+	 * @param cascaded the cascaded
 	 */
-	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval,
-			double subscriptionTimeoutMillis, boolean cascaded) {
+	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval, double subscriptionTimeoutMillis, boolean cascaded) {
 		super(sessionInfo, ipAddressList, cascaded);
 		this.mask = mask;
 		this.noDataIntervalMillis = noDataInterval;
@@ -67,7 +60,7 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Gets the mask.
-	 * 
+	 *
 	 * @return the mask
 	 */
 	public SubscriptionMask getMask() {
@@ -76,9 +69,8 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            the new mask
+	 *
+	 * @param mask the new mask
 	 */
 	public void setMask(SubscriptionMask mask) {
 		this.mask = mask;
@@ -86,7 +78,7 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Gets the subscription timeout millis.
-	 * 
+	 *
 	 * @return the subscription timeout millis
 	 */
 	public double getSubscriptionTimeoutMillis() {
@@ -95,7 +87,7 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Gets the server.
-	 * 
+	 *
 	 * @return the server {@inheritDoc}
 	 */
 	@Override
@@ -105,7 +97,7 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Gets the no data interval.
-	 * 
+	 *
 	 * @return the no data interval
 	 */
 	public int getNoDataIntervalMillis() {
@@ -114,11 +106,9 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Adds the csc subscription id.
-	 * 
-	 * @param cscSubscriptionId
-	 *            the csc subscription id
-	 * @param cscMask
-	 *            the csc mask
+	 *
+	 * @param cscSubscriptionId the csc subscription id
+	 * @param cscMask the csc mask
 	 */
 	public void addCscSubscriptionId(String cscSubscriptionId, SubscriptionMask cscMask) {
 		this.cscSubscriptionIds.put(cscSubscriptionId, cscMask);
@@ -126,9 +116,8 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Removes the csc subscription id.
-	 * 
-	 * @param cscSubscriptionId
-	 *            the csc subscription id
+	 *
+	 * @param cscSubscriptionId the csc subscription id
 	 */
 	public void removeCscSubscriptionId(String cscSubscriptionId) {
 		this.cscSubscriptionIds.remove(cscSubscriptionId);
@@ -136,7 +125,7 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Gets the csc subscription ids.
-	 * 
+	 *
 	 * @return the csc subscription ids
 	 */
 	public Map<String, SubscriptionMask> getCscSubscriptionIds() {
@@ -145,12 +134,11 @@ public class Subscription extends AbstractSession {
 
 	/**
 	 * Dump the subscription into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("subscription");
 		writer.writeAttribute("id", this.getId());

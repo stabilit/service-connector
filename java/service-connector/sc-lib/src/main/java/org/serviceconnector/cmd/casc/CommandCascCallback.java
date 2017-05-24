@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -35,7 +36,7 @@ import org.serviceconnector.service.InvalidMaskLengthException;
  */
 public class CommandCascCallback implements ISCMPMessageCallback {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CommandCascCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandCascCallback.class);
 	/** The callback. */
 	protected IResponderCallback responderCallback;
 	/** The request. */
@@ -47,13 +48,10 @@ public class CommandCascCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Instantiates a new CommandCascCallback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
 	 */
 	public CommandCascCallback(IRequest request, IResponse response, IResponderCallback callback) {
 		this.responderCallback = callback;

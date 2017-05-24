@@ -18,7 +18,7 @@ package org.serviceconnector.net.req.netty;
 
 /**
  * The Class IdleTimeoutException.
- * 
+ *
  * @author JTraber
  */
 public class IdleTimeoutException extends Exception {
@@ -28,9 +28,8 @@ public class IdleTimeoutException extends Exception {
 
 	/**
 	 * Instantiates a new idle timeout exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public IdleTimeoutException(String message) {
 		super(message);

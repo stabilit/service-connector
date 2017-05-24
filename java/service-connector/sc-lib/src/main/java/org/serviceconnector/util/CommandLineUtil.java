@@ -16,11 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CommandLineUtil. Helper class to extract content of virtual machine arguments.
- * 
+ *
  * @author JTraber
  */
 public final class CommandLineUtil {
@@ -33,15 +34,13 @@ public final class CommandLineUtil {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(CommandLineUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandLineUtil.class);
 
 	/**
 	 * Gets the arguments.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @param key
-	 *            the key
+	 *
+	 * @param args the arguments
+	 * @param key the key
 	 * @return the arguments
 	 */
 	public static String getArg(String[] args, String key) {

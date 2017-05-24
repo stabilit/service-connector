@@ -16,13 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
 /**
  * The Enum SCMPMsgType. Defines possible message types in SCMP.
- * 
+ *
  * @author JTraber
  */
 public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
@@ -100,7 +101,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPMsgType.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPMsgType.class);
 
 	/** The value. */
 	private String value;
@@ -109,9 +110,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/**
 	 * Instantiates a SCMPMsgType.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private SCMPMsgType(String value) {
 		this.value = value;
@@ -124,9 +124,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/**
 	 * Gets the msg type by string.
-	 * 
-	 * @param messageTypeString
-	 *            the messageType as string
+	 *
+	 * @param messageTypeString the messageType as string
 	 * @return the msg type as object
 	 */
 	public static SCMPMsgType getMsgType(String messageTypeString) {

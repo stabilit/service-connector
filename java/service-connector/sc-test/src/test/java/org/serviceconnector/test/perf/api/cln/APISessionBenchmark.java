@@ -41,8 +41,9 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 1000) == 0)
+			if (((i + 1) % 1000) == 0) {
 				testLogger.info("Creating Session nr. " + (i + 1) + "...");
+			}
 			response = sessionService.createSession(10, request, cbk);
 			sessionService.deleteSession(10);
 		}
@@ -60,20 +61,22 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		SCSessionService[] sessionServices = new SCSessionService[nr];
 		String[] sessionID = new String[nr];
 		MsgCallback cbk = new MsgCallback(sessionServices[0]);
-		
+
 		// create services
 		testLogger.info("Creating Services...");
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Creating service nr. " + (i + 1) + "...");
+			}
 			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 		}
 		long start = System.currentTimeMillis();
-		
-		//create sessions
+
+		// create sessions
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Creating session nr. " + (i + 1) + "...");
+			}
 			response = sessionServices[i].createSession(10, request, cbk);
 			sessionID[i] = sessionServices[i].getSessionId();
 		}
@@ -90,11 +93,12 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 			}
 		}
 		Assert.assertEquals("sessions not unique", false, duplicates);
-		//delete sessions
+		// delete sessions
 		start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Deleting session nr. " + (i + 1) + "...");
+			}
 			sessionServices[i].deleteSession(10);
 		}
 		stop = System.currentTimeMillis();
@@ -107,16 +111,16 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 	}
 
 	//
-	//	@Test
-	//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
-	//		int threadCount = Thread.activeCount();
+	// @Test
+	// public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
+	// int threadCount = Thread.activeCount();
 	//
-	//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
-	//		long result = clientCtrl.perform();
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
+	// long result = clientCtrl.perform();
 	//
-	//		testLogger.info("Threads before initializing clients:\t" + threadCount);
-	//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-	//		Assert.assertEquals(true, result < 25000);
-	//	}
+	// testLogger.info("Threads before initializing clients:\t" + threadCount);
+	// testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
+	// Assert.assertEquals(true, result < 25000);
+	// }
 	//
 }

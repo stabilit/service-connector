@@ -26,9 +26,8 @@ public class InvalidMaskLengthException extends Exception {
 
 	/**
 	 * Instantiates a new invalid mask length exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public InvalidMaskLengthException(String message) {
 		super(message);

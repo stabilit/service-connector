@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.IRequest;
@@ -32,15 +33,15 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a listen is set
- * up. Receive publication command runs asynchronously and passes through any parts messages.
- * 
+ * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a listen is set up. Receive publication command runs
+ * asynchronously and passes through any parts messages.
+ *
  * @author JTraber
  */
 public class ReceivePublicationCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ReceivePublicationCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReceivePublicationCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -59,8 +60,7 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscription);
 		synchronized (publishMessageQueue) {
 			// reset subscription timeout to NOI+ECI
-			this.subscriptionRegistry.resetSubscriptionTimeout(subscription,
-					subscription.getNoDataIntervalMillis() + subscription.getSubscriptionTimeoutMillis());
+			this.subscriptionRegistry.resetSubscriptionTimeout(subscription, subscription.getNoDataIntervalMillis() + subscription.getSubscriptionTimeoutMillis());
 			// tries polling message
 			message = publishMessageQueue.getMessageOrListen(subscriptionId, request, response);
 			if (message == null) {
@@ -98,8 +98,7 @@ public class ReceivePublicationCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);

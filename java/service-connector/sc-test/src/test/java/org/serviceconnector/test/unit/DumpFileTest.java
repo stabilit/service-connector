@@ -19,8 +19,6 @@ package org.serviceconnector.test.unit;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +26,8 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
+
+import junit.framework.Assert;
 
 public class DumpFileTest {
 

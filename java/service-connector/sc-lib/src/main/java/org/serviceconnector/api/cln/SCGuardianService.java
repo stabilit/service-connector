@@ -30,10 +30,10 @@ public class SCGuardianService extends SCPublishService {
 	}
 
 	/**
-	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility).
-	 * The registered message callback from the client gets informed in case of an error. Operation timeout for receive publication
-	 * is (receivePublicationTimeoutSeconds+noDataIntervalSeconds).
+	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility). The registered message callback from the client gets informed in case of an error.
+	 * Operation timeout for receive publication is (receivePublicationTimeoutSeconds+noDataIntervalSeconds).
 	 */
+	@Override
 	void receivePublication() {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
@@ -42,20 +42,17 @@ public class SCGuardianService extends SCPublishService {
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCGuardianCallback callback = new SCGuardianCallback(this, (SCGuardianMessageCallback) this.messageCallback);
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
-				this.sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName, this.sessionId);
 		try {
 			PerformanceLogger.begin(this.sessionId);
-			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
-					* (this.receivePublicationTimeoutSeconds + this.noDataIntervalSeconds));
+			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR * (this.receivePublicationTimeoutSeconds + this.noDataIntervalSeconds));
 		} catch (Exception e) {
 			PerformanceLogger.end(this.sessionId);
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Receive publication failed.");
 			ex.setSCErrorCode(SCMPError.BROKEN_SUBSCRIPTION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("Receive publication for service=" + this.serviceName
-					+ " failed."));
+			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("Receive publication for service=" + this.serviceName + " failed."));
 			this.messageCallback.receive(ex);
 			return;
 		}

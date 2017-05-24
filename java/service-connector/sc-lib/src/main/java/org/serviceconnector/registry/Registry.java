@@ -20,24 +20,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.registry.jmx.IRegistryMXBean;
 import org.serviceconnector.registry.jmx.RegistryEntryWrapperJMX;
 
 /**
  * The Class Registry. Provides functionality for general registries.
- * 
- * @param <K>
- *            the key type
- * @param <V>
- *            the value type
+ *
+ * @param <K> the key type
+ * @param <V> the value type
  * @author JTraber
  */
 public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Registry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Registry.class);
 
 	/** The registry map. */
 	protected Map<K, V> registryMap;
@@ -51,11 +50,9 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Put an entry into map.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	protected void put(K key, V value) {
 		this.registryMap.put(key, value);
@@ -63,9 +60,8 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Gets an entry by key. If key is null - null will be returned.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the map bean
 	 */
 	protected V get(K key) {
@@ -77,9 +73,8 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Removes an entry by key.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the v
 	 */
 	protected V remove(K key) {
@@ -91,7 +86,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Gets the size.
-	 * 
+	 *
 	 * @return the size
 	 */
 	public int getSize() {
@@ -100,9 +95,8 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Looks up a key.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return true, if successful
 	 */
 	public boolean containsKey(K key) {
@@ -113,10 +107,9 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	}
 
 	/**
-	 * Key set. The view's iterator is a "weakly consistent" iterator that will never throw
-	 * ConcurrentModificationException, and guarantees to traverse elements as they existed upon construction of the
-	 * iterator, and may (but is not guaranteed to) reflect any modifications subsequent to construction.
-	 * 
+	 * Key set. The view's iterator is a "weakly consistent" iterator that will never throw ConcurrentModificationException, and guarantees to traverse elements as they existed
+	 * upon construction of the iterator, and may (but is not guaranteed to) reflect any modifications subsequent to construction.
+	 *
 	 * @return the set
 	 */
 	public Set<K> keySet() {
@@ -125,7 +118,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/**
 	 * Key set array.
-	 * 
+	 *
 	 * @return the k[]
 	 */
 	@SuppressWarnings("unchecked")

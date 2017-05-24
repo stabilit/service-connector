@@ -11,6 +11,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-config C:\stabilit\projects\EUREX\SC\java\sc-test\src\main\resources\sc2.properties"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="service-connector"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=file:C:\stabilit\projects\EUREX\SC\java\sc-test\src\main\resources\log4j-sc2.properties"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlogback.configurationFile=file:C:\stabilit\projects\EUREX\SC\java\sc-test\src\main\resources\logback-sc2.xml"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:sc-test}"/>
 </launchConfiguration>

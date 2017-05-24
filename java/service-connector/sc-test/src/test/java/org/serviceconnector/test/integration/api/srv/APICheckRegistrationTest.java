@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -30,15 +31,15 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APICheckRegistrationTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APICheckRegistrationTest.class);
 
 	/**
-	 * Description:	check session server registration<br>
-	 * Expectation:	passes
+	 * Description: check session server registration<br>
+	 * Expectation: passes
 	 */
 	@Test
 	public void t01_checkSessionServer() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -49,12 +50,12 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 	}
 
 	/**
-	 * Description:	check publish server registration<br>
-	 * Expectation:	passes
+	 * Description: check publish server registration<br>
+	 * Expectation: passes
 	 */
 	@Test
 	public void t02_checkPublishServer() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
@@ -65,5 +66,4 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 	}
 
-	
 }

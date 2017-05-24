@@ -61,6 +61,7 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	/**
 	 * Sets the up.
 	 */
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -159,8 +160,7 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t04_DecodeUNDEFTest() {
-		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n"
-				+ "mty=" + msgType.getValue() + "\n\n" + body + "\n";
+		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -327,9 +327,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 
 	/**
 	 * Verify scmp string body.
-	 * 
-	 * @param scmp
-	 *            the scmp
+	 *
+	 * @param scmp the scmp
 	 */
 	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -341,9 +340,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 
 	/**
 	 * Verify scmp.
-	 * 
-	 * @param scmp
-	 *            the scmp
+	 *
+	 * @param scmp the scmp
 	 */
 	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));

@@ -19,7 +19,8 @@ package org.serviceconnector.net.req.netty.tcp;
 import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -42,15 +43,13 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpConnection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpConnection.class);
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
-	 * 
-	 * @param channelFactory
-	 *            the channel factory
-	 * @param timer
-	 *            the timer
+	 *
+	 * @param channelFactory the channel factory
+	 * @param timer the timer
 	 */
 	public NettyTcpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		super(channelFactory, timer);
@@ -60,8 +59,8 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		this.bootstrap = new ClientBootstrap(NettyTcpConnection.channelFactory);
-		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext, NettyTcpConnection.timer);
+		this.bootstrap = new ClientBootstrap(NettyConnectionAdpater.channelFactory);
+		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext, NettyConnectionAdpater.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
 		this.bootstrap.setOption("tcpNoDelay", true);
@@ -80,12 +79,10 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 			this.remotSocketAddress = (InetSocketAddress) this.channel.getRemoteAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect failed to " + this.remotSocketAddress.toString(), ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
-					+ this.remotSocketAddress.toString());
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP=" + this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
-					this.remotSocketAddress.getPort());
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -103,8 +100,8 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		chBuffer.writeBytes(baos.toByteArray());
 		channel.write(chBuffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
-					this.remotSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(),
+					chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
 	}
 

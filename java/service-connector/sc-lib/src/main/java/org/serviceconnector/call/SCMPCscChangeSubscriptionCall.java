@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -33,15 +34,13 @@ public class SCMPCscChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCscChangeSubscriptionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCscChangeSubscriptionCall.class);
 
 	/**
 	 * Instantiates a new SCMP csc change subscription call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToSend
-	 *            the message to send
+	 *
+	 * @param requester the requester
+	 * @param msgToSend the message to send
 	 */
 	public SCMPCscChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

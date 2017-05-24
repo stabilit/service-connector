@@ -29,11 +29,9 @@ public class CascadedFileService extends Service {
 
 	/**
 	 * Instantiates a new cascaded file service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param cascadedSC
-	 *            the cascaded sc
+	 *
+	 * @param name the name
+	 * @param cascadedSC the cascaded sc
 	 */
 	public CascadedFileService(String name, CascadedSC cascadedSC) {
 		super(name, ServiceType.CASCADED_FILE_SERVICE);
@@ -42,7 +40,7 @@ public class CascadedFileService extends Service {
 
 	/**
 	 * Gets the cascaded sc.
-	 * 
+	 *
 	 * @return the cascaded sc
 	 */
 	public CascadedSC getCascadedSC() {

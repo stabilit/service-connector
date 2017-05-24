@@ -28,27 +28,21 @@ public class SrvSessionService extends SrvService {
 
 	/**
 	 * Instantiates a new srv session service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param maxSessions
-	 *            the max sessions
-	 * @param maxConnections
-	 *            the max connections
-	 * @param requester
-	 *            the requester
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param serviceName the service name
+	 * @param maxSessions the max sessions
+	 * @param maxConnections the max connections
+	 * @param requester the requester
+	 * @param callback the callback
 	 */
-	public SrvSessionService(String serviceName, int maxSessions, int maxConnections, IRequester requester,
-			ISCSessionServerCallback callback) {
+	public SrvSessionService(String serviceName, int maxSessions, int maxConnections, IRequester requester, ISCSessionServerCallback callback) {
 		super(serviceName, maxSessions, maxConnections, requester);
 		this.callback = callback;
 	}
 
 	/**
 	 * Gets the callback.
-	 * 
+	 *
 	 * @return the callback
 	 */
 	public ISCSessionServerCallback getCallback() {

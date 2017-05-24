@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
@@ -35,20 +33,23 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
 
+import junit.framework.Assert;
+
 public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc1Test {
 
 	public SCMPClnChangeSubscriptionTest() {
-		SCMPClnChangeSubscriptionTest.setUpServiceConnectorAndServer();
+		SCMPClnChangeSubscriptionCasc1Test.setUpServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		if (this.requester != null) {
 			this.requester.destroy();
 		}
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 
@@ -70,8 +71,7 @@ public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		changeSubscriptionCall.setSessionInfo(TestConstants.sleepCmd);

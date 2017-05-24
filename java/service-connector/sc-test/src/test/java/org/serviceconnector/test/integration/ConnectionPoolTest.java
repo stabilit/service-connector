@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,22 +41,22 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.DateTimeUtility;
 
+import junit.framework.Assert;
+
 /**
  * The Class ConnectionPoolTest. <br />
  * Check following keys in windows registry in case of an error: <br/>
  * <br/>
  * Browse to the HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters keys.<br />
  * <br />
- * MaxUserPort: This parameter controls the maximum port number that is used when a program requests any available user port
- * from the server. Typically, ephemeral (short-lived) ports are allocated between the values of 1024 and 5000 inclusive.<br />
+ * MaxUserPort: This parameter controls the maximum port number that is used when a program requests any available user port from the server. Typically, ephemeral (short-lived)
+ * ports are allocated between the values of 1024 and 5000 inclusive.<br />
  * <br />
  * TcpNumConnections: This parameter limits the maximum number of connections that TCP can have open at the same time.<br />
  * <br />
- * Valid examples: MaxUserPort 60000, TcpNumConnections 60000
- * More Information: {@link http
- * ://publib.boulder.ibm.com/infocenter/iisinfsv/v8r1/index.jsp?topic=/com.ibm.swg.im.iis.productization
- * .iisinfsv.install.doc/topics/wsisinst_config_winregtcpip.html}
- * 
+ * Valid examples: MaxUserPort 60000, TcpNumConnections 60000 More Information: {@link http
+ * ://publib.boulder.ibm.com/infocenter/iisinfsv/v8r1/index.jsp?topic=/com.ibm.swg.im.iis.productization .iisinfsv.install.doc/topics/wsisinst_config_winregtcpip.html}
+ *
  * @author JTraber
  */
 @RunWith(Parameterized.class)
@@ -82,13 +80,14 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 				new Object[] { new Integer(TestConstants.PORT_SC0_HTTP), ConnectionType.NETTY_HTTP });
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAliveSeconds,
-				this.keepAliveOTIMillis);
+		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAliveSeconds, this.keepAliveOTIMillis);
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -189,8 +188,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		connectionPool.setMinConnections(2);
 		connectionPool.setCloseAfterKeepAlive(false);
 		connectionPool.initMinConnections();
-		Thread.sleep((long) ((this.keepAliveSeconds * 1.5) * Constants.SEC_TO_MILLISEC_FACTOR)
-				* Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
+		Thread.sleep((long) ((this.keepAliveSeconds * 1.5) * Constants.SEC_TO_MILLISEC_FACTOR) * Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
 		IConnection connection = connectionPool.getConnection();
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE);
 		Assert.assertTrue(connection.isConnected());
@@ -248,8 +246,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 
 		for (int i = 0; i < 10000; i++) {
-			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
-					this.keepAliveSeconds, this.keepAliveOTIMillis);
+			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAliveSeconds, this.keepAliveOTIMillis);
 			IConnection connection = cp.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);

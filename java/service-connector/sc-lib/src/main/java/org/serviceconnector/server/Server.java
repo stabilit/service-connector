@@ -20,7 +20,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.concurrent.ScheduledFuture;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -29,16 +30,15 @@ import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.util.TimeoutWrapper;
 
 /**
- * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
- * holds a connection pool to communicate to a backend server. Servers activity is observed by a timer. It gets initialized by
- * adding server to server registry.
- * 
+ * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and holds a connection pool to communicate to a
+ * backend server. Servers activity is observed by a timer. It gets initialized by adding server to server registry.
+ *
  * @author JTraber
  */
 public abstract class Server implements IServer {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(Server.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
 	/** The remote node configuration. */
 	protected RemoteNodeConfiguration remoteNodeConfiguration;
@@ -61,11 +61,9 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Instantiates a new server.
-	 * 
-	 * @param remoteNodeConfiguration
-	 *            the remote node configuration
-	 * @param socketAddress
-	 *            the socket address
+	 *
+	 * @param remoteNodeConfiguration the remote node configuration
+	 * @param socketAddress the socket address
 	 */
 	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		this.requester = new Requester(remoteNodeConfiguration);
@@ -79,9 +77,8 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Immediate connect.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void immediateConnect() throws Exception {
 		this.requester.immediateConnect();
@@ -89,7 +86,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the socket address.
-	 * 
+	 *
 	 * @return the socket address
 	 */
 	public SocketAddress getSocketAddress() {
@@ -98,7 +95,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the server timeout.
-	 * 
+	 *
 	 * @return the server timeout
 	 */
 	public ScheduledFuture<TimeoutWrapper> getTimeout() {
@@ -107,9 +104,8 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Sets the server timeout.
-	 * 
-	 * @param timeout
-	 *            the new server timeout
+	 *
+	 * @param timeout the new server timeout
 	 */
 	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
 		this.timeout = timeout;
@@ -117,9 +113,8 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Sets the timeouter task.
-	 * 
-	 * @param timeouterTask
-	 *            the new timeouter task
+	 *
+	 * @param timeouterTask the new timeouter task
 	 */
 	public void setTimeouterTask(TimeoutWrapper timeouterTask) {
 		this.timeouterTask = timeouterTask;
@@ -127,7 +122,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the timeouter task.
-	 * 
+	 *
 	 * @return the timeouter task
 	 */
 	public TimeoutWrapper getTimeouterTask() {
@@ -136,7 +131,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the host.
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getHost() {
@@ -145,7 +140,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the port number.
-	 * 
+	 *
 	 * @return the port number
 	 */
 	public int getPortNr() {
@@ -154,7 +149,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the connection type
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getConnectionType() {
@@ -163,7 +158,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the max connections.
-	 * 
+	 *
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
@@ -178,7 +173,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the server timeout milliseconds.
-	 * 
+	 *
 	 * @return the server timeout milliseconds
 	 */
 	public double getServerTimeoutMillis() {
@@ -187,7 +182,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the server key.
-	 * 
+	 *
 	 * @return the server key
 	 */
 	public String getServerKey() {
@@ -196,7 +191,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Gets the requester.
-	 * 
+	 *
 	 * @return the requester
 	 */
 	public IRequester getRequester() {
@@ -205,7 +200,7 @@ public abstract class Server implements IServer {
 
 	/**
 	 * Checks if the server has been destroyed.
-	 * 
+	 *
 	 * @return true, if is destroyed
 	 */
 	public boolean isDestroyed() {

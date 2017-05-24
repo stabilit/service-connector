@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -38,13 +39,12 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows unsubscribing from a
- * publish service.
+ * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows unsubscribing from a publish service.
  */
 public class ClnUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClnUnsubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -72,20 +72,19 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		publishMessageQueue.unsubscribe(subscriptionId);
 
 		switch (abstractService.getType()) {
-		case CASCADED_PUBLISH_SERVICE:
-		case CASCADED_CACHE_GUARDIAN:
-			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
-			// publish service is cascaded
-			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
-			// free server from subscription
-			cascadedSC.removeSession(subscription);
-			ClnUnsubscribeCommandCallback callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback,
-					subscription);
-			cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
-			return;
-		default:
-			// code for other types of services is below
-			break;
+			case CASCADED_PUBLISH_SERVICE:
+			case CASCADED_CACHE_GUARDIAN:
+				CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
+				// publish service is cascaded
+				CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
+				// free server from subscription
+				cascadedSC.removeSession(subscription);
+				ClnUnsubscribeCommandCallback callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
+				cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 		StatefulServer server = (StatefulServer) subscription.getServer();
 		ClnUnsubscribeCommandCallback callback = null;
@@ -110,8 +109,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					// only one loop outstanding - don't continue throw current exception
 					server.abortSession(subscription, "unsubscribe subscription failed, connection pool to server busy");
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
-							+ reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -131,18 +129,16 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CLN, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// sessionInfo optional
-			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO),
-					Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO), Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

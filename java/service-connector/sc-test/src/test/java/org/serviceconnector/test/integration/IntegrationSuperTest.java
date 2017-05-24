@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,18 +33,18 @@ import org.serviceconnector.log.Loggers;
 public class IntegrationSuperTest {
 
 	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	protected static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	protected static ProcessesController ctrl;
 	protected static ProcessCtx scCtx;
 	protected int threadCount = 0;
 
-	@Rule 
+	@Rule
 	public TestName name = new TestName();
-	
+
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();		
+		ctrl = new ProcessesController();
 	}
 
 	@Before
@@ -51,7 +52,7 @@ public class IntegrationSuperTest {
 		AppContext.init();
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.logbackSC0, TestConstants.SC0Properties);
 	}
 
 	@After

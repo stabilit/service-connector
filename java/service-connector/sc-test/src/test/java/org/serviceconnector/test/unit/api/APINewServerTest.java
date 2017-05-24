@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,22 +28,23 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
-
-public class APINewServerTest extends SuperUnitTest{
+public class APINewServerTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APINewServerTest.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(APINewServerTest.class);
+
 	private SCServer server;
-	
+
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP);
 		server.startListener();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() {
 		try {
@@ -52,10 +54,10 @@ public class APINewServerTest extends SuperUnitTest{
 		server = null;
 		super.afterOneTest();
 	}
-		
+
 	/**
-	 * Description:	Create new session server<br>
-	 * Expectation:	server is not null
+	 * Description: Create new session server<br>
+	 * Expectation: server is not null
 	 */
 	@Test
 	public void t01_SessionServer() throws Exception {
@@ -64,8 +66,8 @@ public class APINewServerTest extends SuperUnitTest{
 	}
 
 	/**
-	 * Description:	Invoke sessionServer.destroy()<br>
-	 * Expectation:	The SessionServer is destroyed.
+	 * Description: Invoke sessionServer.destroy()<br>
+	 * Expectation: The SessionServer is destroyed.
 	 */
 	@Test
 	public void t02_SessionServer() throws Exception {
@@ -74,34 +76,34 @@ public class APINewServerTest extends SuperUnitTest{
 	}
 
 	/**
-	 * Description:	Check the Host and Port<br>
-	 * Expectation:	The Host and Port have a value.
-	 */	
+	 * Description: Check the Host and Port<br>
+	 * Expectation: The Host and Port have a value.
+	 */
 	@Test
 	public void t03_ServerHostPort() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
-		/* Cannot test interfaces, because they have dynamic values
-		Assert.assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
-		*/
+		/*
+		 * Cannot test interfaces, because they have dynamic values Assert.assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
+		 */
 		Assert.assertEquals("SessionServer Port", TestConstants.PORT_SES_SRV_TCP, sessionServer.getListenerPort());
-	}	
+	}
 
 	/**
-	 * Description:	Check the SCHost and SCPort<br>
-	 * Expectation:	The SCHost and SCPort have a value.
-	 */	
+	 * Description: Check the SCHost and SCPort<br>
+	 * Expectation: The SCHost and SCPort have a value.
+	 */
 	@Test
-	public void t04_SCHostPort() throws Exception  {
+	public void t04_SCHostPort() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
 		Assert.assertEquals("SC Port", TestConstants.PORT_SC0_TCP, sessionServer.getSCPort());
 	}
-	
+
 	/**
-	 * Description:	Create new publish server<br>
-	 * Expectation:	server is not null
+	 * Description: Create new publish server<br>
+	 * Expectation: server is not null
 	 */
 	@Test
 	public void t21_PublishServer() throws Exception {
@@ -110,8 +112,8 @@ public class APINewServerTest extends SuperUnitTest{
 	}
 
 	/**
-	 * Description:	Invoke publishServer.destroy()<br>
-	 * Expectation:	The publishServer is destroyed.
+	 * Description: Invoke publishServer.destroy()<br>
+	 * Expectation: The publishServer is destroyed.
 	 */
 	@Test
 	public void t22_PublishServer() throws Exception {
@@ -120,30 +122,29 @@ public class APINewServerTest extends SuperUnitTest{
 	}
 
 	/**
-	 * Description:	Check the Host and Port<br>
-	 * Expectation:	The Host and Port have a value.
-	 */	
+	 * Description: Check the Host and Port<br>
+	 * Expectation: The Host and Port have a value.
+	 */
 	@Test
 	public void t23_ServerHostPort() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
-		/* Cannot test interfaces, because they have dynamic values
-		Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
-		*/
+		/*
+		 * Cannot test interfaces, because they have dynamic values Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
+		 */
 		Assert.assertEquals("PublishServer Port", TestConstants.PORT_SES_SRV_TCP, publishServer.getListenerPort());
-	}	
+	}
 
 	/**
-	 * Description:	Check the SCHost and SCPort<br>
-	 * Expectation:	The SCHost and SCPort have a value.
-	 */	
+	 * Description: Check the SCHost and SCPort<br>
+	 * Expectation: The SCHost and SCPort have a value.
+	 */
 	@Test
-	public void t24_SCHostPort() throws Exception  {
+	public void t24_SCHostPort() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
 		Assert.assertEquals("SC Port", TestConstants.PORT_SC0_TCP, publishServer.getSCPort());
-	}		
+	}
 
-	
 }

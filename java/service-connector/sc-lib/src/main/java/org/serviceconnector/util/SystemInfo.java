@@ -26,12 +26,13 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * SystemInfo holds and detects current system information.
- * 
+ *
  * @author JTraber
  */
 public final class SystemInfo {
@@ -43,7 +44,7 @@ public final class SystemInfo {
 	}
 
 	/** The Constant log. */
-	private static final Logger LOGGER = Logger.getLogger(SystemInfo.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SystemInfo.class);
 
 	/** The Constant JAVA_VERSION. */
 	private static final String JAVA_VERSION = "java.version";
@@ -136,8 +137,8 @@ public final class SystemInfo {
 		MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
 		memBean.getHeapMemoryUsage();
 		File[] roots = File.listRoots();
-		for (int i = 0; i < roots.length; i++) {
-			availableDiskSpace += roots[i].getFreeSpace();
+		for (File root : roots) {
+			availableDiskSpace += root.getFreeSpace();
 		}
 
 		try {
@@ -149,16 +150,16 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the config file name.
-	 * 
+	 *
 	 * @return the config file name
 	 */
 	public static String getConfigFileName() {
 		return configFileName;
 	}
-	
+
 	/**
 	 * Gets the SCMP version.
-	 * 
+	 *
 	 * @return the SCMP version
 	 */
 	public static String getscmpVersion() {
@@ -167,9 +168,8 @@ public final class SystemInfo {
 
 	/**
 	 * Sets the config file name.
-	 * 
-	 * @param configFileName
-	 *            the new config file name
+	 *
+	 * @param configFileName the new config file name
 	 */
 	public static void setConfigFileName(String configFileName) {
 		SystemInfo.configFileName = configFileName;
@@ -177,7 +177,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns current used java version.
-	 * 
+	 *
 	 * @return javaVersion
 	 */
 	public static String getJavaVersion() {
@@ -186,7 +186,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns version of current used java virtual machine.
-	 * 
+	 *
 	 * @return vmVersion
 	 */
 	public static String getVmVersion() {
@@ -195,7 +195,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns local host identification (hostname / IP).
-	 * 
+	 *
 	 * @return localHostId.
 	 */
 	public static String getLocalHostId() {
@@ -204,7 +204,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns current operating system.
-	 * 
+	 *
 	 * @return os
 	 */
 	public static String getOs() {
@@ -213,7 +213,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns operation system patch level.
-	 * 
+	 *
 	 * @return osPatchLevel
 	 */
 	public static String getOsPatchLevel() {
@@ -222,7 +222,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns CPU type.
-	 * 
+	 *
 	 * @return cpuType
 	 */
 	public static String getCpuType() {
@@ -231,7 +231,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns current user directory.
-	 * 
+	 *
 	 * @return userDir
 	 */
 	public static String getUserDir() {
@@ -240,7 +240,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns the current country setting.
-	 * 
+	 *
 	 * @return countrySetting
 	 */
 	public static String getCountrySetting() {
@@ -249,7 +249,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns the current user time zone.
-	 * 
+	 *
 	 * @return userTimezone
 	 */
 	public static String getUserTimezone() {
@@ -258,7 +258,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns the offset to universal time coordinated (UTC).
-	 * 
+	 *
 	 * @return utcOffset
 	 */
 	public static int getUtcOffset() {
@@ -267,7 +267,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns true if daylight saving (DST) time is used.
-	 * 
+	 *
 	 * @return useDST
 	 */
 	public static boolean isUseDST() {
@@ -276,7 +276,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns startup date and time.
-	 * 
+	 *
 	 * @return startupDateTime
 	 */
 	public static Date getStartupDateTime() {
@@ -285,7 +285,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns the number of processors.
-	 * 
+	 *
 	 * @return numberOfProcessors
 	 */
 	public static int getAvailableProcessors() {
@@ -294,7 +294,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the max memory.
-	 * 
+	 *
 	 * @return the max memory
 	 */
 	public static long getMaxMemory() {
@@ -304,7 +304,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the free memory.
-	 * 
+	 *
 	 * @return the free memory
 	 */
 	public static long getFreeMemory() {
@@ -314,7 +314,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the total memory.
-	 * 
+	 *
 	 * @return the total memory
 	 */
 	public static long getTotalMemory() {
@@ -324,7 +324,7 @@ public final class SystemInfo {
 
 	/**
 	 * Returns total free bytes on file system available in bytes.
-	 * 
+	 *
 	 * @return availDiskMemory
 	 */
 	public static long getAvailableDiskSpace() {
@@ -333,7 +333,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the thread count.
-	 * 
+	 *
 	 * @return the thread count
 	 */
 	public static int getThreadCount() {
@@ -342,7 +342,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the daemon thread count.
-	 * 
+	 *
 	 * @return the daemon thread count
 	 */
 	public static int getDaemonThreadCount() {
@@ -351,7 +351,7 @@ public final class SystemInfo {
 
 	/**
 	 * Gets the peak thread count.
-	 * 
+	 *
 	 * @return the peak thread count
 	 */
 	public static int getPeakThreadCount() {

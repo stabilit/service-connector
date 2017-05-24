@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
@@ -32,25 +33,22 @@ import org.serviceconnector.scmp.SCMPError;
 public class ServiceListConfiguration {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ServiceListConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceListConfiguration.class);
 
 	/** The service configurations. */
 	private Map<String, ServiceConfiguration> serviceConfigurations;
 
 	/**
 	 * Load.
-	 * 
-	 * @param config
-	 *            the config
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *
+	 * @param config the config
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration config) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
 		if (serviceNames == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.PROPERTY_SERVICE_NAMES + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_SERVICE_NAMES + " is missing");
 		}
 
 		// load all remote nodes into the list
@@ -61,8 +59,7 @@ public class ServiceListConfiguration {
 			// load it with the configured items
 			serviceConfig.load(config);
 			if (this.serviceConfigurations.containsKey(serviceName) == true) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-						"service already in registry name must be unique serviceName=" + serviceName);
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service already in registry name must be unique serviceName=" + serviceName);
 			}
 			// adding service to list
 			this.serviceConfigurations.put(serviceName, serviceConfig);
@@ -70,10 +67,10 @@ public class ServiceListConfiguration {
 			LOGGER.info("Service=" + serviceConfig.toString());
 		}
 	}
-	
+
 	/**
 	 * Gets the service configurations.
-	 * 
+	 *
 	 * @return the service configurations
 	 */
 	public Map<String, ServiceConfiguration> getServiceConfigurations() {

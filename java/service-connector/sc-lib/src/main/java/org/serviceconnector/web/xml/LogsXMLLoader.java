@@ -21,21 +21,23 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.WebUtil;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
 
 /**
  * The Class LogXMLLoader.
@@ -54,13 +56,10 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
@@ -77,13 +76,13 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		}
 		// write available log levels
 		writeLogLevels(writer);
-		Logger rootLogger = LogManager.getRootLogger();
+		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		writeLogger(writer, rootLogger, today, current);
-		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
-		while (currentLoggers.hasMoreElements()) {
-			Logger currentLogger = (Logger) currentLoggers.nextElement();
-			Enumeration<?> appenders = currentLogger.getAllAppenders();
-			if (appenders.hasMoreElements()) {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		List<ch.qos.logback.classic.Logger> currentLoggers = loggerContext.getLoggerList();
+		for (ch.qos.logback.classic.Logger currentLogger : currentLoggers) {
+			Iterator<Appender<ILoggingEvent>> appenders = currentLogger.iteratorForAppenders();
+			if (appenders.hasNext()) {
 				writeLogger(writer, currentLogger, today, current);
 			}
 		}
@@ -101,9 +100,9 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("level");
 		writer.writeCharacters(Level.ERROR.toString());
 		writer.writeEndElement();
-		writer.writeStartElement("level");
-		writer.writeCharacters(Level.FATAL.toString());
-		writer.writeEndElement();
+		// writer.writeStartElement("level");
+		// writer.writeCharacters(Level.FATAL.toString());
+		// writer.writeEndElement();
 		writer.writeStartElement("level");
 		writer.writeCharacters(Level.INFO.toString());
 		writer.writeEndElement();
@@ -116,33 +115,28 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("level");
 		writer.writeCharacters(Level.WARN.toString());
 		writer.writeEndElement();
-		writer.writeEndElement();  // end of log-levels		
+		writer.writeEndElement(); // end of log-levels
 	}
 
 	/**
 	 * Write logger.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param logger
-	 *            the logger
-	 * @param today
-	 *            the today
-	 * @param current
-	 *            the current
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param logger the logger
+	 * @param today the today
+	 * @param current the current
+	 * @throws XMLStreamException the xML stream exception
 	 */
-	public void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
+	public void writeLogger(XMLStreamWriter writer, ch.qos.logback.classic.Logger logger, Date today, Date current) throws XMLStreamException {
 		writer.writeStartElement("logger");
 		writer.writeAttribute("name", logger.getName());
-		Enumeration<?> appenders = logger.getAllAppenders();
+		Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
 		Level level = logger.getLevel();
 		writer.writeStartElement("level");
 		writer.writeCharacters(level.toString());
 		writer.writeEndElement();
-		while (appenders.hasMoreElements()) {
-			Appender appender = (Appender) appenders.nextElement();
+		while (appenders.hasNext()) {
+			Appender appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;
@@ -163,7 +157,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 					long length = file.length();
 					writer.writeAttribute("size", String.valueOf(length));
 
-				   writer.writeCData(sFile);
+					writer.writeCData(sFile);
 				}
 				writer.writeEndElement();
 			}
@@ -171,22 +165,22 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		}
 		writer.writeEndElement(); // close logger tag
 	}
-	
+
 	/**
 	 * Gets the current log files.
-	 * 
+	 *
 	 * @return the current log files
 	 */
 	protected List<String> getCurrentLogFiles() {
 		distinctLoggerSet.clear();
 		List<String> logFileList = new ArrayList<String>();
-		Logger rootLogger = LogManager.getRootLogger();
+		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		addLogFiles(rootLogger, logFileList);
-		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
-		while (currentLoggers.hasMoreElements()) {
-			Logger currentLogger = (Logger) currentLoggers.nextElement();
-			Enumeration<?> appenders = currentLogger.getAllAppenders();
-			if (appenders.hasMoreElements()) {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		List<ch.qos.logback.classic.Logger> currentLoggers = loggerContext.getLoggerList();
+		for (ch.qos.logback.classic.Logger currentLogger : currentLoggers) {
+			Iterator<Appender<ILoggingEvent>> appenders = currentLogger.iteratorForAppenders();
+			if (appenders.hasNext()) {
 				addLogFiles(currentLogger, logFileList);
 			}
 		}
@@ -195,16 +189,14 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Adds the log files.
-	 * 
-	 * @param logger
-	 *            the logger
-	 * @param logFileList
-	 *            the log file list
+	 *
+	 * @param logger the logger
+	 * @param logFileList the log file list
 	 */
-	protected void addLogFiles(Logger logger, List<String> logFileList) {
-		Enumeration<?> appenders = logger.getAllAppenders();
-		while (appenders.hasMoreElements()) {
-			Appender appender = (Appender) appenders.nextElement();
+	protected void addLogFiles(ch.qos.logback.classic.Logger logger, List<String> logFileList) {
+		Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
+		while (appenders.hasNext()) {
+			Appender appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;

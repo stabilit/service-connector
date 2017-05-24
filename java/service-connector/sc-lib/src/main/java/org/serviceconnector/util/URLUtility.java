@@ -35,13 +35,10 @@ public final class URLUtility {
 	}
 
 	/**
-	 * Make and return a valid url root path. This method replaces any file system separators
-	 * by its url separator and verifies and sets all required slashes between both parts.
-	 * 
-	 * @param path
-	 *            the path
-	 * @param file
-	 *            the file
+	 * Make and return a valid url root path. This method replaces any file system separators by its url separator and verifies and sets all required slashes between both parts.
+	 *
+	 * @param path the path
+	 * @param file the file
 	 * @return the url path string
 	 */
 	public static String makePath(String path, String file) {

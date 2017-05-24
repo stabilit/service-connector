@@ -18,7 +18,7 @@ package org.serviceconnector.web;
 
 /**
  * The class WebConstants. SC web constants.
- * 
+ *
  * @author JTraber
  */
 public final class WebConstants {

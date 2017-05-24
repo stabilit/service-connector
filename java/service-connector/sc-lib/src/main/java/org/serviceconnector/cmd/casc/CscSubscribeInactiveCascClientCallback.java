@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.ISubscriptionCallback;
@@ -24,6 +23,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CscSubscribeInactiveCascClientCallback.
@@ -31,7 +32,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscSubscribeInactiveCascClientCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscSubscribeInactiveCascClientCallback.class);
 	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 	/** The cascaded client. */
@@ -41,16 +42,12 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 
 	/**
 	 * Instantiates a new csc subscribe inactive casc client callback.
-	 * 
-	 * @param commandCallback
-	 *            the command callback
-	 * @param cascClient
-	 *            the casc client
-	 * @param tmpCscMask
-	 *            the tmp csc mask
+	 *
+	 * @param commandCallback the command callback
+	 * @param cascClient the casc client
+	 * @param tmpCscMask the tmp csc mask
 	 */
-	public CscSubscribeInactiveCascClientCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient,
-			String tmpCscMask) {
+	public CscSubscribeInactiveCascClientCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient, String tmpCscMask) {
 		this.commandCallback = commandCallback;
 		this.cascClient = cascClient;
 		this.tmpCscMask = tmpCscMask;
@@ -75,8 +72,7 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 				this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
 				if (cscScSubscription.isCascaded() == true) {
 					// update csc subscription id list for cascaded subscription
-					cscScSubscription.addCscSubscriptionId(this.commandCallback.getRequest().getMessage().getSessionId(),
-							new SubscriptionMask(this.tmpCscMask));
+					cscScSubscription.addCscSubscriptionId(this.commandCallback.getRequest().getMessage().getSessionId(), new SubscriptionMask(this.tmpCscMask));
 				}
 				// release permit
 				this.cascClient.getCascClientSemaphore().release();
@@ -100,7 +96,7 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		LOGGER.warn("Received exception", ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

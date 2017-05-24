@@ -18,7 +18,8 @@ package org.serviceconnector.ctrl.util;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
@@ -29,11 +30,11 @@ import org.serviceconnector.log.Loggers;
 
 public class ClientThreadController {
 
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	private static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ClientThreadController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientThreadController.class);
 
 	private CountDownLatch beforeAttachSignal;
 	private CountDownLatch attachedSignal;
@@ -47,8 +48,7 @@ public class ClientThreadController {
 	private int executesPerSessionCount;
 	private int messageSize;
 
-	public ClientThreadController(boolean waitBeforeAttach, boolean waitAfterAttach, int clientsCount,
-			int sessionsCount, int executesPerSessionCount, int messageSize) {
+	public ClientThreadController(boolean waitBeforeAttach, boolean waitAfterAttach, int clientsCount, int sessionsCount, int executesPerSessionCount, int messageSize) {
 		this.waitBeforeAttach = waitBeforeAttach;
 		this.waitAfterAttach = waitAfterAttach;
 		this.clientsCount = clientsCount;
@@ -78,8 +78,8 @@ public class ClientThreadController {
 
 		for (int i = 0; i < clientsCount; i++) {
 			messages[i] = new ThreadSafeCounter();
-			new Thread(new PerformanceSessionClient(beforeAttachSignal, afterAttachSignal, attachedSignal, doneSignal,
-					messages[i], sessionsCount, executesPerSessionCount, messageSize)).start();
+			new Thread(new PerformanceSessionClient(beforeAttachSignal, afterAttachSignal, attachedSignal, doneSignal, messages[i], sessionsCount, executesPerSessionCount,
+					messageSize)).start();
 		}
 
 		start = System.currentTimeMillis();
@@ -106,8 +106,8 @@ public class ClientThreadController {
 	private void logResults(ThreadSafeCounter[] messages, long result) {
 		SCMessage response = new SCMessage("0");
 		int sum = 0;
-		for (int i = 0; i < messages.length; i++) {
-			sum += messages[i].value();
+		for (ThreadSafeCounter message : messages) {
+			sum += message.value();
 		}
 		try {
 			SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_HTTP);

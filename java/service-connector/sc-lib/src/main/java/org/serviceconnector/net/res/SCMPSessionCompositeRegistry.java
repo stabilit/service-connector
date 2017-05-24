@@ -20,7 +20,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
@@ -29,15 +30,14 @@ import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
 
 /**
- * The Class SCMPSessionCompositeRegistry. Stores composite components (large response/requests) of a communication to resume at the
- * time it gets active again.
- * 
+ * The Class SCMPSessionCompositeRegistry. Stores composite components (large response/requests) of a communication to resume at the time it gets active again.
+ *
  * @author JTraber
  */
 public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSessionCompositeItem> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCMPSessionCompositeRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSessionCompositeRegistry.class);
 	/** The timer. Timer instance is responsible to observe large message timeouts. */
 	private ScheduledThreadPoolExecutor largeMessageScheduler;
 
@@ -47,9 +47,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Adds the session.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void addSession(String key) {
 		this.put(key, new SCMPSessionCompositeItem(key));
@@ -57,9 +56,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeSession(String key) {
 		SCMPSessionCompositeItem item = this.get(key);
@@ -72,11 +70,9 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Adds the scmp large request.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param largeRequest
-	 *            the large request
+	 *
+	 * @param key the key
+	 * @param largeRequest the large request
 	 */
 	public void addSCMPLargeRequest(String key, SCMPCompositeReceiver largeRequest, int largeMessageTimeoutMillis) {
 		SCMPSessionCompositeItem item = this.get(key);
@@ -90,9 +86,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Gets the SCMP large request.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the SCMP large request
 	 */
 	public SCMPCompositeReceiver getSCMPLargeRequest(String key) {
@@ -105,9 +100,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Removes the scmp large request.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeSCMPLargeRequest(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
@@ -120,11 +114,9 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Adds the SCMP large response.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param largeResponse
-	 *            the large response
+	 *
+	 * @param key the key
+	 * @param largeResponse the large response
 	 */
 	public void addSCMPLargeResponse(String key, SCMPCompositeSender largeResponse, int largeMessageTimeoutMillis) {
 		SCMPSessionCompositeItem item = this.get(key);
@@ -138,9 +130,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Gets the SCMP large response.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the SCMP large response
 	 */
 	public SCMPCompositeSender getSCMPLargeResponse(String key) {
@@ -153,9 +144,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Removes the scmp large response.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeSCMPLargeResponse(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
@@ -174,13 +164,12 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelLargeMessageTimeout(sessionComposite);
-		LOGGER.trace("schedule large message sid=" + sessionComposite.getSessionId() + " timeout in millis "
-				+ (long) sessionComposite.getLargeMessageTimeoutMillis());
+		LOGGER.trace("schedule large message sid=" + sessionComposite.getSessionId() + " timeout in millis " + (long) sessionComposite.getLargeMessageTimeoutMillis());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new LargeMessageTimeout(sessionComposite));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.largeMessageScheduler.schedule(
-				sessionTimeouter, (long) sessionComposite.getLargeMessageTimeoutMillis(), TimeUnit.MILLISECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.largeMessageScheduler.schedule(sessionTimeouter,
+				sessionComposite.getLargeMessageTimeoutMillis(), TimeUnit.MILLISECONDS);
 		sessionComposite.setTimeout(timeout);
 	}
 
@@ -207,9 +196,8 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/**
 	 * Gets the SCMP message id.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the SCMP message id
 	 */
 	public SCMPMessageSequenceNr getSCMPMsgSequenceNr(String key) {

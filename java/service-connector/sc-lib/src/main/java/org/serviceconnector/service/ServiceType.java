@@ -21,7 +21,7 @@ import org.serviceconnector.util.ReverseEnumMap;
 
 /**
  * The Enum ServiceType.
- * 
+ *
  * @author JTraber
  */
 public enum ServiceType implements IReversibleEnum<String, ServiceType> {
@@ -48,14 +48,12 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ServiceType> REVERSE_MAP = new ReverseEnumMap<String, ServiceType>(
-			ServiceType.class);
+	private static final ReverseEnumMap<String, ServiceType> REVERSE_MAP = new ReverseEnumMap<String, ServiceType>(ServiceType.class);
 
 	/**
 	 * Instantiates a new service type.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private ServiceType(String value) {
 		this.value = value;
@@ -63,9 +61,8 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
 	/**
 	 * Gets the type.
-	 * 
-	 * @param typeString
-	 *            the type string
+	 *
+	 * @param typeString the type string
 	 * @return the type
 	 */
 	public static ServiceType getType(String typeString) {
@@ -78,6 +75,7 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getValue() {
 		return this.value;
 	}

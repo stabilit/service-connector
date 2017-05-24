@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
- * 
+ *
  * @author JTraber
  */
 public class SCSessionServer {
@@ -68,13 +68,10 @@ public class SCSessionServer {
 
 	/**
 	 * Instantiates a new SCSessionServer.
-	 * 
-	 * @param scServer
-	 *            the sc server
-	 * @param serviceName
-	 *            the service name
-	 * @param requester
-	 *            the requester
+	 *
+	 * @param scServer the sc server
+	 * @param serviceName the service name
+	 * @param requester the requester
 	 */
 	public SCSessionServer(SCServer scServer, String serviceName, SCRequester requester) {
 		this.requester = requester;
@@ -86,7 +83,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the keep alive interval in seconds.
-	 * 
+	 *
 	 * @return the keep alive interval in seconds
 	 */
 	public int getKeepAliveIntervalSeconds() {
@@ -95,7 +92,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the check registration interval seconds.
-	 * 
+	 *
 	 * @return the check registration interval seconds
 	 */
 	public int getCheckRegistrationIntervalSeconds() {
@@ -104,7 +101,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the max sessions the server is serving for service.
-	 * 
+	 *
 	 * @return the max sessions
 	 */
 	public int getMaxSessions() {
@@ -114,7 +111,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the max connections which the pool uses to connect to SC.
-	 * 
+	 *
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
@@ -123,47 +120,35 @@ public class SCSessionServer {
 
 	/**
 	 * Register server with default operation timeout.
-	 * 
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws SCServiceException
-	 *             listener not started yet<br />
-	 *             server already registered for service<br />
-	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             callback is not set<br />
+	 *
+	 * @param maxSessions the max sessions to serve
+	 * @param maxConnections the max connections pool uses to connect to SC
+	 * @param scCallback the SC callback
+	 * @throws SCServiceException listener not started yet<br />
+	 *         server already registered for service<br />
+	 *         register server on SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException callback is not set<br />
 	 */
-	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
-			throws SCServiceException, SCMPValidatorException {
+	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
 	/**
 	 * Register server.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws SCServiceException
-	 *             listener not started yet<br />
-	 *             server already registered for service<br />
-	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             callback is not set<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param maxSessions the max sessions to serve
+	 * @param maxConnections the max connections pool uses to connect to SC
+	 * @param scCallback the SC callback
+	 * @throws SCServiceException listener not started yet<br />
+	 *         server already registered for service<br />
+	 *         register server on SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException callback is not set<br />
 	 */
-	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
-			SCSessionServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
+	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
+			throws SCServiceException, SCMPValidatorException {
 		if (scCallback == null) {
 			throw new SCMPValidatorException("Callback is missing.");
 		}
@@ -177,21 +162,16 @@ public class SCSessionServer {
 
 	/**
 	 * Do register.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @throws SCServiceException
-	 *             listener not started yet<br />
-	 *             server already registered for service<br />
-	 *             register server on SC failed<br />
-	 *             error message received from SC<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param maxSessions the max sessions to serve
+	 * @param maxConnections the max connections pool uses to connect to SC
+	 * @throws SCServiceException listener not started yet<br />
+	 *         server already registered for service<br />
+	 *         register server on SC failed<br />
+	 *         error message received from SC<br />
 	 */
-	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
-			throws SCServiceException {
+	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws SCServiceException {
 		if (this.scServer.isListening() == false) {
 			throw new SCServiceException("Listener must be started before register service is allowed.");
 		}
@@ -238,13 +218,11 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to
-	 * check its registration.
-	 * 
-	 * @throws SCServiceException
-	 *             server is not registered for a service<br />
-	 *             check registration failed<br />
-	 *             error message received from SC <br />
+	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to check its registration.
+	 *
+	 * @throws SCServiceException server is not registered for a service<br />
+	 *         check registration failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void checkRegistration() throws SCServiceException {
 		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -252,13 +230,11 @@ public class SCSessionServer {
 
 	/**
 	 * Check registration. This message can be sent from the registered server to SC in order to check its registration.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @throws SCServiceException
-	 *             server is not registered for a service<br />
-	 *             check registration failed<br />
-	 *             error message received from SC <br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @throws SCServiceException server is not registered for a service<br />
+	 *         check registration failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.registered == false) {
@@ -289,10 +265,9 @@ public class SCSessionServer {
 
 	/**
 	 * Deregister server with default operation timeout.
-	 * 
-	 * @throws SCServiceException
-	 *             deregister failed<br />
-	 *             error message received from SC<br />
+	 *
+	 * @throws SCServiceException deregister failed<br />
+	 *         error message received from SC<br />
 	 */
 	public synchronized void deregister() throws SCServiceException {
 		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -300,12 +275,10 @@ public class SCSessionServer {
 
 	/**
 	 * Deregister server.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @throws SCServiceException
-	 *             deregister failed<br />
-	 *             error message received from SC<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @throws SCServiceException deregister failed<br />
+	 *         error message received from SC<br />
 	 */
 	public synchronized void deregister(int operationTimeoutSeconds) throws SCServiceException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
@@ -359,9 +332,8 @@ public class SCSessionServer {
 
 	/**
 	 * Cancel server timeout.
-	 * 
-	 * @param mayInterruptIfRunning
-	 *            the may interrupt if running
+	 *
+	 * @param mayInterruptIfRunning the may interrupt if running
 	 */
 	private void cancelServerTimeout(boolean mayInterruptIfRunning) {
 		if (this.serverTimeout == null) {
@@ -375,7 +347,7 @@ public class SCSessionServer {
 
 	/**
 	 * Checks if server is listening.
-	 * 
+	 *
 	 * @return true, if is listening
 	 */
 	public boolean isListening() {
@@ -384,7 +356,7 @@ public class SCSessionServer {
 
 	/**
 	 * Checks if serve is registered to an SC.
-	 * 
+	 *
 	 * @return true, if is registered
 	 */
 	public boolean isRegistered() {
@@ -393,7 +365,7 @@ public class SCSessionServer {
 
 	/**
 	 * Checks if server has its immediate connect flag set.
-	 * 
+	 *
 	 * @return true, if is immediate connect
 	 */
 	public boolean isImmediateConnect() {
@@ -402,7 +374,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the SC host.
-	 * 
+	 *
 	 * @return the SC host
 	 */
 	public String getSCHost() {
@@ -411,7 +383,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the SC port.
-	 * 
+	 *
 	 * @return the SC port
 	 */
 	public int getSCPort() {
@@ -420,7 +392,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the interfaces on which server is listening.
-	 * 
+	 *
 	 * @return the interfaces
 	 */
 	public List<String> getListenerInterfaces() {
@@ -429,7 +401,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the port on which server is listening.
-	 * 
+	 *
 	 * @return the listening port
 	 */
 	public int getListenerPort() {
@@ -438,7 +410,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the connection type which is used to communicate with SC.
-	 * 
+	 *
 	 * @return the connection type
 	 */
 	public ConnectionType getConnectionType() {
@@ -447,7 +419,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -456,7 +428,7 @@ public class SCSessionServer {
 
 	/**
 	 * Gets the SC server.
-	 * 
+	 *
 	 * @return the SC server
 	 */
 	public SCServer getSCServer() {
@@ -470,9 +442,8 @@ public class SCSessionServer {
 
 		/**
 		 * Instantiates a new sC server callback.
-		 * 
-		 * @param synchronous
-		 *            the synchronous
+		 *
+		 * @param synchronous the synchronous
 		 */
 		public SCServerCallback(boolean synchronous) {
 			this.synchronous = synchronous;
@@ -481,8 +452,7 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to
-	 * SC which gets the server entry on SC refreshed.
+	 * The Class SCServerTimeout. Get control at the time a server refresh is needed. Takes care of sending a check registration to SC which gets the server entry on SC refreshed.
 	 */
 	private class SCServerTimeout implements ITimeout {
 
@@ -497,8 +467,7 @@ public class SCSessionServer {
 			} catch (SCServiceException e) {
 				// check registration failed - inform callback
 				SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-				SrvService srvService = srvServiceRegistry.getSrvService(SCSessionServer.this.serviceName + Constants.UNDERLINE
-						+ SCSessionServer.this.scServer.getListenerPort());
+				SrvService srvService = srvServiceRegistry.getSrvService(SCSessionServer.this.serviceName + Constants.UNDERLINE + SCSessionServer.this.scServer.getListenerPort());
 				if (srvService instanceof SrvSessionService) {
 					((SrvSessionService) srvService).getCallback().exceptionCaught(e);
 				} else if (srvService instanceof SrvPublishService) {

@@ -32,36 +32,48 @@ public class APIPerfSuperServerTest extends APIPerfSuperTest {
 	protected SCServer server;
 	protected SCSessionServer sessionServer = null;
 	protected SCPublishServer publishServer = null;
-	
+
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			if (publishServer != null) publishServer.deregister();
-		} catch (Exception e) {}
+			if (publishServer != null) {
+				publishServer.deregister();
+			}
+		} catch (Exception e) {
+		}
 		publishServer = null;
 		try {
-			if (sessionServer != null) sessionServer.deregister();
-		} catch (Exception e) {}
+			if (sessionServer != null) {
+				sessionServer.deregister();
+			}
+		} catch (Exception e) {
+		}
 		sessionServer = null;
 		try {
 			server.stopListener();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		try {
 			server.destroy();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
 		server = null;
 		super.afterOneTest();
 	}
+
 	protected class SesSrvCallback extends SCSessionServerCallback {
 		public SesSrvCallback(SCSessionServer server) {
 			super(server);
 		}
+
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 			return request;
@@ -79,8 +91,9 @@ public class APIPerfSuperServerTest extends APIPerfSuperTest {
 		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			return request;
 		}
+
 		@Override
-		public void exceptionCaught(SCServiceException ex) {			
+		public void exceptionCaught(SCServiceException ex) {
 		}
 	}
 
@@ -89,6 +102,7 @@ public class APIPerfSuperServerTest extends APIPerfSuperTest {
 		public PubSrvCallback(SCPublishServer server) {
 			super(server);
 		}
+
 		@Override
 		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 			return message;
@@ -102,8 +116,9 @@ public class APIPerfSuperServerTest extends APIPerfSuperTest {
 		@Override
 		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 		}
+
 		@Override
-		public void exceptionCaught(SCServiceException ex) {			
+		public void exceptionCaught(SCServiceException ex) {
 		}
 	}
 

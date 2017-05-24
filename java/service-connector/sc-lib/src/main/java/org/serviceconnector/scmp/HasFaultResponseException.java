@@ -16,20 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
 
 /**
- * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the response. Used to
- * save data about occurred errors and writing the response on a different level of software architecture.
- * 
+ * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the response. Used to save data about occurred errors and writing the
+ * response on a different level of software architecture.
+ *
  * @author JTraber
  */
 public abstract class HasFaultResponseException extends Exception {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(HasFaultResponseException.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HasFaultResponseException.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
 	/** The fault message. */
@@ -37,9 +38,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Instantiates a new checks for fault response exception.
-	 * 
-	 * @param error
-	 *            the error
+	 *
+	 * @param error the error
 	 */
 	public HasFaultResponseException(SCMPError error) {
 		super(error.getErrorText());
@@ -48,11 +48,9 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Instantiates a new checks for fault response exception.
-	 * 
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param error the error
+	 * @param additionalInfo the additional info
 	 */
 	public HasFaultResponseException(SCMPError error, String additionalInfo) {
 		super(error.getErrorText(additionalInfo));
@@ -61,11 +59,9 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Sets the attribute.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public void setAttribute(SCMPHeaderAttributeKey key, String value) {
 		this.fault.setHeader(key, value);
@@ -73,9 +69,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Sets the fault response.
-	 * 
-	 * @param response
-	 *            the new fault response
+	 *
+	 * @param response the new fault response
 	 */
 	public void setFaultResponse(IResponse response) {
 		response.setSCMP(this.fault);
@@ -83,9 +78,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Sets the message type.
-	 * 
-	 * @param messageType
-	 *            the new message type
+	 *
+	 * @param messageType the new message type
 	 */
 	public void setMessageType(SCMPMsgType messageType) {
 		this.fault.setMessageType(messageType);
@@ -93,9 +87,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Sets the message type.
-	 * 
-	 * @param messageTypeValue
-	 *            the new message type
+	 *
+	 * @param messageTypeValue the new message type
 	 */
 	public void setMessageType(String messageTypeValue) {
 		this.fault.setMessageType(messageTypeValue);
@@ -103,9 +96,8 @@ public abstract class HasFaultResponseException extends Exception {
 
 	/**
 	 * Tries setting the session id and service name in fault message.
-	 * 
-	 * @param request
-	 *            the new session id and service name
+	 *
+	 * @param request the new session id and service name
 	 */
 	public void setSessionIdAndServiceName(IRequest request) {
 		// set sid & serviceName for EXC

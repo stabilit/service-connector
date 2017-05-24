@@ -26,14 +26,14 @@ public interface ISubscriptionCallback extends ISCMPMessageCallback {
 
 	/**
 	 * Gets the subscription.
-	 * 
+	 *
 	 * @return the subscription
 	 */
 	public abstract Subscription getSubscription();
 
 	/**
 	 * Gets the request.
-	 * 
+	 *
 	 * @return the request
 	 */
 	public abstract IRequest getRequest();

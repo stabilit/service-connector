@@ -16,19 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class SCMPMessageSequenceNr. Provides correct message sequence number (msn) for a specific request/response. Message sequence
- * number and session id are unique. Will be steadily increased.
- * 
+ * The Class SCMPMessageSequenceNr. Provides correct message sequence number (msn) for a specific request/response. Message sequence number and session id are unique. Will be
+ * steadily increased.
+ *
  * @author JTraber
  */
 public class SCMPMessageSequenceNr {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPMessageSequenceNr.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPMessageSequenceNr.class);
 
 	/** The message sequence number. */
 	private long msgSequenceNr;
@@ -42,9 +43,8 @@ public class SCMPMessageSequenceNr {
 
 	/**
 	 * Instantiates a new sCMP message sequence nr.
-	 * 
-	 * @param msgSequenceNr
-	 *            the msg sequence nr
+	 *
+	 * @param msgSequenceNr the msg sequence nr
 	 */
 	public SCMPMessageSequenceNr(long msgSequenceNr) {
 		this.msgSequenceNr = msgSequenceNr;
@@ -52,7 +52,7 @@ public class SCMPMessageSequenceNr {
 
 	/**
 	 * Gets the current number.
-	 * 
+	 *
 	 * @return the current number
 	 */
 	public String getCurrentNr() {
@@ -61,7 +61,7 @@ public class SCMPMessageSequenceNr {
 
 	/**
 	 * Increment message sequence number.
-	 * 
+	 *
 	 * @return the long
 	 */
 	public long incrementAndGetMsgSequenceNr() {
@@ -83,32 +83,31 @@ public class SCMPMessageSequenceNr {
 
 	/**
 	 * Necessary to write. Evaluates if msgSequenceNr needs to be written for specific messageType.
-	 * 
-	 * @param messageTypeValue
-	 *            the message type value
+	 *
+	 * @param messageTypeValue the message type value
 	 * @return true, if successful
 	 */
 	public static boolean necessaryToWrite(String messageTypeValue) {
 		SCMPMsgType messageType = SCMPMsgType.getMsgType(messageTypeValue);
 
 		switch (messageType) {
-		case CLN_CREATE_SESSION:
-		case SRV_CREATE_SESSION:
-		case CLN_DELETE_SESSION:
-		case SRV_DELETE_SESSION:
-		case CLN_EXECUTE:
-		case SRV_EXECUTE:
-		case CLN_SUBSCRIBE:
-		case SRV_SUBSCRIBE:
-		case CLN_CHANGE_SUBSCRIPTION:
-		case SRV_CHANGE_SUBSCRIPTION:
-		case CLN_UNSUBSCRIBE:
-		case SRV_UNSUBSCRIBE:
-		case RECEIVE_PUBLICATION:
-		case PUBLISH:
-			return true;
-		default:
-			return false;
+			case CLN_CREATE_SESSION:
+			case SRV_CREATE_SESSION:
+			case CLN_DELETE_SESSION:
+			case SRV_DELETE_SESSION:
+			case CLN_EXECUTE:
+			case SRV_EXECUTE:
+			case CLN_SUBSCRIBE:
+			case SRV_SUBSCRIBE:
+			case CLN_CHANGE_SUBSCRIPTION:
+			case SRV_CHANGE_SUBSCRIPTION:
+			case CLN_UNSUBSCRIBE:
+			case SRV_UNSUBSCRIBE:
+			case RECEIVE_PUBLICATION:
+			case PUBLISH:
+				return true;
+			default:
+				return false;
 		}
 	}
 }

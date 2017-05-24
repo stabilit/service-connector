@@ -31,8 +31,6 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
-import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
-import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 
 public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
@@ -43,9 +41,9 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 	public APISystemSuperPublishClientTest() {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
-	
+
 	public void setUpClientToSC() throws Exception {
-		if (client == null) {	// client may be already created and attached because the of the class hierarchy
+		if (client == null) { // client may be already created and attached because the of the class hierarchy
 			if (cascadingLevel == 0) {
 				client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 				client.attach();
@@ -58,75 +56,75 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 			}
 		}
 	}
-	
+
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-		APIReceivePublicationCasc1Test.setUpServer();
+		APISystemSuperPublishClientTest.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
-		APIReceivePublicationCasc1Test.setUpServer();
+		APISystemSuperPublishClientTest.setUpServer();
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
-		APIReceivePublicationCasc1Test.setUpServer();
+		APISystemSuperPublishClientTest.setUpServer();
 	}
 
 	public static void setUpServer() {
 		// need to have a server serving 3 sessions here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.pubServiceName1);
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1,
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
-	
-//	public static void setUpServiceConnectorAndServer() {
-//		// SC definitions
-//		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-//		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-//				TestConstants.log4jSC0Properties);
-//		sc0Defs.add(sc0Def);
-//
-//		// server definitions
-//		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-//		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-//				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
-//		srvToSC0Defs.add(srvToSC0Def);
-//
-//		SystemSuperTest.scDefs = sc0Defs;
-//		SystemSuperTest.srvDefs = srvToSC0Defs;
-//	}
-//
-//	public static void setUp1CascadedServiceConnectorAndServer() {
-//		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-//		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-//				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-//		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-//				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-//		scCascDefs.add(sc0CascDef);
-//		scCascDefs.add(sc1CascDef);
-//
-//		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-//		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-//				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-//				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
-//		srvToSC0CascDefs.add(srvToSC0CascDef);
-//
-//		SystemSuperTest.scDefs = scCascDefs;
-//		SystemSuperTest.srvDefs = srvToSC0CascDefs;
-//	}
+	// public static void setUpServiceConnectorAndServer() {
+	// // SC definitions
+	// List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+	// ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+	// TestConstants.log4jSC0Properties);
+	// sc0Defs.add(sc0Def);
+	//
+	// // server definitions
+	// List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+	// ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+	// TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+	// TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
+	// srvToSC0Defs.add(srvToSC0Def);
+	//
+	// SystemSuperTest.scDefs = sc0Defs;
+	// SystemSuperTest.srvDefs = srvToSC0Defs;
+	// }
+	//
+	// public static void setUp1CascadedServiceConnectorAndServer() {
+	// List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
+	// ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
+	// TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
+	// ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
+	// TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
+	// scCascDefs.add(sc0CascDef);
+	// scCascDefs.add(sc1CascDef);
+	//
+	// List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+	// ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+	// TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+	// TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
+	// srvToSC0CascDefs.add(srvToSC0CascDef);
+	//
+	// SystemSuperTest.scDefs = scCascDefs;
+	// SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	// }
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -182,7 +180,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 			message = msg;
 			messageCounter++;
 			if (((messageCounter + 1) % 1000) == 0) {
-				APIReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
+				SystemSuperTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
 			}
 		}
 
@@ -190,8 +188,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		public void receive(Exception e) {
 			SystemSuperTest.testLogger.error("receive error=" + e.getMessage());
 			if (e instanceof SCServiceException) {
-				SystemSuperTest.testLogger.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text="
-						+ ((SCServiceException) e).getSCErrorText());
+				SystemSuperTest.testLogger.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text=" + ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;
 			messageCounter = expectedMessages;

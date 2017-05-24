@@ -18,36 +18,35 @@ package org.serviceconnector.cln;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestClient {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TestClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestClient.class);
 
 	/**
 	 * start test process
-	 * 
-	 * @param args
-	 *            [0] clientType ("session" or "publish")<br>
-	 *            [1] client name<br>
-	 *            [2] SC host<br>
-	 *            [3] SC port<br>
-	 *            [4] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [5] maxConnections<br>
-	 *            [6] keepAliveIntervalSeconds (0 = disabled)<br>
-	 *            [7] serviceName<br>
-	 *            [8] echoIntervalSeconds<br>
-	 *            [9] echoTimeoutSeconds<br>
-	 *            [10] noDataIntervalSeconds<br>
-	 *            [11] methodsToInvoke (split by | "initAattach|detach")
+	 *
+	 * @param args [0] clientType ("session" or "publish")<br>
+	 *        [1] client name<br>
+	 *        [2] SC host<br>
+	 *        [3] SC port<br>
+	 *        [4] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [5] maxConnections<br>
+	 *        [6] keepAliveIntervalSeconds (0 = disabled)<br>
+	 *        [7] serviceName<br>
+	 *        [8] echoIntervalSeconds<br>
+	 *        [9] echoTimeoutSeconds<br>
+	 *        [10] noDataIntervalSeconds<br>
+	 *        [11] methodsToInvoke (split by | "initAattach|detach")
 	 */
 	public static void main(String[] args) {
-		LOGGER.log(Level.OFF, "TestClient starting ...");
+		LOGGER.debug("TestClient starting ...");
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 		TestAbstractClient client = null;
 		if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_SESSION)) {

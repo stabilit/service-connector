@@ -16,19 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class Service.
- * 
+ *
  * @author JTraber
  */
 public abstract class Service {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Service.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
 	/** The type. */
 	ServiceType type;
@@ -39,11 +40,9 @@ public abstract class Service {
 
 	/**
 	 * Instantiates a new service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
+	 *
+	 * @param name the name
+	 * @param type the type
 	 */
 	public Service(String name, ServiceType type) {
 		this.name = name;
@@ -52,7 +51,7 @@ public abstract class Service {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getName() {
@@ -61,7 +60,7 @@ public abstract class Service {
 
 	/**
 	 * Gets the type.
-	 * 
+	 *
 	 * @return the type
 	 */
 	public ServiceType getType() {
@@ -70,7 +69,7 @@ public abstract class Service {
 
 	/**
 	 * Gets the current service state.
-	 * 
+	 *
 	 * @return the state
 	 */
 	public boolean isEnabled() {
@@ -79,9 +78,8 @@ public abstract class Service {
 
 	/**
 	 * Sets the enabled.
-	 * 
-	 * @param enabled
-	 *            the new enabled
+	 *
+	 * @param enabled the new enabled
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -94,11 +92,9 @@ public abstract class Service {
 
 	/**
 	 * Dump the service into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }

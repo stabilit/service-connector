@@ -20,18 +20,18 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A factory for creating FlyweightEncoderDecoder objects. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). EncoderDecoders are only instantiated one time. Factory is
- * always returning the same instance from a map.
+ * A factory for creating FlyweightEncoderDecoder objects. Factory is based on the Flyweight pattern (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm).
+ * EncoderDecoders are only instantiated one time. Factory is always returning the same instance from a map.
  */
 public final class FlyweightEncoderDecoderFactory {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FlyweightEncoderDecoderFactory.class);
 	/** The encoder decoders. */
 	private static Map<String, IEncoderDecoder> encoderDecoders;
 
@@ -57,9 +57,8 @@ public final class FlyweightEncoderDecoderFactory {
 
 	/**
 	 * Checks if is large.
-	 * 
-	 * @param message
-	 *            the scmp message
+	 *
+	 * @param message the scmp message
 	 * @return true, if is large
 	 */
 	public boolean isLarge(SCMPMessage message) {
@@ -76,9 +75,8 @@ public final class FlyweightEncoderDecoderFactory {
 
 	/**
 	 * New instance.
-	 * 
-	 * @param message
-	 *            the scmp message
+	 *
+	 * @param message the scmp message
 	 * @return the i encoder decoder
 	 */
 	public IEncoderDecoder createEncoderDecoder(SCMPMessage message) {
@@ -98,9 +96,8 @@ public final class FlyweightEncoderDecoderFactory {
 
 	/**
 	 * New instance.
-	 * 
-	 * @param scmpBuffer
-	 *            the scmp message buffer
+	 *
+	 * @param scmpBuffer the scmp message buffer
 	 * @return the i encoder decoder
 	 */
 	public IEncoderDecoder createEncoderDecoder(byte[] scmpBuffer) {
@@ -117,15 +114,14 @@ public final class FlyweightEncoderDecoderFactory {
 
 	/**
 	 * New instance.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the i encoder decoder
 	 */
 	private IEncoderDecoder createEncoderDecoder(String key) {
 		IEncoderDecoder encoderDecoder = FlyweightEncoderDecoderFactory.encoderDecoders.get(key);
 		if (encoderDecoder == null) {
-			LOGGER.fatal("key : " + key + " not found!");
+			LOGGER.error("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 		return encoderDecoder;
@@ -133,11 +129,9 @@ public final class FlyweightEncoderDecoderFactory {
 
 	/**
 	 * Adds the encoder decoder.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param encoderDecoder
-	 *            the encoder decoder
+	 *
+	 * @param key the key
+	 * @param encoderDecoder the encoder decoder
 	 */
 	private void addEncoderDecoder(String key, IEncoderDecoder encoderDecoder) {
 		FlyweightEncoderDecoderFactory.encoderDecoders.put(key, encoderDecoder);

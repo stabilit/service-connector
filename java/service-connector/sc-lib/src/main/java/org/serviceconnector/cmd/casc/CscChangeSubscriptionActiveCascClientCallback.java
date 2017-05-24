@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -31,7 +32,7 @@ import org.serviceconnector.service.SubscriptionMask;
  */
 public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessageCallback {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscChangeSubscriptionActiveCascClientCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscChangeSubscriptionActiveCascClientCallback.class);
 
 	/** The request. */
 	protected IRequest request;
@@ -43,13 +44,10 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 
 	/**
 	 * Instantiates a new csc change subscription active casc client callback.
-	 * 
-	 * @param cascClient
-	 *            the casc client
-	 * @param request
-	 *            the request
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param cascClient the casc client
+	 * @param request the request
+	 * @param callback the callback
 	 */
 	public CscChangeSubscriptionActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
 		this.request = request;
@@ -69,8 +67,7 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 				this.commandCallback.receive(reply);
 				// adding client subscription id to cascaded client
 				this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
-				this.cascClient.setSubscriptionMask(new SubscriptionMask(this.request.getMessage().getHeader(
-						SCMPHeaderAttributeKey.CASCADED_MASK)));
+				this.cascClient.setSubscriptionMask(new SubscriptionMask(this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK)));
 				// release permit
 				this.cascClient.getCascClientSemaphore().release();
 				return;

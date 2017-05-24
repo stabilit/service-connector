@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SrvPublishService;
@@ -37,16 +38,14 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SrvAbortSubscriptionCommand. Responsible for validation and execution of abort subscription command. Aborts an active
- * subscription on
- * server.
- * 
+ * The Class SrvAbortSubscriptionCommand. Responsible for validation and execution of abort subscription command. Aborts an active subscription on server.
+ *
  * @author JTraber
  */
 public class SrvAbortSubscriptionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SrvAbortSubscriptionCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SrvAbortSubscriptionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -112,15 +111,13 @@ public class SrvAbortSubscriptionCommand extends SrvCommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_SRV, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sc error code mandatory
 			String sec = message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
 			if (sec == null || sec.equals("")) {

@@ -16,20 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 
 /**
- * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is
- * unique for every message. Format: CacheId / SequenceNr.
- * 
+ * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is unique for every message. Format: CacheId / SequenceNr.
+ *
  * @author JTraber
  */
 public class SCMPCacheId {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCacheId.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCacheId.class);
 
 	/** The cache id. */
 	private String cacheId;
@@ -47,9 +47,8 @@ public class SCMPCacheId {
 
 	/**
 	 * Instantiates a new sCMP cache id.
-	 * 
-	 * @param cacheId
-	 *            the cache id
+	 *
+	 * @param cacheId the cache id
 	 */
 	public SCMPCacheId(String cacheId) {
 		String[] splitted = cacheId.split(Constants.SLASH);
@@ -64,11 +63,9 @@ public class SCMPCacheId {
 
 	/**
 	 * Instantiates a new sCMP cache id.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param sequenceNr
-	 *            the sequence nr
+	 *
+	 * @param cacheId the cache id
+	 * @param sequenceNr the sequence nr
 	 */
 	public SCMPCacheId(String cacheId, String sequenceNr) {
 		this.cacheId = cacheId;
@@ -78,7 +75,7 @@ public class SCMPCacheId {
 
 	/**
 	 * Gets the cache id.
-	 * 
+	 *
 	 * @return the cache id
 	 */
 	public String getCacheId() {
@@ -87,7 +84,7 @@ public class SCMPCacheId {
 
 	/**
 	 * Gets the full cache id.
-	 * 
+	 *
 	 * @return the full cache id
 	 */
 	public String getFullCacheId() {
@@ -108,7 +105,7 @@ public class SCMPCacheId {
 
 	/**
 	 * Gets the sequence nr.
-	 * 
+	 *
 	 * @return the sequence nr
 	 */
 	public String getSequenceNr() {
@@ -117,9 +114,8 @@ public class SCMPCacheId {
 
 	/**
 	 * Sets the sequence nr.
-	 * 
-	 * @param sequenceNr
-	 *            the new sequence nr
+	 *
+	 * @param sequenceNr the new sequence nr
 	 */
 	public void setSequenceNr(String sequenceNr) {
 		this.sequenceNr = sequenceNr;

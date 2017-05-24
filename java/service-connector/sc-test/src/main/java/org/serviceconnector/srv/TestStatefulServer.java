@@ -16,13 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.srv;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileCtx;
 import org.serviceconnector.util.FileUtility;
+import org.slf4j.Logger;
 
 public abstract class TestStatefulServer extends Thread {
 
@@ -135,8 +134,7 @@ public abstract class TestStatefulServer extends Thread {
 			fileCtx.releaseFileLockAndCloseChannel();
 			FileUtility.deleteFile(this.pidFileNameFull);
 			LOGGER.info("Delete PID-file=" + this.pidFileNameFull);
-			LOGGER.log(Level.OFF, "TestServer exit");
-			LOGGER.log(Level.OFF, "<<<");
+			LOGGER.debug("TestServer exit");
 		}
 	}
 }

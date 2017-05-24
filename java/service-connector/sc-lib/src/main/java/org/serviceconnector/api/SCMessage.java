@@ -23,14 +23,13 @@ import org.serviceconnector.cache.SC_CACHING_METHOD;
 
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
- * 
+ *
  * @author JTraber
  */
 public class SCMessage {
 
 	/**
-	 * The message info. Optional information passed together with the message body that helps to identify the message content
-	 * without investigating the body.
+	 * The message info. Optional information passed together with the message body that helps to identify the message content without investigating the body.
 	 */
 	private String messageInfo;
 	/**
@@ -48,8 +47,7 @@ public class SCMessage {
 	/** The message part size. */
 	private int partSize;
 	/**
-	 * The cache id. Identification agreed by the communicating applications to uniquely identify the cached content. The cacheId is
-	 * unique per service.
+	 * The cache id. Identification agreed by the communicating applications to uniquely identify the cached content. The cacheId is unique per service.
 	 */
 	private String cacheId;
 	/** Marks cached messages. Message comes from a cache. */
@@ -60,34 +58,31 @@ public class SCMessage {
 	private String cachePartNr;
 
 	/**
-	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
-	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
-	 * level and are stored in the SC configuration.
+	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow message routing the name must be unique in scope
+	 * of the entire SC network. Service names must be agreed at the application level and are stored in the SC configuration.
 	 */
 	private String serviceName;
 	/**
-	 * The application error code. Numeric value passed between server and the client used to implement error protocol on the
-	 * application level. Can be set by server whenever it responds with a message body.
+	 * The application error code. Numeric value passed between server and the client used to implement error protocol on the application level. Can be set by server whenever it
+	 * responds with a message body.
 	 */
 	private int appErrorCode;
 	/**
-	 * The application error text.Textual value passed between server and the client used to implement error protocol on the
-	 * application level. It can be the textual interpretation of the appErrorCode.
+	 * The application error text.Textual value passed between server and the client used to implement error protocol on the application level. It can be the textual interpretation
+	 * of the appErrorCode.
 	 */
 	private String appErrorText;
 	/** The reject flag used to reject a create session / subscribe. */
 	private boolean reject;
 	/**
-	 * The cache expiration date time, format on wire yyyy-MM-dd hh:mm:ss.SSSZ. Sent by the server, it represents the absolute
-	 * expiration date and time of the message in cache. It must be set together with cacheId attribute.
+	 * The cache expiration date time, format on wire yyyy-MM-dd hh:mm:ss.SSSZ. Sent by the server, it represents the absolute expiration date and time of the message in cache. It
+	 * must be set together with cacheId attribute.
 	 */
 	private Date cacheExpirationDateTime;
 	/**
 	 * The caching method. Method the message has been cached by the server.<br>
-	 * INITIAL: this message is a base message for possible appendix
-	 * APPEND: this message is an appendix for an initial message
-	 * REMOVE: this message has removed a cached managed message
-	 * NOT_MANAGED: default state for unmanaged (no appends possible) messages
+	 * INITIAL: this message is a base message for possible appendix APPEND: this message is an appendix for an initial message REMOVE: this message has removed a cached managed
+	 * message NOT_MANAGED: default state for unmanaged (no appends possible) messages
 	 */
 	private SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.NOT_MANAGED;
 
@@ -112,9 +107,8 @@ public class SCMessage {
 
 	/**
 	 * Instantiates a new SC message with byte[] data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCMessage(byte[] data) {
 		this();
@@ -123,9 +117,8 @@ public class SCMessage {
 
 	/**
 	 * Instantiates a new SC message with String data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCMessage(String data) {
 		this();
@@ -134,12 +127,10 @@ public class SCMessage {
 
 	/**
 	 * Sets the message info.
-	 * 
-	 * @param messageInfo
-	 *            Optional information passed together with the message body that helps to identify the message content without
-	 *            investigating the body.<br />
-	 *            Any printable character, length > 0 and < 256 Byte<br />
-	 *            Example: SECURITY_MARKET_QUERY
+	 *
+	 * @param messageInfo Optional information passed together with the message body that helps to identify the message content without investigating the body.<br />
+	 *        Any printable character, length > 0 and < 256 Byte<br />
+	 *        Example: SECURITY_MARKET_QUERY
 	 */
 	public void setMessageInfo(String messageInfo) {
 		this.messageInfo = messageInfo;
@@ -147,7 +138,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the session info.
-	 * 
+	 *
 	 * @return the session info
 	 */
 	public String getSessionInfo() {
@@ -156,9 +147,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br />
+	 *
+	 * @param sessionInfo Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br />
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.sessionInfo = sessionInfo;
@@ -166,7 +156,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the message info.
-	 * 
+	 *
 	 * @return the message info
 	 */
 	public String getMessageInfo() {
@@ -175,7 +165,7 @@ public class SCMessage {
 
 	/**
 	 * Checks if is compressed.
-	 * 
+	 *
 	 * @return the boolean
 	 */
 	public boolean isCompressed() {
@@ -184,9 +174,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the compressed. Default is true.
-	 * 
-	 * @param compressed
-	 *            Regards the data part of the message.
+	 *
+	 * @param compressed Regards the data part of the message.
 	 */
 	public void setCompressed(boolean compressed) {
 		this.compressed = compressed;
@@ -194,9 +183,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the data.
-	 * 
-	 * @param data
-	 *            the new data
+	 *
+	 * @param data the new data
 	 */
 	public void setData(Object data) {
 		this.data = data;
@@ -204,7 +192,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the data.
-	 * 
+	 *
 	 * @return the data
 	 */
 	public Object getData() {
@@ -213,9 +201,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the data length.
-	 * 
-	 * @param dataLength
-	 *            the new data length
+	 *
+	 * @param dataLength the new data length
 	 */
 	public void setDataLength(int dataLength) {
 		this.dataLength = dataLength;
@@ -223,7 +210,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the data length.
-	 * 
+	 *
 	 * @return the data length
 	 */
 	public int getDataLength() {
@@ -232,7 +219,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the session id.
-	 * 
+	 *
 	 * @return the session id
 	 */
 	public String getSessionId() {
@@ -241,9 +228,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
+	 *
+	 * @param sessionId the new session id
 	 */
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
@@ -251,7 +237,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the cache id.
-	 * 
+	 *
 	 * @return the cache id
 	 */
 	public String getCacheId() {
@@ -260,7 +246,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the cache part nr.
-	 * 
+	 *
 	 * @return the cache part nr
 	 */
 	public String getCachePartNr() {
@@ -269,7 +255,7 @@ public class SCMessage {
 
 	/**
 	 * Checks if message has been cached and comes from a cache.
-	 * 
+	 *
 	 * @return true, if message has been cached
 	 */
 	public boolean isCached() {
@@ -278,9 +264,8 @@ public class SCMessage {
 
 	/**
 	 * Marks the message as a cached message.
-	 * 
-	 * @param cached
-	 *            the new caching state
+	 *
+	 * @param cached the new caching state
 	 */
 	public void setCached(boolean cached) {
 		this.cached = cached;
@@ -288,7 +273,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -296,11 +281,9 @@ public class SCMessage {
 	}
 
 	/**
-	 * Sets the service name. Needs to be the same service which is used to send the message. The name will be overwritten at the
-	 * time the message is sent.
-	 * 
-	 * @param serviceName
-	 *            the new service name
+	 * Sets the service name. Needs to be the same service which is used to send the message. The name will be overwritten at the time the message is sent.
+	 *
+	 * @param serviceName the new service name
 	 */
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
@@ -308,9 +291,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the cache id.
-	 * 
-	 * @param cacheId
-	 *            the new cache id
+	 *
+	 * @param cacheId the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		this.cacheId = cacheId;
@@ -318,9 +300,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the cache part nr.
-	 * 
-	 * @param cachePartNr
-	 *            the new cache part nr
+	 *
+	 * @param cachePartNr the new cache part nr
 	 */
 	public void setCachePartNr(String cachePartNr) {
 		this.cachePartNr = cachePartNr;
@@ -328,7 +309,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the application error code.
-	 * 
+	 *
 	 * @return the application error code
 	 */
 	public int getAppErrorCode() {
@@ -337,9 +318,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the application error text.
-	 * 
-	 * @param appErrorText
-	 *            the new application error text
+	 *
+	 * @param appErrorText the new application error text
 	 */
 	public void setAppErrorText(String appErrorText) {
 		this.appErrorText = appErrorText;
@@ -347,7 +327,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the application error text.
-	 * 
+	 *
 	 * @return the application error text
 	 */
 	public String getAppErrorText() {
@@ -356,9 +336,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the application error code.
-	 * 
-	 * @param appErrorCode
-	 *            the new application error code
+	 *
+	 * @param appErrorCode the new application error code
 	 */
 	public void setAppErrorCode(Integer appErrorCode) {
 		if (appErrorCode == null) {
@@ -370,7 +349,7 @@ public class SCMessage {
 
 	/**
 	 * Checks if is reject.
-	 * 
+	 *
 	 * @return true, if is reject
 	 */
 	public boolean isReject() {
@@ -379,9 +358,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the reject.
-	 * 
-	 * @param reject
-	 *            the new reject
+	 *
+	 * @param reject the new reject
 	 */
 	public void setReject(boolean reject) {
 		this.reject = reject;
@@ -389,7 +367,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the part size.
-	 * 
+	 *
 	 * @return the size of the parts in which message will be broken when it is large
 	 */
 	public int getPartSize() {
@@ -398,9 +376,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the part size.
-	 * 
-	 * @param partSize
-	 *            the size in which message will be broken when it is large
+	 *
+	 * @param partSize the size in which message will be broken when it is large
 	 */
 	public void setPartSize(int partSize) {
 		// only value smaller then MAX_MESSAGE_SIZE is allowed
@@ -413,7 +390,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the cache expiration date time.
-	 * 
+	 *
 	 * @return the cache expiration date time
 	 */
 	public Date getCacheExpirationDateTime() {
@@ -422,9 +399,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the cache expiration date time.
-	 * 
-	 * @param cacheExpirationDateTime
-	 *            the new cache expiration date time
+	 *
+	 * @param cacheExpirationDateTime the new cache expiration date time
 	 */
 	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) {
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
@@ -432,9 +408,8 @@ public class SCMessage {
 
 	/**
 	 * Sets the caching method.
-	 * 
-	 * @param cachingMethod
-	 *            the new caching method
+	 *
+	 * @param cachingMethod the new caching method
 	 */
 	public void setCachingMethod(SC_CACHING_METHOD cachingMethod) {
 		this.cachingMethod = cachingMethod;
@@ -442,7 +417,7 @@ public class SCMessage {
 
 	/**
 	 * Gets the caching method.
-	 * 
+	 *
 	 * @return the caching method
 	 */
 	public SC_CACHING_METHOD getCachingMethod() {
@@ -451,7 +426,7 @@ public class SCMessage {
 
 	/**
 	 * Checks if message is managed.
-	 * 
+	 *
 	 * @return true, if message is managed
 	 */
 	public boolean isManaged() {

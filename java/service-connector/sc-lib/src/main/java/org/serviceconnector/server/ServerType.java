@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.server;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
@@ -38,7 +39,7 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ServerType.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServerType.class);
 
 	/** The value. */
 	private String value;
@@ -47,9 +48,8 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 
 	/**
 	 * Instantiates a new server type.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private ServerType(String value) {
 		this.value = value;
@@ -57,9 +57,8 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 
 	/**
 	 * Gets the type.
-	 * 
-	 * @param typeString
-	 *            the type string
+	 *
+	 * @param typeString the type string
 	 * @return the type
 	 */
 	public static ServerType getType(String typeString) {

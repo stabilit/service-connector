@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvAbortSubscriptionCall;
@@ -60,7 +61,7 @@ import org.serviceconnector.util.XMLDumpWriter;
 public class StatefulServer extends Server implements IStatefulServer {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(StatefulServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StatefulServer.class);
 
 	/** List of sessions and subscriptions allocated to the server. */
 	private List<AbstractSession> sessions;
@@ -75,34 +76,29 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Instantiates a new stateful server.
-	 * 
-	 * @param remoteNodeConfiguration
-	 *            the remote node configuration
-	 * @param serviceName
-	 *            the service name
-	 * @param socketAddress
-	 *            the socket address
+	 *
+	 * @param remoteNodeConfiguration the remote node configuration
+	 * @param serviceName the service name
+	 * @param socketAddress the socket address
 	 */
 	public StatefulServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
-		this.serverKey = serviceName + Constants.UNDERLINE + socketAddress.getHostName() + Constants.SLASH
-				+ socketAddress.getPort();
+		this.serverKey = serviceName + Constants.UNDERLINE + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.service = null;
 		// set up separate remote node configuration for SRV_ABORT_SESSION request in case of busy connection pool
-		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
-				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
-				0, 0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
+		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(), remoteNodeConfiguration.getHost(),
+				remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(), 0, 0, 1, 1, remoteNodeConfiguration.getHttpUrlFileQualifier());
 		// calculate server timeout: multiply check registration interval with checkRegistrationIntervalMultiplier!
-		this.serverTimeoutMillis = (remoteNodeConfiguration.getCheckRegistrationIntervalSeconds()
-				* Constants.SEC_TO_MILLISEC_FACTOR * AppContext.getBasicConfiguration().getCheckRegistrationIntervalMultiplier());
+		this.serverTimeoutMillis = (remoteNodeConfiguration.getCheckRegistrationIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR
+				* AppContext.getBasicConfiguration().getCheckRegistrationIntervalMultiplier());
 	}
 
 	/**
 	 * Checks for free session.
-	 * 
+	 *
 	 * @return true, if successful {@inheritDoc}
 	 */
 	@Override
@@ -116,9 +112,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Adds the session.
-	 * 
-	 * @param session
-	 *            the session {@inheritDoc}
+	 *
+	 * @param session the session {@inheritDoc}
 	 */
 	@Override
 	public void addSession(AbstractSession session) {
@@ -127,9 +122,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param session
-	 *            the session {@inheritDoc}
+	 *
+	 * @param session the session {@inheritDoc}
 	 */
 	@Override
 	public void removeSession(AbstractSession session) {
@@ -143,7 +137,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Gets the sessions.
-	 * 
+	 *
 	 * @return the sessions {@inheritDoc}
 	 */
 	@Override
@@ -159,7 +153,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Gets the max sessions.
-	 * 
+	 *
 	 * @return the max sessions {@inheritDoc}
 	 */
 	@Override
@@ -169,7 +163,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -178,18 +172,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Creates the session.
-	 * 
-	 * @param msgToForward
-	 *            the message to forward
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param msgToForward the message to forward
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		msgToForward.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvCreateSessionCall createSessionCall = new SCMPSrvCreateSessionCall(requester, msgToForward);
@@ -205,18 +194,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Delete session.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvDeleteSessionCall deleteSessionCall = new SCMPSrvDeleteSessionCall(requester, message);
@@ -232,18 +216,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Subscribe.
-	 * 
-	 * @param msgToForward
-	 *            the message to forward
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param msgToForward the message to forward
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		msgToForward.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvSubscribeCall subscribeCall = new SCMPSrvSubscribeCall(requester, msgToForward);
@@ -259,18 +238,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Unsubscribe.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvUnsubscribeCall unsubscribeCall = new SCMPSrvUnsubscribeCall(this.requester, message);
@@ -287,18 +261,13 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Change subscription.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout milliseconds
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = new SCMPSrvChangeSubscriptionCall(this.requester, message);
@@ -315,15 +284,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Send data. Tries sending data to server asynchronous.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
 	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
@@ -341,37 +306,27 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Server abort session.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	private void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	private void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		this.serverAbortSessionWithExtraRequester(this.requester, message, callback, timeoutMillis);
 	}
 
 	/**
 	 * Server abort session with extra requester.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param requester the requester
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout milliseconds
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	private void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
-			int timeoutMillis) throws ConnectionPoolBusyException {
+	private void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvAbortSessionCall srvAbortSessionCall = new SCMPSrvAbortSessionCall(this.requester, message);
@@ -386,37 +341,27 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Server abort subscription.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout millis
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	private void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
-			throws ConnectionPoolBusyException {
+	private void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		this.serverAbortSubscriptionWithRequester(this.requester, message, callback, timeoutMillis);
 	}
 
 	/**
 	 * Server abort subscription with requester.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param message
-	 *            the message
-	 * @param callback
-	 *            the callback
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
-	 * @throws ConnectionPoolBusyException
-	 *             the connection pool busy exception
+	 *
+	 * @param requester the requester
+	 * @param message the message
+	 * @param callback the callback
+	 * @param timeoutMillis the timeout milliseconds
+	 * @throws ConnectionPoolBusyException the connection pool busy exception
 	 */
-	private void serverAbortSubscriptionWithRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
-			int timeoutMillis) throws ConnectionPoolBusyException {
+	private void serverAbortSubscriptionWithRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		// setting the http url file qualifier which is necessary to communicate with the server.
 		message.setHttpUrlFileQualifier(this.remoteNodeConfiguration.getHttpUrlFileQualifier());
 		SCMPSrvAbortSubscriptionCall srvAbortSubscriptionCall = new SCMPSrvAbortSubscriptionCall(this.requester, message);
@@ -431,11 +376,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Abort session.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param reason
-	 *            the reason {@inheritDoc}
+	 *
+	 * @param session the session
+	 * @param reason the reason {@inheritDoc}
 	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
@@ -447,8 +390,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			// delete session in global registries
 			if (session instanceof Subscription) {
 				AppContext.getSubscriptionRegistry().removeSubscription(session.getId());
-				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
-						.getService()).getMessageQueue();
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer()).getService()).getMessageQueue();
 				// unsubscribe subscription
 				publishMessageQueue.unsubscribe(session.getId());
 				// remove non referenced nodes
@@ -494,15 +436,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Abort session and wait mech.
-	 * 
-	 * @param oti
-	 *            the oti
-	 * @param abortMessage
-	 *            the abort message
-	 * @param reason
-	 *            the reason
-	 * @param abortSubscription
-	 *            the abort subscription
+	 *
+	 * @param oti the oti
+	 * @param abortMessage the abort message
+	 * @param reason the reason
+	 * @param abortSubscription the abort subscription
 	 */
 	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason, boolean abortSubscription) {
 		if (this.destroyed == true) {
@@ -531,8 +469,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
 						LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + abortMessage.getServiceName()));
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-								"service=" + abortMessage.getServiceName());
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + abortMessage.getServiceName());
 						throw scmpCommandException;
 					}
 				}
@@ -580,9 +517,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Abort sessions and destroy. All sessions are aborted and server gets destroyed.
-	 * 
-	 * @param reason
-	 *            the reason
+	 *
+	 * @param reason the reason
 	 */
 	public synchronized void abortSessionsAndDestroy(String reason) {
 		if (this.destroyed == true) {
@@ -614,8 +550,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 					// server already destroyed
 					continue;
 				}
-				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
-						.getService()).getMessageQueue();
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer()).getService()).getMessageQueue();
 				// unsubscribe subscription
 				publishMessageQueue.unsubscribe(session.getId());
 				// remove non referenced nodes
@@ -630,8 +565,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 					for (String id : subscriptionIds) {
 						abortMessage.setSessionId(id);
 						try {
-							this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext
-									.getBasicConfiguration().getSrvAbortOTIMillis());
+							this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 						} catch (ConnectionPoolBusyException e) {
 							LOGGER.warn("aborting subscription failed because of busy connection pool. " + e.toString());
 						} catch (Exception e) {
@@ -643,8 +577,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 					continue;
 				}
 				try {
-					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
-							.getSrvAbortOTIMillis());
+					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting subscription failed because of busy connection pool. " + e.toString());
 				} catch (Exception e) {
@@ -653,8 +586,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			} else {
 				SessionLogger.logAbortSession((Session) session, reason);
 				try {
-					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
-							.getSrvAbortOTIMillis());
+					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 				} catch (ConnectionPoolBusyException e) {
 					LOGGER.warn("aborting session failed because of busy connection pool. " + e.toString());
 				} catch (Exception e) {
@@ -668,7 +600,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Gets the service.
-	 * 
+	 *
 	 * @return the service
 	 */
 	public StatefulService getService() {
@@ -677,9 +609,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Sets the service.
-	 * 
-	 * @param service
-	 *            the new service
+	 *
+	 * @param service the new service
 	 */
 	public void setService(StatefulService service) {
 		this.service = service;
@@ -698,7 +629,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * To string.
-	 * 
+	 *
 	 * @return the string {@inheritDoc}
 	 */
 	@Override
@@ -708,12 +639,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Dump the server into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("stateful-server");
 		writer.writeAttribute("key", this.serverKey);

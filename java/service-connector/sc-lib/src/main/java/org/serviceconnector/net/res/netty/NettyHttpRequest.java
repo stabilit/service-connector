@@ -19,7 +19,8 @@ package org.serviceconnector.net.res.netty;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.serviceconnector.ctx.AppContext;
@@ -30,27 +31,23 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
 /**
- * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame. Based on
- * JBoss Netty.
+ * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame. Based on JBoss Netty.
  */
 public class NettyHttpRequest extends RequestAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpRequest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpRequest.class);
 
 	/** The request. */
 	private HttpRequest request;
 
 	/**
 	 * Instantiates a new netty http request.
-	 * 
-	 * @param httpRequest
-	 *            the request
-	 * @param localAddress
-	 *            the socket address
-	 * @param remoteAddress
-	 *            the remote address
+	 *
+	 * @param httpRequest the request
+	 * @param localAddress the socket address
+	 * @param remoteAddress the remote address
 	 */
 	public NettyHttpRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
@@ -65,8 +62,8 @@ public class NettyHttpRequest extends RequestAdapter {
 		channelBuffer.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getRemoteSocketAddress().getHostName(), this
-					.getRemoteSocketAddress().getPort(), buffer, 0, buffer.length);
+			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getRemoteSocketAddress().getHostName(), this.getRemoteSocketAddress().getPort(), buffer, 0,
+					buffer.length);
 		}
 		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

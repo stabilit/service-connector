@@ -17,7 +17,8 @@
 package org.serviceconnector.conf;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -29,17 +30,15 @@ import org.serviceconnector.scmp.SCMPError;
 public class WebConfiguration {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(WebConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebConfiguration.class);
 
 	/**
-	 * The translet enabled flag.
-	 * If this flag is true then all xsl transformations will be cached internal otherwise not.
+	 * The translet enabled flag. If this flag is true then all xsl transformations will be cached internal otherwise not.
 	 */
 	private boolean xslTransformationCacheEnabled;
 
 	/**
-	 * Page header prefix is displayed in the page header and page title in front of the
-	 * standard text. The property WEB_PAGE_HEADER_PREFIX allows to define a custom value.
+	 * Page header prefix is displayed in the page header and page title in front of the standard text. The property WEB_PAGE_HEADER_PREFIX allows to define a custom value.
 	 */
 	private String pageHeaderPrefix;
 
@@ -83,15 +82,12 @@ public class WebConfiguration {
 	 * Loads web parameters from properties file.<br />
 	 * Service Connector web parameters: <br />
 	 * web.xslTransformationCache.enabled=true<br >
-	 * 
-	 * @param compositeConfiguration
-	 *            the composite configuration
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param compositeConfiguration the composite configuration
+	 * @throws Exception the exception
 	 */
 	public synchronized void load(CompositeConfiguration compositeConfiguration) throws Exception {
-		Boolean xslTransformationCacheEnabledConf = compositeConfiguration.getBoolean(
-				Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED, null);
+		Boolean xslTransformationCacheEnabledConf = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED, null);
 		if (xslTransformationCacheEnabledConf != null) {
 			this.xslTransformationCacheEnabled = xslTransformationCacheEnabledConf;
 		}
@@ -105,8 +101,7 @@ public class WebConfiguration {
 		if (this.scDownloadService != null) {
 			// service must exist if it was speciffied
 			if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_DOWNLOAD_SERVICE + "="
-						+ this.scDownloadService + " service not found");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService + " service not found");
 			}
 		}
 
@@ -115,8 +110,7 @@ public class WebConfiguration {
 		if (this.scUploadService != null) {
 			// service must exist if it was speciffied
 			if (AppContext.getServiceRegistry().getService(this.scUploadService) == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_UPLOAD_SERVICE + "="
-						+ this.scUploadService + " service not found");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_UPLOAD_SERVICE + "=" + this.scUploadService + " service not found");
 			}
 		}
 		Boolean scTerminateAllowedConf = compositeConfiguration.getBoolean(Constants.WEB_SC_TERMINATE_ALLOWED, null);
@@ -124,7 +118,7 @@ public class WebConfiguration {
 			this.scTerminateAllowed = scTerminateAllowedConf;
 		}
 		this.colorScheme = compositeConfiguration.getString(Constants.WEB_COLOR_SCHEMA, null);
-		if (this.colorScheme == null  || this.colorScheme.isEmpty()) {
+		if (this.colorScheme == null || this.colorScheme.isEmpty()) {
 			this.colorScheme = Constants.DEFAULT_WEB_COLOR_SCHEME;
 		}
 		LOGGER.info(Constants.WEB_COLOR_SCHEMA + "=" + this.colorScheme);
@@ -132,7 +126,7 @@ public class WebConfiguration {
 
 	/**
 	 * Checks if is translet enabled.
-	 * 
+	 *
 	 * @return true, if is translet enabled
 	 */
 	public boolean isTransletEnabled() {
@@ -141,7 +135,7 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the web session schedule timeout seconds.
-	 * 
+	 *
 	 * @return the web session schedule timeout seconds
 	 */
 	public int getWebSessionScheduleTimeoutSeconds() {
@@ -150,7 +144,7 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the web session timeout minutes.
-	 * 
+	 *
 	 * @return the web session timeout minutes
 	 */
 	public int getWebSessionTimeoutMinutes() {
@@ -159,7 +153,7 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the page header prefix.
-	 * 
+	 *
 	 * @return the page header prefix
 	 */
 	public String getPageHeaderPrefix() {
@@ -168,7 +162,7 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the sc download service.
-	 * 
+	 *
 	 * @return the sc download service
 	 */
 	public String getScDownloadService() {
@@ -177,7 +171,7 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the sc upload service.
-	 * 
+	 *
 	 * @return the sc upload service
 	 */
 	public String getScUploadService() {
@@ -186,16 +180,16 @@ public class WebConfiguration {
 
 	/**
 	 * Checks if is SC can be terminated from the GUI.
-	 * 
+	 *
 	 * @return true, if termination is allowed
 	 */
 	public boolean isScTerminateAllowed() {
 		return scTerminateAllowed;
 	}
-	
+
 	/**
 	 * Gets the color scheme
-	 * 
+	 *
 	 * @return the color scheme name
 	 */
 	public String getColorScheme() {

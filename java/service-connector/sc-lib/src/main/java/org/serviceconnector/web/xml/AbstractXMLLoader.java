@@ -37,7 +37,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.cln.SCClient;
@@ -78,7 +79,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(AbstractXMLLoader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractXMLLoader.class);
 
 	/** The meta map. */
 	private Map<String, String> metaMap;
@@ -96,7 +97,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Checks if is text.
-	 * 
+	 *
 	 * @return true, if is text {@inheritDoc}
 	 */
 	@Override
@@ -106,11 +107,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Adds the meta.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value {@inheritDoc}
+	 *
+	 * @param name the name
+	 * @param value the value {@inheritDoc}
 	 */
 	@Override
 	public void addMeta(String name, String value) {
@@ -119,9 +118,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Adds the meta.
-	 * 
-	 * @param map
-	 *            the map {@inheritDoc}
+	 *
+	 * @param map the map {@inheritDoc}
 	 */
 	@Override
 	public void addMeta(Map<String, String> map) {
@@ -130,39 +128,32 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
+	@Override
 	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void loadBody(Writer writer, IWebRequest request) throws Exception {
 
 	}
 
 	/**
 	 * Load.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param os
-	 *            the os
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 *
+	 * @param request the request
+	 * @param os the os
+	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
 	public final void load(IWebRequest request, OutputStream os) throws Exception {
@@ -273,11 +264,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write system.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
 		// write system info
@@ -314,13 +303,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write bean.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param obj
-	 *            the obj
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param obj the obj
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeBean(XMLStreamWriter writer, Object obj) throws XMLStreamException {
 		if (obj == null) {
@@ -505,13 +491,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write header map.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param map
-	 *            the map
-	 * @throws XMLStreamException
-	 *             the XML stream exception
+	 *
+	 * @param writer the writer
+	 * @param map the map
+	 * @throws XMLStreamException the XML stream exception
 	 */
 	public void writeHeaderMap(XMLStreamWriter writer, Map<String, String> map) throws XMLStreamException {
 		if (map == null) {
@@ -534,11 +517,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write web info.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeWebInfo(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("sessions");
@@ -549,24 +530,22 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write runtime.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("availableProcessors");
 		writer.writeCData(String.valueOf(SystemInfo.getAvailableProcessors()));
 		writer.writeEndElement(); // end of availableProcessors
 		writer.writeStartElement("totalMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()/1024/1024));
+		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory() / 1024 / 1024));
 		writer.writeEndElement(); // end of totalMemory
 		writer.writeStartElement("freeMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()/1024/1024));
+		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory() / 1024 / 1024));
 		writer.writeEndElement(); // end of freeMemory
 		writer.writeStartElement("maxMemory");
-		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()/1024/1024));
+		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory() / 1024 / 1024));
 		writer.writeEndElement(); // end of maxMemory
 		// get thread info
 		writer.writeStartElement("threadCount");
@@ -582,13 +561,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write success to xml stream using given message text.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param msg
-	 *            the msg
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param msg the msg
+	 * @throws Exception the exception
 	 */
 	public void writeSuccess(XMLStreamWriter writer, String msg) throws Exception {
 		writer.writeStartElement("status");
@@ -604,13 +580,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write failure to xml stream using given message text.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param msg
-	 *            the msg
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param msg the msg
+	 * @throws Exception the exception
 	 */
 	public void writeFailure(XMLStreamWriter writer, String msg) throws Exception {
 		writer.writeStartElement("status");
@@ -624,14 +597,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	}
 
 	/**
-	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint if no netty tcp
-	 * endpoint is available
-	 * 
-	 * @param service
-	 *            the service
+	 * Connect client to service. In case of FileService get first netty tcp endpoint or netty http endpoint if no netty tcp endpoint is available
+	 *
+	 * @param service the service
 	 * @return the sC mgmt client
-	 * @throws WebCommandException
-	 *             the web command exception
+	 * @throws WebCommandException the web command exception
 	 */
 	protected SCClient connectClientToService(Service service) throws WebCommandException {
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
@@ -666,8 +636,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						localClient.attach();
 						return localClient;
 					} catch (Exception e) {
-						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port
-								+ " failed. " + e.toString());
+						LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed. " + e.toString());
 					}
 				}
 			}
@@ -684,8 +653,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				localClient.attach();
 				return localClient;
 			} catch (Exception e) {
-				LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed. "
-						+ e.toString());
+				LOGGER.warn("upload current log files, connect to network interface " + host + " and port " + port + " failed. " + e.toString());
 			}
 		}
 		return null;
@@ -693,13 +661,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Gets the parameter int.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param name
-	 *            the name
-	 * @param defaultValue
-	 *            the default value
+	 *
+	 * @param request the request
+	 * @param name the name
+	 * @param defaultValue the default value
 	 * @return the parameter int
 	 */
 	protected int getParameterInt(IWebRequest request, String name, int defaultValue) {
@@ -713,16 +678,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write paging attributes.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @param size
-	 *            the size
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @param size the size
 	 * @return the paging
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	protected Paging writePagingAttributes(XMLStreamWriter writer, IWebRequest request, int size, String prefix) throws Exception {
 		Paging paging = new Paging(size);
@@ -849,7 +810,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the size.
-		 * 
+		 *
 		 * @return the size
 		 */
 		public int getSize() {
@@ -858,9 +819,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the size.
-		 * 
-		 * @param size
-		 *            the new size
+		 *
+		 * @param size the new size
 		 */
 		public void setSize(int size) {
 			this.size = size;
@@ -868,7 +828,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the page.
-		 * 
+		 *
 		 * @return the page
 		 */
 		public int getPage() {
@@ -877,9 +837,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the page.
-		 * 
-		 * @param page
-		 *            the new page
+		 *
+		 * @param page the new page
 		 */
 		public void setPage(int page) {
 			this.page = page;
@@ -887,7 +846,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the site.
-		 * 
+		 *
 		 * @return the site
 		 */
 		public int getSite() {
@@ -896,9 +855,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the site.
-		 * 
-		 * @param site
-		 *            the new site
+		 *
+		 * @param site the new site
 		 */
 		public void setSite(int site) {
 			this.site = site;
@@ -906,7 +864,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the last page.
-		 * 
+		 *
 		 * @return the last page
 		 */
 		public int getLastPage() {
@@ -915,9 +873,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the last page.
-		 * 
-		 * @param lastPage
-		 *            the new last page
+		 *
+		 * @param lastPage the new last page
 		 */
 		public void setLastPage(int lastPage) {
 			this.lastPage = lastPage;
@@ -925,7 +882,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the last site.
-		 * 
+		 *
 		 * @return the last site
 		 */
 		public int getLastSite() {
@@ -934,9 +891,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the last site.
-		 * 
-		 * @param lastSite
-		 *            the new last site
+		 *
+		 * @param lastSite the new last site
 		 */
 		public void setLastSite(int lastSite) {
 			this.lastSite = lastSite;
@@ -944,7 +900,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the page size.
-		 * 
+		 *
 		 * @return the page size
 		 */
 		public int getPageSize() {
@@ -953,9 +909,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the page size.
-		 * 
-		 * @param pageSize
-		 *            the new page size
+		 *
+		 * @param pageSize the new page size
 		 */
 		public void setPageSize(int pageSize) {
 			this.pageSize = pageSize;
@@ -963,7 +918,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Gets the site size.
-		 * 
+		 *
 		 * @return the site size
 		 */
 		public int getSiteSize() {
@@ -972,9 +927,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 		/**
 		 * Sets the site size.
-		 * 
-		 * @param siteSize
-		 *            the new site size
+		 *
+		 * @param siteSize the new site size
 		 */
 		public void setSiteSize(int siteSize) {
 			this.siteSize = siteSize;

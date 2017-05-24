@@ -50,12 +50,13 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 		SCMPClnExecuteCacheCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		if (cascadingLevel == 1) {
-			this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+			this.requester = new SCRequester(
+					new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 			AppContext.init();
 			this.createSession();
 		}
@@ -79,13 +80,13 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 	public static void setUpServer() {
 		// needs a server with 1 session/connection
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		this.deleteSession();
@@ -346,9 +347,8 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 
 	/**
 	 * create session.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	protected void createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
@@ -362,13 +362,11 @@ public class SCMPClnExecuteCacheCasc1Test extends SystemSuperTest {
 
 	/**
 	 * delete session.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	private void deleteSession() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1,
-				this.sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk = new TestCallback();
 		deleteSessionCall.invoke(cbk, 3000);
 		cbk.getMessageSync(3000);

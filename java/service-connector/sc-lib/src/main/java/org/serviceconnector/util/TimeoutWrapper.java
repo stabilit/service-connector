@@ -16,23 +16,22 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class TimeoutWrapper. Wraps various Timeouts. An instance of TimeoutWrapper might be hand over to a Executer which runs the
- * Wrapper at the timeout.
+ * The Class TimeoutWrapper. Wraps various Timeouts. An instance of TimeoutWrapper might be hand over to a Executer which runs the Wrapper at the timeout.
  */
 public class TimeoutWrapper implements Runnable {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TimeoutWrapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeoutWrapper.class);
 	/** The target. */
 	private ITimeout target;
 
 	/**
 	 * Instantiates a new timeout wrapper.
-	 * 
-	 * @param target
-	 *            the target
+	 *
+	 * @param target the target
 	 */
 	public TimeoutWrapper(ITimeout target) {
 		this.target = target;

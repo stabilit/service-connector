@@ -18,7 +18,7 @@ package org.serviceconnector.net.connection;
 
 /**
  * The Class ConnectionPoolConnectException. Connection pool failed when establish a connection.
- * 
+ *
  * @author JTraber
  */
 public class ConnectionPoolConnectException extends Exception {
@@ -28,11 +28,9 @@ public class ConnectionPoolConnectException extends Exception {
 
 	/**
 	 * Instantiates a new connection pool connect exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param exception
-	 *            the cause
+	 *
+	 * @param message the message
+	 * @param exception the cause
 	 */
 	public ConnectionPoolConnectException(String message, Exception exception) {
 		super(message, exception);

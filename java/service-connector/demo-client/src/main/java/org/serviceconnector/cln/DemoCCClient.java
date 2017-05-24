@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
@@ -32,13 +33,12 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoCCClient {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoCCClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoCCClient.class);
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DemoCCClient demoSessionClient = new DemoCCClient();
@@ -69,8 +69,8 @@ public class DemoCCClient {
 			msg.setData("certificate or what so ever"); // optional
 			SCMessageCallback cbk = new DemoSessionClientCallback(sessionSrv); // callback on service!!
 			SCMessage reply = sessionSrv.createSession(10, msg, cbk); // create a session within 10 seconds
-			Object body = reply.getData();		
-			
+			Object body = reply.getData();
+
 			String sid = sessionSrv.getSessionId();
 
 			SCMessage requestMsg = new SCMessage();
@@ -84,8 +84,8 @@ public class DemoCCClient {
 
 			responseMsg = sessionSrv.execute(requestMsg); // regular synchronous call
 			LOGGER.info("Message sent with cacheId=" + requestMsg.getData());
-			LOGGER.info("Message received from cache=" + responseMsg.getData());			
-			
+			LOGGER.info("Message received from cache=" + responseMsg.getData());
+
 			SCPublishService publishService = sc.newPublishService("cacheGuardian1"); // name of the service to use
 
 			DemoPublishClientCallback pubCbk = new DemoPublishClientCallback(publishService); // callback on service!!
@@ -97,12 +97,11 @@ public class DemoCCClient {
 			subMsg.setMask(mask); // mandatory
 			subMsg.setNoDataIntervalSeconds(100); // mandatory
 			SCSubscribeMessage subReply = publishService.subscribe(subMsg, pubCbk); // regular subscribe
-			
+
 			responseMsg = sessionSrv.execute(requestMsg); // regular synchronous call
 			LOGGER.info("Message sent with cacheId=" + requestMsg.getData());
-			LOGGER.info("Message received from cache=" + responseMsg.getData());		
-			
-			
+			LOGGER.info("Message received from cache=" + responseMsg.getData());
+
 		} catch (Exception e) {
 			LOGGER.error("run", e);
 		} finally {
@@ -127,9 +126,8 @@ public class DemoCCClient {
 
 		/**
 		 * Instantiates a new demo session client callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);
@@ -148,7 +146,7 @@ public class DemoCCClient {
 			System.out.println("DemoSessionClient.DemoSessionClientCallback.receive() " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * The Class DemoPublishClientCallback.
 	 */
@@ -159,9 +157,8 @@ public class DemoCCClient {
 
 		/**
 		 * Instantiates a new demo publish client callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public DemoPublishClientCallback(SCPublishService service) {
 			super(service);

@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
@@ -29,24 +30,21 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPEchoCall. Call sends an echo.
- * 
+ *
  * @author JTraber
  */
 public class SCMPEchoCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPEchoCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPEchoCall.class);
 
 	/**
 	 * Instantiates a new SCMPEchoCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param req the requester to use when invoking call
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPEchoCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
@@ -54,11 +52,9 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new sCMP echo call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToSend
-	 *            the msg to send
+	 *
+	 * @param requester the requester
+	 * @param msgToSend the msg to send
 	 */
 	public SCMPEchoCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

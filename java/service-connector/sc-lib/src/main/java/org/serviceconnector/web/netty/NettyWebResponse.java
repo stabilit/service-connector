@@ -19,7 +19,8 @@ package org.serviceconnector.web.netty;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
@@ -30,7 +31,7 @@ import org.serviceconnector.web.IWebResponse;
 public class NettyWebResponse implements IWebResponse {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyWebResponse.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebResponse.class);
 	/** The response. */
 	private HttpResponse response;
 	/** The os. */
@@ -38,21 +39,20 @@ public class NettyWebResponse implements IWebResponse {
 
 	/**
 	 * Instantiates a new netty web response.
-	 * 
-	 * @param httpResponse
-	 *            the response
+	 *
+	 * @param httpResponse the response
 	 */
 	public NettyWebResponse(HttpResponse httpResponse) {
 		this.response = httpResponse;
 		this.os = null;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void addHeader(String name, String value) {
-	   this.response.addHeader(name, value);
+		this.response.addHeader(name, value);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public OutputStream getOutputStream() {

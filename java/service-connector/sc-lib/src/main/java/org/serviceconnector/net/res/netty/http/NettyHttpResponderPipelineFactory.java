@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.http;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -30,16 +31,17 @@ import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating NettyHttpServerPipeline objects.
- * 
+ *
  * @author JTraber
  */
 public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpResponderPipelineFactory.class);
 
 	/** {@inheritDoc} */
+	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler

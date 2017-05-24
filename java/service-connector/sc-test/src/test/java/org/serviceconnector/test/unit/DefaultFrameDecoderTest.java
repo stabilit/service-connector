@@ -23,7 +23,7 @@ import org.serviceconnector.net.SCMPFrameDecoder;
 
 /**
  * The Class DefaultFrameDecoderTest.
- * 
+ *
  * @author JTraber
  */
 public class DefaultFrameDecoderTest extends SuperUnitTest {

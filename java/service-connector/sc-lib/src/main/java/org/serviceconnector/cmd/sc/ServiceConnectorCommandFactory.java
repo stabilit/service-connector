@@ -16,20 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
 
 /**
  * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector commands.
- * 
+ *
  * @author JTraber
  */
 public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ServiceConnectorCommandFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceConnectorCommandFactory.class);
 
 	/**
 	 * Instantiates a new service connector command factory.

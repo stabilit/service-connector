@@ -19,7 +19,8 @@ package org.serviceconnector.net.res.netty;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -38,17 +39,14 @@ import org.serviceconnector.server.StatefulServer;
 public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyResponderRequestHandlerAdapter.class);
 
 	/**
 	 * Message received.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param channel
-	 *            the channel
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param channel the channel
 	 */
 	public void messageReceived(IRequest request, IResponse response, Channel channel) {
 		// set up responderRequestHandlerTask to take care of the request
@@ -68,11 +66,9 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 
 	/**
 	 * Clean up dead server.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
+	 *
+	 * @param host the host
+	 * @param port the port
 	 */
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + Constants.SLASH + port;

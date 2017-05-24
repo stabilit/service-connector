@@ -19,8 +19,6 @@ package org.serviceconnector.test.system.scmp.casc1;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +39,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
+import junit.framework.Assert;
+
 /**
  * The Class ClnCreateSessionTestCase.
  */
@@ -49,24 +49,25 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 	protected SCRequester requester;
 
 	public SCMPClnCreateSessionCasc1Test() {
-		SCMPClnCreateSessionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 		// server definitions needs to be different
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
 		AppContext.init();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -92,8 +93,7 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 		String sessId = responseMessage.getSessionId();
 		TestUtil.checkReply(responseMessage);
 
-		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, responseMessage.getServiceName(),
-				sessId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, responseMessage.getServiceName(), sessId);
 		deleteSessionCall.invoke(cbk, 2000);
 		responseMessage = cbk.getMessageSync(4000);
 		TestUtil.checkReply(responseMessage);
@@ -143,8 +143,7 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 	}
 
 	/**
-	 * Description: create session - waits 2 seconds - another create session times out when
-	 * waiting for free connection<br>
+	 * Description: create session - waits 2 seconds - another create session times out when waiting for free connection<br>
 	 * Expectation: passes
 	 */
 	@Test

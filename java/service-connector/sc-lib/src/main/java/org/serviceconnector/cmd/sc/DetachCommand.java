@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -25,16 +26,15 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class DetachCommand. Responsible for validation and execution of detach command. Allows detaching (virtual
- * detach) from SC.
- * 
+ * The Class DetachCommand. Responsible for validation and execution of detach command. Allows detaching (virtual detach) from SC.
+ *
  * @author JTraber
  */
 public class DetachCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(DetachCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DetachCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

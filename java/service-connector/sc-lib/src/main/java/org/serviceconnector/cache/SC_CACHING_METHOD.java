@@ -33,14 +33,12 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 	private String value;
 
 	/** The reverseMap, to get access to the enumeration constants by string value. */
-	private static final ReverseEnumMap<String, SC_CACHING_METHOD> REVERSE_MAP = new ReverseEnumMap<String, SC_CACHING_METHOD>(
-			SC_CACHING_METHOD.class);
+	private static final ReverseEnumMap<String, SC_CACHING_METHOD> REVERSE_MAP = new ReverseEnumMap<String, SC_CACHING_METHOD>(SC_CACHING_METHOD.class);
 
 	/**
 	 * Instantiates a new caching method.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private SC_CACHING_METHOD(String value) {
 		this.value = value;
@@ -48,9 +46,8 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 
 	/**
 	 * Gets the caching method.
-	 * 
-	 * @param methodString
-	 *            the method string
+	 *
+	 * @param methodString the method string
 	 * @return the caching method
 	 */
 	public static SC_CACHING_METHOD getCachingMethod(String methodString) {
@@ -63,6 +60,7 @@ public enum SC_CACHING_METHOD implements IReversibleEnum<String, SC_CACHING_METH
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getValue() {
 		return this.value;
 	}

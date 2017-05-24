@@ -16,31 +16,29 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPSrvExecuteCall. Call send data to backend server.
- * 
+ *
  * @author JTraber
  */
 public class SCMPSrvExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSrvExecuteCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSrvExecuteCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvExecuteCall.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *
+	 * @param req the requester
+	 * @param receivedMessage the received message
 	 */
 	public SCMPSrvExecuteCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
@@ -48,9 +46,8 @@ public class SCMPSrvExecuteCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

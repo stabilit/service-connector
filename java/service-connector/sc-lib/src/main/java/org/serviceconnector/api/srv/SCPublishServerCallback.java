@@ -21,7 +21,7 @@ import org.serviceconnector.api.SCSubscribeMessage;
 
 /**
  * The Class SCPublishServerCallback. Abstract class provides basic functions for a publish server callback.
- * 
+ *
  * @author JTraber
  */
 public abstract class SCPublishServerCallback implements ISCPublishServerCallback {
@@ -31,15 +31,16 @@ public abstract class SCPublishServerCallback implements ISCPublishServerCallbac
 
 	/**
 	 * Instantiates a new SCPublishServerCallback.
-	 * 
-	 * @param scPublishServer
-	 *            the server
+	 *
+	 * @param scPublishServer the server
 	 */
 	public SCPublishServerCallback(SCPublishServer scPublishServer) {
 		this.scPublishServer = scPublishServer;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#subscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
@@ -47,7 +48,9 @@ public abstract class SCPublishServerCallback implements ISCPublishServerCallbac
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#changeSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
@@ -55,14 +58,18 @@ public abstract class SCPublishServerCallback implements ISCPublishServerCallbac
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#unsubscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
 	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#abortSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override

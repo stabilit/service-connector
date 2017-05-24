@@ -18,9 +18,8 @@ package org.serviceconnector.test.unit.api;
 
 import java.util.Date;
 
-import junit.framework.Assert;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +28,8 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
+import junit.framework.Assert;
+
 /**
  * @author FJurnecka
  */
@@ -36,16 +37,18 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APISCMessageTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APISCMessageTest.class);
 
 	private SCMessage message;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		message = new SCMessage();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() {
 		message = null;
@@ -148,7 +151,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t40_SessionId() {
-		((SCMessage) message).setSessionId(null);
+		message.setSessionId(null);
 		Assert.assertEquals(null, message.getSessionId());
 	}
 
@@ -158,7 +161,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t41_SessionId() {
-		((SCMessage) message).setSessionId("");
+		message.setSessionId("");
 		Assert.assertEquals("", message.getSessionId());
 	}
 
@@ -168,7 +171,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t42_SessionId() {
-		((SCMessage) message).setSessionId("a");
+		message.setSessionId("a");
 		Assert.assertEquals("a", message.getSessionId());
 	}
 
@@ -182,7 +185,7 @@ public class APISCMessageTest extends SuperUnitTest {
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
-		((SCMessage) message).setSessionId(sb.toString());
+		message.setSessionId(sb.toString());
 		Assert.assertEquals(sb.toString(), message.getSessionId());
 	}
 

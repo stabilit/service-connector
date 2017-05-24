@@ -24,11 +24,12 @@ import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
 public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
-	
+
 	public APIExecuteCacheTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
-	
+
+	@Override
 	@Test
 	public void t25_cacheAMessageClearCacheAndGetMessage() throws Exception {
 		SCMessage request = new SCMessage();

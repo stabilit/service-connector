@@ -24,7 +24,7 @@ import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls.
- * 
+ *
  * @author JTraber
  */
 public abstract class SCMPCallAdapter implements ISCMPCall {
@@ -42,9 +42,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/**
 	 * Instantiates a new SCMPCallAdapter.
-	 * 
-	 * @param requester
-	 *            the requester
+	 *
+	 * @param requester the requester
 	 */
 	public SCMPCallAdapter(IRequester requester) {
 		this.requester = requester;
@@ -53,11 +52,9 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/**
 	 * Instantiates a new SCMP call adapter.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
 	 */
 	public SCMPCallAdapter(IRequester requester, String serviceName) {
 		this(requester);
@@ -66,13 +63,10 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/**
 	 * Instantiates a new SCMPCallAdapter.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPCallAdapter(IRequester requester, String serviceName, String sessionId) {
 		this(requester, serviceName);
@@ -81,13 +75,10 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/**
-	 * Instantiates a new SCMPCallAdapter. Constructor is necessary because in SC you need to hand over received
-	 * message.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param messageToForward
-	 *            the message
+	 * Instantiates a new SCMPCallAdapter. Constructor is necessary because in SC you need to hand over received message.
+	 *
+	 * @param requester the requester
+	 * @param messageToForward the message
 	 */
 	public SCMPCallAdapter(IRequester requester, SCMPMessage messageToForward) {
 		this.requester = requester;

@@ -20,7 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -45,24 +46,22 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpClientConnection. Concrete connection implementation with JBoss Netty for Http.
- * 
+ *
  * @author JTraber
  */
 public class NettyHttpConnection extends NettyConnectionAdpater {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpConnection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpConnection.class);
 
 	/** The url. */
 	private URL url;
 
 	/**
 	 * Instantiates a new netty http connection.
-	 * 
-	 * @param channelFactory
-	 *            the channel factory
-	 * @param timer
-	 *            the timer
+	 *
+	 * @param channelFactory the channel factory
+	 * @param timer the timer
 	 */
 	public NettyHttpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		super(channelFactory, timer);
@@ -93,12 +92,10 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 			this.remotSocketAddress = (InetSocketAddress) this.channel.getRemoteAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
-					+ this.remotSocketAddress.toString());
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP=" + this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
-					this.remotSocketAddress.getPort());
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -129,8 +126,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		request.setContent(channelBuffer);
 		channel.write(request);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
-					this.remotSocketAddress.getPort(), buffer, 0, buffer.length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(), buffer, 0, buffer.length);
 		}
 		return;
 	}

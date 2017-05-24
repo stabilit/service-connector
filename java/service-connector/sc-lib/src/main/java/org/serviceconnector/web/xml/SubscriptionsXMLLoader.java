@@ -83,9 +83,9 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 		Paging paging = this.writePagingAttributes(writer, request, subscriptions.length, "");
 		int nOfRealSubscriptions = 0;
 		for (Subscription subscription : subscriptions) {
-			if(subscription.isCascaded() == true) {
+			if (subscription.isCascaded() == true) {
 				// adding casceded subscriptions of current subscription
-				nOfRealSubscriptions += subscription.getCscSubscriptionIds().size();				
+				nOfRealSubscriptions += subscription.getCscSubscriptionIds().size();
 			} else {
 				// adding current subscription because its a real one!
 				nOfRealSubscriptions++;

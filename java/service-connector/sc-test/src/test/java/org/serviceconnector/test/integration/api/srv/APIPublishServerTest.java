@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -31,7 +32,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APIPublishServerTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APIPublishServerTest.class);
 
 	/**
 	 * Description: publish 1 message to the service "publish-1"<br>
@@ -39,8 +40,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t101_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -59,8 +59,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t102_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -79,8 +78,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t103_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -99,8 +97,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t104_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -119,8 +116,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t105_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -139,8 +135,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t106_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -159,8 +154,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t107_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -179,8 +173,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t108_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -199,8 +192,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t109_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -219,8 +211,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t110_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -243,8 +234,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t111_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -263,8 +253,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t112_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -283,8 +272,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t113_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -296,8 +284,9 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishMessage.setData(new byte[128]);
 		int count = 10000;
 		for (int i = 0; i < count; i++) {
-			if (((i + 1) % 200) == 0)
+			if (((i + 1) % 200) == 0) {
 				testLogger.info("Publish message nr. " + (i + 1));
+			}
 			publishServer.publish(publishMessage);
 		}
 	}
@@ -308,8 +297,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t114_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -328,8 +316,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t115_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -348,8 +335,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t116_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
@@ -368,8 +354,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t117_publish() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP,
-				ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);

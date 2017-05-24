@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
@@ -31,13 +32,12 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.ITimeout;
 
 /**
- * The Class ReceivePublicationTimeout. ReceivePublicationTimeout defines action to get in place when receive publication times out
- * or a new publish message arrives.
+ * The Class ReceivePublicationTimeout. ReceivePublicationTimeout defines action to get in place when receive publication times out or a new publish message arrives.
  */
 public class ReceivePublicationTimeout implements ITimeout {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ReceivePublicationTimeout.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReceivePublicationTimeout.class);
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 	/** The noDataIntervalMillis. */
@@ -51,11 +51,9 @@ public class ReceivePublicationTimeout implements ITimeout {
 
 	/**
 	 * Instantiates a new publish timer run.
-	 * 
-	 * @param publishMessageQueue
-	 *            the publishMessageQueue
-	 * @param noDataIntervalMillis
-	 *            the timeout
+	 *
+	 * @param publishMessageQueue the publishMessageQueue
+	 * @param noDataIntervalMillis the timeout
 	 */
 	public ReceivePublicationTimeout(PublishMessageQueue<SCMPMessage> publishMessageQueue, int noDataIntervalMillis) {
 		this.request = null;
@@ -72,9 +70,8 @@ public class ReceivePublicationTimeout implements ITimeout {
 
 	/**
 	 * Sets the request.
-	 * 
-	 * @param request
-	 *            the new request
+	 *
+	 * @param request the new request
 	 */
 	public void setRequest(IRequest request) {
 		this.request = request;
@@ -82,9 +79,8 @@ public class ReceivePublicationTimeout implements ITimeout {
 
 	/**
 	 * Sets the response.
-	 * 
-	 * @param response
-	 *            the new response
+	 *
+	 * @param response the new response
 	 */
 	public void setResponse(IResponse response) {
 		this.response = response;
@@ -108,24 +104,21 @@ public class ReceivePublicationTimeout implements ITimeout {
 			if (subscription == null) {
 				LOGGER.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
-				SCMPMessageFault fault = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SUBSCRIPTION_NOT_FOUND,
-						subscriptionId);
+				SCMPMessageFault fault = new SCMPMessageFault(reqMsg.getSCMPVersion(), SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 				fault.setMessageType(reqMsg.getMessageType());
 				response.setSCMP(fault);
 			} else {
 				// tries polling from queue
 				SCMPMessage message = this.publishMessageQueue.getMessage(subscriptionId);
 				if (message == null) {
-					LOGGER.trace("no message found on queue - subscription timeout set up no data message subscriptionId="
-							+ subscriptionId);
+					LOGGER.trace("no message found on queue - subscription timeout set up no data message subscriptionId=" + subscriptionId);
 					// no message found on queue - subscription timeout set up no data message
 					reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 					reqMsg.setIsReply(true);
 					this.response.setSCMP(reqMsg);
 				} else {
 					// message polling successful
-					LOGGER.trace("message found on queue - subscription timeout set up reply message subscriptionId="
-							+ subscriptionId);
+					LOGGER.trace("message found on queue - subscription timeout set up reply message subscriptionId=" + subscriptionId);
 					// set up reply
 					SCMPMessage reply = null;
 					if (message.isPart()) {

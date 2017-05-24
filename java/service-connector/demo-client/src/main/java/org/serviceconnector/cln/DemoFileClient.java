@@ -22,7 +22,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.net.ConnectionType;
@@ -33,13 +34,12 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoFileClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoFileClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoFileClient.class);
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DemoFileClient demoFileClient = new DemoFileClient();

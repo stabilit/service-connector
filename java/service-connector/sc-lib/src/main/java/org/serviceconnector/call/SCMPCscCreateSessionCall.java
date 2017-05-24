@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -28,22 +29,20 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPCscCreateSessionCall. Call tries creating a session to a backend server over a SC.
- * 
+ *
  * @author JTraber
  */
 public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCscCreateSessionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCscCreateSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMP csc create session call.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param messageToForward
-	 *            the message to forward
+	 *
+	 * @param req the requester
+	 * @param messageToForward the message to forward
 	 */
 	public SCMPCscCreateSessionCall(IRequester req, SCMPMessage messageToForward) {
 		super(req, messageToForward);
@@ -65,12 +64,11 @@ public class SCMPCscCreateSessionCall extends SCMPCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_CREATE_SESSION;
 	}
-	
+
 	/**
 	 * Sets the version.
-	 * 
-	 * @param version
-	 *            the new version
+	 *
+	 * @param version the new version
 	 */
 	private void setVersion(String version) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);

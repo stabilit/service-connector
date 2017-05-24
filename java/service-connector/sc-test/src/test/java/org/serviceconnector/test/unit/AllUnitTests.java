@@ -30,30 +30,15 @@ import org.serviceconnector.test.unit.scmp.SCMPMessageMaskTest;
 import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { 
+@Suite.SuiteClasses({
 		// API unit tests
-		APISCMessageTest.class,
-		APISCSubscribeMessageTest.class,
-		APISCPublishMessageTest.class,
-		APISCClientTest.class,
-		APISCServerTest.class,
-		APINewServerTest.class,
-		
+		APISCMessageTest.class, APISCSubscribeMessageTest.class, APISCPublishMessageTest.class, APISCClientTest.class, APISCServerTest.class, APINewServerTest.class,
+
 		// SCMP unit tests
-		SCMPVersionTest.class,
-		SCMPMessageMaskTest.class,
-		SCMPLargeResponseTest.class,
-		SCMPLargeRequestTest.class,
-		
+		SCMPVersionTest.class, SCMPMessageMaskTest.class, SCMPLargeResponseTest.class, SCMPLargeRequestTest.class,
+
 		// other unit tests
-		DefaultFrameDecoderTest.class,
-		LargeMessageEncoderDecoderTest.class,
-		KeepAliveMessageEncoderDecoderTest.class,
-		DefaultEncoderDecoderTest.class,
-		ValidatorUtilityTest.class,
-		DecodeSCMPVersionTest.class,
-		LinkedQueueTest.class,
-		SCVersionTest.class
- })
+		DefaultFrameDecoderTest.class, LargeMessageEncoderDecoderTest.class, KeepAliveMessageEncoderDecoderTest.class, DefaultEncoderDecoderTest.class, ValidatorUtilityTest.class,
+		DecodeSCMPVersionTest.class, LinkedQueueTest.class, SCVersionTest.class })
 public class AllUnitTests {
 }

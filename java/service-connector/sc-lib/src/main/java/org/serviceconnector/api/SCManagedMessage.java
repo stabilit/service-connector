@@ -36,7 +36,7 @@ public class SCManagedMessage extends SCMessage {
 
 	/**
 	 * Gets the appendixes.
-	 * 
+	 *
 	 * @return the appendixes
 	 */
 	public List<SCAppendMessage> getAppendixes() {
@@ -45,9 +45,8 @@ public class SCManagedMessage extends SCMessage {
 
 	/**
 	 * Adds the appendix.
-	 * 
-	 * @param appendix
-	 *            the appendix
+	 *
+	 * @param appendix the appendix
 	 */
 	public void addAppendix(SCAppendMessage appendix) {
 		this.appendixes.add(appendix);
@@ -55,7 +54,7 @@ public class SCManagedMessage extends SCMessage {
 
 	/**
 	 * Gets the number of appendixes.
-	 * 
+	 *
 	 * @return the number of appendixes
 	 */
 	public int getNrOfAppendixes() {
@@ -64,7 +63,7 @@ public class SCManagedMessage extends SCMessage {
 
 	/**
 	 * Checks if is managed.
-	 * 
+	 *
 	 * @return true, if is managed {@inheritDoc}
 	 */
 	@Override

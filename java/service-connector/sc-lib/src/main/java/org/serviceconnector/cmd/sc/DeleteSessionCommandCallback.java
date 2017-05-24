@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -37,7 +38,7 @@ import org.serviceconnector.service.Session;
 public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DeleteSessionCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeleteSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -53,20 +54,14 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Instantiates a new delete session command callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param session
-	 *            the session
-	 * @param server
-	 *            the server
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param session the session
+	 * @param server the server
 	 */
-	public DeleteSessionCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Session session,
-			StatefulServer server) {
+	public DeleteSessionCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Session session, StatefulServer server) {
 		this.responderCallback = callback;
 		this.request = request;
 		this.response = response;
@@ -105,11 +100,9 @@ public class DeleteSessionCommandCallback implements ISCMPMessageCallback {
 		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC delete session sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC delete session sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC delete session sid="
-					+ sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC delete session sid=" + sid);
 		} else {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing delete session failed sid=" + sid);
 		}

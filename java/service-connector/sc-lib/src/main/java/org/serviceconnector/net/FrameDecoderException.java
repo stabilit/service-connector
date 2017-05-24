@@ -18,7 +18,7 @@ package org.serviceconnector.net;
 
 /**
  * The Class FrameDecoderException. Occurs when decoding frame fails.
- * 
+ *
  * @author JTraber
  */
 public class FrameDecoderException extends Exception {
@@ -28,9 +28,8 @@ public class FrameDecoderException extends Exception {
 
 	/**
 	 * Instantiates a new frame decoder exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public FrameDecoderException(String message) {
 		super(message);
@@ -38,11 +37,9 @@ public class FrameDecoderException extends Exception {
 
 	/**
 	 * Instantiates a new frame decoder exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
+	 *
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public FrameDecoderException(String message, Throwable cause) {
 		super(message, cause);

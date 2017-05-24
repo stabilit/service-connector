@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.Constants;
@@ -31,11 +32,11 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APIAttachDetachClientTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APIAttachDetachClientTest.class);
 
 	/**
 	 * helper create the client with different parameters
-	 * 
+	 *
 	 * @param host
 	 * @param port
 	 * @param connectionType
@@ -45,8 +46,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 		SCClient client = new SCClient(host, port, connectionType);
 		Assert.assertEquals("Host ", host, client.getHost());
 		Assert.assertEquals("port ", port, client.getPort());
-		Assert.assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS,
-				client.getKeepAliveIntervalSeconds());
+		Assert.assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, client.getKeepAliveIntervalSeconds());
 		Assert.assertEquals("Attached ", false, client.isAttached());
 		Assert.assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
 		Assert.assertEquals("Connection Type ", connectionType, client.getConnectionType());

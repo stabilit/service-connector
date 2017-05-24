@@ -24,7 +24,7 @@ import org.serviceconnector.net.res.EndpointAdapter;
 
 /**
  * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss Netty for Tcp.
- * 
+ *
  * @author JTraber
  */
 public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
@@ -34,8 +34,8 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	 */
 	public NettyTcpEndpoint() {
 		super();
-		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-				Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
+		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
+				AppContext.getBasicConfiguration().getMaxIOThreads());
 	}
 
 	/** {@inheritDoc} */

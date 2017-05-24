@@ -18,7 +18,7 @@ package org.serviceconnector.net.connection;
 
 /**
  * The Class DisconnectException.
- * 
+ *
  * @author JTraber
  */
 public class DisconnectException extends Exception {
@@ -28,9 +28,8 @@ public class DisconnectException extends Exception {
 
 	/**
 	 * Instantiates a new disconnect exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public DisconnectException(String message) {
 		super(message);

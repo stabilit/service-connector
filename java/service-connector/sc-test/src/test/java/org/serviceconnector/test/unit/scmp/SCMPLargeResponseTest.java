@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.scmp;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
@@ -27,9 +25,11 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.scmp.SCMPVersion;
 
+import junit.framework.Assert;
+
 /**
  * The Class SCMPCompositeTest.
- * 
+ *
  * @author JTraber
  */
 public class SCMPLargeResponseTest {

@@ -15,11 +15,12 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 /**
- * 
+ *
  */
 package org.serviceconnector.test.unit.api;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,19 +38,21 @@ public class APISCClientTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APISCClientTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APISCClientTest.class);
 
 	private SCClient client;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		client = null;
 	}
 
+	@Override
 	@After
 	public void afterOneTest() {
 		client = null;

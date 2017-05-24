@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCMessageCallback. Abstract class provides basic functions for a message callback.
- * 
+ *
  * @author JTraber
  */
 public abstract class SCMessageCallback {
@@ -36,7 +36,7 @@ public abstract class SCMessageCallback {
 
 	/**
 	 * Instantiates a new SCMessageCallback.
-	 * 
+	 *
 	 * @param service the service
 	 */
 	public SCMessageCallback(SCService service) {
@@ -45,21 +45,21 @@ public abstract class SCMessageCallback {
 
 	/**
 	 * Callback. Method gets called when reply arrives.
-	 * 
+	 *
 	 * @param reply the reply
 	 */
 	public abstract void receive(SCMessage reply);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
-	 * 
+	 *
 	 * @param ex the exception
 	 */
 	public abstract void receive(Exception ex);
 
 	/**
 	 * Gets the service which is using the message callback.
-	 * 
+	 *
 	 * @return the service
 	 */
 	public SCService getService() {

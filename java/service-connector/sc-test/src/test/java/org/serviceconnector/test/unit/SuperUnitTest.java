@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +27,7 @@ import org.serviceconnector.log.Loggers;
 public class SuperUnitTest {
 
 	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	protected static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	protected int threadCount = 0;
 

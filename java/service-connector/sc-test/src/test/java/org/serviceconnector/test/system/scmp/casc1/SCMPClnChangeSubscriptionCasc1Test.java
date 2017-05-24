@@ -19,8 +19,6 @@ package org.serviceconnector.test.system.scmp.casc1;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +37,8 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.test.system.SystemSuperTest;
+
+import junit.framework.Assert;
 
 public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 
@@ -66,23 +66,24 @@ public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 	public static void setUpServer() {
 		// need to have a publish service here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1,
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 1, 1, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		if (cascadingLevel == 1) {
-			this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-					TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+			this.requester = new SCRequester(
+					new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC1_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		}
 		AppContext.init();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -114,14 +115,12 @@ public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(30000);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		changeSubscriptionCall.invoke(cbk, 3000);

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req.netty.http;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -33,14 +34,14 @@ import org.serviceconnector.net.req.netty.NettyIdleHandler;
 
 /**
  * A factory for creating NettyHttpRequesterPipeline objects.
- * 
+ *
  * @author JTraber
  */
 public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpRequesterPipelineFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpRequesterPipelineFactory.class);
 
 	/** The timer to observe timeouts. */
 	private Timer timer;
@@ -49,11 +50,9 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 
 	/**
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
-	 * 
-	 * @param context
-	 *            the context
-	 * @param timer
-	 *            the timer
+	 *
+	 * @param context the context
+	 * @param timer the timer
 	 */
 	public NettyHttpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
 		this.timer = timer;
@@ -61,6 +60,7 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler

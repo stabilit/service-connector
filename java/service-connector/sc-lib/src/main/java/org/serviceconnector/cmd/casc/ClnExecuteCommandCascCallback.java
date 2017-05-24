@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
@@ -36,19 +37,16 @@ import org.serviceconnector.scmp.SCMPVersion;
 public class ClnExecuteCommandCascCallback extends CommandCascCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnExecuteCommandCascCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClnExecuteCommandCascCallback.class);
 	/** The request message. */
 	private SCMPMessage requestMessage;
 
 	/**
 	 * Instantiates a new ClnExecuteCommandCascCallback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
 	 */
 	public ClnExecuteCommandCascCallback(IRequest request, IResponse response, IResponderCallback callback) {
 		super(request, response, callback);

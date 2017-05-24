@@ -19,7 +19,8 @@ package org.serviceconnector.util;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 
 /**
@@ -29,7 +30,7 @@ public final class Statistics {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Statistics.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Statistics.class);
 
 	/** The instance. */
 	private static Statistics instance = new Statistics();
@@ -50,7 +51,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the single instance of Statistics.
-	 * 
+	 *
 	 * @return single instance of Statistics
 	 */
 	public static Statistics getInstance() {
@@ -73,9 +74,8 @@ public final class Statistics {
 
 	/**
 	 * Increment total messages.
-	 * 
-	 * @param msgLength
-	 *            the msg length
+	 *
+	 * @param msgLength the msg length
 	 */
 	public synchronized void incrementTotalMessages(long msgLength) {
 		totalMessages++;
@@ -84,7 +84,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the total messages.
-	 * 
+	 *
 	 * @return the total messages
 	 */
 	public double getTotalMessages() {
@@ -93,7 +93,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the total bytes.
-	 * 
+	 *
 	 * @return the total bytes
 	 */
 	public double getTotalBytes() {
@@ -102,7 +102,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the startup date time.
-	 * 
+	 *
 	 * @return the startup date time
 	 */
 	public Timestamp getStartupDateTime() {
@@ -111,7 +111,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the runtime since startup millis.
-	 * 
+	 *
 	 * @return the runtime since startup millis
 	 */
 	public long getRuntimeSinceStartupSeconds() {
@@ -122,9 +122,8 @@ public final class Statistics {
 
 	/**
 	 * Sets the startup date time.
-	 * 
-	 * @param startupDateTime
-	 *            the new startup date time
+	 *
+	 * @param startupDateTime the new startup date time
 	 */
 	public void setStartupDateTime(Timestamp startupDateTime) {
 		this.startupDateTime = startupDateTime;
@@ -132,7 +131,7 @@ public final class Statistics {
 
 	/**
 	 * Gets the messages in cache.
-	 * 
+	 *
 	 * @return the messages in cache
 	 */
 	public int getMessagesInCache() {

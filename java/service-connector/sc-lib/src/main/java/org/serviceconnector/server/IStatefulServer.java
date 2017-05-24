@@ -35,44 +35,42 @@ public interface IStatefulServer extends IServer {
 
 	/**
 	 * Removes an allocated session from the server.
-	 * 
-	 * @param abstractSession
-	 *            the abstract session
+	 *
+	 * @param abstractSession the abstract session
 	 */
 	public abstract void removeSession(AbstractSession abstractSession);
 
 	/**
 	 * Adds an allocated session to the server.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public abstract void addSession(AbstractSession session);
 
 	/**
 	 * Gets the sessions.
-	 * 
+	 *
 	 * @return the sessions
 	 */
 	public abstract List<AbstractSession> getSessions();
 
 	/**
 	 * Gets the session count.
-	 * 
+	 *
 	 * @return the session count
 	 */
 	public abstract int getSessionCount();
 
 	/**
 	 * Checks for free session.
-	 * 
+	 *
 	 * @return true, if successful
 	 */
 	public abstract boolean hasFreeSession();
 
 	/**
 	 * Gets the max sessions.
-	 * 
+	 *
 	 * @return the max sessions
 	 */
 	public abstract int getMaxSessions();

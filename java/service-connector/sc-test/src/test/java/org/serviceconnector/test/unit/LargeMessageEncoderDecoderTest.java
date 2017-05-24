@@ -62,6 +62,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	/**
 	 * Sets the up.
 	 */
+	@Override
 	@Before
 	public void beforeOneTest() {
 		this.headKey = SCMPHeaderKey.REQ;
@@ -159,8 +160,7 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t04_decodeUNDEFTest() {
-		String requestString = "garbe /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n"
-				+ "mty=" + msgType.getValue() + "\n" + body;
+		String requestString = "garbe /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -435,9 +435,8 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 	/**
 	 * Verify scmp string body.
-	 * 
-	 * @param scmp
-	 *            the scmp
+	 *
+	 * @param scmp the scmp
 	 */
 	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -449,9 +448,8 @@ public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 	/**
 	 * Verify scmp.
-	 * 
-	 * @param scmp
-	 *            the scmp
+	 *
+	 * @param scmp the scmp
 	 */
 	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));

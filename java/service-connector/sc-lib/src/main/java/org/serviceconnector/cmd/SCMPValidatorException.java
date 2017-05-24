@@ -21,7 +21,7 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class SCMPValidatorException. Occurs when validation of a request fails.
- * 
+ *
  * @author JTraber
  */
 public class SCMPValidatorException extends HasFaultResponseException {
@@ -38,9 +38,8 @@ public class SCMPValidatorException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new sCMP validator exception.
-	 * 
-	 * @param info
-	 *            the info
+	 *
+	 * @param info the info
 	 */
 	public SCMPValidatorException(String info) {
 		this(SCMPError.HV_ERROR, info);
@@ -48,11 +47,9 @@ public class SCMPValidatorException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new sCMP validator exception.
-	 * 
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param error the error
+	 * @param additionalInfo the additional info
 	 */
 	public SCMPValidatorException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);

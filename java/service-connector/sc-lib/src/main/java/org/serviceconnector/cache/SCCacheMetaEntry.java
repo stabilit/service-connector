@@ -29,11 +29,10 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
- * The Class SCCacheMetaEntry. The cache meta entry instances are stored in META_DATA_CACHE. It represents either a single message
- * or a group of part messages they belong to a large response. Meta entries are identified by the cache id. SCMPMessages in
- * DATA_CACHE are identified by cacheId/partnNr. The meta entry controls the state of the message. Loading means storing the message
- * in cache has started but is not completed yet. Meta entry count number of parts, saves loading session id and lots of other meta
- * data. The state Loading marks a message to be ready for delivery out of the cache.
+ * The Class SCCacheMetaEntry. The cache meta entry instances are stored in META_DATA_CACHE. It represents either a single message or a group of part messages they belong to a
+ * large response. Meta entries are identified by the cache id. SCMPMessages in DATA_CACHE are identified by cacheId/partnNr. The meta entry controls the state of the message.
+ * Loading means storing the message in cache has started but is not completed yet. Meta entry count number of parts, saves loading session id and lots of other meta data. The
+ * state Loading marks a message to be ready for delivery out of the cache.
  */
 public class SCCacheMetaEntry implements Serializable {
 
@@ -68,9 +67,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Instantiates a new cache meta entry.
-	 * 
-	 * @param cacheId
-	 *            the cache id
+	 *
+	 * @param cacheId the cache id
 	 */
 	public SCCacheMetaEntry(String cacheId) {
 		this.cacheId = cacheId;
@@ -89,9 +87,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Instantiates a new meta entry. Copy constructor. Make a copy of given object.
-	 * 
-	 * @param toCopyObject
-	 *            the object to be copied
+	 *
+	 * @param toCopyObject the object to be copied
 	 */
 	public SCCacheMetaEntry(SCCacheMetaEntry toCopyObject) {
 		this(toCopyObject.getCacheId());
@@ -115,7 +112,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the cache id.
-	 * 
+	 *
 	 * @return the cache id
 	 */
 	public String getCacheId() {
@@ -124,7 +121,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the loading session id.
-	 * 
+	 *
 	 * @return the loading session id
 	 */
 	public String getLoadingSessionId() {
@@ -133,9 +130,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the loading session id.
-	 * 
-	 * @param loadingSessionId
-	 *            the new loading session id
+	 *
+	 * @param loadingSessionId the new loading session id
 	 */
 	public void setLoadingSessionId(String loadingSessionId) {
 		this.loadingSessionId = loadingSessionId;
@@ -143,9 +139,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Checks if is loading session id.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 * @return true, if is loading session id
 	 */
 	public boolean isLoadingSessionId(String sessionId) {
@@ -157,9 +152,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the cache entry state.
-	 * 
-	 * @param cacheEntryState
-	 *            the new cache entry state
+	 *
+	 * @param cacheEntryState the new cache entry state
 	 */
 	public synchronized void setCacheEntryState(SC_CACHE_ENTRY_STATE cacheEntryState) {
 		this.cacheEntryState = cacheEntryState;
@@ -167,7 +161,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the SC cache entry state.
-	 * 
+	 *
 	 * @return the SC cache entry state
 	 */
 	public SC_CACHE_ENTRY_STATE getSCCacheEntryState() {
@@ -176,9 +170,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the caching method.
-	 * 
-	 * @param cachingMethod
-	 *            the new caching method
+	 *
+	 * @param cachingMethod the new caching method
 	 */
 	public void setCachingMethod(SC_CACHING_METHOD cachingMethod) {
 		this.cachingMethod = cachingMethod;
@@ -186,7 +179,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Checks if is managed.
-	 * 
+	 *
 	 * @return true, if is managed
 	 */
 	public boolean isManaged() {
@@ -198,7 +191,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Checks if is loading.
-	 * 
+	 *
 	 * @return true, if is loading
 	 */
 	public boolean isLoading() {
@@ -210,7 +203,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Checks if is loading appendix.
-	 * 
+	 *
 	 * @return true, if is loading appendix
 	 */
 	public boolean isLoadingAppendix() {
@@ -222,7 +215,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Checks if is this composite is loaded and is accessible. {@link SC_CACHE_ENTRY_STATE}
-	 * 
+	 *
 	 * @return true, if is loaded
 	 */
 	public boolean isLoaded() {
@@ -234,7 +227,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the creation time.
-	 * 
+	 *
 	 * @return the creation time
 	 */
 	public Date getCreationTime() {
@@ -243,7 +236,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the last modified time.
-	 * 
+	 *
 	 * @return the last modified time
 	 */
 	public Date getLastModifiedTime() {
@@ -259,7 +252,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the loading timeout milliseconds.
-	 * 
+	 *
 	 * @return the loading timeout milliseconds
 	 */
 	public int getLoadingTimeoutMillis() {
@@ -268,20 +261,17 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the loading timeout milliseconds.
-	 * 
-	 * @param loadingTimeoutMillis
-	 *            the new loading timeout milliseconds
+	 *
+	 * @param loadingTimeoutMillis the new loading timeout milliseconds
 	 */
 	public void setLoadingTimeoutMillis(int loadingTimeoutMillis) {
 		this.loadingTimeoutMillis = loadingTimeoutMillis;
 	}
 
 	/**
-	 * Clear the actual header and puts all header attributes from parameter
-	 * instance.
-	 * 
-	 * @param header
-	 *            the header
+	 * Clear the actual header and puts all header attributes from parameter instance.
+	 *
+	 * @param header the header
 	 */
 	public void setHeader(Map<String, String> header) {
 		if (header == null) {
@@ -300,7 +290,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the header.
-	 * 
+	 *
 	 * @return the header
 	 */
 	public Map<String, String> getHeader() {
@@ -309,7 +299,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the number of appendix.
-	 * 
+	 *
 	 * @return the number of appendix
 	 */
 	public int getNrOfAppendix() {
@@ -318,7 +308,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Increment number of appendix.
-	 * 
+	 *
 	 * @return incremented number of appendix
 	 */
 	public int incrementNrOfAppendix() {
@@ -328,7 +318,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the cache guardian name.
-	 * 
+	 *
 	 * @return the cache guardian name
 	 */
 	public String getCacheGuardianName() {
@@ -337,9 +327,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the cache guardian name.
-	 * 
-	 * @param cacheGuardianName
-	 *            the new cache guardian name
+	 *
+	 * @param cacheGuardianName the new cache guardian name
 	 */
 	public void setCacheGuardianName(String cacheGuardianName) {
 		this.cacheGuardianName = cacheGuardianName;
@@ -347,9 +336,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the expiration date time string.
-	 * 
-	 * @param cacheExpirationDateTime
-	 *            the new expiration date time string
+	 *
+	 * @param cacheExpirationDateTime the new expiration date time string
 	 */
 	public void setExpDateTimeStr(String cacheExpirationDateTime) {
 		this.expirationDateTimeString = cacheExpirationDateTime;
@@ -357,7 +345,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the expiration date time string.
-	 * 
+	 *
 	 * @return the expiration date time string
 	 */
 	public String getExpDateTimeStr() {
@@ -366,9 +354,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the number of parts.
-	 * 
-	 * @param cacheId
-	 *            the cache id
+	 *
+	 * @param cacheId the cache id
 	 * @return the number of parts
 	 */
 	public int getNrOfParts(String cacheId) {
@@ -381,7 +368,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Gets the expected number of appendix.
-	 * 
+	 *
 	 * @return the expected number of appendix
 	 */
 	public int getExpectedAppendix() {
@@ -390,9 +377,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Sets the expected number of appendix.
-	 * 
-	 * @param expectedAppendix
-	 *            the new expected number of appendix
+	 *
+	 * @param expectedAppendix the new expected number of appendix
 	 */
 	public void setExpectedAppendix(Integer expectedAppendix) {
 		if (expectedAppendix == null) {
@@ -404,9 +390,8 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Increment number of parts for cached data message.
-	 * 
-	 * @param cacheId
-	 *            the cache id
+	 *
+	 * @param cacheId the cache id
 	 * @return the number of parts
 	 */
 	public int incrementNrOfPartsForDataMsg(String cacheId) {
@@ -423,7 +408,7 @@ public class SCCacheMetaEntry implements Serializable {
 
 	/**
 	 * Number of parts by appendix as string.
-	 * 
+	 *
 	 * @return the string
 	 */
 	public String nrOfPartsByAppendixAsString() {

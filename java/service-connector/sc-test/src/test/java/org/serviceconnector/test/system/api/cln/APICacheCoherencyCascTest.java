@@ -16,11 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln;
 
+import org.serviceconnector.test.system.api.APISystemSuperCCTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICacheCoherencyCasc1Test;
 
 public class APICacheCoherencyCascTest extends APICacheCoherencyCasc1Test {
 
 	public APICacheCoherencyCascTest() {
-		APICacheCoherencyCascTest.setUpServiceConnectorAndServer();
+		APISystemSuperCCTest.setUpServiceConnectorAndServer();
 	}
 }

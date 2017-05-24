@@ -22,8 +22,8 @@ package org.serviceconnector.api;
 public class SCPublishMessage extends SCMessage {
 
 	/**
-	 * The mask. The mask is used in SUBSCRIBE / CHANGE_SUBSCRIPTION to express the client interest and in PUBLISH to designate the
-	 * message contents. Only printable characters are allowed.
+	 * The mask. The mask is used in SUBSCRIBE / CHANGE_SUBSCRIPTION to express the client interest and in PUBLISH to designate the message contents. Only printable characters are
+	 * allowed.
 	 */
 	private String mask = null;
 
@@ -35,9 +35,8 @@ public class SCPublishMessage extends SCMessage {
 
 	/**
 	 * Instantiates a new SC publish message with byte[] data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCPublishMessage(byte[] data) {
 		super(data);
@@ -45,9 +44,8 @@ public class SCPublishMessage extends SCMessage {
 
 	/**
 	 * Instantiates a new SC publish message with String data.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 */
 	public SCPublishMessage(String data) {
 		super(data);
@@ -55,7 +53,7 @@ public class SCPublishMessage extends SCMessage {
 
 	/**
 	 * Gets the mask.
-	 * 
+	 *
 	 * @return the mask
 	 */
 	public String getMask() {
@@ -64,11 +62,10 @@ public class SCPublishMessage extends SCMessage {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            Any printable character, length > 0 and < 256 Byte<br />
-	 *            Client may not subscribe with mask containing "%" character.<br />
-	 *            Example: "000012100012832102FADF-----------X-----------"
+	 *
+	 * @param mask Any printable character, length > 0 and < 256 Byte<br />
+	 *        Client may not subscribe with mask containing "%" character.<br />
+	 *        Example: "000012100012832102FADF-----------X-----------"
 	 */
 	public void setMask(String mask) {
 		this.mask = mask;

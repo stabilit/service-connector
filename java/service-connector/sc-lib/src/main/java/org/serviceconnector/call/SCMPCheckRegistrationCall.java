@@ -16,28 +16,27 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPCheckRegistrationCall. Checks server registration.
- * 
+ *
  * @author JTraber
  */
-public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
+public class SCMPCheckRegistrationCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCheckRegistrationCall.class);
-		
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCheckRegistrationCall.class);
+
 	/**
 	 * Instantiates a new SCMPCheckRegistrationCall.
-	 * 
-	 * @param requester
-	 *            the requesters to use when invoking call
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requesters to use when invoking call
+	 * @param serviceName the service name
 	 */
 	public SCMPCheckRegistrationCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);

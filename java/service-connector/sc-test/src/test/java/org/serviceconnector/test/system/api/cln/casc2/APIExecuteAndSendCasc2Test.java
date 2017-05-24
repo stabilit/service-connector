@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
 
 /**
@@ -27,7 +28,7 @@ public class APIExecuteAndSendCasc2Test extends APIExecuteAndSendCasc1Test {
 	 * Instantiates a new aPI execute and send casc2 test.
 	 */
 	public APIExecuteAndSendCasc2Test() {
-		APIExecuteAndSendCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 	}
 
 }

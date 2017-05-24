@@ -28,7 +28,8 @@ public class APIIntegrationSuperClientTest extends IntegrationSuperTest {
 	protected SCClient client;
 	protected SCSessionService sessionService = null;
 	protected SCPublishService publishService = null;
-	
+
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		sessionService = null;
@@ -36,11 +37,13 @@ public class APIIntegrationSuperClientTest extends IntegrationSuperTest {
 		super.beforeOneTest();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
 			client.detach();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		client = null;
 		super.afterOneTest();
 	}

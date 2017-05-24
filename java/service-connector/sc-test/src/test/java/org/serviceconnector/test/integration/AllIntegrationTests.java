@@ -38,35 +38,19 @@ import org.serviceconnector.test.integration.scmp.SCMPRegisterDeregisterServerTe
 import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( {
+@Suite.SuiteClasses({
 		// Other tests - process them first
-		ConnectionPoolTest.class,
-		ConnectionTest.class,
-		MultipleNICTest.class,
-		SCConsoleTest.class,
+		ConnectionPoolTest.class, ConnectionTest.class, MultipleNICTest.class, SCConsoleTest.class,
 
 		// API client tests
-		APIAttachDetachClientTest.class,
-		APINewServiceTest.class,
-		APIEnableDisableServiceTest.class,
-		APIMultipleSCsClientTest.class,
-		APIAfterSCAbortClientTest.class,
+		APIAttachDetachClientTest.class, APINewServiceTest.class, APIEnableDisableServiceTest.class, APIMultipleSCsClientTest.class, APIAfterSCAbortClientTest.class,
 		APIAfterSCRestartClientTest.class,
 
 		// API server tests
-		APIRegisterSessionServerTest.class,
-		APIRegisterPublishServerTest.class,
-		APICheckRegistrationTest.class,
-		APIPublishServerTest.class,
-		APIMultipleSCsServerTest.class,
-		APIAfterSCAbortServerTest.class,
-		APIAfterSCRestartServerTest.class,
-		
+		APIRegisterSessionServerTest.class, APIRegisterPublishServerTest.class, APICheckRegistrationTest.class, APIPublishServerTest.class, APIMultipleSCsServerTest.class,
+		APIAfterSCAbortServerTest.class, APIAfterSCRestartServerTest.class,
+
 		// SCMP client test
-		SCMPAttachDetachTest.class,
-		SCMPManageTest.class,
-		SCMPRegisterDeregisterServerTest.class,
-		SCMPSCVersionTest.class
-})
+		SCMPAttachDetachTest.class, SCMPManageTest.class, SCMPRegisterDeregisterServerTest.class, SCMPSCVersionTest.class })
 public class AllIntegrationTests {
 }

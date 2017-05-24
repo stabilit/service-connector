@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -31,13 +32,13 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual attach) to SC.
- * 
+ *
  * @author JTraber
  */
 public class AttachCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(AttachCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AttachCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

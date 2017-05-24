@@ -24,10 +24,6 @@ import org.serviceconnector.test.system.AllSystemTests;
 import org.serviceconnector.test.unit.AllUnitTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( {
-	AllUnitTests.class,
-	AllIntegrationTests.class, 
-	AllSystemTests.class,
-	AllCascSystemTests.class})
+@Suite.SuiteClasses({ AllUnitTests.class, AllIntegrationTests.class, AllSystemTests.class, AllCascSystemTests.class })
 public class AllTests {
 }

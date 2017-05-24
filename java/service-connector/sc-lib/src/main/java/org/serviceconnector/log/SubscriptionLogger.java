@@ -19,7 +19,8 @@ package org.serviceconnector.log;
 import java.util.Date;
 import java.util.Formatter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.service.Subscription;
 
 /**
@@ -28,7 +29,7 @@ import org.serviceconnector.service.Subscription;
 public final class SubscriptionLogger {
 
 	/** The Constant subscriptionLogger. */
-	private static final Logger SUBSCRIPTION_LOGGER = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
+	private static final Logger SUBSCRIPTION_LOGGER = LoggerFactory.getLogger(Loggers.SUBSCRIPTION.getValue());
 
 	/** The subscribe str. */
 	private static String subscribeStr = "subscription=%s - subscribing to=%s - with mask=%s";
@@ -57,7 +58,7 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Checks if is enabled.
-	 * 
+	 *
 	 * @return true, if is enabled
 	 */
 	public static boolean isTraceEnabled() {
@@ -66,7 +67,7 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Checks if is debug enabled.
-	 * 
+	 *
 	 * @return true, if is debug enabled
 	 */
 	public static boolean isDebugEnabled() {
@@ -75,13 +76,10 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log subscribe.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param subscriptionId
-	 *            the subscription Id
-	 * @param mask
-	 *            the mask
+	 *
+	 * @param serviceName the service name
+	 * @param subscriptionId the subscription Id
+	 * @param mask the mask
 	 */
 	public static synchronized void logSubscribe(String serviceName, String subscriptionId, String mask) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
@@ -94,13 +92,10 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log change subscribe.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param subscriptionId
-	 *            the subscription Id
-	 * @param mask
-	 *            the mask
+	 *
+	 * @param serviceName the service name
+	 * @param subscriptionId the subscription Id
+	 * @param mask the mask
 	 */
 	public static synchronized void logChangeSubscribe(String serviceName, String subscriptionId, String mask) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
@@ -113,11 +108,9 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log unsubscribe.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param subscriptionId
-	 *            the subscription Id
+	 *
+	 * @param serviceName the service name
+	 * @param subscriptionId the subscription Id
 	 */
 	public static synchronized void logUnsubscribe(String serviceName, String subscriptionId) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
@@ -130,11 +123,9 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log create subscription.
-	 * 
-	 * @param id
-	 *            the id
-	 * @param timeoutMillis
-	 *            the timeout
+	 *
+	 * @param id the id
+	 * @param timeoutMillis the timeout
 	 */
 	public static synchronized void logCreateSubscription(String id, double timeoutMillis, double noiMillis) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
@@ -147,9 +138,8 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log delete subscription.
-	 * 
-	 * @param id
-	 *            the id
+	 *
+	 * @param id the id
 	 */
 	public static synchronized void logDeleteSubscription(String id) {
 		if (SUBSCRIPTION_LOGGER.isDebugEnabled()) {
@@ -162,11 +152,9 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log abort subscription.
-	 * 
-	 * @param subscription
-	 *            the subscription
-	 * @param reason
-	 *            the reason
+	 *
+	 * @param subscription the subscription
+	 * @param reason the reason
 	 */
 	public static synchronized void logAbortSubscription(Subscription subscription, String reason) {
 		if (SUBSCRIPTION_LOGGER.isInfoEnabled()) {
@@ -182,9 +170,8 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log timeout subscription.
-	 * 
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param subscription the subscription
 	 */
 	public static synchronized void logTimeoutSubscription(Subscription subscription) {
 		if (SUBSCRIPTION_LOGGER.isInfoEnabled()) {
@@ -200,9 +187,8 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log start timeout scheduling.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logScheduleTimeout(String sessionId, double timeout, long delay) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {
@@ -215,9 +201,8 @@ public final class SubscriptionLogger {
 
 	/**
 	 * Log cancel timeout.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	public static synchronized void logCancelTimeout(String sessionId) {
 		if (SUBSCRIPTION_LOGGER.isTraceEnabled()) {

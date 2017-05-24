@@ -23,7 +23,8 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 
 /**
@@ -36,16 +37,15 @@ public final class DumpUtility {
 	 */
 	private DumpUtility() {
 	}
-	
+
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(DumpUtility.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DumpUtility.class);
 
 	/**
 	 * Gets all dump files matching given criterias.
-	 * 
-	 * @param dumpPath
-	 *            the dump path
+	 *
+	 * @param dumpPath the dump path
 	 * @return the dump files
 	 */
 	public static File[] getDumpFiles(String dumpPath) {
@@ -53,6 +53,7 @@ public final class DumpUtility {
 		FileFilter fileFilter = new WildcardFileFilter(Constants.DUMP_FILE_NAME + "*." + Constants.DUMP_FILE_EXTENSION);
 		File[] fileArray = dumpPathFile.listFiles(fileFilter);
 		Arrays.sort(fileArray, new Comparator<File>() {
+			@Override
 			public int compare(File f1, File f2) {
 				return -Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
 			}
@@ -62,9 +63,8 @@ public final class DumpUtility {
 
 	/**
 	 * Delete all dump files for given dump path.
-	 * 
-	 * @param dumpPath
-	 *            the dump path
+	 *
+	 * @param dumpPath the dump path
 	 */
 	public static void deleteAllDumpFiles(String dumpPath) {
 		File dumpPathFile = new File(dumpPath);
@@ -78,15 +78,11 @@ public final class DumpUtility {
 
 	/**
 	 * Read dump file to writer.
-	 * 
-	 * @param dumpPath
-	 *            the dump path
-	 * @param dumpFile
-	 *            the dump file
-	 * @param writer
-	 *            the writer
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param dumpPath the dump path
+	 * @param dumpFile the dump file
+	 * @param writer the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void readDumpFileToWriter(String dumpPath, String dumpFile, Writer writer) throws IOException {
 		String filePath = dumpPath + File.separator + dumpFile;

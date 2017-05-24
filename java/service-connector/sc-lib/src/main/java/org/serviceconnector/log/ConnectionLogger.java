@@ -18,7 +18,8 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 
 /**
@@ -27,7 +28,7 @@ import org.serviceconnector.Constants;
 public final class ConnectionLogger {
 
 	/** The Constant connectionLogger. */
-	private static final Logger CONNECTION_LOGGER = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private static final Logger CONNECTION_LOGGER = LoggerFactory.getLogger(Loggers.CONNECTION.getValue());
 
 	/** The connect string. */
 	private static String connectStr = "%s connect to:%s/%s";
@@ -50,13 +51,10 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log connect.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
 	 */
 	public static synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
@@ -67,13 +65,10 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log disconnect by local host.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
 	 */
 	public static synchronized void logDisconnectByLocalHost(String className, String hostName, int port) {
 		Formatter format = new Formatter();
@@ -84,13 +79,10 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log disconnect by remote host.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
 	 */
 	public static synchronized void logDisconnectByRemoteHost(String className, String hostName, int port) {
 		Formatter format = new Formatter();
@@ -101,19 +93,13 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log read buffer.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
-	 * @param data
-	 *            the data
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
+	 * @param data the data
+	 * @param offset the offset
+	 * @param length the length
 	 */
 	public static synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
@@ -128,19 +114,13 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log write buffer.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
-	 * @param data
-	 *            the data
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
+	 * @param data the data
+	 * @param offset the offset
+	 * @param length the length
 	 */
 	public static synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
@@ -155,15 +135,11 @@ public final class ConnectionLogger {
 
 	/**
 	 * Log keep alive.
-	 * 
-	 * @param className
-	 *            the class name
-	 * @param hostName
-	 *            the host name
-	 * @param port
-	 *            the port
-	 * @param nrOfIdles
-	 *            the nr of idles
+	 *
+	 * @param className the class name
+	 * @param hostName the host name
+	 * @param port the port
+	 * @param nrOfIdles the nr of idles
 	 */
 	public static synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
@@ -174,7 +150,7 @@ public final class ConnectionLogger {
 
 	/**
 	 * Checks if is enabled full.
-	 * 
+	 *
 	 * @return true, if is enabled full
 	 */
 	public static boolean isEnabledFull() {
@@ -183,7 +159,7 @@ public final class ConnectionLogger {
 
 	/**
 	 * Checks if is enabled.
-	 * 
+	 *
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {

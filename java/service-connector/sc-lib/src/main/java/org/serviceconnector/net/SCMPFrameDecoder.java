@@ -21,7 +21,7 @@ import org.serviceconnector.scmp.SCMPHeaderKey;
 
 /**
  * The Class SCMPFrameDecoder.
- * 
+ *
  * @author JTraber
  */
 public class SCMPFrameDecoder {
@@ -34,12 +34,10 @@ public class SCMPFrameDecoder {
 
 	/**
 	 * Parses the frame size.
-	 * 
-	 * @param buffer
-	 *            the buffer to parse
+	 *
+	 * @param buffer the buffer to parse
 	 * @return the frame size
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 		try {
@@ -58,12 +56,10 @@ public class SCMPFrameDecoder {
 
 	/**
 	 * Parses the message size.
-	 * 
-	 * @param buffer
-	 *            the buffer
+	 *
+	 * @param buffer the buffer
 	 * @return the int
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static int parseMessageSize(byte[] buffer) throws Exception {
 		return SCMPFrameDecoder.readInt(buffer, Constants.SCMP_MSG_SIZE_START, Constants.SCMP_MSG_SIZE_END);
@@ -71,12 +67,10 @@ public class SCMPFrameDecoder {
 
 	/**
 	 * Parses the header size.
-	 * 
-	 * @param buffer
-	 *            the buffer
+	 *
+	 * @param buffer the buffer
 	 * @return the int
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static int parseHeaderSize(byte[] buffer) throws Exception {
 		return SCMPFrameDecoder.readInt(buffer, Constants.SCMP_HEADER_SIZE_START, Constants.SCMP_HEADER_SIZE_END);
@@ -84,16 +78,12 @@ public class SCMPFrameDecoder {
 
 	/**
 	 * Read int from byte buffer.
-	 * 
-	 * @param b
-	 *            the b
-	 * @param startOffset
-	 *            the start offset
-	 * @param endOffset
-	 *            the end offset
+	 *
+	 * @param b the b
+	 * @param startOffset the start offset
+	 * @param endOffset the end offset
 	 * @return the int
-	 * @throws FrameDecoderException
-	 *             the frame decoder exception
+	 * @throws FrameDecoderException the frame decoder exception
 	 */
 	public static int readInt(byte[] b, int startOffset, int endOffset) throws Exception {
 
@@ -109,7 +99,7 @@ public class SCMPFrameDecoder {
 		int factor = 1;
 		for (int i = endOffset; i >= startOffset; i--) {
 			if (b[i] >= '0' && b[i] <= '9') {
-				scmpLength += ((int) b[i] - Constants.SCMP_ZERO) * factor;
+				scmpLength += (b[i] - Constants.SCMP_ZERO) * factor;
 				factor *= Constants.NUMBER_10;
 			} else {
 				throw new Exception("invalid scmp message length");

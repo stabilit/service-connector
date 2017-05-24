@@ -18,7 +18,6 @@ package org.serviceconnector.cln;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
@@ -27,13 +26,15 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PerformanceSessionClient implements Runnable {
 
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	private static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(PerformanceSessionClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PerformanceSessionClient.class);
 	private final CountDownLatch beforeAttachSignal;
 	private final CountDownLatch afterAttachSignal;
 	private final CountDownLatch attachedSignal;
@@ -45,9 +46,8 @@ public class PerformanceSessionClient implements Runnable {
 	private final int executeCycles;
 	private final int messageSize;
 
-	public PerformanceSessionClient(CountDownLatch beforeAttachSignal, CountDownLatch afterAttachSignal,
-			CountDownLatch attachedSignal, CountDownLatch doneSignal, ThreadSafeCounter counter, int sessionCycles,
-			int executeCycles, int messageSize) {
+	public PerformanceSessionClient(CountDownLatch beforeAttachSignal, CountDownLatch afterAttachSignal, CountDownLatch attachedSignal, CountDownLatch doneSignal,
+			ThreadSafeCounter counter, int sessionCycles, int executeCycles, int messageSize) {
 		this.beforeAttachSignal = beforeAttachSignal;
 		this.afterAttachSignal = afterAttachSignal;
 		this.attachedSignal = attachedSignal;
@@ -88,7 +88,7 @@ public class PerformanceSessionClient implements Runnable {
 			}
 
 		} catch (Exception e) {
-			LOGGER.fatal("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				sc.detach();
@@ -99,8 +99,8 @@ public class PerformanceSessionClient implements Runnable {
 			// signal that this worker is done
 			doneSignal.countDown();
 
-			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute " + counter
-					+ " messages of " + messageSize + "B.\nCurrent number on the latch:\t" + doneSignal.getCount());
+			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute " + counter + " messages of " + messageSize + "B.\nCurrent number on the latch:\t"
+					+ doneSignal.getCount());
 		}
 	}
 }

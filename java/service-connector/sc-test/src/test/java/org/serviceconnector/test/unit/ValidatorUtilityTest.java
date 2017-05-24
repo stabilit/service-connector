@@ -19,7 +19,8 @@ package org.serviceconnector.test.unit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
@@ -27,14 +28,14 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.
- * 
+ *
  * @author JTraber
  */
 public class ValidatorUtilityTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ValidatorUtilityTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorUtilityTest.class);
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */
@@ -84,7 +85,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t04_validateIpAddressList() throws SCMPValidatorException {
 		ValidatorUtility.validateIpAddressList("127.0.0");
 	}
-	
+
 	/**
 	 * Description: Validate ip address list delimiter forbidden<br>
 	 * Expectation: throws SCMPValidatorException
@@ -93,7 +94,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t05_validateIpAddressList() throws SCMPValidatorException {
 		ValidatorUtility.validateIpAddressList("127.0.0.1/");
 	}
-
 
 	/**
 	 * Description: Validate integer test<br>
@@ -104,7 +104,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 		ValidatorUtility.validateInt(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
 	}
 
-	
 	/**
 	 * Description: Validate integer test lower than lowerLimit<br>
 	 * Expectation: throws SCMPValidatorException
@@ -122,7 +121,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t22_validateIntTest() throws SCMPValidatorException {
 		ValidatorUtility.validateInt(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
 	}
-	
+
 	/**
 	 * Description: Validate integer value with lower & upper limit<br>
 	 * Expectation: passes
@@ -132,7 +131,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 		ValidatorUtility.validateInt(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
 	}
 
-	
 	/**
 	 * Description: Validate integer lower than lowerLimit<br>
 	 * Expectation: throws SCMPValidatorException
@@ -142,7 +140,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 		ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
 	}
 
-	
 	/**
 	 * Description: Validate integer higher than upperLimit<br>
 	 * Expectation: throws SCMPValidatorException
@@ -161,7 +158,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 		ValidatorUtility.validateInt(0, "", 1, SCMPError.HV_WRONG_PORTNR);
 	}
 
-	
 	/**
 	 * Description: Validate integer test<br>
 	 * Expectation: passes
@@ -170,7 +166,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t30_validateLongTest() throws SCMPValidatorException {
 		ValidatorUtility.validateLong(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
 	}
-	
+
 	/**
 	 * Description: Validate integer test lower than lowerLimit<br>
 	 * Expectation: throws SCMPValidatorException
@@ -188,7 +184,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t32_validateLongTest() throws SCMPValidatorException {
 		ValidatorUtility.validateLong(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
 	}
-	
+
 	/**
 	 * Description: Validate integer value with lower & upper limit<br>
 	 * Expectation: passes
@@ -198,7 +194,6 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 		ValidatorUtility.validateLong(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
 	}
 
-	
 	/**
 	 * Description: Validate integer lower than lowerLimit<br>
 	 * Expectation: throws SCMPValidatorException
@@ -207,7 +202,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	public void t34_validateLongTest() throws SCMPValidatorException {
 		ValidatorUtility.validateLong(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
 	}
-	
+
 	/**
 	 * Description: Validate string test<br>
 	 * Expectation: passes

@@ -18,26 +18,23 @@ package org.serviceconnector.scmp;
 
 /**
  * The Interface ISCMPCallback. Interface for callback on SCMP level.
- * 
+ *
  * @author JTraber
  */
 public interface ISCMPMessageCallback {
 
 	/**
 	 * Callback. This method gets informed when a message received.
-	 * 
-	 * @param reply
-	 *            the scmp reply
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param reply the scmp reply
+	 * @throws Exception the exception
 	 */
 	public abstract void receive(SCMPMessage reply) throws Exception;
 
 	/**
 	 * Callback. This method gets informed in case of an error.
-	 * 
-	 * @param ex
-	 *            the ex
+	 *
+	 * @param ex the ex
 	 */
 	public abstract void receive(Exception ex);
 }

@@ -16,31 +16,29 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnUnsubscribeCall. Call unsubscribes from a publish service.
- * 
+ *
  * @author JTraber
  */
 public class SCMPClnUnsubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnUnsubscribeCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPClnUnsubscribeCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnUnsubscribeCall.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param req the requester
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPClnUnsubscribeCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
@@ -54,9 +52,8 @@ public class SCMPClnUnsubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
+	 *
+	 * @param sessionInfo the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);

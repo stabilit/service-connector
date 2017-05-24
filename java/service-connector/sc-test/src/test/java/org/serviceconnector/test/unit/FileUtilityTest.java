@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
-
 public class FileUtilityTest extends SuperUnitTest {
-	
-	
+
 }

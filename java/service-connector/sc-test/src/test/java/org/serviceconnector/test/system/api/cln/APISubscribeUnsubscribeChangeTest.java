@@ -17,7 +17,6 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
@@ -27,14 +26,14 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
-import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
+import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {
-		APIReceivePublicationCasc1Test.setUpServiceConnectorAndServer();
+		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();
 	}
 
 	/**
@@ -324,7 +323,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 	}
-	
+
 	/**
 	 * Description: receivePublication timeout = -1<br>
 	 * Expectation: throws SCServiceException
@@ -334,7 +333,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		publishService.setReceivePublicationTimeoutSeconds(-1);
 	}
-	
+
 	/**
 	 * Description: receivePublication timeout = 0<br>
 	 * Expectation: throws SCServiceException
@@ -344,7 +343,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		publishService.setReceivePublicationTimeoutSeconds(0);
 	}
-	
+
 	/**
 	 * Description: receivePublication timeout = 67000<br>
 	 * Expectation: throws SCServiceException
@@ -394,11 +393,12 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 		subMsgRequest.setMask("abc%xy");
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
-	
+
 	/**
 	 * Description: two clients subscribe to a message queue, the server gets destroyed<br>
 	 * Expectation: clients get a not found error, passes
 	 */
+	@Override
 	@Test
 	public void t95_TwoSubscribersServerGetsDestroyed() throws Exception {
 		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);

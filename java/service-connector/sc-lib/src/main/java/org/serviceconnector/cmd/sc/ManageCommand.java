@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -37,15 +38,14 @@ import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to enable/disable
- * services.
- * 
+ * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to enable/disable services.
+ *
  * @author JTraber
  */
 public class ManageCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ManageCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ManageCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -135,11 +135,9 @@ public class ManageCommand extends CommandAdapter {
 
 	/**
 	 * Modify state of all services.
-	 * 
-	 * @param enable
-	 *            the enable
-	 * @param serviceNameRegex
-	 *            the service name regex
+	 *
+	 * @param enable the enable
+	 * @param serviceNameRegex the service name regex
 	 * @return true, if successful
 	 */
 	private boolean modifyStateOfServices(boolean enable, String serviceNameRegex) {

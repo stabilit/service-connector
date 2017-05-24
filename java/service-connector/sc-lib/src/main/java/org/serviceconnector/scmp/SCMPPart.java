@@ -20,10 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at the time all
- * parts
- * are sent and put together.
- * 
+ * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at the time all parts are sent and put together.
+ *
  * @author JTraber
  */
 public class SCMPPart extends SCMPMessage {
@@ -36,9 +34,8 @@ public class SCMPPart extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMPPart.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
+	 *
+	 * @param scmpVersion the SCMP version
 	 */
 	public SCMPPart(SCMPVersion scmpVersion) {
 		this(scmpVersion, false);
@@ -46,11 +43,9 @@ public class SCMPPart extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP part.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
-	 * @param pollRequest
-	 *            the poll request
+	 *
+	 * @param scmpVersion the SCMP version
+	 * @param pollRequest the poll request
 	 */
 	public SCMPPart(SCMPVersion scmpVersion, boolean pollRequest) {
 		super(scmpVersion);
@@ -59,13 +54,10 @@ public class SCMPPart extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMP part.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version
-	 * @param pollRequest
-	 *            the poll request
-	 * @param baseHeader
-	 *            the base header
+	 *
+	 * @param scmpVersion the SCMP version
+	 * @param pollRequest the poll request
+	 * @param baseHeader the base header
 	 */
 	public SCMPPart(SCMPVersion scmpVersion, boolean pollRequest, Map<String, String> baseHeader) {
 		this(scmpVersion, pollRequest);
@@ -73,11 +65,9 @@ public class SCMPPart extends SCMPMessage {
 	}
 
 	/**
-	 * Instantiates a new SCMP part. Copy constructor. Make a copy of given object.
-	 * Uses SCMP Message copy constructor.
-	 * 
-	 * @param toCopyObject
-	 *            the object to be copied
+	 * Instantiates a new SCMP part. Copy constructor. Make a copy of given object. Uses SCMP Message copy constructor.
+	 *
+	 * @param toCopyObject the object to be copied
 	 */
 	public SCMPPart(SCMPPart toCopyObject) {
 		super(toCopyObject);
@@ -85,24 +75,25 @@ public class SCMPPart extends SCMPMessage {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public boolean isPart() {
 		return true;
 	}
 
 	/**
 	 * Checks if the message is a poll request in large message sequence.
-	 * 
+	 *
 	 * @return true, if is poll
 	 */
+	@Override
 	public boolean isPollRequest() {
 		return this.pollRequest;
 	}
 
 	/**
 	 * Sets the checks if is poll request.
-	 * 
-	 * @param pollRequest
-	 *            the new checks if is poll request
+	 *
+	 * @param pollRequest the new checks if is poll request
 	 */
 	public void setIsPollRequest(boolean pollRequest) {
 		this.pollRequest = pollRequest;

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -28,15 +29,14 @@ public class SubscriptionMask {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SubscriptionMask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionMask.class);
 	/** The mask in bytes. */
 	private byte[] mask;
 
 	/**
 	 * Instantiates a new filter mask.
-	 * 
-	 * @param mask
-	 *            the mask
+	 *
+	 * @param mask the mask
 	 */
 	public SubscriptionMask(String mask) {
 		this.mask = mask.getBytes();
@@ -44,9 +44,8 @@ public class SubscriptionMask {
 
 	/**
 	 * Matches.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 * @return true, if successful
 	 */
 	public boolean matches(SCMPMessage message) {
@@ -69,7 +68,7 @@ public class SubscriptionMask {
 
 	/**
 	 * Gets the value.
-	 * 
+	 *
 	 * @return the value
 	 */
 	public String getValue() {
@@ -78,20 +77,16 @@ public class SubscriptionMask {
 
 	/**
 	 * Masking. Combines base mask with given new mask.
-	 * 
-	 * @param baseMask
-	 *            the base mask
-	 * @param newMask
-	 *            the new mask
+	 *
+	 * @param baseMask the base mask
+	 * @param newMask the new mask
 	 * @return the byte[]
-	 * @throws InvalidMaskLengthException
-	 *             the invalid mask length exception
+	 * @throws InvalidMaskLengthException the invalid mask length exception
 	 */
 	public static byte[] masking(byte[] baseMask, byte[] newMask) throws InvalidMaskLengthException {
 
 		if (baseMask.length != newMask.length) {
-			throw new InvalidMaskLengthException("masks have different lengths, masking not allowed: baseMask=" + baseMask
-					+ " mask=" + newMask);
+			throw new InvalidMaskLengthException("masks have different lengths, masking not allowed: baseMask=" + baseMask + " mask=" + newMask);
 		}
 
 		for (int byteIndex = 0; byteIndex < baseMask.length; byteIndex++) {
@@ -109,14 +104,11 @@ public class SubscriptionMask {
 
 	/**
 	 * Masking. Combines base mask with given new mask.
-	 * 
-	 * @param currentSubscriptionMask
-	 *            the current subscription mask
-	 * @param mask2
-	 *            the mask2
+	 *
+	 * @param currentSubscriptionMask the current subscription mask
+	 * @param mask2 the mask2
 	 * @return the string
-	 * @throws InvalidMaskLengthException
-	 *             the invalid mask length exception
+	 * @throws InvalidMaskLengthException the invalid mask length exception
 	 */
 	public static String masking(SubscriptionMask currentSubscriptionMask, String mask2) throws InvalidMaskLengthException {
 		return new String(SubscriptionMask.masking(currentSubscriptionMask.getValue().getBytes(), mask2.getBytes()));

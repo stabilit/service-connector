@@ -33,9 +33,8 @@ public class FileServerException extends Exception {
 
 	/**
 	 * Instantiates a new file server exception.
-	 * 
-	 * @param msg
-	 *            the msg
+	 *
+	 * @param msg the msg
 	 */
 	public FileServerException(String msg) {
 		super(msg);

@@ -27,17 +27,18 @@ import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc
 public class SCMPClnChangeSubscriptionCasc2Test extends SCMPClnChangeSubscriptionCasc1Test {
 
 	public SCMPClnChangeSubscriptionCasc2Test() {
-		SCMPClnChangeSubscriptionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		SCMPClnChangeSubscriptionCasc1Test.setUp2CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		if (this.requester != null) {
 			this.requester.destroy();
 		}
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 10), 0);
 		AppContext.init();
 	}
 }

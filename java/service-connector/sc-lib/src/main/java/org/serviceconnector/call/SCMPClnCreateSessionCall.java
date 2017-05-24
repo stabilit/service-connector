@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -26,22 +27,20 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnCreateSessionCall. Call tries creating a session to a backend server over a SC.
- * 
+ *
  * @author JTraber
  */
 public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnCreateSessionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPClnCreateSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.
-	 * 
-	 * @param requester
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requester to use when invoking call
+	 * @param serviceName the service name
 	 */
 	public SCMPClnCreateSessionCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
@@ -57,9 +56,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
+	 *
+	 * @param sessionInfo the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
@@ -67,9 +65,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the echo interval seconds.
-	 * 
-	 * @param echoInterval
-	 *            the new echo interval seconds
+	 *
+	 * @param echoInterval the new echo interval seconds
 	 */
 	public void setEchoIntervalSeconds(int echoInterval) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
@@ -77,9 +74,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

@@ -21,21 +21,21 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client
- * and a server. Session activity is observed by a timer. The timer gets initialized when adding the session to the registry. It gets
- * reseted when session is used by requests.
+ * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client and a server. Session activity is observed by a
+ * timer. The timer gets initialized when adding the session to the registry. It gets reseted when session is used by requests.
  */
 public class Session extends AbstractSession {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Session.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Session.class);
 
 	/** The session timeout milliseconds. */
 	private double sessionTimeoutMillis;
@@ -46,11 +46,9 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Instantiates a new session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param ipAdressList
-	 *            the ip adress list
+	 *
+	 * @param sessionInfo the session info
+	 * @param ipAdressList the ip adress list
 	 */
 	public Session(String sessionInfo, String ipAdressList) {
 		super(sessionInfo, ipAdressList);
@@ -60,9 +58,8 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Sets the session timeout seconds.
-	 * 
-	 * @param sessionTimeoutMillis
-	 *            the new session timeout seconds
+	 *
+	 * @param sessionTimeoutMillis the new session timeout seconds
 	 */
 	public void setSessionTimeoutMillis(double sessionTimeoutMillis) {
 		this.sessionTimeoutMillis = sessionTimeoutMillis;
@@ -70,7 +67,7 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Gets the session timeout seconds.
-	 * 
+	 *
 	 * @return the session timeout seconds
 	 */
 	public double getSessionTimeoutMillis() {
@@ -79,7 +76,7 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Gets the stateful server.
-	 * 
+	 *
 	 * @return the stateful server
 	 */
 	public StatefulServer getStatefulServer() {
@@ -88,9 +85,8 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Sets the pending request. Careful in use - take care of synchronization.
-	 * 
-	 * @param pendingRequest
-	 *            the new pending request
+	 *
+	 * @param pendingRequest the new pending request
 	 */
 	public void setPendingRequest(boolean pendingRequest) {
 		this.pendingRequest = pendingRequest;
@@ -98,7 +94,7 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Gets the pending request. Careful in use - take care of synchronization. setPendingRequest
-	 * 
+	 *
 	 * @return the pending request
 	 */
 	public boolean hasPendingRequest() {
@@ -107,7 +103,7 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Gets the last execute time.
-	 * 
+	 *
 	 * @return the last execute time
 	 */
 	public Date getLastExecuteTime() {
@@ -123,12 +119,11 @@ public class Session extends AbstractSession {
 
 	/**
 	 * Dump the session into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("session");
 		writer.writeAttribute("id", this.getId());

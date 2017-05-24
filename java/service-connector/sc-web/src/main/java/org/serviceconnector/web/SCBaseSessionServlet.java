@@ -27,9 +27,8 @@ import org.serviceconnector.util.DateTimeUtility;
 /**
  * The Class SCBaseSessionServlet. Base servlet for session service implementations.<br />
  * <br />
- * User needs to extend this servlet to implement a session service. This base servlet implements ISCSessionServerCallback which
- * gets called if client actions are processed.
- * More information available in super class.<br />
+ * User needs to extend this servlet to implement a session service. This base servlet implements ISCSessionServerCallback which gets called if client actions are processed. More
+ * information available in super class.<br />
  * <br />
  * The urlPath passed in constructor is used by the SC to call the servlet(URL). So it must match the mapping in web.xml.
  */
@@ -40,15 +39,16 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 
 	/**
 	 * Instantiates a new sC base session servlet.
-	 * 
-	 * @param urlPath
-	 *            the URL path
+	 *
+	 * @param urlPath the URL path
 	 */
 	protected SCBaseSessionServlet(String urlPath) {
 		super(urlPath);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#createSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
@@ -56,21 +56,27 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#deleteSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
 	public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#abortSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
 	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#execute(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
@@ -78,7 +84,9 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#exceptionCaught(org.serviceconnector.api.SCServiceException)
 	 */
 	@Override
@@ -87,11 +95,9 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 
 	/**
 	 * Base create session.
-	 * 
-	 * @param reqMessage
-	 *            the req message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout millis
+	 *
+	 * @param reqMessage the req message
+	 * @param operationTimeoutMillis the operation timeout millis
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseCreateSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -143,11 +149,9 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 
 	/**
 	 * Base delete session.
-	 * 
-	 * @param reqMessage
-	 *            the req message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout millis
+	 *
+	 * @param reqMessage the req message
+	 * @param operationTimeoutMillis the operation timeout millis
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseDeleteSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -176,11 +180,9 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 
 	/**
 	 * Base abort session.
-	 * 
-	 * @param reqMessage
-	 *            the req message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout millis
+	 *
+	 * @param reqMessage the req message
+	 * @param operationTimeoutMillis the operation timeout millis
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseAbortSession(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -204,11 +206,9 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 
 	/**
 	 * Base execute.
-	 * 
-	 * @param reqMessage
-	 *            the req message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout millis
+	 *
+	 * @param reqMessage the req message
+	 * @param operationTimeoutMillis the operation timeout millis
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseExecute(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -236,8 +236,7 @@ public abstract class SCBaseSessionServlet extends SCBaseServlet implements ISCS
 		if (scReply != null) {
 			reply.setBody(scReply.getData());
 			if (scReply.getCacheExpirationDateTime() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-						DateTimeUtility.getDateTimeAsString(scReply.getCacheExpirationDateTime()));
+				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getDateTimeAsString(scReply.getCacheExpirationDateTime()));
 			}
 			reply.setCacheId(scReply.getCacheId());
 			if (scReply.getMessageInfo() != null) {

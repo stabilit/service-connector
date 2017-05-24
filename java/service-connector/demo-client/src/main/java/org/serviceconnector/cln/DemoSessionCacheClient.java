@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
@@ -30,16 +31,15 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionCacheClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoSessionCacheClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSessionCacheClient.class);
 
 	/** The pending request. */
 	private static boolean pendingRequest = false;
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DemoSessionCacheClient demoSessionClient = new DemoSessionCacheClient();
@@ -123,9 +123,8 @@ public class DemoSessionCacheClient extends Thread {
 
 		/**
 		 * Instantiates a new demo session client callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);
@@ -139,7 +138,7 @@ public class DemoSessionCacheClient extends Thread {
 
 		/**
 		 * Gets the message.
-		 * 
+		 *
 		 * @return the message
 		 */
 		public SCMessage getMessage() {

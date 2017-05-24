@@ -21,21 +21,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class RequesterConfiguration. It may hold more than one configuration for a requester, is represented by
- * <code>RemoteNodeConfiguration</code>.
- * 
+ * The Class RequesterConfiguration. It may hold more than one configuration for a requester, is represented by <code>RemoteNodeConfiguration</code>.
+ *
  * @author JTraber
  */
 public class RemoteNodeListConfiguration {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(RemoteNodeListConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteNodeListConfiguration.class);
 	/** The remote node configurations. */
 	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurations;
 
@@ -47,18 +47,15 @@ public class RemoteNodeListConfiguration {
 
 	/**
 	 * Initializes the requester configuration.
-	 * 
-	 * @param compositeConfig
-	 *            the apache composite config
-	 * @throws SCMPValidatorException
-	 *             the SCMP validator exception
+	 *
+	 * @param compositeConfig the apache composite config
+	 * @throws SCMPValidatorException the SCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> requesterList = compositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
 		if (requesterList == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.PROPERTY_REMOTE_NODES + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_REMOTE_NODES + " is missing");
 		}
 
 		// load all remote nodes into the list
@@ -69,8 +66,7 @@ public class RemoteNodeListConfiguration {
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
 			if (this.remoteNodeConfigurations.containsKey(requesterName) == true) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-						"requester already in registry name must be unique requesterName=" + requesterName);
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "requester already in registry name must be unique requesterName=" + requesterName);
 			}
 			// adding requester to list
 			this.remoteNodeConfigurations.put(requesterName, remoteNodeConfig);
@@ -81,7 +77,7 @@ public class RemoteNodeListConfiguration {
 
 	/**
 	 * Gets the requester configurations.
-	 * 
+	 *
 	 * @return the requester configurations
 	 */
 	public Map<String, RemoteNodeConfiguration> getRequesterConfigurations() {

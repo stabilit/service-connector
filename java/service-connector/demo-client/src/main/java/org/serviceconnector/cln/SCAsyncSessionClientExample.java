@@ -18,7 +18,8 @@ package org.serviceconnector.cln;
 
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
@@ -30,16 +31,15 @@ import org.serviceconnector.api.cln.SCSessionService;
 public class SCAsyncSessionClientExample {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCAsyncSessionClientExample.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCAsyncSessionClientExample.class);
 
 	/** The message received. */
 	private static boolean messageReceived = false;
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SCAsyncSessionClientExample example = new SCAsyncSessionClientExample();
@@ -91,11 +91,9 @@ public class SCAsyncSessionClientExample {
 
 	/**
 	 * Wait for message.
-	 * 
-	 * @param nrSeconds
-	 *            the nr seconds
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param nrSeconds the nr seconds
+	 * @throws Exception the exception
 	 */
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
@@ -114,9 +112,8 @@ public class SCAsyncSessionClientExample {
 
 		/**
 		 * Instantiates a new example callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public ExampleCallback(SCSessionService service) {
 			super(service);
@@ -124,9 +121,8 @@ public class SCAsyncSessionClientExample {
 
 		/**
 		 * Receive.
-		 * 
-		 * @param msg
-		 *            the msg {@inheritDoc}
+		 *
+		 * @param msg the msg {@inheritDoc}
 		 */
 		@Override
 		public void receive(SCMessage msg) {
@@ -138,9 +134,8 @@ public class SCAsyncSessionClientExample {
 
 		/**
 		 * Receive.
-		 * 
-		 * @param ex
-		 *            the ex {@inheritDoc}
+		 *
+		 * @param ex the ex {@inheritDoc}
 		 */
 		@Override
 		public void receive(Exception ex) {

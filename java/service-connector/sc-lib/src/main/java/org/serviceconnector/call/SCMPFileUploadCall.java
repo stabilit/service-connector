@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -30,17 +31,14 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPFileUploadCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPFileUploadCall.class);
 
 	/**
 	 * Instantiates a new sCMP file upload call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPFileUploadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
@@ -48,11 +46,9 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new sCMP file upload call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToForward
-	 *            the msg to forward
+	 *
+	 * @param requester the requester
+	 * @param msgToForward the msg to forward
 	 */
 	public SCMPFileUploadCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
@@ -60,9 +56,8 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the remote file name.
-	 * 
-	 * @param remoteFileName
-	 *            the new remote file name
+	 *
+	 * @param remoteFileName the new remote file name
 	 */
 	public void setRemoteFileName(String remoteFileName) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);

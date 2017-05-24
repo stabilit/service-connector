@@ -20,95 +20,84 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The Interface ISCCacheModule. Abstracts SC caches modules. A SCCache holds cache modules.
- * A cache module is a logical part of a cache.
+ * The Interface ISCCacheModule. Abstracts SC caches modules. A SCCache holds cache modules. A cache module is a logical part of a cache.
  */
 public interface ISCCacheModule<T> {
 
 	/**
 	 * Gets the object from cache module.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the object
 	 */
 	public abstract T get(Object key);
 
 	/**
 	 * Put the object in cache module. Existing elements are replaced.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value to store
-	 * @param timeToLiveSeconds
-	 *            seconds the object has to stay in cache module from now on
+	 *
+	 * @param key the key
+	 * @param value the value to store
+	 * @param timeToLiveSeconds seconds the object has to stay in cache module from now on
 	 */
 	public abstract void putOrUpdate(Object key, T value, int timeToLiveSeconds);
 
 	/**
 	 * Replace the object in cache module. Element has to be in place otherwise replace fails.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value to store
-	 * @param timeToLiveSeconds
-	 *            seconds the object has to stay in cache module from now on
+	 *
+	 * @param key the key
+	 * @param value the value to store
+	 * @param timeToLiveSeconds seconds the object has to stay in cache module from now on
 	 */
 	public abstract void replace(Object key, T value, int timeToLiveSeconds);
 
 	/**
 	 * Gets the list of keys in the cache module.
-	 * 
+	 *
 	 * @return the keys with expire check
 	 */
 	public abstract List<String> getKeyList();
 
 	/**
 	 * Gets the expiration time.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the expiration time
 	 */
 	public abstract Date getExpirationTime(String key);
 
 	/**
 	 * Gets the creation time.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the creation time
 	 */
 	public abstract Date getCreationTime(String key);
 
 	/**
 	 * Gets the last access time.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the last access time
 	 */
 	public abstract Date getLastAccessTime(String key);
 
 	/**
 	 * Gets the cache name.
-	 * 
+	 *
 	 * @return the cache name
 	 */
 	public abstract String getCacheModuleName();
 
 	/**
 	 * Gets the memory store size.
-	 * 
+	 *
 	 * @return the memory store size
 	 */
 	public abstract long getNumberOfMessagesInStore();
 
 	/**
 	 * Gets the disk store size.
-	 * 
+	 *
 	 * @return the disk store size
 	 */
 	public abstract long getNumberOfMessagesInDiskStore();
@@ -129,9 +118,8 @@ public interface ISCCacheModule<T> {
 
 	/**
 	 * Removes the object from cache module.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return true, if successful
 	 */
 	public abstract T remove(Object key);

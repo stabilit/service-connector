@@ -19,7 +19,6 @@ package org.serviceconnector.net.req.netty.tcp;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -34,16 +33,18 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCCallbackException;
 import org.serviceconnector.util.Statistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyTcpRequesterResponseHandler.
- * 
+ *
  * @author JTraber
  */
 public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpRequesterResponseHandler.class);
 	/** The scmp callback. */
 	private ISCMPMessageCallback scmpCallback;
 	/** The pending request. */
@@ -59,9 +60,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 
 	/**
 	 * Sets the callback.
-	 * 
-	 * @param callback
-	 *            the new callback
+	 *
+	 * @param callback the new callback
 	 */
 	public void setCallback(ISCMPMessageCallback callback) {
 		this.scmpCallback = callback;
@@ -78,8 +78,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
 					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
-							remoteAddress.getPort(), buffer, 0, buffer.length);
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(), remoteAddress.getPort(), buffer, 0, buffer.length);
 				}
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
@@ -109,8 +108,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
 			if (ConnectionLogger.isEnabled()) {
 				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
-						remoteSocketAddress.getPort());
+				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
 			}
 			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
 			try {
@@ -122,8 +120,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		}
 		if (ConnectionLogger.isEnabled()) {
 			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
-			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(),
-					remoteSocketAddress.getPort());
+			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
 		}
 	}
 
@@ -148,15 +145,14 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			}
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.warn(th); // regular disconnect causes this expected exception
+			LOGGER.warn("regular disconnect", th); // regular disconnect causes this expected exception
 		} else {
 			LOGGER.error("Response error", th);
 		}
 	}
 
 	/**
-	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in
-	 * disconnect procedure.
+	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in disconnect procedure.
 	 */
 	public void connectionDisconnect() {
 		this.pendingRequest = false;

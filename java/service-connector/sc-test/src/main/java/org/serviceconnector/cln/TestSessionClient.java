@@ -18,13 +18,12 @@ package org.serviceconnector.cln;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.slf4j.LoggerFactory;
 
 public class TestSessionClient extends TestAbstractClient {
 
@@ -33,29 +32,28 @@ public class TestSessionClient extends TestAbstractClient {
 	private SCSessionService service;
 
 	static {
-		TestAbstractClient.LOGGER = Logger.getLogger(TestSessionClient.class);
+		TestAbstractClient.LOGGER = LoggerFactory.getLogger(TestSessionClient.class);
 	}
 
 	/**
 	 * Main method if you like to start in debug mode.
-	 * 
-	 * @param args
-	 *            [0] client name<br>
-	 *            [1] SC host<br>
-	 *            [2] SC port<br>
-	 *            [3] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [4] maxConnections<br>
-	 *            [5] keepAliveIntervalSeconds (0 = disabled)<br>
-	 *            [6] serviceName<br>
-	 *            [7] echoIntervalSeconds<br>
-	 *            [8] echoTimeoutSeconds<br>
-	 *            [9] noDataIntervalSeconds<br>
-	 *            [10] methodsToInvoke
+	 *
+	 * @param args [0] client name<br>
+	 *        [1] SC host<br>
+	 *        [2] SC port<br>
+	 *        [3] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [4] maxConnections<br>
+	 *        [5] keepAliveIntervalSeconds (0 = disabled)<br>
+	 *        [6] serviceName<br>
+	 *        [7] echoIntervalSeconds<br>
+	 *        [8] echoTimeoutSeconds<br>
+	 *        [9] noDataIntervalSeconds<br>
+	 *        [10] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
-		LOGGER.log(Level.OFF, "TestSessionClient is starting ...");
+		LOGGER.debug("TestSessionClient is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 		TestSessionClient testClient = new TestSessionClient();
 		testClient.setClientName(args[0]);
@@ -101,7 +99,7 @@ public class TestSessionClient extends TestAbstractClient {
 		for (int i = 0; i < 100000; i++) {
 			service.execute(new SCMessage());
 			if (i % 10000 == 0) {
-				LOGGER.log(Level.OFF, this.clientName + " sent message number " + i);
+				LOGGER.debug(this.clientName + " sent message number " + i);
 			}
 		}
 	}

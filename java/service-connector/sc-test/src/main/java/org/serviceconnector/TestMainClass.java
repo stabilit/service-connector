@@ -21,7 +21,7 @@ import org.serviceconnector.srv.TestServer;
 
 /**
  * This class serves just as a switch to run either TestServer or TestClient.
- * 
+ *
  * @author Martin Zukal
  *
  */
@@ -31,14 +31,14 @@ public class TestMainClass {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if(args.length == 9) {
+		if (args.length == 9) {
 			TestServer.main(args);
-		} else if(args.length == 12) {
+		} else if (args.length == 12) {
 			TestClient.main(args);
 		} else {
 			System.out.println("You specified wrong number of parameters.");
 		}
-		
+
 	}
 
 }

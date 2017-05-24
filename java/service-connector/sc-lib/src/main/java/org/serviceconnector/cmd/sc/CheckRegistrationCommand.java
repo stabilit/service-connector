@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -34,15 +35,14 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class CheckRegistrationCommand. Validates the server registration. Used by the server to check that SC is alive and the
- * registration is valid.
- * 
+ * The Class CheckRegistrationCommand. Validates the server registration. Used by the server to check that SC is alive and the registration is valid.
+ *
  * @author JTrnka
  */
 public class CheckRegistrationCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CheckRegistrationCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CheckRegistrationCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -88,8 +88,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

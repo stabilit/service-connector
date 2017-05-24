@@ -32,10 +32,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.log4j.Logger;
 import org.jboss.netty.handler.execution.OrderedMemoryAwareThreadPoolExecutor;
 import org.jboss.netty.logging.InternalLoggerFactory;
-import org.jboss.netty.logging.Log4JLoggerFactory;
+import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.SCCache;
@@ -59,15 +58,17 @@ import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class AppContext. The AppContext is singleton and holds all factories and registries. Its the top context in a service
- * connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
+ * The Class AppContext. The AppContext is singleton and holds all factories and registries. Its the top context in a service connector, server or even in clients. Its a superset
+ * of the specific contexts and unifies the data.
  */
 public final class AppContext {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(AppContext.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
 
 	/** The Constant DUMP_FILE_SDF. */
 	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.DUMP_FILE_NAME_FORMAT);
@@ -138,8 +139,8 @@ public final class AppContext {
 
 	// initialize configurations in every case
 	static {
-		// configures NETTY logging to use log4j framework
-		InternalLoggerFactory.setDefaultFactory(new Log4JLoggerFactory());
+		// configures NETTY logging to use Slf4j framework
+		InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
 		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.scCacheConfiguration = new SCCacheConfiguration();
 		AppContext.responderConfiguration = new ListenerListConfiguration();
@@ -161,31 +162,27 @@ public final class AppContext {
 			ConnectionFactory.init();
 			if (AppContext.otiScheduler == null) {
 				// set up new scheduler with high priority threads
-				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI",
-						Thread.MAX_PRIORITY));
+				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("OTI", Thread.MAX_PRIORITY));
 			}
 			if (AppContext.eci_cri_Scheduler == null) {
 				// set up new scheduler with high priority threads
-				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI",
-						Thread.MAX_PRIORITY));
+				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI", Thread.MAX_PRIORITY));
 			}
 			if (AppContext.scWorkerThreadPool == null) {
 				AppContext.scWorkerThreadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
 			}
 
 			if (AppContext.orderedSCWorkerThreadPool == null) {
-				AppContext.orderedSCWorkerThreadPool = new OrderedMemoryAwareThreadPoolExecutor(
-						Constants.DEFAULT_MAX_ORDERED_IO_THREADS, 0, 0, 10, TimeUnit.SECONDS, new NamedPriorityThreadFactory(
-								"ORDERED_SC_WORKER"));
+				AppContext.orderedSCWorkerThreadPool = new OrderedMemoryAwareThreadPoolExecutor(Constants.DEFAULT_MAX_ORDERED_IO_THREADS, 0, 0, 10, TimeUnit.SECONDS,
+						new NamedPriorityThreadFactory("ORDERED_SC_WORKER"));
 			}
 		}
 	}
 
 	/**
 	 * Initializes the commands.
-	 * 
-	 * @param commandFactory
-	 *            the command factory
+	 *
+	 * @param commandFactory the command factory
 	 */
 	public static void initCommands(FlyweightCommandFactory commandFactory) {
 		if (AppContext.commandFactory != null) {
@@ -197,7 +194,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the command factory.
-	 * 
+	 *
 	 * @return the command factory
 	 */
 	public static FlyweightCommandFactory getCommandFactory() {
@@ -206,7 +203,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the connection factory.
-	 * 
+	 *
 	 * @return the connection factory
 	 */
 	public static ConnectionFactory getConnectionFactory() {
@@ -215,7 +212,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the encoder decoder factory.
-	 * 
+	 *
 	 * @return the encoder decoder factory
 	 */
 	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
@@ -224,7 +221,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the endpoint factory.
-	 * 
+	 *
 	 * @return the endpoint factory
 	 */
 	public static EndpointFactory getEndpointFactory() {
@@ -233,7 +230,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the responder registry.
-	 * 
+	 *
 	 * @return the responder registry
 	 */
 	public static ResponderRegistry getResponderRegistry() {
@@ -242,7 +239,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the srv service registry.
-	 * 
+	 *
 	 * @return the srv service registry
 	 */
 	public static SrvServiceRegistry getSrvServiceRegistry() {
@@ -251,7 +248,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the server registry.
-	 * 
+	 *
 	 * @return the server registry
 	 */
 	public static ServerRegistry getServerRegistry() {
@@ -260,7 +257,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the service registry.
-	 * 
+	 *
 	 * @return the service registry
 	 */
 	public static ServiceRegistry getServiceRegistry() {
@@ -269,7 +266,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the session registry.
-	 * 
+	 *
 	 * @return the session registry
 	 */
 	public static SessionRegistry getSessionRegistry() {
@@ -278,7 +275,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the subscription registry.
-	 * 
+	 *
 	 * @return the subscription registry
 	 */
 	public static SubscriptionRegistry getSubscriptionRegistry() {
@@ -287,7 +284,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the SCMP session composite registry.
-	 * 
+	 *
 	 * @return the SCMP session composite registry
 	 */
 	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
@@ -296,7 +293,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the cache modules registry.
-	 * 
+	 *
 	 * @return the cache modules registry
 	 */
 	public static CacheModuleRegistry getCacheModuleRegistry() {
@@ -305,7 +302,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the SC cache.
-	 * 
+	 *
 	 * @return the SC cache
 	 */
 	public static SCCache getSCCache() {
@@ -314,11 +311,9 @@ public final class AppContext {
 
 	/**
 	 * Initializes the configuration.
-	 * 
-	 * @param configFile
-	 *            the configuration file
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param configFile the configuration file
+	 * @throws Exception the exception
 	 */
 	public static void initConfiguration(String configFile) throws Exception {
 		AppContext.apacheCompositeConfig = new CompositeConfiguration();
@@ -335,7 +330,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the apache composite config.
-	 * 
+	 *
 	 * @return the apache composite config
 	 */
 	public static CompositeConfiguration getApacheCompositeConfig() {
@@ -344,7 +339,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the basic configuration.
-	 * 
+	 *
 	 * @return the basic configuration
 	 */
 	public static BasicConfiguration getBasicConfiguration() {
@@ -353,7 +348,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the SC cache configuration.
-	 * 
+	 *
 	 * @return the SC cache configuration
 	 */
 	public static SCCacheConfiguration getSCCacheConfiguration() {
@@ -362,7 +357,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the responder configuration.
-	 * 
+	 *
 	 * @return the responder configuration
 	 */
 	public static ListenerListConfiguration getResponderConfiguration() {
@@ -371,7 +366,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the requester configuration.
-	 * 
+	 *
 	 * @return the requester configuration
 	 */
 	public static RemoteNodeListConfiguration getRequesterConfiguration() {
@@ -380,7 +375,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the service configuration.
-	 * 
+	 *
 	 * @return the service configuration
 	 */
 	public static ServiceListConfiguration getServiceConfiguration() {
@@ -389,9 +384,8 @@ public final class AppContext {
 
 	/**
 	 * Sets the sC environment.
-	 * 
-	 * @param scEnvironment
-	 *            the new sC environment
+	 *
+	 * @param scEnvironment the new sC environment
 	 */
 	public static void setSCEnvironment(boolean scEnvironment) {
 		AppContext.scEnvironment = scEnvironment;
@@ -406,7 +400,7 @@ public final class AppContext {
 
 	/**
 	 * Checks if is sc environment.
-	 * 
+	 *
 	 * @return true, if is sc environment
 	 */
 	public static boolean isScEnvironment() {
@@ -415,7 +409,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the SC worker thread pool.
-	 * 
+	 *
 	 * @return the SC worker thread pool
 	 */
 	public static ExecutorService getSCWorkerThreadPool() {
@@ -424,7 +418,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the ordered SC worker thread pool.
-	 * 
+	 *
 	 * @return the ordered SC worker thread pool
 	 */
 	public static ExecutorService getOrderedSCWorkerThreadPool() {
@@ -478,10 +472,9 @@ public final class AppContext {
 
 	/**
 	 * dumps the entire application context.
-	 * 
+	 *
 	 * @return the string
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static String dump() throws Exception {
 		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
@@ -539,11 +532,9 @@ public final class AppContext {
 
 	/**
 	 * Dump app context infos.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	private static void dumpAppContextInfos(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("sc-worker-threadpool");

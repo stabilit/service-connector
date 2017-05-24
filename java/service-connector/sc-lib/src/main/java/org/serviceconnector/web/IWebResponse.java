@@ -25,41 +25,37 @@ public interface IWebResponse {
 
 	/**
 	 * Adds the header.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
+	 *
+	 * @param name the name
+	 * @param value the value
 	 */
 	void addHeader(String name, String value);
 
 	/**
 	 * Gets the output stream.
-	 * 
+	 *
 	 * @return the output stream
 	 */
 	public abstract OutputStream getOutputStream();
 
 	/**
 	 * Gets the bytes.
-	 * 
+	 *
 	 * @return the bytes
 	 */
 	public abstract byte[] getBytes();
 
 	/**
 	 * Sets the content type.
-	 * 
-	 * @param string
-	 *            the new content type
+	 *
+	 * @param string the new content type
 	 */
 	public abstract void setContentType(String string);
 
 	/**
 	 * Redirect.
-	 * 
-	 * @param path
-	 *            the path
+	 *
+	 * @param path the path
 	 */
 	public abstract void redirect(String path);
 

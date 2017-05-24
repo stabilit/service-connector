@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -26,20 +27,19 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations are done properly.
- * 
+ *
  * @author JTraber
  */
 public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPInspectCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPInspectCall.class);
 
 	/**
 	 * Instantiates a new SCMPInspectCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
+	 *
+	 * @param req the requester to use when invoking call
 	 */
 	public SCMPInspectCall(IRequester req) {
 		super(req);
@@ -61,9 +61,8 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

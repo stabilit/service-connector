@@ -19,7 +19,8 @@ package org.serviceconnector.server;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -34,7 +35,7 @@ public final class ServerLoader {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ServerLoader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServerLoader.class);
 
 	/**
 	 * Instantiates a new server loader.
@@ -44,11 +45,9 @@ public final class ServerLoader {
 
 	/**
 	 * Loads remote hosts from a file.
-	 * 
-	 * @param remoteNodeListConfigurations
-	 *            the remote node list configurations
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param remoteNodeListConfigurations the remote node list configurations
+	 * @throws Exception the exception
 	 */
 	public static void load(RemoteNodeListConfiguration remoteNodeListConfigurations) throws Exception {
 		Map<String, RemoteNodeConfiguration> remoteNodesMap = remoteNodeListConfigurations.getRequesterConfigurations();
@@ -56,23 +55,22 @@ public final class ServerLoader {
 		for (RemoteNodeConfiguration remoteNodeConfiguration : remoteNodesMap.values()) {
 
 			ServerType serverType = remoteNodeConfiguration.getServerType();
-			InetSocketAddress socketAddress = new InetSocketAddress(remoteNodeConfiguration.getHost(), remoteNodeConfiguration
-					.getPort());
+			InetSocketAddress socketAddress = new InetSocketAddress(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort());
 
 			Server server = null;
 			switch (serverType) {
-			case FILE_SERVER:
-				server = new FileServer(remoteNodeConfiguration, socketAddress);
-				break;
-			case CASCADED_SC:
-				server = new CascadedSC(remoteNodeConfiguration, socketAddress);
-				break;
-			case WEB_SERVER:
-				// nothing to do in case of a web server is registered in specific endpoint
-				continue;
-			default:
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType="
-						+ remoteNodeConfiguration.getName() + Constants.SLASH + serverType);
+				case FILE_SERVER:
+					server = new FileServer(remoteNodeConfiguration, socketAddress);
+					break;
+				case CASCADED_SC:
+					server = new CascadedSC(remoteNodeConfiguration, socketAddress);
+					break;
+				case WEB_SERVER:
+					// nothing to do in case of a web server is registered in specific endpoint
+					continue;
+				default:
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+							"wrong serverType, serverName/serverType=" + remoteNodeConfiguration.getName() + Constants.SLASH + serverType);
 			}
 			AppContext.getServerRegistry().addServer(server.getServerKey(), server);
 		}

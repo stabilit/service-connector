@@ -32,7 +32,7 @@ public class SCRemovedMessage extends SCPublishMessage {
 
 	/**
 	 * Checks if is managed.
-	 * 
+	 *
 	 * @return true, if is managed {@inheritDoc}
 	 */
 	@Override

@@ -28,7 +28,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.ctx.WebContext;
 
@@ -39,7 +40,7 @@ public final class XSLTTransformerFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(XSLTTransformerFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(XSLTTransformerFactory.class);
 
 	/** The transformer factory. */
 	protected static XSLTTransformerFactory transformerFactory = new XSLTTransformerFactory();
@@ -55,11 +56,9 @@ public final class XSLTTransformerFactory {
 
 	/**
 	 * Adds the translet.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param translet
-	 *            the translet
+	 *
+	 * @param key the key
+	 * @param translet the translet
 	 */
 	public void addTranslet(String key, Templates translet) {
 		if (WebContext.getWebConfiguration().isTransletEnabled()) {
@@ -76,12 +75,10 @@ public final class XSLTTransformerFactory {
 
 	/**
 	 * Creates a new transformer instance which is threadsafe.
-	 * 
-	 * @param xslPath
-	 *            the xsl path
+	 *
+	 * @param xslPath the xsl path
 	 * @return the transformer
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public synchronized Transformer newTransformer(String xslPath) throws Exception {
 		Templates translet = transletMap.get(xslPath);
@@ -115,7 +112,7 @@ public final class XSLTTransformerFactory {
 
 	/**
 	 * Gets the single instance of XSLTTransformerFactory.
-	 * 
+	 *
 	 * @return single instance of XSLTTransformerFactory
 	 */
 	public static XSLTTransformerFactory getInstance() {

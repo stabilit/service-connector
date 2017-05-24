@@ -23,7 +23,7 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * Provides actual SC version and method to check compatibility. The SC versioning schema follows this philosophy <br />
- * 
+ *
  * <pre>
  * 	A99.99-999 (Ex. V2.4-265)<br />
  *    | |  |   |<br />
@@ -32,7 +32,7 @@ import org.serviceconnector.scmp.SCMPError;
  *    | +-- release number<br />
  *    +-- version type<br />
  * </pre>
- * 
+ *
  * Version type designates the target and scope and can be: <br />
  * <ul>
  * <li>X � experimental, usually not distributed</li>
@@ -50,7 +50,7 @@ import org.serviceconnector.scmp.SCMPError;
  * the other way round.<br />
  * <br />
  * See the SC_0_SCMP_E.PDF for more details.
- * 
+ *
  * @author JTraber
  */
 public enum SCVersion {
@@ -72,7 +72,7 @@ public enum SCVersion {
 
 	/**
 	 * Instantiates a new SCVersion.
-	 * 
+	 *
 	 * @param release the release
 	 * @param version the version
 	 * @param revision the revision
@@ -85,7 +85,7 @@ public enum SCVersion {
 
 	/**
 	 * Checks if is supported.
-	 * 
+	 *
 	 * @param scVersion the text in format 999.999-999 e.g. 1.5-003
 	 * @throws SCMPValidatorException the SCMP validator exception
 	 */

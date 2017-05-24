@@ -28,32 +28,26 @@ public interface ICommand {
 
 	/**
 	 * Gets the key.
-	 * 
+	 *
 	 * @return the key
 	 */
 	public SCMPMsgType getKey();
 
 	/**
 	 * Run command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            callback to the responder
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback callback to the responder
+	 * @throws Exception the exception
 	 */
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception;
 
 	/**
 	 * Validate request.
-	 * 
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	public void validate(IRequest request) throws Exception;
 

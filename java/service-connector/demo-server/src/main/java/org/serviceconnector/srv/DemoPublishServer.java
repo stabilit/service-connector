@@ -19,7 +19,8 @@ package org.serviceconnector.srv;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -32,7 +33,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishServer extends Thread {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoPublishServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoPublishServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -78,7 +79,7 @@ public class DemoPublishServer extends Thread {
 	private class SrvCallback extends SCPublishServerCallback {
 
 		/** The Constant LOGGER. */
-		private final Logger LOGGER = Logger.getLogger(SrvCallback.class);
+		private final Logger LOGGER = LoggerFactory.getLogger(SrvCallback.class);
 
 		public SrvCallback(SCPublishServer publishSrv) {
 			super(publishSrv);

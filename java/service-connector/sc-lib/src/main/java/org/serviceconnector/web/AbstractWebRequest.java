@@ -20,7 +20,8 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.web.ctx.WebContext;
 
 /**
@@ -30,7 +31,7 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(AbstractWebRequest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWebRequest.class);
 
 	/** The attr map. */
 	private Map<String, Object> attrMap;
@@ -46,11 +47,9 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Instantiates a new abstract web request.
-	 * 
-	 * @param localAddress
-	 *            the local address
-	 * @param remoteAddress
-	 *            the remote address
+	 *
+	 * @param localAddress the local address
+	 * @param remoteAddress the remote address
 	 */
 	public AbstractWebRequest(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		this.localAddress = localAddress;
@@ -61,9 +60,8 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Gets the attribute.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the attribute {@inheritDoc}
 	 */
 	@Override
@@ -73,11 +71,9 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Sets the attribute.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value {@inheritDoc}
+	 *
+	 * @param key the key
+	 * @param value the value {@inheritDoc}
 	 */
 	@Override
 	public void setAttribute(String key, Object value) {
@@ -99,9 +95,8 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Sets the local address.
-	 * 
-	 * @param localAddress
-	 *            the new local address
+	 *
+	 * @param localAddress the new local address
 	 */
 	public void setLocalAddress(InetSocketAddress localAddress) {
 		this.localAddress = localAddress;
@@ -109,9 +104,8 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Sets the remote address.
-	 * 
-	 * @param remoteAddress
-	 *            the new remote address
+	 *
+	 * @param remoteAddress the new remote address
 	 */
 	public void setRemoteAddress(InetSocketAddress remoteAddress) {
 		this.remoteAddress = remoteAddress;
@@ -163,9 +157,8 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/**
 	 * Checks if is my session.
-	 * 
-	 * @param webSession
-	 *            the web session
+	 *
+	 * @param webSession the web session
 	 * @return true, if is my session
 	 */
 	private boolean isMySession(WebSession webSession) {

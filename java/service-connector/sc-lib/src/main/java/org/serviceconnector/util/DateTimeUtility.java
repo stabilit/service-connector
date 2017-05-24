@@ -22,7 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 
 /**
@@ -32,7 +33,7 @@ public final class DateTimeUtility {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(DateTimeUtility.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeUtility.class);
 
 	/** The Constant SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
@@ -43,7 +44,7 @@ public final class DateTimeUtility {
 		TimeZone timeZoneUTC = TimeZone.getTimeZone("UTC");
 		SDFUTC.setTimeZone(timeZoneUTC);
 	}
-	
+
 	/**
 	 * Instantiates a new date time utility.
 	 */
@@ -52,7 +53,7 @@ public final class DateTimeUtility {
 
 	/**
 	 * Gets the current time zone millis.
-	 * 
+	 *
 	 * @return the current time zone millis
 	 */
 	public static String getCurrentTimeZoneMillis() {
@@ -79,7 +80,7 @@ public final class DateTimeUtility {
 
 	/**
 	 * Gets the current date
-	 * 
+	 *
 	 * @return the current date
 	 */
 	public static Date getCurrentDate() {
@@ -89,9 +90,9 @@ public final class DateTimeUtility {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		Date date = cal.getTime();
-        return date;
+		return date;
 	}
-	
+
 	/**
 	 * Gets the current time (ms).
 	 *
@@ -103,9 +104,8 @@ public final class DateTimeUtility {
 
 	/**
 	 * Gets the date time as string.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return the date and time as string
 	 */
 	public static String getDateTimeAsString(Date date) {
@@ -116,11 +116,9 @@ public final class DateTimeUtility {
 
 	/**
 	 * Gets the increment time in millis.
-	 * 
-	 * @param date
-	 *            the date
-	 * @param inc
-	 *            the inc
+	 *
+	 * @param date the date
+	 * @param inc the inc
 	 * @return the increment time in millis
 	 */
 	public static Date getIncrementTimeMillis(Date date, long inc) {
@@ -131,12 +129,10 @@ public final class DateTimeUtility {
 
 	/**
 	 * Parses the date string.
-	 * 
-	 * @param dateString
-	 *            the date string
+	 *
+	 * @param dateString the date string
 	 * @return the date
-	 * @throws ParseException
-	 *             the parse exception
+	 * @throws ParseException the parse exception
 	 */
 	public static Date parseDateString(String dateString) throws ParseException {
 		synchronized (SDF) {
@@ -147,12 +143,10 @@ public final class DateTimeUtility {
 
 	/**
 	 * Parses the date string to UTC.
-	 * 
-	 * @param dateString
-	 *            the date string
+	 *
+	 * @param dateString the date string
 	 * @return the date
-	 * @throws ParseException
-	 *             the parse exception
+	 * @throws ParseException the parse exception
 	 */
 	public static Date parseDateStringUTC(String dateString) throws ParseException {
 		synchronized (SDFUTC) {
@@ -163,9 +157,8 @@ public final class DateTimeUtility {
 
 	/**
 	 * Checks if is same day.
-	 * 
-	 * @param date
-	 *            the date
+	 *
+	 * @param date the date
 	 * @return true, if is same day
 	 */
 	@SuppressWarnings("deprecation")

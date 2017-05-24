@@ -33,7 +33,7 @@ public enum TimeMillis {
 
 	/**
 	 * Gets the millis.
-	 * 
+	 *
 	 * @return the millis
 	 */
 	public long getMillis() {
@@ -42,9 +42,8 @@ public enum TimeMillis {
 
 	/**
 	 * Instantiates a new time millis.
-	 * 
-	 * @param millis
-	 *            the millis
+	 *
+	 * @param millis the millis
 	 */
 	private TimeMillis(long millis) {
 		this.millis = millis;

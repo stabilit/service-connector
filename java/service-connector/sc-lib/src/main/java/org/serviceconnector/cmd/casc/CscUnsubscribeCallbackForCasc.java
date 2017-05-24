@@ -32,18 +32,13 @@ public class CscUnsubscribeCallbackForCasc extends CommandCascCallback implement
 
 	/**
 	 * Instantiates a new csc unsubscribe callback for casc.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param subscription the subscription
 	 */
-	public CscUnsubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription subscription) {
+	public CscUnsubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback, Subscription subscription) {
 		super(request, response, callback);
 		this.subscription = subscription;
 	}

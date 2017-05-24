@@ -17,7 +17,6 @@
 package org.serviceconnector.test.system.api.cln.casc1;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,6 +38,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -190,9 +190,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	/**
 	 * Description: exchange large message with cacheId repeating times, part size 64KB<br>
 	 * The first large client call loads the cache and accesses the server.<br>
-	 * The following client calls (also large message) MUST read the reply from the cache, NO ACCESS
-	 * to the server is allowed.
-	 * Expectation: get large message from cache
+	 * The following client calls (also large message) MUST read the reply from the cache, NO ACCESS to the server is allowed. Expectation: get large message from cache
 	 */
 	@Test
 	public void t07_2_cacheLargeMessage() throws Exception {
@@ -319,8 +317,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService exchange a message, sessionService1 exchange a message, with different cacheId's on two service
-	 * instances<br>
+	 * Description: sessionService exchange a message, sessionService1 exchange a message, with different cacheId's on two service instances<br>
 	 * Expectation: get messages from cache
 	 */
 	@Test
@@ -388,8 +385,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service
-	 * instances, sessionService2 gets an exception<br>
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service instances, sessionService2 gets an exception<br>
 	 * Expectation: cache loading exception
 	 */
 	@Test
@@ -426,8 +422,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service.
-	 * The second session gets a CACHE_LOADING exception.
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service. The second session gets a CACHE_LOADING exception.
 	 * instances, sessionService2 gets an exception<br>
 	 * Expectation: cache loading exception
 	 */
@@ -470,8 +465,8 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService exchange a large message, sessionService1 exchange a message, with same cacheId's on two service
-	 * instances, sessionService two gets message from cache, part size 64KB<br>
+	 * Description: sessionService exchange a large message, sessionService1 exchange a message, with same cacheId's on two service instances, sessionService two gets message from
+	 * cache, part size 64KB<br>
 	 * Expectation: get messages from cache
 	 */
 	@Test
@@ -598,8 +593,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: exchange message with cacheId, cache expires but is still in cache, exchange message with same cacheId - same
-	 * session<br>
+	 * Description: exchange message with cacheId, cache expires but is still in cache, exchange message with same cacheId - same session<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -623,9 +617,8 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service.
-	 * The second session gets a CACHE_LOADING exception. Procedure takes longer than session timeout!
-	 * instances, sessionService2 gets an exception<br>
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service. The second session gets a CACHE_LOADING exception.
+	 * Procedure takes longer than session timeout! instances, sessionService2 gets an exception<br>
 	 * Expectation: cache loading exception
 	 */
 	@Test
@@ -716,8 +709,8 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: sessionService exchange a large message, sessionService1 exchange a message, same cacheId's on two service
-	 * instances, sessionService two gets message from cache<br>
+	 * Description: sessionService exchange a large message, sessionService1 exchange a message, same cacheId's on two service instances, sessionService two gets message from cache
+	 * <br>
 	 * Expectation: get messages from cache
 	 */
 	@Test

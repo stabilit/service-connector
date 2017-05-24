@@ -51,11 +51,9 @@ public abstract class AbstractSession {
 
 	/**
 	 * Instantiates a new session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param ipAddressList
-	 *            the ip address list
+	 *
+	 * @param sessionInfo the session info
+	 * @param ipAddressList the ip address list
 	 */
 	public AbstractSession(String sessionInfo, String ipAddressList) {
 		this(sessionInfo, ipAddressList, false);
@@ -63,13 +61,10 @@ public abstract class AbstractSession {
 
 	/**
 	 * Instantiates a new abstract session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param ipAddressList
-	 *            the ip address list
-	 * @param cascaded
-	 *            the cascaded
+	 *
+	 * @param sessionInfo the session info
+	 * @param ipAddressList the ip address list
+	 * @param cascaded the cascaded
 	 */
 	public AbstractSession(String sessionInfo, String ipAddressList, boolean cascaded) {
 		UUID uuid = UUID.randomUUID();
@@ -84,7 +79,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the id.
-	 * 
+	 *
 	 * @return the id
 	 */
 	public String getId() {
@@ -93,9 +88,8 @@ public abstract class AbstractSession {
 
 	/**
 	 * Sets the server.
-	 * 
-	 * @param server
-	 *            the new server
+	 *
+	 * @param server the new server
 	 */
 	public void setServer(IServer server) {
 		this.server = server;
@@ -103,7 +97,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the server.
-	 * 
+	 *
 	 * @return the server
 	 */
 	public IServer getServer() {
@@ -112,9 +106,8 @@ public abstract class AbstractSession {
 
 	/**
 	 * Sets the service.
-	 * 
-	 * @param service
-	 *            the new service
+	 *
+	 * @param service the new service
 	 */
 	public void setService(Service service) {
 		this.service = service;
@@ -122,7 +115,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the service.
-	 * 
+	 *
 	 * @return the service
 	 */
 	public Service getService() {
@@ -131,7 +124,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the session timeout.
-	 * 
+	 *
 	 * @return the session timeout
 	 */
 	public ScheduledFuture<TimeoutWrapper> getTimeout() {
@@ -140,9 +133,8 @@ public abstract class AbstractSession {
 
 	/**
 	 * Sets the session timeout.
-	 * 
-	 * @param timeout
-	 *            the new session timeout
+	 *
+	 * @param timeout the new session timeout
 	 */
 	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
 		this.timeout = timeout;
@@ -150,7 +142,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the ip address list.
-	 * 
+	 *
 	 * @return the ip address list
 	 */
 	public String getIpAddressList() {
@@ -159,7 +151,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the session info.
-	 * 
+	 *
 	 * @return the session info
 	 */
 	public String getSessionInfo() {
@@ -168,9 +160,8 @@ public abstract class AbstractSession {
 
 	/**
 	 * Sets the timeouter task.
-	 * 
-	 * @param timeouterTask
-	 *            the new timeouter task
+	 *
+	 * @param timeouterTask the new timeouter task
 	 */
 	public void setTimeouterTask(TimeoutWrapper timeouterTask) {
 		this.timeouterTask = timeouterTask;
@@ -178,7 +169,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the timeouter task.
-	 * 
+	 *
 	 * @return the timeouter task
 	 */
 	public TimeoutWrapper getTimeouterTask() {
@@ -187,7 +178,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the creation time.
-	 * 
+	 *
 	 * @return the creation time
 	 */
 	public Date getCreationTime() {
@@ -196,7 +187,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Checks if is cascaded session. Indicates if session has been created by a cascaded client or a real client.
-	 * 
+	 *
 	 * @return true, if is cascaded
 	 */
 	public boolean isCascaded() {
@@ -205,7 +196,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * To string.
-	 * 
+	 *
 	 * @return the string {@inheritDoc}
 	 */
 	@Override
@@ -215,11 +206,9 @@ public abstract class AbstractSession {
 
 	/**
 	 * Dump the session into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public abstract void dump(XMLDumpWriter writer) throws Exception;
 }

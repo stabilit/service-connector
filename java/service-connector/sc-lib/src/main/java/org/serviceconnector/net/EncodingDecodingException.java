@@ -18,7 +18,7 @@ package org.serviceconnector.net;
 
 /**
  * The Class EncodingDecodingException. Occurs when encoding/decoding fails.
- * 
+ *
  * @author JTraber
  */
 public class EncodingDecodingException extends Exception {
@@ -28,9 +28,8 @@ public class EncodingDecodingException extends Exception {
 
 	/**
 	 * Instantiates a new encoding decoding exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public EncodingDecodingException(String message) {
 		super(message);
@@ -38,9 +37,8 @@ public class EncodingDecodingException extends Exception {
 
 	/**
 	 * Instantiates a new encoding decoding exception.
-	 * 
-	 * @param exception
-	 *            the cause
+	 *
+	 * @param exception the cause
 	 */
 	public EncodingDecodingException(Exception exception) {
 		super(exception);
@@ -48,11 +46,9 @@ public class EncodingDecodingException extends Exception {
 
 	/**
 	 * Instantiates a new encoding decoding exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
+	 *
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public EncodingDecodingException(String message, Exception cause) {
 		super(message, cause);

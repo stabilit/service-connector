@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.example;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -27,7 +28,7 @@ public class DemoSCPublishServlet extends SCBasePublishServlet {
 
 	private static final long serialVersionUID = 1L;
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoSCPublishServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSCPublishServlet.class);
 
 	public DemoSCPublishServlet() {
 		super("/demo-web-server/DemoSCPublishServlet");
@@ -57,6 +58,7 @@ public class DemoSCPublishServlet extends SCBasePublishServlet {
 		LOGGER.info("Subscription aborted");
 	}
 
+	@Override
 	public void exceptionCaught(SCServiceException ex) {
 		LOGGER.error("exception caught");
 	}

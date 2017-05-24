@@ -47,13 +47,10 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Load web configuration.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void loadWebConfiguration(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
@@ -79,13 +76,10 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Load file services.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();

@@ -16,12 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIFileServiceCasc1;
 
 public class APIFileServiceCasc2 extends APIFileServiceCasc1 {
 
 	public APIFileServiceCasc2() {
-		APIFileServiceCasc2.setUp2CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 	}
 
 }

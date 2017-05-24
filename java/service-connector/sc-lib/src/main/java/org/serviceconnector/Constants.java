@@ -18,7 +18,7 @@ package org.serviceconnector;
 
 /**
  * The class Constants. SC constants.
- * 
+ *
  * @author JTraber
  */
 public final class Constants {

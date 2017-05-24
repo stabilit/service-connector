@@ -16,19 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.ctrl.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.ConnectionType;
 
 public class ProcessCtx {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ProcessCtx.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessCtx.class);
 
 	private Process process = null;
 	private String runableName = null;
 	private String propertyFileName = null;
-	private String log4jFileName = null;
+	private String logbackFileName = null;
 	private String pidFileName = null;
 	private boolean running = false;
 	private String serviceNames;
@@ -67,12 +68,12 @@ public class ProcessCtx {
 		this.propertyFileName = propertyFileName;
 	}
 
-	public String getLog4jFileName() {
-		return log4jFileName;
+	public String getLogbackFileName() {
+		return logbackFileName;
 	}
 
-	public void setLog4jFileName(String log4jFileName) {
-		this.log4jFileName = log4jFileName;
+	public void setLogbackFileName(String logbackFileName) {
+		this.logbackFileName = logbackFileName;
 	}
 
 	public String getPidFileName() {

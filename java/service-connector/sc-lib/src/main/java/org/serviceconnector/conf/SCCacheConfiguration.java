@@ -17,21 +17,21 @@
 package org.serviceconnector.conf;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class SCCacheConfiguration.
- * This is the main SC cache configuration class, keeping all required configuration parameters.
- * This class is used to setup SC cache {@link SCCache} instance.
+ * The Class SCCacheConfiguration. This is the main SC cache configuration class, keeping all required configuration parameters. This class is used to setup SC cache
+ * {@link SCCache} instance.
  */
 public class SCCacheConfiguration {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCCacheConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCCacheConfiguration.class);
 
 	/** The cache enabled. */
 	private boolean cacheEnabled;
@@ -62,11 +62,9 @@ public class SCCacheConfiguration {
 	 * cache.maxElementsInMemory=100000 <br />
 	 * cache.maxElementsOnDisk=1000000 <br />
 	 * cache.expirationCheckIntervalSeconds=60 <br />
-	 * 
-	 * @param compositeConfiguration
-	 *            the composite configuration
-	 * @throws SCMPValidatorException
-	 *             the SCMP validator exception
+	 *
+	 * @param compositeConfiguration the composite configuration
+	 * @throws SCMPValidatorException the SCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException { // synchronized?
 		Boolean cacheEnabledConf = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
@@ -78,8 +76,7 @@ public class SCCacheConfiguration {
 		// diskPath
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
 		if (sDiskPath == null && this.cacheEnabled) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.CACHE_DISK_PATH
-					+ " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.CACHE_DISK_PATH + " is missing");
 		}
 		if (sDiskPath != null && sDiskPath.equals(this.diskPath) == false) {
 			this.diskPath = sDiskPath;
@@ -101,8 +98,7 @@ public class SCCacheConfiguration {
 		LOGGER.info(Constants.CACHE_MAX_ELEMENTS_ON_DISK + "=" + this.maxElementsOnDisk);
 
 		// expirationCheckIntervalSeconds
-		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
-				Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
+		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
 		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationCheckIntervalSeconds) {
 			this.expirationCheckIntervalSeconds = expirationThreadIntervalSeconds;
 		}
@@ -111,7 +107,7 @@ public class SCCacheConfiguration {
 
 	/**
 	 * Checks if is cache enabled.
-	 * 
+	 *
 	 * @return true, if is cache enabled
 	 */
 	public boolean isCacheEnabled() {
@@ -120,7 +116,7 @@ public class SCCacheConfiguration {
 
 	/**
 	 * Gets the disk path.
-	 * 
+	 *
 	 * @return the disk path
 	 */
 	public String getDiskPath() {
@@ -129,7 +125,7 @@ public class SCCacheConfiguration {
 
 	/**
 	 * Gets the max elements in memory.
-	 * 
+	 *
 	 * @return the max elements in memory
 	 */
 	public int getMaxElementsInMemory() {
@@ -138,7 +134,7 @@ public class SCCacheConfiguration {
 
 	/**
 	 * Gets the max elements on disk.
-	 * 
+	 *
 	 * @return the max elements on disk
 	 */
 	public int getMaxElementsOnDisk() {
@@ -147,7 +143,7 @@ public class SCCacheConfiguration {
 
 	/**
 	 * Gets the expiration check interval seconds.
-	 * 
+	 *
 	 * @return the expiration check interval seconds
 	 */
 	public int getExpirationCheckIntervalSeconds() {

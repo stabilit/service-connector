@@ -19,14 +19,15 @@ package org.serviceconnector.conf.apache.common.configuration;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.log.Loggers;
 
 public class CommonConfigSample {
 
 	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
+	protected static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
+
 	public static void main(String[] args) {
 		String commonPropertiesFile = "org/serviceconnector/conf/apache/common/configuration/sc.common.properties";
 		CompositeConfiguration config = new CompositeConfiguration();

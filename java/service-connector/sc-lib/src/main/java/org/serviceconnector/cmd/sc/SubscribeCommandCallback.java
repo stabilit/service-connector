@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
@@ -46,7 +47,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SubscribeCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -64,15 +65,11 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 
 	/**
 	 * Instantiates a new ClnExecuteCommandCallback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param tempSubscription
-	 *            the subscription
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param tempSubscription the subscription
 	 */
 	public SubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Subscription tempSubscription) {
 		this.responderCallback = callback;
@@ -94,12 +91,10 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 			if (rejectSubscriptionFlag == false) {
 				if (tempSubscription.isCascaded() == true) {
 					// update csc subscription id list for cascaded subscription
-					tempSubscription.addCscSubscriptionId(this.reqMessage.getSessionId(),
-							new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
+					tempSubscription.addCscSubscriptionId(this.reqMessage.getSessionId(), new SubscriptionMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK)));
 				}
 				// subscription has not been rejected, add server to subscription
-				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService())
-						.getMessageQueue();
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService()).getMessageQueue();
 				ReceivePublicationTimeout crpTimeout = new ReceivePublicationTimeout(publishMessageQueue, noDataIntervalMillis);
 				SubscriptionMask subscriptionMask = tempSubscription.getMask();
 				publishMessageQueue.subscribe(tempSubscription.getId(), subscriptionMask, crpTimeout);
@@ -139,14 +134,11 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 		SCMPVersion scmpVersion = this.reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC cln subscribe sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid="
-					+ sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe sid=" + sid);
 		} else if (ex instanceof InterruptedException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid="
-					+ sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {

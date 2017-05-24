@@ -22,7 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
@@ -36,7 +37,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(LargeMessageEncoderDecoder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LargeMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new large message encoder decoder.

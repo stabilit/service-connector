@@ -16,29 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPSrvAbortSubscriptionCall. Call aborts a subscription on a backend server.
- * 
+ *
  * @author JTraber
  */
 public class SCMPSrvAbortSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSrvAbortSubscriptionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSrvAbortSubscriptionCall.class);
 
 	/**
 	 * Instantiates a new SCMP server abort subscription call.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *
+	 * @param req the requester
+	 * @param receivedMessage the received message
 	 */
 	public SCMPSrvAbortSubscriptionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);

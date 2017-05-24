@@ -18,12 +18,11 @@ package org.serviceconnector.cln;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestPublishServiceMessageCallback;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.slf4j.LoggerFactory;
 
 public class TestPublishClient extends TestAbstractClient {
 
@@ -39,29 +38,28 @@ public class TestPublishClient extends TestAbstractClient {
 	}
 
 	static {
-		TestAbstractClient.LOGGER = Logger.getLogger(TestPublishClient.class);
+		TestAbstractClient.LOGGER = LoggerFactory.getLogger(TestPublishClient.class);
 	}
 
 	/**
 	 * Main method if you like to start in debug mode.
-	 * 
-	 * @param args
-	 *            [0] client name<br>
-	 *            [1] SC host<br>
-	 *            [2] SC port<br>
-	 *            [3] connectionType ("netty.tcp" or "netty.http")<br>
-	 *            [4] maxConnections<br>
-	 *            [5] keepAliveIntervalSeconds (0 = disabled)<br>
-	 *            [6] serviceName<br>
-	 *            [7] echoIntervalSeconds<br>
-	 *            [8] echoTimeoutSeconds<br>
-	 *            [9] noDataIntervalSeconds<br>
-	 *            [10] methodsToInvoke
+	 *
+	 * @param args [0] client name<br>
+	 *        [1] SC host<br>
+	 *        [2] SC port<br>
+	 *        [3] connectionType ("netty.tcp" or "netty.http")<br>
+	 *        [4] maxConnections<br>
+	 *        [5] keepAliveIntervalSeconds (0 = disabled)<br>
+	 *        [6] serviceName<br>
+	 *        [7] echoIntervalSeconds<br>
+	 *        [8] echoTimeoutSeconds<br>
+	 *        [9] noDataIntervalSeconds<br>
+	 *        [10] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
-		LOGGER.log(Level.OFF, "TestPublishClient is starting ...");
+		LOGGER.debug("TestPublishClient is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.debug("args[" + i + "]:" + args[i]);
 		}
 		TestPublishClient testClient = new TestPublishClient();
 		testClient.setClientName(args[0]);
@@ -117,8 +115,8 @@ public class TestPublishClient extends TestAbstractClient {
 		TestPublishServiceMessageCallback.receivedMsg = 0;
 		Thread.sleep(1000);
 		if (TestPublishServiceMessageCallback.receivedMsg != 0) {
-			LOGGER.error(this.clientName + " received messages " + TestPublishServiceMessageCallback.receivedMsg
-					+ " but changed subscription with " + scSubscribeMessage.getMask());
+			LOGGER.error(
+					this.clientName + " received messages " + TestPublishServiceMessageCallback.receivedMsg + " but changed subscription with " + scSubscribeMessage.getMask());
 		}
 		scSubscribeMessage.setMask(TestConstants.mask);
 		service.changeSubscription(scSubscribeMessage);
@@ -205,8 +203,8 @@ public class TestPublishClient extends TestAbstractClient {
 		while (TestPublishServiceMessageCallback.receivedMsg < numberOfMessages) {
 			Thread.sleep(200);
 			if ((System.currentTimeMillis() - start) > maxTimeMillis) {
-				LOGGER.error(this.clientName + " sid=" + this.sessionId + "could not receive " + numberOfMessages + " messages in "
-						+ maxTimeMillis + " milliseconds received: " + TestPublishServiceMessageCallback.receivedMsg + ".");
+				LOGGER.error(this.clientName + " sid=" + this.sessionId + "could not receive " + numberOfMessages + " messages in " + maxTimeMillis + " milliseconds received: "
+						+ TestPublishServiceMessageCallback.receivedMsg + ".");
 				break;
 			}
 		}

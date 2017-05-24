@@ -22,10 +22,10 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 
 /**
  * The Class SCVersionTestCase.
- * 
+ *
  * @author JTrnka
  */
-public final class SCVersionTest extends SuperUnitTest{
+public final class SCVersionTest extends SuperUnitTest {
 
 	/**
 	 * Description: Version compatibility test<br>

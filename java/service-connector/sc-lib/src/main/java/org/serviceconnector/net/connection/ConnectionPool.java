@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -46,13 +47,13 @@ import org.serviceconnector.util.XMLDumpWriter;
  * - initializing pool by starting a minimum of connections immediately<br />
  * - observing connection idle timeout and sending keep alive messages to refresh firewall<br />
  * - force closing of a specific connection, very useful if connection has a curious state
- * 
+ *
  * @author JTraber
  */
 public class ConnectionPool {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPool.class);
 
 	/** The port. */
 	private int port;
@@ -83,15 +84,11 @@ public class ConnectionPool {
 
 	/**
 	 * Instantiates a new connection pool.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param conType
-	 *            the connection type
-	 * @param keepAliveIntervalSeconds
-	 *            the keep alive interval
+	 *
+	 * @param host the host
+	 * @param port the port
+	 * @param conType the connection type
+	 * @param keepAliveIntervalSeconds the keep alive interval
 	 */
 	public ConnectionPool(String host, int port, String conType, int keepAliveIntervalSeconds, int keepAliveOTIMillis) {
 		this.host = host;
@@ -113,10 +110,9 @@ public class ConnectionPool {
 
 	/**
 	 * Gets a connection of the pool.
-	 * 
+	 *
 	 * @return the connection
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public synchronized IConnection getConnection() throws Exception {
 		IConnection connection = null;
@@ -147,10 +143,9 @@ public class ConnectionPool {
 
 	/**
 	 * Creates the new connection.
-	 * 
+	 *
 	 * @return the i connection
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private synchronized IConnection createNewConnection() throws Exception {
 		IConnection connection = null;
@@ -177,9 +172,8 @@ public class ConnectionPool {
 
 	/**
 	 * Free connection. Gives connection back for other interested parties.
-	 * 
-	 * @param connection
-	 *            the connection
+	 *
+	 * @param connection the connection
 	 */
 	public synchronized void freeConnection(IConnection connection) {
 		if (this.destroyed == true) {
@@ -204,9 +198,8 @@ public class ConnectionPool {
 
 	/**
 	 * Sets the max connections for the pool.
-	 * 
-	 * @param maxConnections
-	 *            the new max connections
+	 *
+	 * @param maxConnections the new max connections
 	 */
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
@@ -223,9 +216,8 @@ public class ConnectionPool {
 
 	/**
 	 * Destroy connections.
-	 * 
-	 * @param connections
-	 *            the connections
+	 *
+	 * @param connections the connections
 	 */
 	private void destroyConnections(List<IConnection> connections) {
 		IConnection connection;
@@ -237,11 +229,9 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may affect
-	 * others because of shared stuff (timer) etc.
-	 * 
-	 * @param connection
-	 *            the connection
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may affect others because of shared stuff (timer) etc.
+	 *
+	 * @param connection the connection
 	 */
 	private void destroyConnection(IConnection connection) {
 		try {
@@ -255,9 +245,8 @@ public class ConnectionPool {
 
 	/**
 	 * Disconnect connection.
-	 * 
-	 * @param connection
-	 *            the connection
+	 *
+	 * @param connection the connection
 	 */
 	private void disconnectConnection(IConnection connection) {
 		try {
@@ -269,11 +258,9 @@ public class ConnectionPool {
 
 	/**
 	 * Force closing specific connection.
-	 * 
-	 * @param connection
-	 *            the connection
-	 * @param quietClose
-	 *            the quiet close
+	 *
+	 * @param connection the connection
+	 * @param quietClose the quiet close
 	 */
 	public synchronized void forceClosingConnection(IConnection connection, boolean quietClose) {
 		// make sure connection is not registered
@@ -293,9 +280,8 @@ public class ConnectionPool {
 
 	/**
 	 * Sets the close on free. Indicates that connection should be closed at the time they get freed.
-	 * 
-	 * @param closeOnFree
-	 *            the new close on free
+	 *
+	 * @param closeOnFree the new close on free
 	 */
 	public void setCloseOnFree(boolean closeOnFree) {
 		this.closeOnFree = closeOnFree;
@@ -303,9 +289,8 @@ public class ConnectionPool {
 
 	/**
 	 * Sets the close after keep alive. Indicates that a connection gets closed after Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE.
-	 * 
-	 * @param closeAfterKeepAlive
-	 *            the new close after keep alive
+	 *
+	 * @param closeAfterKeepAlive the new close after keep alive
 	 */
 	public void setCloseAfterKeepAlive(boolean closeAfterKeepAlive) {
 		this.closeAfterKeepAlive = closeAfterKeepAlive;
@@ -313,9 +298,8 @@ public class ConnectionPool {
 
 	/**
 	 * Sets the minimum connections for the pool.
-	 * 
-	 * @param minConnections
-	 *            the new minimum connections
+	 *
+	 * @param minConnections the new minimum connections
 	 */
 	public void setMinConnections(int minConnections) {
 		this.minConnections = minConnections;
@@ -344,7 +328,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the max connections.
-	 * 
+	 *
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
@@ -353,7 +337,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the min connections.
-	 * 
+	 *
 	 * @return the min connections
 	 */
 	public int getMinConnections() {
@@ -362,7 +346,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the number of busy connections at this time.
-	 * 
+	 *
 	 * @return the busy connections
 	 */
 	public int getBusyConnections() {
@@ -371,7 +355,7 @@ public class ConnectionPool {
 
 	/**
 	 * Checks for free connections in the pool.
-	 * 
+	 *
 	 * @return true, if successful
 	 */
 	public synchronized boolean hasFreeConnections() {
@@ -388,9 +372,8 @@ public class ConnectionPool {
 
 	/**
 	 * Connection idle. Process idle event of connection. Sending of keep alive does not need to be synchronized.
-	 * 
-	 * @param connection
-	 *            the connection
+	 *
+	 * @param connection the connection
 	 */
 	public void connectionIdle(IConnection connection) {
 		synchronized (this) {
@@ -420,8 +403,7 @@ public class ConnectionPool {
 			if (reply.isFault() == true) {
 				// reply of keep alive is fault
 				SCMPMessageFault fault = (SCMPMessageFault) reply;
-				LOGGER.error("send keepalive failed - connection gets destroyed, scErrorText="
-						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT) + " scErrorCode="
+				LOGGER.error("send keepalive failed - connection gets destroyed, scErrorText=" + fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT) + " scErrorCode="
 						+ fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				this.forceClosingConnection(connection, false);
 				return;
@@ -438,7 +420,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the keep alive interval the pool is observing. 0 means disabled.
-	 * 
+	 *
 	 * @return the keep alive interval
 	 */
 	public int getKeepAliveInterval() {
@@ -447,7 +429,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the host.
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getHost() {
@@ -456,7 +438,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the port.
-	 * 
+	 *
 	 * @return the port
 	 */
 	public int getPort() {
@@ -465,7 +447,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the free connections.
-	 * 
+	 *
 	 * @return the free connections
 	 */
 	public List<IConnection> getFreeConnections() {
@@ -474,7 +456,7 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the used connections.
-	 * 
+	 *
 	 * @return the used connections
 	 */
 	public List<IConnection> getUsedConnections() {
@@ -505,9 +487,8 @@ public class ConnectionPool {
 
 		/**
 		 * Instantiates a new connection pool callback.
-		 * 
-		 * @param synchronous
-		 *            the synchronous
+		 *
+		 * @param synchronous the synchronous
 		 */
 		public ConnectionPoolCallback(boolean synchronous) {
 			this.synchronous = synchronous;
@@ -523,11 +504,9 @@ public class ConnectionPool {
 
 	/**
 	 * Dump the connection pool into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("connection-pool");

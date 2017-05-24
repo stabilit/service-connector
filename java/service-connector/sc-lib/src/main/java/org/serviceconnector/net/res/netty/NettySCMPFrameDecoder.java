@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -27,13 +28,13 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class NettySCMPFrameDecoder. Decodes a SCMP frame.
- * 
+ *
  * @author JTraber
  */
 public class NettySCMPFrameDecoder extends FrameDecoder {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettySCMPFrameDecoder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettySCMPFrameDecoder.class);
 	/** The scmp frame size. */
 	private int scmpFrameSize;
 	/** The headline. */
@@ -64,11 +65,9 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 
 	/**
 	 * Decode frame size from headline.
-	 * 
-	 * @param buffer
-	 *            the buffer
-	 * @throws SCMPFrameDecoderException
-	 *             the sCMP frame decoder exception
+	 *
+	 * @param buffer the buffer
+	 * @throws SCMPFrameDecoderException the sCMP frame decoder exception
 	 */
 	private void decodeFrameSizeFromHeadline(ChannelBuffer buffer) throws SCMPFrameDecoderException {
 		if (buffer.readableBytes() < Constants.SCMP_HEADLINE_SIZE) {
@@ -87,9 +86,8 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 
 	/**
 	 * Aggregate frame.
-	 * 
-	 * @param buffer
-	 *            the buffer
+	 *
+	 * @param buffer the buffer
 	 * @return the byte[]
 	 */
 	private byte[] aggregateFrame(ChannelBuffer buffer) {

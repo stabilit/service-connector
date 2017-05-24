@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -31,7 +32,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 	/** The command callback. */
@@ -41,11 +42,9 @@ public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallb
 
 	/**
 	 * Instantiates a new csc unsubscribe callback active casc client.
-	 * 
-	 * @param cascClient
-	 *            the casc client
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param cascClient the casc client
+	 * @param callback the callback
 	 */
 	public CscUnsubscribeCallbackActiveCascClient(CascadedClient cascClient, ISubscriptionCallback callback) {
 		this.cascClient = cascClient;

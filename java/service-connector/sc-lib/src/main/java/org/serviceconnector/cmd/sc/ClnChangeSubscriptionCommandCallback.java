@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -42,7 +43,7 @@ import org.serviceconnector.service.SubscriptionMask;
  */
 public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ClnChangeSubscriptionCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClnChangeSubscriptionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -54,18 +55,13 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 
 	/**
 	 * Instantiates a new cln change subscription command callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
+	 * @param subscription the subscription
 	 */
-	public ClnChangeSubscriptionCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
-			Subscription subscription) {
+	public ClnChangeSubscriptionCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback, Subscription subscription) {
 		this.responderCallback = responderCallback;
 		this.request = request;
 		this.response = response;
@@ -109,16 +105,13 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC cln change subscription sid=" + sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln change subscription sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.CONNECTION_EXCEPTION,
-					"broken connection on SC cln change subscription sid=" + sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln change subscription sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
 			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {
-			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SC_ERROR,
-					"executing cln change subscription failed sid=" + sid);
+			fault = new SCMPMessageFault(reqMessage.getSCMPVersion(), SCMPError.SC_ERROR, "executing cln change subscription failed sid=" + sid);
 		}
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);

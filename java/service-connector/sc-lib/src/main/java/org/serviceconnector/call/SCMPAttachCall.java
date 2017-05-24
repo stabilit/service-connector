@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -26,20 +27,19 @@ import org.serviceconnector.util.DateTimeUtility;
 
 /**
  * The Class SCMPAttachCall. Call attaches on SCMP level.
- * 
+ *
  * @author JTraber
  */
 public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPAttachCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPAttachCall.class);
 
 	/**
 	 * Instantiates a new SCMPAttachCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
+	 *
+	 * @param req the requester to use when invoking call
 	 */
 	public SCMPAttachCall(IRequester req) {
 		super(req);
@@ -55,9 +55,8 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the version.
-	 * 
-	 * @param version
-	 *            the new version
+	 *
+	 * @param version the new version
 	 */
 	private void setVersion(String version) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
@@ -65,9 +64,8 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the local date time.
-	 * 
-	 * @param localDateTime
-	 *            the new local date time
+	 *
+	 * @param localDateTime the new local date time
 	 */
 	private void setLocalDateTime(String localDateTime) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);

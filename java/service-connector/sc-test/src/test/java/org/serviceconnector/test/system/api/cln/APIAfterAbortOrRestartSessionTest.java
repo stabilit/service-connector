@@ -33,13 +33,14 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 	public APIAfterAbortOrRestartSessionTest() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
-	
+
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		this.setUpClientToSC();
 	}
-	
+
 	/**
 	 * Description: create session after SC was aborted<br>
 	 * Expectation: throws SCMPValidatorException
@@ -250,9 +251,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
-		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10,
-				TestConstants.sesServiceName1);
+		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvCtxs.put(TestConstants.sesServerName1, sesSrvCtx);
 
 		response = sessionService1.execute(request);
@@ -271,9 +271,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		response = sessionService1.createSession(request, msgCallback1);
 
 		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
-		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10,
-				TestConstants.sesServiceName1);
+		ProcessCtx sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvCtxs.put(TestConstants.sesServerName1, sesSrvCtx);
 		sessionService1.deleteSession();
 	}

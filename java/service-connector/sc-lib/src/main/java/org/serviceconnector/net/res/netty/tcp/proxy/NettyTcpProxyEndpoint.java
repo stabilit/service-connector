@@ -18,9 +18,8 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 
 import java.util.concurrent.Executors;
 
-import net.sf.ehcache.config.InvalidConfigurationException;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
@@ -29,21 +28,23 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.IResponder;
 
+import net.sf.ehcache.config.InvalidConfigurationException;
+
 /**
  * The Class NettyTcpProxyEndpoint.
  */
 public class NettyTcpProxyEndpoint extends EndpointAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyEndpoint.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpProxyEndpoint.class);
 	/** The host. */
 	private String remoteHost;
 	/** The port. */
 	private int remotePort;
 
 	/** The client channel factory. */
-	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-			Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
+	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
+			AppContext.getBasicConfiguration().getMaxIOThreads());
 
 	/**
 	 * Instantiates a new NettyTcpProxyEndpoint.
@@ -70,17 +71,16 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 		ListenerConfiguration listenerConfig = resp.getListenerConfig();
 		RemoteNodeConfiguration remoteNodeConfig = listenerConfig.getRemoteNodeConfiguration();
 		if (remoteNodeConfig == null) {
-			throw new InvalidConfigurationException("remote host configuration is missing for responder="
-					+ resp.getListenerConfig().getName());
+			throw new InvalidConfigurationException("remote host configuration is missing for responder=" + resp.getListenerConfig().getName());
 		}
 		this.remoteHost = remoteNodeConfig.getHost();
 		this.remotePort = remoteNodeConfig.getPort();
 		try {
 			// limit threads to maxIOThreads
-			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-					Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
-			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-					Executors.newCachedThreadPool(), AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
+					AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
+					AppContext.getBasicConfiguration().getMaxIOThreads());
 		} catch (Exception e) {
 			LOGGER.error("setResponder", e);
 		}

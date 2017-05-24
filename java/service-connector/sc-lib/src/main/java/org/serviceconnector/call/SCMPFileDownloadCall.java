@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -30,17 +31,14 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPFileDownloadCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPFileDownloadCall.class);
 
 	/**
 	 * Instantiates a new sCMP file download call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPFileDownloadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
@@ -48,11 +46,9 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new sCMP file download call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param msgToForward
-	 *            the msg to forward
+	 *
+	 * @param requester the requester
+	 * @param msgToForward the msg to forward
 	 */
 	public SCMPFileDownloadCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
@@ -60,9 +56,8 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the remote file name.
-	 * 
-	 * @param remoteFileName
-	 *            the new remote file name
+	 *
+	 * @param remoteFileName the new remote file name
 	 */
 	public void setRemoteFileName(String remoteFileName) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
@@ -70,7 +65,7 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	/**
 	 * Gets the message type.
-	 * 
+	 *
 	 * @return the message type {@inheritDoc}
 	 */
 	@Override

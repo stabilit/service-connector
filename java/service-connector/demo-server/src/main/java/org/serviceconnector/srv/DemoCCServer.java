@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -35,7 +36,7 @@ import org.serviceconnector.net.ConnectionType;
 
 public class DemoCCServer extends Thread {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoCCServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoCCServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.

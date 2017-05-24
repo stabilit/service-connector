@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -36,7 +37,7 @@ import org.serviceconnector.web.AbstractWebRequest;
 public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebRequest.class);
 
 	/** The request. */
 	private HttpRequest request;
@@ -49,13 +50,10 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/**
 	 * Instantiates a new netty web request.
-	 * 
-	 * @param httpRequest
-	 *            the request
-	 * @param localAddress
-	 *            the local address
-	 * @param remoteAddress
-	 *            the remote address
+	 *
+	 * @param httpRequest the request
+	 * @param localAddress the local address
+	 * @param remoteAddress the remote address
 	 */
 	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
@@ -77,8 +75,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 				String charsetName = Constants.SC_CHARACTER_SET;
 				if (request.containsHeader(HttpHeaders.Names.ACCEPT_CHARSET)) {
 					String contentType = request.getHeader(HttpHeaders.Names.ACCEPT_CHARSET);
-					charsetName = contentType.indexOf("charset=") > -1 ? contentType.substring(contentType.indexOf("charset=") + 8)
-							: charsetName;
+					charsetName = contentType.indexOf("charset=") > -1 ? contentType.substring(contentType.indexOf("charset=") + 8) : charsetName;
 				}
 				Charset charset = null;
 				try {
@@ -138,7 +135,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/**
 	 * Gets the encoded session id.
-	 * 
+	 *
 	 * @return the encoded session id
 	 */
 	private String parseEncodedSessionId() {

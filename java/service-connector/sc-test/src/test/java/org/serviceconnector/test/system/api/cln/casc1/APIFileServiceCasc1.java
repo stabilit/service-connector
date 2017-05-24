@@ -38,6 +38,7 @@ public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();

@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class FileCtx.
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
 public class FileCtx {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FileCtx.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileCtx.class);
 
 	/** The lock. */
 	private FileLock lock;
@@ -37,14 +38,12 @@ public class FileCtx {
 	private FileChannel fileChannel;
 	/** The file. */
 	private File file;
-	
+
 	/**
 	 * Instantiates a new file ctx.
-	 * 
-	 * @param lock
-	 *            the lock
-	 * @param fileChannel
-	 *            the file channel
+	 *
+	 * @param lock the lock
+	 * @param fileChannel the file channel
 	 */
 	public FileCtx(FileLock lock, FileChannel fileChannel, File file) {
 		this.lock = lock;
@@ -71,10 +70,10 @@ public class FileCtx {
 			LOGGER.debug("Closing file channel failed", e);
 		}
 	}
-	
+
 	/**
 	 * Gets the file.
-	 * 
+	 *
 	 * @return the file
 	 */
 	public File getFile() {

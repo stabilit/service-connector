@@ -16,13 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
 /**
  * The Enum SCMPBodyType. Defines possible body types in SCMP.
- * 
+ *
  * @author JTraber
  */
 public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
@@ -38,19 +39,17 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPBodyType.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPBodyType.class);
 
 	/** The value. */
 	private String value;
 	/** The REVERSE_MAP, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, SCMPBodyType> REVERSE_MAP = new ReverseEnumMap<String, SCMPBodyType>(
-			SCMPBodyType.class);
+	private static final ReverseEnumMap<String, SCMPBodyType> REVERSE_MAP = new ReverseEnumMap<String, SCMPBodyType>(SCMPBodyType.class);
 
 	/**
 	 * Instantiates a new SCMP body type.
-	 * 
-	 * @param value
-	 *            the name
+	 *
+	 * @param value the name
 	 */
 	private SCMPBodyType(String value) {
 		this.value = value;
@@ -58,9 +57,8 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 
 	/**
 	 * Gets the body type by string.
-	 * 
-	 * @param bodyTypeString
-	 *            the body type
+	 *
+	 * @param bodyTypeString the body type
 	 * @return the body type
 	 */
 	public static SCMPBodyType getBodyType(String bodyTypeString) {
@@ -74,18 +72,18 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 
 	/**
 	 * Gets the mime type. mime types http://msdn.microsoft.com/en-us/library/ms775147%28VS.85%29.aspx
-	 * 
+	 *
 	 * @return the mime type
 	 */
 	public String getMimeType() {
 		switch (this) {
-		case BINARY:
-		case INPUT_STREAM:
-			return "application/octet-stream";
-		case TEXT:
-			return "text/plain";
-		default:
-			return "application/octet-stream";
+			case BINARY:
+			case INPUT_STREAM:
+				return "application/octet-stream";
+			case TEXT:
+				return "text/plain";
+			default:
+				return "application/octet-stream";
 		}
 	}
 

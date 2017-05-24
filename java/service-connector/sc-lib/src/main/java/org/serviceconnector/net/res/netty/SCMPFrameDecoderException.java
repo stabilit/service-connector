@@ -22,7 +22,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPFrameDecoderException. Decoding SCMP frame fails.
- * 
+ *
  * @author JTraber
  */
 public class SCMPFrameDecoderException extends HasFaultResponseException {
@@ -32,9 +32,8 @@ public class SCMPFrameDecoderException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new SCMPFrameDecoderException.
-	 * 
-	 * @param errorCode
-	 *            the error code
+	 *
+	 * @param errorCode the error code
 	 */
 	public SCMPFrameDecoderException(SCMPError errorCode) {
 		super(errorCode);

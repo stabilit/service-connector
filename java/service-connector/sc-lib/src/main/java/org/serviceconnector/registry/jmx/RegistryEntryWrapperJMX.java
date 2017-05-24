@@ -18,18 +18,19 @@ package org.serviceconnector.registry.jmx;
 
 import java.beans.ConstructorProperties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class MapBeanWrapperJMX. Wraps registry entries. Needed for JMX access.
- * 
+ *
  * @author JTraber
  */
 public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(RegistryEntryWrapperJMX.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegistryEntryWrapperJMX.class);
 	/** The map bean. */
 	private Object obj;
 	/** The registry key. */
@@ -37,11 +38,9 @@ public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 
 	/**
 	 * Instantiates a new RegistryEntryWrapperJMX.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param obj
-	 *            the map bean
+	 *
+	 * @param key the key
+	 * @param obj the map bean
 	 */
 	@ConstructorProperties({ "key", "obj" })
 	public RegistryEntryWrapperJMX(String key, Object obj) {

@@ -16,29 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPCscExecuteCall. Call sends data to backend server over SC.
- * 
+ *
  * @author JTraber
  */
 public class SCMPCscExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCscExecuteCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCscExecuteCall.class);
 
 	/**
 	 * Instantiates a new SCMP cascaded execute call.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param msgToSend
-	 *            the message to send
+	 *
+	 * @param req the requester
+	 * @param msgToSend the message to send
 	 */
 	public SCMPCscExecuteCall(IRequester req, SCMPMessage msgToSend) {
 		super(req, msgToSend);

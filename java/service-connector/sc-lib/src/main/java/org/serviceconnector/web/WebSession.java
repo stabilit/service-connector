@@ -19,13 +19,14 @@ package org.serviceconnector.web;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.web.ctx.WebContext;
 
 public class WebSession {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(WebSession.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebSession.class);
 	/** The user agent. */
 	private String userAgent;
 
@@ -67,7 +68,7 @@ public class WebSession {
 
 	/**
 	 * Gets the session timeout seconds.
-	 * 
+	 *
 	 * @return the session timeout seconds
 	 */
 	public double getSessionTimeoutSeconds() {
@@ -76,7 +77,7 @@ public class WebSession {
 
 	/**
 	 * Gets the session timeout.
-	 * 
+	 *
 	 * @return the session timeout
 	 */
 	public ScheduledFuture<TimeoutWrapper> getTimeout() {
@@ -85,9 +86,8 @@ public class WebSession {
 
 	/**
 	 * Sets the session timeout.
-	 * 
-	 * @param timeout
-	 *            the new session timeout
+	 *
+	 * @param timeout the new session timeout
 	 */
 	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
 		this.timeout = timeout;
@@ -95,9 +95,8 @@ public class WebSession {
 
 	/**
 	 * Sets the timeouter task.
-	 * 
-	 * @param timeouterTask
-	 *            the new timeouter task
+	 *
+	 * @param timeouterTask the new timeouter task
 	 */
 	public void setTimeouterTask(TimeoutWrapper timeouterTask) {
 		this.timeouterTask = timeouterTask;
@@ -105,13 +104,13 @@ public class WebSession {
 
 	/**
 	 * Gets the timeouter task.
-	 * 
+	 *
 	 * @return the timeouter task
 	 */
 	public TimeoutWrapper getTimeouterTask() {
 		return this.timeouterTask;
 	}
-	
+
 	public String getUserAgent() {
 		return this.userAgent;
 	}
@@ -155,7 +154,7 @@ public class WebSession {
 	public WebCredentials getCredentials() {
 		return credentials;
 	}
-	
+
 	public void setCredentials(WebCredentials credentials) {
 		this.credentials = credentials;
 	}

@@ -18,7 +18,8 @@ package org.serviceconnector.net.res;
 
 import java.io.ByteArrayOutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
@@ -28,15 +29,15 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class ResponseAdapter. Provides basic functionality for responses.
- * 
+ *
  * @author JTraber
  */
 public abstract class ResponseAdapter implements IResponse {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ResponseAdapter.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseAdapter.class);
+
 	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;
 	/** The scmp. */
@@ -46,25 +47,23 @@ public abstract class ResponseAdapter implements IResponse {
 
 	/**
 	 * Instantiates a new response adapter.
-	 * 
-	 * @param channel
-	 *            the event
+	 *
+	 * @param channel the event
 	 */
 	public ResponseAdapter(Channel channel) {
 		this.scmp = null;
 		this.channel = channel;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public abstract void write() throws Exception;
 
 	/**
 	 * Gets the buffer. Encodes the scmp.
-	 * 
+	 *
 	 * @return the buffer
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -73,7 +72,6 @@ public abstract class ResponseAdapter implements IResponse {
 		byte[] buf = baos.toByteArray();
 		return ChannelBuffers.copiedBuffer(buf);
 	}
-	
 
 	/** {@inheritDoc} */
 	@Override

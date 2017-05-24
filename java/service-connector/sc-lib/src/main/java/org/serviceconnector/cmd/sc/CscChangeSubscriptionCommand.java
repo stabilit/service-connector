@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -43,7 +44,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class CscChangeSubscriptionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscChangeSubscriptionCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscChangeSubscriptionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -70,18 +71,17 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
-		case CASCADED_PUBLISH_SERVICE:
-		case CASCADED_CACHE_GUARDIAN:
-			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
-			// publish service is cascaded
-			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
-			CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response,
-					responderCallback, cascSubscription, cascadedSCMask);
-			cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
-			return;
-		default:
-			// code for other types of services is below
-			break;
+			case CASCADED_PUBLISH_SERVICE:
+			case CASCADED_CACHE_GUARDIAN:
+				CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
+				// publish service is cascaded
+				CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
+				CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response, responderCallback, cascSubscription, cascadedSCMask);
+				cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 		StatefulServer server = (StatefulServer) cascSubscription.getServer();
 		CscChangeSubscriptionCallbackForCasc callback = null;
@@ -94,11 +94,9 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			// reset ipList&msgType, might have been modified in below change subscription try
 			reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 			reqMessage.setMessageType(this.getKey());
-			callback = new CscChangeSubscriptionCallbackForCasc(request, response, responderCallback, cascSubscription,
-					cascadedSCMask);
+			callback = new CscChangeSubscriptionCallbackForCasc(request, response, responderCallback, cascSubscription, cascadedSCMask);
 			try {
-				server.changeSubscription(reqMessage, callback, otiOnSCMillis
-						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
+				server.changeSubscription(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -106,8 +104,7 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
-							+ reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -126,19 +123,16 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// subscriptionId mandatory
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// cascadedSubscriptionId mandatory
 			String cascadedSubscriptionId = message.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
-			ValidatorUtility.validateStringLengthTrim(1, cascadedSubscriptionId, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, cascadedSubscriptionId, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -146,8 +140,8 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// sessionInfo optional
-			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO),
-					Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO), Constants.MAX_STRING_LENGTH_256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -30,9 +30,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 /**
  * The Class SCBasePublishServlet. Base servlet for publish service implementations.<br />
  * <br />
- * User needs to extend this servlet to implement a publish service. This base servlet implements ISCPublishServerCallback which
- * gets called if client actions are processed. Publishing messages to an SC can be done by publish methods.
- * More information available in super class.<br />
+ * User needs to extend this servlet to implement a publish service. This base servlet implements ISCPublishServerCallback which gets called if client actions are processed.
+ * Publishing messages to an SC can be done by publish methods. More information available in super class.<br />
  * <br />
  * The urlPath passed in constructor is used by the SC to call the servlet(URL). So it must match the mapping in web.xml.
  */
@@ -43,15 +42,16 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Instantiates a new sC base publish servlet.
-	 * 
-	 * @param urlPath
-	 *            the URL path
+	 *
+	 * @param urlPath the URL path
 	 */
 	protected SCBasePublishServlet(String urlPath) {
 		super(urlPath);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#subscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
@@ -59,7 +59,9 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#changeSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
@@ -67,21 +69,27 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#unsubscribe(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
 	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#abortSubscription(org.serviceconnector.api.SCSubscribeMessage, int)
 	 */
 	@Override
 	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCPublishServerCallback#exceptionCaught(org.serviceconnector.api.SCServiceException)
 	 */
 	@Override
@@ -90,11 +98,9 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Base subscribe.
-	 * 
-	 * @param reqMessage
-	 *            the requester message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout milliseconds
+	 *
+	 * @param reqMessage the requester message
+	 * @param operationTimeoutMillis the operation timeout milliseconds
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseSubscribe(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -147,11 +153,9 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Base unsubscribe.
-	 * 
-	 * @param reqMessage
-	 *            the requester message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout milliseconds
+	 *
+	 * @param reqMessage the requester message
+	 * @param operationTimeoutMillis the operation timeout milliseconds
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseUnsubscribe(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -179,11 +183,9 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Base abort subscription.
-	 * 
-	 * @param reqMessage
-	 *            the requester message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout milliseconds
+	 *
+	 * @param reqMessage the requester message
+	 * @param operationTimeoutMillis the operation timeout milliseconds
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseAbortSubscription(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -210,11 +212,9 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Base change subscription.
-	 * 
-	 * @param reqMessage
-	 *            the requester message
-	 * @param operationTimeoutMillis
-	 *            the operation timeout milliseconds
+	 *
+	 * @param reqMessage the requester message
+	 * @param operationTimeoutMillis the operation timeout milliseconds
 	 * @return the sCMP message
 	 */
 	protected final SCMPMessage baseChangeSubscription(SCMPMessage reqMessage, int operationTimeoutMillis) {
@@ -263,15 +263,12 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Publish message to SC.
-	 * 
-	 * @param publishMessage
-	 *            the publish message
-	 * @throws SCServiceException
-	 *             server not registered yet<br />
-	 *             publish to SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             publish message is not set<br />
+	 *
+	 * @param publishMessage the publish message
+	 * @throws SCServiceException server not registered yet<br />
+	 *         publish to SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException publish message is not set<br />
 	 */
 	public final void publish(SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
@@ -279,20 +276,15 @@ public abstract class SCBasePublishServlet extends SCBaseServlet implements ISCP
 
 	/**
 	 * Publish message to SC.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param publishMessage
-	 *            the publish message
-	 * @throws SCServiceException
-	 *             server not registered yet<br />
-	 *             publish to SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             publish message is not set<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param publishMessage the publish message
+	 * @throws SCServiceException server not registered yet<br />
+	 *         publish to SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException publish message is not set<br />
 	 */
-	public final void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException,
-			SCMPValidatorException {
+	public final void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		if (this.registered == false) {
 			throw new SCServiceException("Server is not registered for a service.");
 		}

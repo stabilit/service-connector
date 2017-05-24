@@ -27,14 +27,14 @@ import org.serviceconnector.test.system.SystemSuperTest;
 public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
 	public APIStressExecutionCasc1Test() {
-		APIStressExecutionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 	}
-	
+
 	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		TestUtil.deleteLogDir(TestConstants.log4jClnProperties);
+		TestUtil.deleteLogDir(TestConstants.logbackCln);
 	}
 
 	/**
@@ -47,14 +47,13 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
-					"f_execute1000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client" + i, TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP,
+					10, 0, TestConstants.sesServerName1, 50, 60, "f_execute1000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
 	}
 
 	/**
@@ -67,16 +66,14 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
-					"f_execute100000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client" + i, TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP,
+					10, 0, TestConstants.sesServerName1, 10, 60, "f_execute100000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIStressExecutionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
 	}
-	
 
 	/**
 	 * Description: Exchanges a 10MB message with the server<br>
@@ -84,12 +81,11 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 	 */
 	@Test
 	public void t160_10MBMessageExchange() throws Exception {
-		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
-				TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
-				"f_execute10MBMessageAndExit");
+		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.logbackCln, "client", TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP, 10, 0,
+				TestConstants.sesServerName1, 50, 60, "f_execute10MBMessageAndExit");
 
-		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "sc.log");
-		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+		SystemSuperTest.ctrl.waitForClientTermination(clientCtx);
+		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
+		TestUtil.checkLogFile(TestConstants.logbackCln, "message.log");
 	}
 }

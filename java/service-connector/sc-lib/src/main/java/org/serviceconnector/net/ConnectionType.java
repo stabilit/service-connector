@@ -43,14 +43,12 @@ public enum ConnectionType implements IReversibleEnum<String, ConnectionType> {
 	private String value;
 
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ConnectionType> REVERSE_MAP = new ReverseEnumMap<String, ConnectionType>(
-			ConnectionType.class);
+	private static final ReverseEnumMap<String, ConnectionType> REVERSE_MAP = new ReverseEnumMap<String, ConnectionType>(ConnectionType.class);
 
 	/**
 	 * The Connection type.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	private ConnectionType(String value) {
 		this.value = value;
@@ -58,9 +56,8 @@ public enum ConnectionType implements IReversibleEnum<String, ConnectionType> {
 
 	/**
 	 * Gets the type.
-	 * 
-	 * @param typeString
-	 *            the type string
+	 *
+	 * @param typeString the type string
 	 * @return the type
 	 */
 	public static ConnectionType getType(String typeString) {

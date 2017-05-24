@@ -47,13 +47,10 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
@@ -74,16 +71,12 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache configuration.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cacheConfiguration
-	 *            the cache configuration
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param cacheConfiguration the cache configuration
+	 * @throws XMLStreamException the xML stream exception
 	 */
-	private void writeCacheConfiguration(XMLStreamWriter writer, SCCacheConfiguration cacheConfiguration)
-			throws XMLStreamException {
+	private void writeCacheConfiguration(XMLStreamWriter writer, SCCacheConfiguration cacheConfiguration) throws XMLStreamException {
 		writer.writeStartElement("config");
 		writer.writeStartElement("diskPath");
 		writer.writeCharacters(cacheConfiguration.getDiskPath());
@@ -102,15 +95,11 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache modules.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cacheModuleKeys
-	 *            the cache module keys
-	 * @param request
-	 *            the request
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param cacheModuleKeys the cache module keys
+	 * @param request the request
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	private void writeCaches(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String cacheModuleParam = request.getParameter("cacheModule");
@@ -149,16 +138,12 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache loading.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cache
-	 *            the cache
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param cache the cache
+	 * @throws XMLStreamException the xML stream exception
 	 */
-	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache)
-			throws XMLStreamException {
+	private void writeCacheLoading(XMLStreamWriter writer, org.serviceconnector.cache.SCCache cache) throws XMLStreamException {
 		HashMap<String, String> loadingSessionIds = cache.getLoadingSessionIds();
 		Set<String> sessionIds = loadingSessionIds.keySet();
 		for (String sid : sessionIds) {
@@ -173,18 +158,13 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache module details.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cacheModule
-	 *            the cache module
-	 * @param request
-	 *            the request
-	 * @throws XMLStreamException
-	 *             the XML stream exception
+	 *
+	 * @param writer the writer
+	 * @param cacheModule the cache module
+	 * @param request the request
+	 * @throws XMLStreamException the XML stream exception
 	 */
-	private void writeCacheModuleDetails(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, IWebRequest request)
-			throws Exception {
+	private void writeCacheModuleDetails(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, IWebRequest request) throws Exception {
 		writer.writeStartElement("details");
 		List<String> cacheKeys = cacheModule.getKeyList();
 		// sort cacheKeys
@@ -242,22 +222,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache meta entry.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cacheModule
-	 *            the cache module
-	 * @param cacheKey
-	 *            the cache key
-	 * @param metaEntry
-	 *            the cache composite
-	 * @param request
-	 *            the request
-	 * @throws XMLStreamException
-	 *             the xML stream exception
+	 *
+	 * @param writer the writer
+	 * @param cacheModule the cache module
+	 * @param cacheKey the cache key
+	 * @param metaEntry the cache composite
+	 * @param request the request
+	 * @throws XMLStreamException the xML stream exception
 	 */
-	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey,
-			SCCacheMetaEntry metaEntry, IWebRequest request) throws Exception {
+	private void writeCacheMetaEntry(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCCacheMetaEntry metaEntry, IWebRequest request) throws Exception {
 		int simulation = this.getParameterInt(request, "sim", 0);
 		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
@@ -296,22 +269,15 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Write cache message.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param cacheModule
-	 *            the cache module
-	 * @param cacheKey
-	 *            the cache key
-	 * @param cacheMessage
-	 *            the cache message
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param cacheModule the cache module
+	 * @param cacheKey the cache key
+	 * @param cacheMessage the cache message
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
-	private void writeCacheMessage(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey,
-			SCMPMessage cacheMessage, IWebRequest request) throws Exception {
+	private void writeCacheMessage(XMLStreamWriter writer, ISCCacheModule<?> cacheModule, String cacheKey, SCMPMessage cacheMessage, IWebRequest request) throws Exception {
 		writer.writeStartElement("cacheMessage");
 		writer.writeStartElement("key");
 		writer.writeCharacters(cacheKey);

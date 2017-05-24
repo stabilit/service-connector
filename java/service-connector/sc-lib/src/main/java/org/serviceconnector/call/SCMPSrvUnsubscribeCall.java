@@ -16,29 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPSrvUnsubscribeCall. Call unsubscribes client from service.
- * 
+ *
  * @author JTraber
  */
 public class SCMPSrvUnsubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSrvUnsubscribeCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSrvUnsubscribeCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvUnsubscribeCall.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *
+	 * @param req the requester
+	 * @param receivedMessage the received message
 	 */
 	public SCMPSrvUnsubscribeCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);

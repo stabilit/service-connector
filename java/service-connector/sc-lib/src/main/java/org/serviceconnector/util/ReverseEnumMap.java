@@ -19,31 +19,29 @@ package org.serviceconnector.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum} constant.
- * 
+ *
  * @author JTraber
- * @param <K>
- *            the key type
- * @param <V>
- *            the value type
+ * @param <K> the key type
+ * @param <V> the value type
  */
 public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ReverseEnumMap.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReverseEnumMap.class);
 
 	/** The reverse map. */
 	private final Map<K, V> reverseMap = new HashMap<K, V>();
 
 	/**
 	 * Create a new instance of ReverseEnumMap. *
-	 * 
-	 * @param valueType
-	 *            the value type
+	 *
+	 * @param valueType the value type
 	 */
 	public ReverseEnumMap(final Class<V> valueType) {
 		for (final V v : valueType.getEnumConstants()) {
@@ -53,9 +51,8 @@ public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
 	/**
 	 * Perform the reverse lookup for the given enum value and return the enum constant.
-	 * 
-	 * @param enumValue
-	 *            the enum value
+	 *
+	 * @param enumValue the enum value
 	 * @return enum constant
 	 */
 	public V get(final K enumValue) {

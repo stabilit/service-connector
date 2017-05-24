@@ -16,27 +16,26 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPDetachCall. Call detaches on SCMP level.
- * 
+ *
  * @author JTraber
  */
 public class SCMPDetachCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPDetachCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPDetachCall.class);
 
 	/**
 	 * Instantiates a new SCMPDetachCall.
-	 * 
-	 * @param req
-	 *            the client to use when invoking call
+	 *
+	 * @param req the client to use when invoking call
 	 */
 	public SCMPDetachCall(IRequester req) {
 		super(req);

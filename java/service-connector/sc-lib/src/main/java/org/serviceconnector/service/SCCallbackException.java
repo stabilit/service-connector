@@ -20,17 +20,15 @@ package org.serviceconnector.service;
  * The Class SCCallbackException. Exceptions which occurs in a callback.
  */
 public class SCCallbackException extends Exception {
-	
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2833490923843542634L;
 
 	/**
 	 * Instantiates a new sC callback exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
+	 *
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public SCCallbackException(String message, Throwable cause) {
 		super(message, cause);

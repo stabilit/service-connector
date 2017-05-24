@@ -25,18 +25,16 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnSubscribeCall. Call tries subscribing to a publish service.
- * 
+ *
  * @author JTraber
  */
 public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnSubscribeCall.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param requester the requester
+	 * @param serviceName the service name
 	 */
 	public SCMPClnSubscribeCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
@@ -52,9 +50,8 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
+	 *
+	 * @param sessionInfo the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
@@ -62,9 +59,8 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            the new mask
+	 *
+	 * @param mask the new mask
 	 */
 	public void setMask(String mask) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
@@ -72,9 +68,8 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the no data interval seconds.
-	 * 
-	 * @param noDataIntervalSeconds
-	 *            the new no data interval seconds
+	 *
+	 * @param noDataIntervalSeconds the new no data interval seconds
 	 */
 	public void setNoDataIntervalSeconds(int noDataIntervalSeconds) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataIntervalSeconds);
@@ -82,9 +77,8 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

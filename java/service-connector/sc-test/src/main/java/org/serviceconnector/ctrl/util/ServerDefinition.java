@@ -22,7 +22,7 @@ import org.serviceconnector.net.ConnectionType;
 public class ServerDefinition {
 
 	private String serverType;
-	private String log4jproperty;
+	private String logbackFileName;
 	private String serverName;
 	private int serverPort;
 	private int scPort;
@@ -33,16 +33,15 @@ public class ServerDefinition {
 	private String timezone;
 	private String nics;
 
-	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType) {
-		this(serverType, log4jproperty, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames, connectionType,
-				null, TestConstants.HOST);
+	public ServerDefinition(String serverType, String logbackFilename, String serverName, int serverPort, int scPort, int maxSessions, int maxConnections, String serviceNames,
+			ConnectionType connectionType) {
+		this(serverType, logbackFilename, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames, connectionType, null, TestConstants.HOST);
 	}
 
-	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType, String timezone, String nics) {
+	public ServerDefinition(String serverType, String logbackFileName, String serverName, int serverPort, int scPort, int maxSessions, int maxConnections, String serviceNames,
+			ConnectionType connectionType, String timezone, String nics) {
 		this.serverType = serverType;
-		this.log4jproperty = log4jproperty;
+		this.logbackFileName = logbackFileName;
 		this.serverName = serverName;
 		this.serverPort = serverPort;
 		this.scPort = scPort;
@@ -54,18 +53,16 @@ public class ServerDefinition {
 		this.nics = nics;
 	}
 
-	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames) {
-		this(serverType, log4jproperty, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
+	public ServerDefinition(String serverType, String logbackFilename, String serverName, int serverPort, int scPort, int maxSessions, int maxConnections, String serviceNames) {
+		this(serverType, logbackFilename, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 	}
 
 	public String getServerType() {
 		return serverType;
 	}
 
-	public String getLog4jproperty() {
-		return log4jproperty;
+	public String getLogbackFileName() {
+		return logbackFileName;
 	}
 
 	public String getServerName() {
@@ -99,7 +96,7 @@ public class ServerDefinition {
 	public String getTimezone() {
 		return timezone;
 	}
-	
+
 	public String getNics() {
 		return nics;
 	}

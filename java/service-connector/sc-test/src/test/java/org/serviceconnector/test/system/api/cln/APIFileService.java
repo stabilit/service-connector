@@ -20,9 +20,9 @@ import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIFileServiceCasc1;
 
 public class APIFileService extends APIFileServiceCasc1 {
-	
+
 	public APIFileService() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
-	
+
 }

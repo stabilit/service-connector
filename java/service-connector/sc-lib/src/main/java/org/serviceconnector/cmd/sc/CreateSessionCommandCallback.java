@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.req.IRequest;
@@ -41,7 +42,7 @@ import org.serviceconnector.service.Session;
 public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CreateSessionCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -59,15 +60,11 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Instantiates a new CreateSessionCommandCallback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param callback
-	 *            the callback
-	 * @param session
-	 *            the session
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param callback the callback
+	 * @param session the session
 	 */
 	public CreateSessionCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Session session) {
 		this.responderCallback = callback;
@@ -123,11 +120,9 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC create session sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC create session sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid="
-					+ sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC create session sid=" + sid);
 		} else {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing create session failed sid=" + sid);
 		}
@@ -140,9 +135,8 @@ public class CreateSessionCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Sets the server.
-	 * 
-	 * @param server
-	 *            the new server
+	 *
+	 * @param server the new server
 	 */
 	public void setServer(StatefulServer server) {
 		this.server = server;

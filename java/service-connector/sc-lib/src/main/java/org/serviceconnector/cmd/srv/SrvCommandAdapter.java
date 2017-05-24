@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
@@ -39,7 +40,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SrvCommandAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SrvCommandAdapter.class);
 
 	/** The session composite registry. */
 	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
@@ -66,12 +67,10 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/**
 	 * Gets the srv service by service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the srv service by service name
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
@@ -89,12 +88,10 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/**
 	 * Gets the srv session service by service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the srv session service by service name
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
@@ -109,12 +106,10 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/**
 	 * Gets the srv publish service by service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the srv publish service by service name
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);

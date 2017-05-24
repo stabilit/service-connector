@@ -18,21 +18,21 @@ package org.serviceconnector.registry.jmx;
 
 /**
  * The Interface IMapBeanWrapperMXBean. Interface provides access for JMX clients.
- * 
+ *
  * @author JTraber
  */
 public interface IRegistryEntryWrapperMXBean {
 
 	/**
 	 * Gets the entry.
-	 * 
+	 *
 	 * @return the entry
 	 */
 	String getEntry();
 
 	/**
 	 * Gets the key.
-	 * 
+	 *
 	 * @return the key
 	 */
 	String getKey();

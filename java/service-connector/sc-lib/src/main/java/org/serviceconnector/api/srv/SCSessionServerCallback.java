@@ -28,15 +28,16 @@ public abstract class SCSessionServerCallback implements ISCSessionServerCallbac
 
 	/**
 	 * Instantiates a new sC session server callback.
-	 * 
-	 * @param scSessionServer
-	 *            the sc session server
+	 *
+	 * @param scSessionServer the sc session server
 	 */
 	public SCSessionServerCallback(SCSessionServer scSessionServer) {
 		this.scSessionServer = scSessionServer;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#createSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
@@ -44,21 +45,27 @@ public abstract class SCSessionServerCallback implements ISCSessionServerCallbac
 		return message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#deleteSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
 	public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#abortSession(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override
 	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.serviceconnector.api.srv.ISCSessionServerCallback#execute(org.serviceconnector.api.SCMessage, int)
 	 */
 	@Override

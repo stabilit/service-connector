@@ -23,35 +23,32 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Interface IRequester.
- * 
+ *
  * @author JTraber
  */
 public interface IResponder {
 
 	/**
 	 * Creates the responder.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void create() throws Exception;
 
 	/**
 	 * Start listen asynchronous. Starts responder in a separate thread.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void startListenAsync() throws Exception;
 
 	/**
 	 * Start listener synchronous. Starts responder in current thread. Does not give back control.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void startListenSync() throws Exception;
-	
+
 	/**
 	 * Stop listening.
 	 */
@@ -64,19 +61,17 @@ public interface IResponder {
 
 	/**
 	 * Sets the responder configuration.
-	 * 
-	 * @param respConfig
-	 *            the new responder configuration
+	 *
+	 * @param respConfig the new responder configuration
 	 */
 	public void setListenerConfig(ListenerConfiguration respConfig);
 
 	/**
 	 * Gets the responder configuration.
-	 * 
+	 *
 	 * @return the responder configuration
 	 */
 	public ListenerConfiguration getListenerConfig();
-	
 
 	/**
 	 * Gets the endpoint.
@@ -87,11 +82,9 @@ public interface IResponder {
 
 	/**
 	 * Dump the responder into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception;
 }

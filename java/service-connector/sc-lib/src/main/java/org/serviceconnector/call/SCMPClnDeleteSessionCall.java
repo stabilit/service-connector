@@ -16,31 +16,29 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnDeleteSessionCall. Call deletes a session.
- * 
+ *
  * @author JTraber
  */
 public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnDeleteSessionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPClnDeleteSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param req the requester to use when invoking call
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPClnDeleteSessionCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
@@ -54,9 +52,8 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
+	 *
+	 * @param sessionInfo the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);

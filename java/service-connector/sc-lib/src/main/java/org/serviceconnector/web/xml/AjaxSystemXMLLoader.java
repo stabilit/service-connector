@@ -28,8 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -40,11 +40,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
@@ -65,6 +60,14 @@ import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.cmd.XMLLoaderFactory;
 import org.serviceconnector.web.cmd.XSLTTransformerFactory;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
 
 /**
  * The Class AjaxSystemXMLLoader.
@@ -75,7 +78,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 
 	/** The Constant LOGGER. */
-	public static final Logger LOGGER = Logger.getLogger(AjaxSystemXMLLoader.class);
+	public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AjaxSystemXMLLoader.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -243,15 +246,12 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	}
 
 	/**
-	 * Download and replace all selected from remote file server into our current configuration directory.
-	 * If the same file already exists then the local file content will be replaced.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 * Download and replace all selected from remote file server into our current configuration directory. If the same file already exists then the local file content will be
+	 * replaced.
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void downloadAndReplace(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String serviceName = request.getParameter("service");
@@ -307,22 +307,15 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Download and replace a single file.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param fileServer
-	 *            the file server
-	 * @param fileService
-	 *            the file service
-	 * @param remoteFile
-	 *            the remote file
-	 * @param dstFile
-	 *            the dst file
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param fileServer the file server
+	 * @param fileService the file service
+	 * @param remoteFile the remote file
+	 * @param dstFile the dst file
+	 * @throws Exception the exception
 	 */
-	private void downloadAndReplaceSingleFile(XMLStreamWriter writer, Service service, String remoteFile, File dstFile)
-			throws Exception {
+	private void downloadAndReplaceSingleFile(XMLStreamWriter writer, Service service, String remoteFile, File dstFile) throws Exception {
 		String status = "successful (copied)";
 		if (dstFile.exists()) {
 			status = "successful (replaced)";
@@ -359,13 +352,10 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Upload current log files to remote file server. The file server will be identified by the service name.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void uploadLogAndDumpFiles(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String serviceName = request.getParameter("service");
@@ -423,14 +413,11 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Upload current log and dump files.
-	 * 
-	 * @param service
-	 *            the service
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param service the service
+	 * @param serviceName the service name
 	 * @return the string
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private String uploadLogAndDumpFiles(Service service, String serviceName, Date date) throws Exception {
 		if (!(service instanceof FileService || service instanceof CascadedFileService)) {
@@ -450,15 +437,11 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Upload log and dump files.
-	 * 
-	 * @param client
-	 *            the client
-	 * @param fileService
-	 *            the file service
-	 * @param serviceName
-	 *            the service name
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param client the client
+	 * @param fileService the file service
+	 * @param serviceName the service name
+	 * @throws Exception the exception
 	 */
 	private String uploadLogAndDumpFiles(SCClient client, Service service, String serviceName, Date date) throws Exception {
 		// get all log and dump file
@@ -539,7 +522,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Gets the current log file names in a list. Any distinct filenames will be ignored.
-	 * 
+	 *
 	 * @return the current log file in a list
 	 */
 	private List<File> getLogAndDumpFiles(Date date) {
@@ -547,13 +530,13 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		Set<String> distinctLoggerSet = new HashSet<String>();
 		List<File> logAndDumpFileList = new ArrayList<File>();
 		// add log files
-		Logger rootLogger = LogManager.getRootLogger();
+		Logger rootLogger = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		addLogFiles(rootLogger, logAndDumpFileList, distinctLoggerSet, date, today);
-		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
-		while (currentLoggers.hasMoreElements()) {
-			Logger currentLogger = (Logger) currentLoggers.nextElement();
-			Enumeration<?> appenders = currentLogger.getAllAppenders();
-			if (appenders.hasMoreElements()) {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		List<Logger> currentLoggers = loggerContext.getLoggerList();
+		for (Logger currentLogger : currentLoggers) {
+			Iterator<Appender<ILoggingEvent>> appenders = currentLogger.iteratorForAppenders();
+			if (appenders.hasNext()) {
 				addLogFiles(currentLogger, logAndDumpFileList, distinctLoggerSet, date, today);
 			}
 		}
@@ -571,18 +554,15 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Adds the log files for given LOGGER instance to the list. Any distinct file names will be ignored.
-	 * 
-	 * @param logger
-	 *            the LOGGER
-	 * @param logFileList
-	 *            the log file list
-	 * @param distinctLoggerSet
-	 *            the distinct LOGGER set
+	 *
+	 * @param logger the LOGGER
+	 * @param logFileList the log file list
+	 * @param distinctLoggerSet the distinct LOGGER set
 	 */
 	private void addLogFiles(Logger logger, List<File> logFileList, Set<String> distinctLoggerSet, Date current, Date today) {
-		Enumeration<?> appenders = logger.getAllAppenders();
-		while (appenders.hasMoreElements()) {
-			Appender appender = (Appender) appenders.nextElement();
+		Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
+		while (appenders.hasNext()) {
+			Appender appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;
@@ -604,14 +584,11 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Gets the upload log file remote path.
-	 * 
-	 * @param fileService
-	 *            the file service
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param fileService the file service
+	 * @param serviceName the service name
 	 * @return the upload log file remote path
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private String getUploadLogFileRemotePath(Service service, String serviceName) throws Exception {
 		Calendar cal = Calendar.getInstance();
@@ -635,13 +612,10 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Enable service.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void enableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		XMLLoaderFactory.LOGGER.debug("run disable service");
@@ -663,13 +637,10 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Disable service.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	private void disableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		XMLLoaderFactory.LOGGER.debug("run disable service");
@@ -691,11 +662,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 	/**
 	 * Change log level.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
+	 *
+	 * @param writer the writer
+	 * @param request the request
 	 * @throws Exception
 	 */
 	private void changeLogLevel(XMLStreamWriter writer, IWebRequest request) throws Exception {
@@ -710,7 +679,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 			this.writeFailure(writer, "Missing log level!");
 			return;
 		}
-		Logger logger = LogManager.getLogger(logName);
+		Logger logger = (Logger) LoggerFactory.getLogger(logName);
 		if (logger == null) {
 			this.writeFailure(writer, "Log name [" + logName + "] is not valid (not found)!");
 			return;
@@ -718,7 +687,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		Level newLevel = Level.toLevel(level);
 		logger.setLevel(newLevel);
 		if ("root".equals(logName)) {
-			Logger rootLogger = LogManager.getRootLogger();
+			Logger rootLogger = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 			if (rootLogger != null) {
 				rootLogger.setLevel(newLevel);
 			}
@@ -748,9 +717,8 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 		/**
 		 * Instantiates a new upload runnable.
-		 * 
-		 * @param cbb
-		 *            the cbb
+		 *
+		 * @param cbb the cbb
 		 */
 		private UploadRunnable(SCClient client, String remotePath, String serviceName, CircularByteBuffer cbb) {
 			this.client = client;
@@ -763,7 +731,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 		/**
 		 * Gets the output stream.
-		 * 
+		 *
 		 * @return the output stream
 		 */
 		public OutputStream getOutputStream() {
@@ -772,10 +740,9 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
 		/**
 		 * Close.
-		 * 
+		 *
 		 * @return the integer
-		 * @throws Exception
-		 *             the exception
+		 * @throws Exception the exception
 		 */
 		public Integer close() throws Exception {
 			this.cbb.getOutputStream().close();

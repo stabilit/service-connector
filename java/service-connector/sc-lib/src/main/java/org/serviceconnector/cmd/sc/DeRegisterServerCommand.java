@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -36,15 +37,15 @@ import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to deregisters server from
- * SC service. Server will be removed from server registry.
- * 
+ * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to deregisters server from SC service. Server will be removed from server
+ * registry.
+ *
  * @author JTraber
  */
 public class DeRegisterServerCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DeRegisterServerCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeRegisterServerCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -67,7 +68,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		server.abortSessionsAndDestroy("deregister of server");
 		this.serverRegistry.removeServer(serverKey);
-		
+
 		// SCMP Version request
 		SCMPMessage scmpReply = new SCMPMessage(message.getSCMPVersion());
 		scmpReply.setIsReply(true);
@@ -100,12 +101,10 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 	/**
 	 * Gets the stateful server by name.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the stateful server by name
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	public StatefulServer getStatefulServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);

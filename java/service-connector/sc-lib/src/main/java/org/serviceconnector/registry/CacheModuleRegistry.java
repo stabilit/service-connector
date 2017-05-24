@@ -34,11 +34,9 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 
 	/**
 	 * Adds the cache module.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param cacheModule
-	 *            the cache module
+	 *
+	 * @param key the key
+	 * @param cacheModule the cache module
 	 */
 	public void addCacheModule(String key, ISCCacheModule<?> cacheModule) {
 		super.put(key, cacheModule);
@@ -46,9 +44,8 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 
 	/**
 	 * Gets the cache.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the cache
 	 */
 	public ISCCacheModule<?> getCache(String key) {
@@ -57,9 +54,8 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 
 	/**
 	 * Removes the cache.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeCache(String key) {
 		this.remove(key);
@@ -67,11 +63,9 @@ public class CacheModuleRegistry extends Registry<String, ISCCacheModule<?>> {
 
 	/**
 	 * Dump.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("caches");

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -36,13 +37,13 @@ import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to clients.
- * 
+ *
  * @author JTraber
  */
 public class PublishCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(PublishCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PublishCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -104,15 +105,13 @@ public class PublishCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MASK);
 			// message info optional
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_MESSAGE_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			// caching method value
 			String cachingMethod = message.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD);
 			ValidatorUtility.validateCachingMethod(cachingMethod, SCMPError.HV_WRONG_CACHING_METHOD_VALUE);

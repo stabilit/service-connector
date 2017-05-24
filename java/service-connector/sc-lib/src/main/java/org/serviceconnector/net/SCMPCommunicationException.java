@@ -21,7 +21,7 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class SCMPCommunicationException. Communication on SCMP level failed.
- * 
+ *
  * @author JTraber
  */
 public class SCMPCommunicationException extends HasFaultResponseException {
@@ -31,11 +31,9 @@ public class SCMPCommunicationException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new SCMPCommunicationException.
-	 * 
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param error the error
+	 * @param additionalInfo the additional info
 	 */
 	public SCMPCommunicationException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);

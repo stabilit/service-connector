@@ -32,11 +32,9 @@ class SCGuardianCallback extends SCServiceCallback {
 
 	/**
 	 * Instantiates a new guardian service callback.
-	 * 
-	 * @param service
-	 *            the service
-	 * @param messageCallback
-	 *            the message callback
+	 *
+	 * @param service the service
+	 * @param messageCallback the message callback
 	 */
 	public SCGuardianCallback(SCPublishService service, SCGuardianMessageCallback messageCallback) {
 		super(service, messageCallback);
@@ -64,22 +62,21 @@ class SCGuardianCallback extends SCServiceCallback {
 		boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 		if (noData == false) {
 			// data reply received - pass to application
-			SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.getCachingMethod(reply
-					.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
+			SC_CACHING_METHOD cachingMethod = SC_CACHING_METHOD.getCachingMethod(reply.getHeader(SCMPHeaderAttributeKey.CACHING_METHOD));
 
 			SCPublishMessage replyToClient = null;
 
 			switch (cachingMethod) {
-			case INITIAL:
-			case NOT_MANAGED:
-				replyToClient = new SCPublishMessage();
-				break;
-			case APPEND:
-				replyToClient = new SCAppendMessage();
-				break;
-			case REMOVE:
-				replyToClient = new SCRemovedMessage();
-				break;
+				case INITIAL:
+				case NOT_MANAGED:
+					replyToClient = new SCPublishMessage();
+					break;
+				case APPEND:
+					replyToClient = new SCAppendMessage();
+					break;
+				case REMOVE:
+					replyToClient = new SCRemovedMessage();
+					break;
 			}
 			replyToClient.setData(reply.getBody());
 			replyToClient.setDataLength(reply.getBodyLength());
@@ -95,16 +92,16 @@ class SCGuardianCallback extends SCServiceCallback {
 			// inform service request is completed
 			this.service.setRequestComplete();
 			switch (cachingMethod) {
-			case INITIAL:
-			case NOT_MANAGED:
-				this.messageCallback.receive(replyToClient);
-				break;
-			case APPEND:
-				((SCGuardianMessageCallback) this.messageCallback).receiveAppendix((SCAppendMessage) replyToClient);
-				break;
-			case REMOVE:
-				((SCGuardianMessageCallback) this.messageCallback).receiveRemove((SCRemovedMessage) replyToClient);
-				break;
+				case INITIAL:
+				case NOT_MANAGED:
+					this.messageCallback.receive(replyToClient);
+					break;
+				case APPEND:
+					((SCGuardianMessageCallback) this.messageCallback).receiveAppendix((SCAppendMessage) replyToClient);
+					break;
+				case REMOVE:
+					((SCGuardianMessageCallback) this.messageCallback).receiveRemove((SCRemovedMessage) replyToClient);
+					break;
 			}
 		}
 		((SCPublishService) this.service).receivePublication();

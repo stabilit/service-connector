@@ -20,7 +20,8 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -36,13 +37,13 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
- * 
+ *
  * @author JTraber
  */
 public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(EndpointAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EndpointAdapter.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 
@@ -183,7 +184,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/**
 	 * Gets the host.
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getHost() {
@@ -198,7 +199,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/**
 	 * Gets the port.
-	 * 
+	 *
 	 * @return the port
 	 */
 	public int getPort() {

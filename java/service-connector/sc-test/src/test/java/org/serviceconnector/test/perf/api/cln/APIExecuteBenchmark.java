@@ -23,8 +23,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
 @SuppressWarnings("unused")
-public class APIExecuteBenchmark extends APIPerfSuperClientTest{
-
+public class APIExecuteBenchmark extends APIPerfSuperClientTest {
 
 	/**
 	 * Description: Send 10000 message � 128 bytes to the server. Receive echoed messages. Measure performance <br>
@@ -47,8 +46,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		for (int i = 0; i < nrMessages; i++) {
 			if (((i + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				testLogger.info("Executing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart))
-						+ " msg/sec.");
+				testLogger.info("Executing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
 			response = sessionService.execute(10, request);
@@ -81,8 +79,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		for (int i = 0; i < nrMessages; i++) {
 			if (((i + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				testLogger.info("Executing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart))
-						+ " msg/sec.");
+				testLogger.info("Executing message nr. " + (i + 1) + "... " + (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
 
@@ -95,57 +92,57 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 600);
 	}
 
-	//	/**
-	//	 * Description: execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
-	//	 * 
-	//	 * @throws Exception
-	//	 */
-	//	@Test
-	//	public void t04_benchmark() throws Exception {
-	//		long previousResult = Long.MAX_VALUE;
-	//		long result = Long.MAX_VALUE - 1;
-	//		int dataLength = 10 * TestConstants.dataLength1MB;
-	//		int messages = 0;
+	// /**
+	// * Description: execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
+	// *
+	// * @throws Exception
+	// */
+	// @Test
+	// public void t04_benchmark() throws Exception {
+	// long previousResult = Long.MAX_VALUE;
+	// long result = Long.MAX_VALUE - 1;
+	// int dataLength = 10 * TestConstants.dataLength1MB;
+	// int messages = 0;
 	//
-	//		while (result < previousResult) {
-	//			previousResult = result;
-	//			messages++;
+	// while (result < previousResult) {
+	// previousResult = result;
+	// messages++;
 	//
-	//			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
 	//
-	//			result = clientCtrl.perform();
+	// result = clientCtrl.perform();
 	//
-	//			scProcess = ctrl.restartSC(scProcess);
-	//			srvProcess = ctrl.restartServer(srvProcess);
-	//		}
+	// scProcess = ctrl.restartSC(scProcess);
+	// srvProcess = ctrl.restartServer(srvProcess);
+	// }
 	//
-	//		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-	//				+ --messages + " messages of " + dataLength / messages + "B data each.");
-	//		Assert.assertEquals(true, previousResult < 25000);
-	//	}
+	// testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+	// + --messages + " messages of " + dataLength / messages + "B data each.");
+	// Assert.assertEquals(true, previousResult < 25000);
+	// }
 	//
-	//	@Test
-	//	public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength() throws Exception {
-	//		long previousResult = Long.MAX_VALUE;
-	//		long result = Long.MAX_VALUE - 1;
-	//		int dataLength = 10 * TestConstants.dataLength1MB;
-	//		int messages = 100001;
+	// @Test
+	// public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength() throws Exception {
+	// long previousResult = Long.MAX_VALUE;
+	// long result = Long.MAX_VALUE - 1;
+	// int dataLength = 10 * TestConstants.dataLength1MB;
+	// int messages = 100001;
 	//
-	//		while (result < previousResult && messages > 0) {
-	//			previousResult = result;
-	//			messages--;
+	// while (result < previousResult && messages > 0) {
+	// previousResult = result;
+	// messages--;
 	//
-	//			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
 	//
-	//			result = clientCtrl.perform();
+	// result = clientCtrl.perform();
 	//
-	//			scProcess = ctrl.restartSC(scProcess);
-	//			srvProcess = ctrl.restartServer(srvProcess);
-	//		}
+	// scProcess = ctrl.restartSC(scProcess);
+	// srvProcess = ctrl.restartServer(srvProcess);
+	// }
 	//
-	//		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-	//				+ ++messages + " messages of " + dataLength / messages + "B data each.");
-	//		Assert.assertEquals(true, previousResult < 25000);
-	//	}
+	// testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+	// + ++messages + " messages of " + dataLength / messages + "B data each.");
+	// Assert.assertEquals(true, previousResult < 25000);
+	// }
 
 }

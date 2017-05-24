@@ -19,9 +19,8 @@ package org.serviceconnector.scmp;
 import java.io.InputStream;
 
 /**
- * The Class SCMPOffsetPart. Represents an outgoing part SCMP of a large message. Extends SCMPPart and adds information of current
- * body like offset, totalBodyLength.
- * 
+ * The Class SCMPOffsetPart. Represents an outgoing part SCMP of a large message. Extends SCMPPart and adds information of current body like offset, totalBodyLength.
+ *
  * @author JTraber
  */
 public class SCMPOffsetPart extends SCMPPart {
@@ -38,13 +37,10 @@ public class SCMPOffsetPart extends SCMPPart {
 
 	/**
 	 * Instantiates a new SCMPOffsetPart.
-	 * 
-	 * @param message
-	 *            the scmp message
-	 * @param offset
-	 *            the offset
-	 * @param largeMessageLength
-	 *            the large message length
+	 *
+	 * @param message the scmp message
+	 * @param offset the offset
+	 * @param largeMessageLength the large message length
 	 */
 	public SCMPOffsetPart(SCMPMessage message, int offset, int largeMessageLength) {
 		// SCMP Version - version in request
@@ -82,6 +78,7 @@ public class SCMPOffsetPart extends SCMPPart {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public int getBodyOffset() {
 		return offset;
 	}

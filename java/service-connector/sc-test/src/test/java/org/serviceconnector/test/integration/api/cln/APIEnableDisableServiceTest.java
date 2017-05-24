@@ -138,8 +138,9 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client.attach();
 		int nr = 1000;
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 100) == 0)
+			if (((i + 1) % 100) == 0) {
 				testLogger.info("Enable/disable nr. " + (i + 1) + "...");
+			}
 			client.disableService(TestConstants.sesServiceName1);
 			Assert.assertFalse("Enabled ", client.isServiceEnabled(TestConstants.sesServiceName1));
 			client.enableService(TestConstants.sesServiceName1);

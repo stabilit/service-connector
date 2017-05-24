@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -24,7 +25,7 @@ import org.serviceconnector.api.cln.SCSessionService;
 public class TestSessionServiceMessageCallback extends SCMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(TestSessionServiceMessageCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestSessionServiceMessageCallback.class);
 
 	public TestSessionServiceMessageCallback(SCSessionService service) {
 		super(service);

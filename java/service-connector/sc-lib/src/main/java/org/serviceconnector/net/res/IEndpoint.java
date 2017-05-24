@@ -18,30 +18,27 @@ package org.serviceconnector.net.res;
 
 import org.serviceconnector.util.XMLDumpWriter;
 
-
 /**
  * The Interface IEndpoint.
- * 
+ *
  * @author JTraber
  */
 public interface IEndpoint {
 
 	/**
 	 * Sets the host.
-	 * 
-	 * @param host
-	 *            the host
+	 *
+	 * @param host the host
 	 */
 	public void setHost(String host);
 
 	/**
 	 * Sets the port.
-	 * 
-	 * @param port
-	 *            the port
+	 *
+	 * @param port the port
 	 */
 	public void setPort(int port);
-	
+
 	/**
 	 * Destroys endpoint.
 	 */
@@ -54,17 +51,15 @@ public interface IEndpoint {
 
 	/**
 	 * Starts listen asynchronous. Starts listener in a separate thread.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void startsListenAsync() throws Exception;
 
 	/**
 	 * Start listen synchronous. Starts listener in current thread. Does not give back control.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void startListenSync() throws Exception;
 
@@ -75,26 +70,23 @@ public interface IEndpoint {
 
 	/**
 	 * Gets the responder.
-	 * 
+	 *
 	 * @return the responder
 	 */
 	public IResponder getResponder();
 
 	/**
 	 * Sets the responder.
-	 * 
-	 * @param resp
-	 *            the new responder
+	 *
+	 * @param resp the new responder
 	 */
 	public void setResponder(IResponder resp);
-	
+
 	/**
 	 * Dump the endpoint into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception;
 }

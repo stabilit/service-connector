@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -43,16 +44,15 @@ import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class CscCreateSessionCommand. Responsible for validation and execution of cascaded creates session command. Command runs
- * successfully
- * if backend server accepts clients request and allows creating a session. Session is saved in a session registry of SC.
- * 
+ * The Class CscCreateSessionCommand. Responsible for validation and execution of cascaded creates session command. Command runs successfully if backend server accepts clients
+ * request and allows creating a session. Session is saved in a session registry of SC.
+ *
  * @author JTraber
  */
 public class CscCreateSessionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscCreateSessionCommand.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscCreateSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -68,8 +68,7 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		// check service is present and enabled
 		Service abstractService = this.getService(serviceName);
 		if (abstractService.isEnabled() == false) {
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
-					+ abstractService.getName() + " is disabled");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service=" + abstractService.getName() + " is disabled");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -83,42 +82,42 @@ public class CscCreateSessionCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
-		case CASCADED_SESSION_SERVICE:
-			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
-			cascadedSC.createSession(reqMessage, callback, oti);
-			return;
-		case CASCADED_FILE_SERVICE:
-			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
-			callback = new CommandCascCallback(request, response, responderCallback);
-			cascadedSC.createSession(reqMessage, callback, oti);
-			return;
-		case SESSION_SERVICE:
-			// code for type session service is below switch statement
-			break;
-		case FILE_SERVICE:
-			FileService fileService = (FileService) abstractService;
-			// create file session
-			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(),
-					fileService.getUploadFileScriptName(), fileService.getGetFileListScriptName());
-			fileSession.setService(fileService);
-			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
-			// add server to session
-			fileSession.setServer(fileServer);
-			fileSession.setSessionTimeoutMillis(eciInMillis * basicConf.getEchoIntervalMultiplier());
-			// finally add file session to the registry
-			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
-			// reply to client - SCMP Version request
-			SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			reply.setSessionId(fileSession.getId());
-			response.setSCMP(reply);
-			responderCallback.responseCallback(request, response);
-			return;
-		default:
-			// code for other types of services is below
-			break;
+			case CASCADED_SESSION_SERVICE:
+				CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
+				CommandCascCallback callback = new CommandCascCallback(request, response, responderCallback);
+				cascadedSC.createSession(reqMessage, callback, oti);
+				return;
+			case CASCADED_FILE_SERVICE:
+				cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+				callback = new CommandCascCallback(request, response, responderCallback);
+				cascadedSC.createSession(reqMessage, callback, oti);
+				return;
+			case SESSION_SERVICE:
+				// code for type session service is below switch statement
+				break;
+			case FILE_SERVICE:
+				FileService fileService = (FileService) abstractService;
+				// create file session
+				FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService.getUploadFileScriptName(),
+						fileService.getGetFileListScriptName());
+				fileSession.setService(fileService);
+				FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
+				// add server to session
+				fileSession.setServer(fileServer);
+				fileSession.setSessionTimeoutMillis(eciInMillis * basicConf.getEchoIntervalMultiplier());
+				// finally add file session to the registry
+				this.sessionRegistry.addSession(fileSession.getId(), fileSession);
+				// reply to client - SCMP Version request
+				SCMPMessage reply = new SCMPMessage(reqMessage.getSCMPVersion());
+				reply.setIsReply(true);
+				reply.setMessageType(getKey());
+				reply.setSessionId(fileSession.getId());
+				response.setSCMP(reply);
+				responderCallback.responseCallback(request, response);
+				return;
+			default:
+				// code for other types of services is below
+				break;
 		}
 
 		// create session
@@ -142,8 +141,8 @@ public class CscCreateSessionCommand extends CommandAdapter {
 			reqMessage.setMessageType(this.getKey());
 			callback = new CreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
-				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
-						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
+				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session,
+						otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
@@ -157,8 +156,7 @@ public class CscCreateSessionCommand extends CommandAdapter {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
-							+ reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -181,23 +179,19 @@ public class CscCreateSessionCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME,
-					SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, Constants.MAX_LENGTH_SERVICENAME, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE,
-					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(Constants.MIN_OTI_VALUE_CSC, otiValue, Constants.MAX_OTI_VALUE, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// echoInterval mandatory
 			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
-			ValidatorUtility.validateInt(Constants.MIN_ECI_VALUE, echoIntervalValue, Constants.MAX_ECI_VALUE,
-					SCMPError.HV_WRONG_ECHO_INTERVAL);
+			ValidatorUtility.validateInt(Constants.MIN_ECI_VALUE, echoIntervalValue, Constants.MAX_ECI_VALUE, SCMPError.HV_WRONG_ECHO_INTERVAL);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256,
-					SCMPError.HV_WRONG_SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, Constants.MAX_STRING_LENGTH_256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

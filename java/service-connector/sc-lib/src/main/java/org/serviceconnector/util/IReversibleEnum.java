@@ -18,27 +18,24 @@ package org.serviceconnector.util;
 
 /**
  * The Interface IReversibleEnum.
- * 
- * @param <E>
- *            the element type
- * @param <V>
- *            the value type
+ *
+ * @param <E> the element type
+ * @param <V> the value type
  * @author JTraber
  */
 public interface IReversibleEnum<E, V> {
 
 	/**
 	 * Return the value/code of the enum constant.
-	 * 
+	 *
 	 * @return value
 	 */
 	public E getValue();
 
 	/**
 	 * Get the {@link Enum} constant by looking up the code in the reverse enum map. *
-	 * 
-	 * @param code
-	 *            the code
+	 *
+	 * @param code the code
 	 * @return V - The enum constant
 	 */
 	public V reverse(E code);

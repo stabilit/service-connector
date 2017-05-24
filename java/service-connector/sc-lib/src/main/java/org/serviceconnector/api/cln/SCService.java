@@ -51,7 +51,7 @@ public abstract class SCService {
 
 	/**
 	 * Instantiates a new service.
-	 * 
+	 *
 	 * @param scClient the sc client
 	 * @param serviceName the service name
 	 * @param requester the requester
@@ -74,7 +74,7 @@ public abstract class SCService {
 
 	/**
 	 * Gets the associated SC client.
-	 * 
+	 *
 	 * @return the SC client
 	 */
 	public SCClient getSCClient() {
@@ -83,7 +83,7 @@ public abstract class SCService {
 
 	/**
 	 * Checks if session in service is active.
-	 * 
+	 *
 	 * @return true, if is active
 	 */
 	public boolean isActive() {
@@ -92,7 +92,7 @@ public abstract class SCService {
 
 	/**
 	 * Gets the session id.
-	 * 
+	 *
 	 * @return the session id
 	 */
 	public String getSessionId() {
@@ -101,7 +101,7 @@ public abstract class SCService {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {

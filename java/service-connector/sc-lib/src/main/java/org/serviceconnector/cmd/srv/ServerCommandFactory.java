@@ -16,20 +16,21 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
 
 /**
  * A factory for creating UnitServerCommand objects. Unifies all commands used by publish and session server.
- * 
+ *
  * @author JTraber
  */
 public class ServerCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(ServerCommandFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServerCommandFactory.class);
 
 	/**
 	 * Instantiates a new server command factory.

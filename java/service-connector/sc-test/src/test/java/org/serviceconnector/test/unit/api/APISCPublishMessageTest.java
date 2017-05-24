@@ -16,43 +16,45 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import junit.framework.Assert;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
+import junit.framework.Assert;
+
 public class APISCPublishMessageTest extends SuperUnitTest {
-	
+
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APISCPublishMessageTest.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(APISCPublishMessageTest.class);
+
 	private SCPublishMessage message;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		message = new SCPublishMessage();
 	}
-	
+
+	@Override
 	@After
-	public void afterOneTest(){
+	public void afterOneTest() {
 		message = null;
 		super.afterOneTest();
 	}
-	
+
 	/**
 	 * Description: Check default values <br>
 	 * Expectation: passed, all values are default
 	 */
 	@Test
 	public void t01_constructor() {
-		Assert.assertEquals("mask is not null",null, message.getMask());
+		Assert.assertEquals("mask is not null", null, message.getMask());
 	}
-
 
 }

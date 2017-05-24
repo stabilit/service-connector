@@ -32,9 +32,8 @@ public class SCPublishClientExample {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SCPublishClientExample test = new SCPublishClientExample();
@@ -80,9 +79,8 @@ public class SCPublishClientExample {
 
 		/**
 		 * Instantiates a new test publish callback.
-		 * 
-		 * @param service
-		 *            the service
+		 *
+		 * @param service the service
 		 */
 		public TestPublishCallback(SCPublishService service) {
 			super(service);
@@ -92,8 +90,7 @@ public class SCPublishClientExample {
 		@Override
 		public void receive(SCMessage reply) {
 			publishedMessageCounter++;
-			System.out
-					.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = " + publishedMessageCounter);
+			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = " + publishedMessageCounter);
 		}
 
 		/** {@inheritDoc} */

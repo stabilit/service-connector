@@ -37,7 +37,6 @@ import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
-import org.serviceconnector.test.system.api.cln.casc1.APICacheCoherencyCasc1Test;
 
 public class APISystemSuperCCTest extends SystemSuperTest {
 
@@ -78,33 +77,30 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-		APICacheCoherencyCasc1Test.setUpServer();
+		APISystemSuperCCTest.setUpServer();
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
-		APICacheCoherencyCasc1Test.setUpServer();
+		APISystemSuperCCTest.setUpServer();
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
-		APICacheCoherencyCasc1Test.setUpServer();
+		APISystemSuperCCTest.setUpServer();
 	}
 
 	public static void setUpServer() {
 		// need to have a server serving 3 sessions here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian1);
+		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1,
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian1);
 
-		ServerDefinition srvPublish2ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName2, TestConstants.PORT_PUB_SRV2_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian2);
+		ServerDefinition srvPublish2ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName2,
+				TestConstants.PORT_PUB_SRV2_TCP, TestConstants.PORT_SC0_TCP, 3, 3, TestConstants.cacheGuardian2);
 
-		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 
 		srvToSC0CascDefs.add(srvPublishToSC0Def);
 		srvToSC0CascDefs.add(srvPublish2ToSC0Def);
@@ -114,21 +110,18 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 
 	protected void startSC0AAndServers() throws Exception {
 		List<ServiceConnectorDefinition> sc0ADefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0A, TestConstants.SC0AProperties,
-				TestConstants.log4jSC0AProperties);
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0A, TestConstants.SC0AProperties, TestConstants.logbackSC0A);
 		sc0ADefs.add(sc0Def);
 
 		Map<String, ProcessCtx> sc0AProcess = ctrl.startSCEnvironment(sc0ADefs);
 		SystemSuperTest.scCtxs.putAll(sc0AProcess);
 
 		List<ServerDefinition> srvToSC0ACascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1A, TestConstants.PORT_PUB_SRVA_TCP,
-				TestConstants.PORT_SC0A_TCP, 3, 3, TestConstants.cacheGuardian1A);
+		ServerDefinition srvPublishToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1A,
+				TestConstants.PORT_PUB_SRVA_TCP, TestConstants.PORT_SC0A_TCP, 3, 3, TestConstants.cacheGuardian1A);
 
-		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1A, TestConstants.PORT_SES_SRVA_TCP,
-				TestConstants.PORT_SC0A_TCP, 100, 10, TestConstants.sesServiceName1);
+		ServerDefinition srvSessionToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1A,
+				TestConstants.PORT_SES_SRVA_TCP, TestConstants.PORT_SC0A_TCP, 100, 10, TestConstants.sesServiceName1);
 
 		srvToSC0ACascDefs.add(srvPublishToSC0Def);
 		srvToSC0ACascDefs.add(srvSessionToSC0Def);
@@ -137,11 +130,13 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 		SystemSuperTest.srvCtxs.putAll(sc0ASeverProcess);
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -197,8 +192,7 @@ public class APISystemSuperCCTest extends SystemSuperTest {
 					if (this.appendMsgRecvCounter == 0) {
 						return;
 					}
-					throw new TimeoutException(this.appendMsgRecvCounter + " Message(s) received within " + nrSeconds
-							+ " seconds, fault zero expected.");
+					throw new TimeoutException(this.appendMsgRecvCounter + " Message(s) received within " + nrSeconds + " seconds, fault zero expected.");
 				}
 
 				for (int i = 0; i < (nrSeconds * 10); i++) {

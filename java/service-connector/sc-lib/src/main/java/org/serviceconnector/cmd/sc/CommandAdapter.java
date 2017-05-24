@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -47,13 +48,13 @@ import org.serviceconnector.service.Subscription;
 
 /**
  * The Class CommandAdapter. Adapter for every kind of command. Provides basic functions that is used by executions of commands.
- * 
+ *
  * @author JTraber
  */
 public abstract class CommandAdapter implements ICommand {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CommandAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandAdapter.class);
 
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
@@ -68,12 +69,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Gets the session by id. Checks properness of session, if session is null given session id is wrong - no session found.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 * @return the session by id
-	 * @throws SCMPCommandException
-	 *             session is not in registry, invalid session id
+	 * @throws SCMPCommandException session is not in registry, invalid session id
 	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
 		Session session = sessionRegistry.getSession(sessionId);
@@ -89,12 +88,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Gets the subscription by id.
-	 * 
-	 * @param subscriptionId
-	 *            the subscription id
+	 *
+	 * @param subscriptionId the subscription id
 	 * @return the subscription by id
-	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 * @throws SCMPCommandException the sCMP command exception
 	 */
 	protected Subscription getSubscriptionById(String subscriptionId) throws SCMPCommandException {
 		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
@@ -111,12 +108,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Gets the publish message queue by id.
-	 * 
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param subscription the subscription
 	 * @return the publish message queue by id
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	protected PublishMessageQueue<SCMPMessage> getPublishMessageQueueById(Subscription subscription) throws Exception {
 		return ((IPublishService) subscription.getService()).getMessageQueue();
@@ -124,12 +119,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Gets the service.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected Service getService(String serviceName) throws SCMPCommandException {
 		Service service = this.serviceRegistry.getService(serviceName);
@@ -144,12 +137,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Validate publish service.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the publish service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
 		Service service = this.getService(serviceName);
@@ -158,18 +149,15 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Validate publish service.
-	 * 
-	 * @param service
-	 *            the service
+	 *
+	 * @param service the service
 	 * @return the publish service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected PublishService validatePublishService(Service service) throws SCMPCommandException {
 		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.CACHE_GUARDIAN) {
 			// service is not publish service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service.getName()
-					+ " is not publish service");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service.getName() + " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -178,19 +166,16 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Validate file service.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the publish service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected FileService validateFileService(String serviceName) throws SCMPCommandException {
 		Service service = this.getService(serviceName);
 		if (service.getType() != ServiceType.FILE_SERVICE) {
 			// service is not file service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
-					+ " is not file service");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName + " is not file service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -199,38 +184,33 @@ public abstract class CommandAdapter implements ICommand {
 
 	/**
 	 * Gets the stateful service. This method does not control the state of the service.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the stateful service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 * @throws SCMPCommandException the SCMP command exception
 	 */
 	protected StatefulService getStatefulService(String serviceName) throws SCMPCommandException {
 		Service service = this.getService(serviceName);
 
 		switch (service.getType()) {
-		case PUBLISH_SERVICE:
-		case SESSION_SERVICE:
-		case CACHE_GUARDIAN:
-			break;
-		default:
-			// service is not the right type
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
-					+ " is not session or publish service");
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
+			case PUBLISH_SERVICE:
+			case SESSION_SERVICE:
+			case CACHE_GUARDIAN:
+				break;
+			default:
+				// service is not the right type
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName + " is not session or publish service");
+				scmpCommandException.setMessageType(getKey());
+				throw scmpCommandException;
 		}
 		return (StatefulService) service;
 	}
 
 	/**
 	 * Reset server timeout. Gets server from the registry and refreshes server timeouts.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param socketAddress
-	 *            the socket address
+	 *
+	 * @param serviceName the service name
+	 * @param socketAddress the socket address
 	 */
 	public void resetServerTimeout(String serviceName, InetSocketAddress socketAddress) {
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + Constants.SLASH + socketAddress.getPort();
@@ -238,8 +218,7 @@ public abstract class CommandAdapter implements ICommand {
 		Server server = this.serverRegistry.getServer(serverKey);
 		if (server instanceof StatefulServer) {
 			// reset server timeout for stateful servers.
-			LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)="
-					+ server.getServerTimeoutMillis());
+			LOGGER.debug("refresh server timeout server=" + server.getServerKey() + " timeout(ms)=" + server.getServerTimeoutMillis());
 			serverRegistry.resetServerTimeout(server, server.getServerTimeoutMillis());
 		}
 	}

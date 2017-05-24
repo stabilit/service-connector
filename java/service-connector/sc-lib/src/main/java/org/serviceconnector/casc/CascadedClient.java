@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.casc.CscReceivePublicationCallback;
 import org.serviceconnector.ctx.AppContext;
@@ -37,7 +38,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CascadedClient {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CascadedClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CascadedClient.class);
 
 	/** The subscribed. */
 	private boolean subscribed;
@@ -66,11 +67,9 @@ public class CascadedClient {
 
 	/**
 	 * Instantiates a new cascaded client.
-	 * 
-	 * @param cascadedSC
-	 *            the cascaded sc
-	 * @param publishService
-	 *            the publish service
+	 *
+	 * @param cascadedSC the cascaded sc
+	 * @param publishService the publish service
 	 */
 	public CascadedClient(CascadedSC cascadedSC, CascadedPublishService publishService) {
 		this.subscribed = false;
@@ -89,7 +88,7 @@ public class CascadedClient {
 
 	/**
 	 * Checks if is subscribed.
-	 * 
+	 *
 	 * @return true, if is subscribed
 	 */
 	public boolean isSubscribed() {
@@ -103,9 +102,8 @@ public class CascadedClient {
 
 	/**
 	 * Sets the subscribed.
-	 * 
-	 * @param subscribed
-	 *            the new subscribed
+	 *
+	 * @param subscribed the new subscribed
 	 */
 	public void setSubscribed(boolean subscribed) {
 		if (this.destroyed == true) {
@@ -118,9 +116,8 @@ public class CascadedClient {
 
 	/**
 	 * Sets the subscription id.
-	 * 
-	 * @param subscriptionId
-	 *            the new subscription id
+	 *
+	 * @param subscriptionId the new subscription id
 	 */
 	public void setSubscriptionId(String subscriptionId) {
 		this.subscriptionId = subscriptionId;
@@ -128,7 +125,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the subscription id.
-	 * 
+	 *
 	 * @return the subscription id
 	 */
 	public String getSubscriptionId() {
@@ -136,8 +133,8 @@ public class CascadedClient {
 	}
 
 	/**
-	 * Increment and checks semaphore permit denial counter. If the counter achieves 5 this cascaded client destroys himself. It
-	 * should never appear. It under some circumstances releasing the semaphore fails it continues running fine after destroying.
+	 * Increment and checks semaphore permit denial counter. If the counter achieves 5 this cascaded client destroys himself. It should never appear. It under some circumstances
+	 * releasing the semaphore fails it continues running fine after destroying.
 	 */
 	public int incrementAndCheckSemaphorePermitDenialCounter() {
 		int counter = this.permitDenialCounter.incrementAndGet();
@@ -159,7 +156,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the casc client semaphore.
-	 * 
+	 *
 	 * @return the casc client semaphore
 	 */
 	public Semaphore getCascClientSemaphore() {
@@ -168,9 +165,8 @@ public class CascadedClient {
 
 	/**
 	 * Sets the subscription mask.
-	 * 
-	 * @param newSubscriptionMask
-	 *            the new subscription mask
+	 *
+	 * @param newSubscriptionMask the new subscription mask
 	 */
 	public void setSubscriptionMask(SubscriptionMask newSubscriptionMask) {
 		this.subscriptionMask = newSubscriptionMask;
@@ -178,7 +174,7 @@ public class CascadedClient {
 
 	/**
 	 * Eval subscription mask from client subscriptions.
-	 * 
+	 *
 	 * @return the string
 	 */
 	public String evalSubscriptionMaskFromClientSubscriptions() {
@@ -202,7 +198,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the subscription mask.
-	 * 
+	 *
 	 * @return the subscription mask
 	 */
 	public SubscriptionMask getSubscriptionMask() {
@@ -211,7 +207,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -220,7 +216,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the publish service.
-	 * 
+	 *
 	 * @return the publish service
 	 */
 	public CascadedPublishService getPublishService() {
@@ -229,7 +225,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the client subscription ids.
-	 * 
+	 *
 	 * @return the client subscription ids
 	 */
 	public Map<String, SubscriptionMask> getClientSubscriptionIds() {
@@ -238,28 +234,23 @@ public class CascadedClient {
 
 	/**
 	 * Adds the client subscription id.
-	 * 
-	 * @param clientSubscriptionId
-	 *            the client subscription id
-	 * @param clientMask
-	 *            the client mask
-	 * @throws InvalidMaskLengthException
-	 *             the invalid mask length exception
+	 *
+	 * @param clientSubscriptionId the client subscription id
+	 * @param clientMask the client mask
+	 * @throws InvalidMaskLengthException the invalid mask length exception
 	 */
 	public void addClientSubscriptionId(String clientSubscriptionId, SubscriptionMask clientMask) throws InvalidMaskLengthException {
 		if (this.subscriptionMask != null && (this.subscriptionMask.getValue().length() != clientMask.getValue().length())) {
 			// client mask has invalid (different than current mask of cascaded client) length
-			throw new InvalidMaskLengthException("client mask has invalid length: clientSubscriptionId=" + clientSubscriptionId
-					+ " clientMask=" + clientMask);
+			throw new InvalidMaskLengthException("client mask has invalid length: clientSubscriptionId=" + clientSubscriptionId + " clientMask=" + clientMask);
 		}
 		this.clientSubscriptionIds.put(clientSubscriptionId, clientMask);
 	}
 
 	/**
 	 * Removes the client subscription id.
-	 * 
-	 * @param clientSubscriptionId
-	 *            the client subscription id
+	 *
+	 * @param clientSubscriptionId the client subscription id
 	 */
 	public void removeClientSubscriptionId(String clientSubscriptionId) {
 		this.clientSubscriptionIds.remove(clientSubscriptionId);
@@ -275,8 +266,7 @@ public class CascadedClient {
 		}
 		CscReceivePublicationCallback callback = new CscReceivePublicationCallback(this);
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
-		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
-				* Constants.SEC_TO_MILLISEC_FACTOR;
+		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds()) * Constants.SEC_TO_MILLISEC_FACTOR;
 		this.cascadedSC.receivePublication(this, callback, oti, false);
 	}
 
@@ -290,14 +280,13 @@ public class CascadedClient {
 		}
 		CscReceivePublicationCallback callback = new CscReceivePublicationCallback(this);
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
-		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
-				* Constants.SEC_TO_MILLISEC_FACTOR;
+		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds()) * Constants.SEC_TO_MILLISEC_FACTOR;
 		this.cascadedSC.receivePublication(this, callback, oti, true);
 	}
 
 	/**
 	 * Gets the cascaded sc.
-	 * 
+	 *
 	 * @return the cascaded sc
 	 */
 	public CascadedSC getCascadedSC() {
@@ -305,9 +294,9 @@ public class CascadedClient {
 	}
 
 	/**
-	 * Checks if is destroyed. Careful in use - destroy method renews the client. This method is only to use if u are still holding
-	 * the same instance. On the service it might be a new cascaded client instance in the meantime.
-	 * 
+	 * Checks if is destroyed. Careful in use - destroy method renews the client. This method is only to use if u are still holding the same instance. On the service it might be a
+	 * new cascaded client instance in the meantime.
+	 *
 	 * @return true, if is destroyed
 	 */
 	public boolean isDestroyed() {
@@ -316,7 +305,7 @@ public class CascadedClient {
 
 	/**
 	 * Gets the msg sequence nr.
-	 * 
+	 *
 	 * @return the msg sequence nr
 	 */
 	public SCMPMessageSequenceNr getMsgSequenceNr() {
@@ -324,10 +313,9 @@ public class CascadedClient {
 	}
 
 	/**
-	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The publish
-	 * service gets a new instance of CascadedClient which holds current subscribers. Destroy should be called having a permit to
-	 * avoid errors in proceeding subscribe/unsubscribe/changeSubscription. Destroy releases any thread waiting for a permit on
-	 * semaphore. It unsubscribes the current cascaded client.
+	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The publish service gets a new instance of CascadedClient which
+	 * holds current subscribers. Destroy should be called having a permit to avoid errors in proceeding subscribe/unsubscribe/changeSubscription. Destroy releases any thread
+	 * waiting for a permit on semaphore. It unsubscribes the current cascaded client.
 	 */
 	public void destroy() {
 		// synchronization avoids changing destroyed of more than one thread at the same time

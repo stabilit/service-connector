@@ -46,13 +46,13 @@ public class TestConstants {
 	public static final String SC01Properties = "sc0.properties";
 	public static final String SC1Properties = "sc1.properties";
 	public static final String SC2Properties = "sc2.properties";
-	public static final String log4jSC0Properties = "log4j-sc0.properties";
-	public static final String log4jSC0AProperties = "log4j-sc0A.properties";
-	public static final String log4jSC1Properties = "log4j-sc1.properties";
-	public static final String log4jSC2Properties = "log4j-sc2.properties";
+	public static final String logbackSC0 = "logback-sc0.xml";
+	public static final String logbackSC0A = "logback-sc0A.xml";
+	public static final String logbackSC1 = "logback-sc1.xml";
+	public static final String logbackSC2 = "logback-sc2.xml";
 
-	public static final String log4jClnProperties = "log4j-cln.properties";
-	public static final String log4jSrvProperties = "log4j-srv.properties";
+	public static final String logbackCln = "logback-cln.xml";
+	public static final String logbackSrv = "logback-srv.xml";
 	public static final String SC0Properties = "sc0.properties";
 	public static final String SC0AProperties = "sc0A.properties";
 	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";

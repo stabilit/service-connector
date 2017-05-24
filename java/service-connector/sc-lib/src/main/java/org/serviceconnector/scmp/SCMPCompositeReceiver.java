@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to complete
- * request/response.
- * 
+ * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to complete request/response.
+ *
  * @author JTraber
  */
 public class SCMPCompositeReceiver extends SCMPMessage {
@@ -36,7 +36,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1735822027625330541L;
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCMPCompositeReceiver.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPCompositeReceiver.class);
 
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
@@ -53,11 +53,9 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Instantiates a new SCMPCompositeReceiver.
-	 * 
-	 * @param request
-	 *            the request message
-	 * @param messagePart
-	 *            the message part
+	 *
+	 * @param request the request message
+	 * @param messagePart the message part
 	 */
 	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
 		// SCMP Version request
@@ -90,9 +88,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Adds the part.
-	 * 
-	 * @param message
-	 *            the SCMP message
+	 *
+	 * @param message the SCMP message
 	 */
 	public void add(SCMPMessage message) {
 		if (message == null) {
@@ -142,7 +139,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Merge part bodies.
-	 * 
+	 *
 	 * @return the object
 	 */
 	private Object mergePartBodies() {
@@ -197,9 +194,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Write body out to given stream instance.
-	 * 
-	 * @param outStream
-	 *            the out stream
+	 *
+	 * @param outStream the out stream
 	 */
 	public void writeBodyAsStream(OutputStream outStream) {
 		// put all parts together to get complete body
@@ -231,7 +227,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Gets the poll message. Poll message to send in order to receive the next part of large message.
-	 * 
+	 *
 	 * @return the poll message
 	 */
 	public SCMPMessage getPollMessage() {
@@ -240,7 +236,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/**
 	 * Gets the offset.
-	 * 
+	 *
 	 * @return the offset
 	 */
 	public int getOffset() {

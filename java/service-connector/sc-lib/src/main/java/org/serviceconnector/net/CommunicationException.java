@@ -18,7 +18,7 @@ package org.serviceconnector.net;
 
 /**
  * The Class CommunicationException. Occurs when communicating process fails.
- * 
+ *
  * @author JTraber
  */
 public class CommunicationException extends Exception {
@@ -28,7 +28,7 @@ public class CommunicationException extends Exception {
 
 	/**
 	 * Instantiates a new communication exception.
-	 * 
+	 *
 	 * @param errorMsg the error message
 	 */
 	public CommunicationException(String errorMsg) {

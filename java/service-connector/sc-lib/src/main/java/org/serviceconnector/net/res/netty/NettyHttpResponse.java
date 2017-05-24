@@ -18,7 +18,8 @@ package org.serviceconnector.net.res.netty;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -30,20 +31,18 @@ import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
 /**
- * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on
- * JBoss Netty.
+ * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss Netty.
  */
 public class NettyHttpResponse extends ResponseAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponse.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpResponse.class);
 
 	/**
 	 * Instantiates a new netty http response.
-	 * 
-	 * @param channel
-	 *            the communication channel
+	 *
+	 * @param channel the communication channel
 	 */
 	public NettyHttpResponse(Channel channel) {
 		super(channel);
@@ -64,9 +63,8 @@ public class NettyHttpResponse extends ResponseAdapter {
 		// Write the response.
 		channel.write(httpResponse);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress())
-					.getHostName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(),
-					0, buffer.toByteBuffer().array().length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getHostName(),
+					((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
 		}
 	}
 }

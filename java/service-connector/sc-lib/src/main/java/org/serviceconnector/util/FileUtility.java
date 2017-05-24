@@ -29,16 +29,18 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Category;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
 
 /**
  * The Class FileUtility.
@@ -46,7 +48,7 @@ import org.serviceconnector.scmp.SCMPError;
 public final class FileUtility {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(FileUtility.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUtility.class);
 
 	/**
 	 * Instantiates a new file utility.
@@ -56,9 +58,8 @@ public final class FileUtility {
 
 	/**
 	 * Exists.
-	 * 
-	 * @param filename
-	 *            the filename
+	 *
+	 * @param filename the filename
 	 * @return true if the given file exists
 	 */
 	public static boolean exists(String filename) {
@@ -68,7 +69,7 @@ public final class FileUtility {
 
 	/**
 	 * Check if give file belongs to current date (day)
-	 * 
+	 *
 	 * @param file
 	 * @param date
 	 * @return
@@ -77,9 +78,9 @@ public final class FileUtility {
 		long lastModified = file.lastModified();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
-		cal.set(Calendar.MINUTE, 0);                 // set minute in hour
-		cal.set(Calendar.SECOND, 0);                 // set second in minute
+		cal.set(Calendar.HOUR_OF_DAY, 0); // set hour to midnight
+		cal.set(Calendar.MINUTE, 0); // set minute in hour
+		cal.set(Calendar.SECOND, 0); // set second in minute
 		cal.set(Calendar.MILLISECOND, 0);
 		long startTS = cal.getTimeInMillis();
 		long endTS = startTS + (24 * 60 * 60 * 1000);
@@ -88,19 +89,18 @@ public final class FileUtility {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if is file locked.
-	 * 
-	 * @param filename
-	 *            the filename
+	 *
+	 * @param filename the filename
 	 * @return true, if is file locked
 	 */
 	public static boolean isFileLocked(String filename) {
 		File file = new File(filename);
 		if (file.exists()) {
 			// Get a file channel for the file
-			FileChannel channel;
+			FileChannel channel = null;
 			try {
 				channel = new RandomAccessFile(file, "rw").getChannel();
 
@@ -113,7 +113,7 @@ public final class FileUtility {
 				}
 				lock.release();
 			} catch (Exception e) {
-				LOGGER.debug(e);
+				LOGGER.debug(String.format("File '%s' could not be locked", filename), e);
 			}
 			return false;
 		} else {
@@ -123,9 +123,8 @@ public final class FileUtility {
 
 	/**
 	 * Locate.
-	 * 
-	 * @param resourceName
-	 *            the resource name
+	 *
+	 * @param resourceName the resource name
 	 * @return the uRL
 	 */
 	public static URL locate(String resourceName) {
@@ -138,9 +137,8 @@ public final class FileUtility {
 
 	/**
 	 * Locate from absolute path.
-	 * 
-	 * @param resourceName
-	 *            the resource name
+	 *
+	 * @param resourceName the resource name
 	 * @return the uRL
 	 */
 	public static URL locateFromAbsolutePath(String resourceName) {
@@ -161,9 +159,8 @@ public final class FileUtility {
 
 	/**
 	 * Locate from current classpath.
-	 * 
-	 * @param resourceName
-	 *            the resource name
+	 *
+	 * @param resourceName the resource name
 	 * @return the uRL
 	 */
 	public static URL locateFromCurrentClasspath(String resourceName) {
@@ -178,12 +175,10 @@ public final class FileUtility {
 
 	/**
 	 * To url.
-	 * 
-	 * @param file
-	 *            the file
+	 *
+	 * @param file the file
 	 * @return the uRL
-	 * @throws MalformedURLException
-	 *             the malformed url exception
+	 * @throws MalformedURLException the malformed url exception
 	 */
 	static URL toURL(File file) throws MalformedURLException {
 		try {
@@ -200,9 +195,8 @@ public final class FileUtility {
 
 	/**
 	 * Not exists.
-	 * 
-	 * @param filename
-	 *            the filename
+	 *
+	 * @param filename the filename
 	 * @return true if the given file does not exist
 	 */
 	public static boolean notExists(String filename) {
@@ -211,9 +205,8 @@ public final class FileUtility {
 
 	/**
 	 * Not exists or unlocked.
-	 * 
-	 * @param filename
-	 *            the filename
+	 *
+	 * @param filename the filename
 	 * @return true if the given file does not exist
 	 */
 	public static boolean notExistsOrUnlocked(String filename) {
@@ -224,12 +217,9 @@ public final class FileUtility {
 	}
 
 	/**
-	 * @param filename
-	 *            to look for
-	 * @param nrSeconds
-	 *            to wait (check is done in 1 second interval)
-	 * @throws Exception
-	 *             if the file does not exist after the given time
+	 * @param filename to look for
+	 * @param nrSeconds to wait (check is done in 1 second interval)
+	 * @throws Exception if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
 		if (exists(filename)) {
@@ -245,12 +235,9 @@ public final class FileUtility {
 	}
 
 	/**
-	 * @param filename
-	 *            to look for
-	 * @param nrSeconds
-	 *            to wait (check is done in 1 second interval)
-	 * @throws Exception
-	 *             if the file does not exist after the given time
+	 * @param filename to look for
+	 * @param nrSeconds to wait (check is done in 1 second interval)
+	 * @throws Exception if the file does not exist after the given time
 	 */
 	public static void waitExistsAndLocked(String filename, int nrSeconds) throws Exception {
 		if (exists(filename) && isFileLocked(filename)) {
@@ -266,12 +253,9 @@ public final class FileUtility {
 	}
 
 	/**
-	 * @param filename
-	 *            to look for
-	 * @param nrSeconds
-	 *            to wait (check is done in 1 second interval)
-	 * @throws Exception
-	 *             if the file still exists after the given time
+	 * @param filename to look for
+	 * @param nrSeconds to wait (check is done in 1 second interval)
+	 * @throws Exception if the file still exists after the given time
 	 */
 	public static void waitNotExistsOrUnlocked(String filename, int nrSeconds) throws Exception {
 		if (notExistsOrUnlocked(filename)) {
@@ -288,12 +272,10 @@ public final class FileUtility {
 
 	/**
 	 * Create file containing the PID. Is used for testing purpose to verify that process is running properly.
-	 * 
-	 * @param fileNameFull
-	 *            the file name full
+	 *
+	 * @param fileNameFull the file name full
 	 * @return the file ctx
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public static FileCtx createPIDfileAndLock(String fileNameFull) throws Exception {
 		FileWriter fw = null;
@@ -326,9 +308,8 @@ public final class FileUtility {
 
 	/**
 	 * Delete file. Catch all possible errors
-	 * 
-	 * @param fileNameFull
-	 *            the file name full
+	 *
+	 * @param fileNameFull the file name full
 	 */
 	public static void deleteFile(String fileNameFull) {
 		try {
@@ -337,24 +318,24 @@ public final class FileUtility {
 				pidFile.delete();
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e);
+			LOGGER.debug(String.format("File '%s' could not be deleted", fileNameFull), e);
 			// ignore any error
 		}
 	}
 
 	/**
 	 * Gets the log path.
-	 * 
-	 * @return directory configured for appender in the current log4j configuration file
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *
+	 * @return directory configured for appender in the current logback configuration file
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public static String getLogPath() throws SCMPValidatorException {
-		Category rootLogger = LOGGER.getParent();
-		Enumeration<?> appenders = rootLogger.getAllAppenders();
+
+		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		FileAppender fileAppender = null;
-		while (appenders.hasMoreElements()) {
-			Appender appender = (Appender) appenders.nextElement();
+		Iterator<Appender<ILoggingEvent>> iteratorForAppenders = rootLogger.iteratorForAppenders();
+		while (iteratorForAppenders.hasNext()) {
+			Appender<ILoggingEvent> appender = iteratorForAppenders.next();
 			if (appender instanceof FileAppender) {
 				fileAppender = (FileAppender) appender;
 				break;
@@ -377,13 +358,10 @@ public final class FileUtility {
 
 	/**
 	 * Read file to writer.
-	 * 
-	 * @param filePath
-	 *            the file path
-	 * @param writer
-	 *            the writer
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param filePath the file path
+	 * @param writer the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void readFileToWriter(String filePath, Writer writer) throws IOException {
 		FileReader fr = new FileReader(filePath);

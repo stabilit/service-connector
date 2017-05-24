@@ -40,16 +40,13 @@ import org.serviceconnector.util.DateTimeUtility;
  * <br/>
  * Browse to the HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters keys.<br />
  * <br />
- * MaxUserPort: This REG_DWORD parameter controls the maximum port number that is used when a program requests any available user
- * port
- * from the server. Typically, ephemeral (short-lived) ports are allocated between the values of 1024 and 5000 inclusive.<br />
+ * MaxUserPort: This REG_DWORD parameter controls the maximum port number that is used when a program requests any available user port from the server. Typically, ephemeral
+ * (short-lived) ports are allocated between the values of 1024 and 5000 inclusive.<br />
  * <br />
  * TcpNumConnections: This REG_DWORD parameter limits the maximum number of connections that TCP can have open at the same time.<br />
  * <br />
- * Valid examples: MaxUserPort 60000, TcpNumConnections 60000
- * More Information: {@link http
- * ://publib.boulder.ibm.com/infocenter/iisinfsv/v8r1/index.jsp?topic=/com.ibm.swg.im.iis.productization
- * .iisinfsv.install.doc/topics/wsisinst_config_winregtcpip.html}
+ * Valid examples: MaxUserPort 60000, TcpNumConnections 60000 More Information: {@link http
+ * ://publib.boulder.ibm.com/infocenter/iisinfsv/v8r1/index.jsp?topic=/com.ibm.swg.im.iis.productization .iisinfsv.install.doc/topics/wsisinst_config_winregtcpip.html}
  */
 public class ConnectionTest extends IntegrationSuperTest {
 

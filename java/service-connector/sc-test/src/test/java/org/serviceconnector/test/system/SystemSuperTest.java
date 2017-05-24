@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,7 +38,7 @@ import org.serviceconnector.log.Loggers;
 public class SystemSuperTest {
 
 	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	protected static final Logger testLogger = LoggerFactory.getLogger(Loggers.TEST.getValue());
 
 	protected static ProcessesController ctrl;
 	protected static Map<String, ProcessCtx> scCtxs;
@@ -91,15 +92,13 @@ public class SystemSuperTest {
 	public static void setUpServiceConnectorAndServer() {
 		// SC definitions
 		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties, TestConstants.logbackSC0);
 		sc0Defs.add(sc0Def);
 
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
@@ -109,18 +108,15 @@ public class SystemSuperTest {
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties, TestConstants.logbackSC0);
 		scDefs.add(sc0Def);
-		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties,
-				TestConstants.log4jSC1Properties);
+		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties, TestConstants.logbackSC1);
 		scDefs.add(sc1);
 
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = scDefs;
@@ -130,21 +126,17 @@ public class SystemSuperTest {
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
 		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties, TestConstants.logbackSC0);
 		scDefs.add(sc0Def);
-		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties,
-				TestConstants.log4jSC1Properties);
+		ServiceConnectorDefinition sc1 = new ServiceConnectorDefinition(TestConstants.SC1, TestConstants.SC1Properties, TestConstants.logbackSC1);
 		scDefs.add(sc1);
-		ServiceConnectorDefinition sc2 = new ServiceConnectorDefinition(TestConstants.SC2, TestConstants.SC2Properties,
-				TestConstants.log4jSC2Properties);
+		ServiceConnectorDefinition sc2 = new ServiceConnectorDefinition(TestConstants.SC2, TestConstants.SC2Properties, TestConstants.logbackSC2);
 		scDefs.add(sc2);
 
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = scDefs;

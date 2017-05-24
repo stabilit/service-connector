@@ -32,33 +32,28 @@ import org.serviceconnector.util.XMLDumpWriter;
 public class FileSession extends Session {
 
 	/** The streaming. */
-	private boolean streaming;	
+	private boolean streaming;
 	/** The path. */
-	private String path;	
+	private String path;
 	/** The http url connection. */
-	private HttpURLConnection httpURLConnection;	
+	private HttpURLConnection httpURLConnection;
 	/** The is. */
-	private InputStream is;	
+	private InputStream is;
 	/** The out. */
-	private OutputStream out;	
+	private OutputStream out;
 	/** The upload script. */
-	private String uploadScript;	
+	private String uploadScript;
 	/** The get file list script. */
 	private String getFileListScript;
 
 	/**
 	 * Instantiates a new file session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param ipAddressList
-	 *            the ip address list
-	 * @param path
-	 *            the path
-	 * @param uploadScript
-	 *            the upload script
-	 * @param getFileListScript
-	 *            the get file list script
+	 *
+	 * @param sessionInfo the session info
+	 * @param ipAddressList the ip address list
+	 * @param path the path
+	 * @param uploadScript the upload script
+	 * @param getFileListScript the get file list script
 	 */
 	public FileSession(String sessionInfo, String ipAddressList, String path, String uploadScript, String getFileListScript) {
 		super(sessionInfo, ipAddressList);
@@ -71,7 +66,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the file server.
-	 * 
+	 *
 	 * @return the file server
 	 */
 	public FileServer getFileServer() {
@@ -80,7 +75,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Checks if is streaming.
-	 * 
+	 *
 	 * @return true, if is streaming
 	 */
 	public boolean isStreaming() {
@@ -103,12 +98,11 @@ public class FileSession extends Session {
 
 	/**
 	 * Dump the session into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("file-session");
 		writer.writeAttribute("id", this.getId());
@@ -129,10 +123,10 @@ public class FileSession extends Session {
 		this.getService().dump(writer);
 		writer.writeEndElement(); // file-session
 	}
-	
+
 	/**
 	 * Gets the path.
-	 * 
+	 *
 	 * @return the path
 	 */
 	public String getPath() {
@@ -141,9 +135,8 @@ public class FileSession extends Session {
 
 	/**
 	 * Sets the http url connection.
-	 * 
-	 * @param httpCon
-	 *            the new http url connection
+	 *
+	 * @param httpCon the new http url connection
 	 */
 	public void setHttpUrlConnection(HttpURLConnection httpCon) {
 		this.httpURLConnection = httpCon;
@@ -151,9 +144,8 @@ public class FileSession extends Session {
 
 	/**
 	 * Sets the input stream.
-	 * 
-	 * @param is
-	 *            the new input stream
+	 *
+	 * @param is the new input stream
 	 */
 	public void setInputStream(InputStream is) {
 		this.is = is;
@@ -161,7 +153,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the http url connection.
-	 * 
+	 *
 	 * @return the http url connection
 	 */
 	public HttpURLConnection getHttpURLConnection() {
@@ -170,7 +162,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the input stream.
-	 * 
+	 *
 	 * @return the input stream
 	 */
 	public InputStream getInputStream() {
@@ -179,7 +171,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the upload file script name.
-	 * 
+	 *
 	 * @return the upload file script name
 	 */
 	public String getUploadFileScriptName() {
@@ -188,7 +180,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the gets the file list script name.
-	 * 
+	 *
 	 * @return the gets the file list script name
 	 */
 	public String getGetFileListScriptName() {
@@ -197,9 +189,8 @@ public class FileSession extends Session {
 
 	/**
 	 * Sets the output stream.
-	 * 
-	 * @param out
-	 *            the new output stream
+	 *
+	 * @param out the new output stream
 	 */
 	public void setOutputStream(OutputStream out) {
 		this.out = out;
@@ -207,7 +198,7 @@ public class FileSession extends Session {
 
 	/**
 	 * Gets the output steam.
-	 * 
+	 *
 	 * @return the output steam
 	 */
 	public OutputStream getOutputSteam() {

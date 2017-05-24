@@ -18,7 +18,7 @@ package org.serviceconnector.net.connection;
 
 /**
  * The Interface IIdleConnectionCallback.
- * 
+ *
  * @author JTraber
  */
 public interface IIdleConnectionCallback extends Runnable {

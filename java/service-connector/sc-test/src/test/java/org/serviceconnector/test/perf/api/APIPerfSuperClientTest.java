@@ -18,7 +18,8 @@ package org.serviceconnector.test.perf.api;
 
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.TestConstants;
@@ -31,7 +32,6 @@ import org.serviceconnector.api.cln.SCService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.perf.api.cln.APIReceivePublicationBenchmark;
 
 public class APIPerfSuperClientTest extends APIPerfSuperTest {
 
@@ -41,19 +41,19 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 	protected ProcessCtx sesSrvCtx;
 	protected ProcessCtx pubSrvCtx;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 1000, 10,
-				TestConstants.sesServiceName1);
-		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 1000, 10,
-				TestConstants.pubServiceName1);
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_TCP, 1000, 10, TestConstants.sesServiceName1);
+		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+				TestConstants.PORT_SC0_TCP, 1000, 10, TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -87,7 +87,7 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 	protected class MsgCallback extends SCMessageCallback {
 
 		/** The Constant LOGGER. */
-		private final Logger LOGGER = Logger.getLogger(MsgCallback.class);
+		private final Logger LOGGER = LoggerFactory.getLogger(MsgCallback.class);
 
 		private SCMessage message;
 		private volatile int messageCounter;
@@ -137,8 +137,7 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 
 			if (((messageCounter + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				APIReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter + 1) + "... "
-						+ (1000000 / (stopPart - startPart)) + " msg/sec.");
+				APIPerfSuperTest.testLogger.info("Receiving message nr. " + (messageCounter + 1) + "... " + (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
 			if (expectedMessages == messageCounter) {
@@ -150,8 +149,7 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 		public void receive(Exception e) {
 			LOGGER.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				LOGGER.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text="
-						+ ((SCServiceException) e).getSCErrorText());
+				LOGGER.info("SC error received code=" + ((SCServiceException) e).getSCErrorCode() + " text=" + ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;
 			messageCounter = expectedMessages;

@@ -16,19 +16,19 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class LinkedNode. Represents a node of the LinkedQueue construct.
- * 
- * @param <T>
- *            the generic type
+ *
+ * @param <T> the generic type
  */
 public class LinkedNode<T> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(LinkedNode.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LinkedNode.class);
 
 	/** The value of the node. */
 	public T value;
@@ -39,9 +39,8 @@ public class LinkedNode<T> {
 
 	/**
 	 * Instantiates a LinkedNode.
-	 * 
-	 * @param value
-	 *            the value
+	 *
+	 * @param value the value
 	 */
 	LinkedNode(T value) {
 		this.value = value;
@@ -49,11 +48,9 @@ public class LinkedNode<T> {
 
 	/**
 	 * Instantiates a LinkedNode.
-	 * 
-	 * @param value
-	 *            the value
-	 * @param next
-	 *            the next
+	 *
+	 * @param value the value
+	 * @param next the next
 	 */
 	public LinkedNode(T value, LinkedNode<T> next) {
 		this.value = value;
@@ -62,7 +59,7 @@ public class LinkedNode<T> {
 
 	/**
 	 * Gets the next node.
-	 * 
+	 *
 	 * @return the next node
 	 */
 	public LinkedNode<T> getNext() {
@@ -71,7 +68,7 @@ public class LinkedNode<T> {
 
 	/**
 	 * Gets the value of the node.
-	 * 
+	 *
 	 * @return the value of the node
 	 */
 	public T getValue() {
@@ -80,7 +77,7 @@ public class LinkedNode<T> {
 
 	/**
 	 * Checks if is referenced.
-	 * 
+	 *
 	 * @return true, if is referenced
 	 */
 	public synchronized boolean isReferenced() {
@@ -103,7 +100,7 @@ public class LinkedNode<T> {
 
 	/**
 	 * Gets the reference count.
-	 * 
+	 *
 	 * @return the reference count
 	 */
 	public synchronized int getReferenceCount() {

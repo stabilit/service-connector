@@ -18,7 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
@@ -26,21 +25,21 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.SynchronousCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Class CommandCallback. CommandCallback might be used in a command if executing the command jobs needs a callback.
- * Error handling is addressed by this callback.
+ * The Class CommandCallback. CommandCallback might be used in a command if executing the command jobs needs a callback. Error handling is addressed by this callback.
  */
 public class CommandCallback extends SynchronousCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandCallback.class);
 
 	/**
 	 * Instantiates a new command callback.
-	 * 
-	 * @param synchronous
-	 *            the synchronous
+	 *
+	 * @param synchronous the synchronous
 	 */
 	public CommandCallback(boolean synchronous) {
 		this.synchronous = synchronous;
@@ -49,7 +48,7 @@ public class CommandCallback extends SynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		LOGGER.warn(ex);
+		LOGGER.warn("Received exception", ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version current

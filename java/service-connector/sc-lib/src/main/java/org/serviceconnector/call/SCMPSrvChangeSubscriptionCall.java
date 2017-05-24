@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -26,25 +27,22 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPSrvChangeSubscriptionCall. Call changes subscription for a client.
- * 
+ *
  * @author JTraber
  */
 public class SCMPSrvChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPSrvChangeSubscriptionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSrvChangeSubscriptionCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param receivedMessage
-	 *            the received message
+	 *
+	 * @param requester the requester
+	 * @param receivedMessage the received message
 	 */
 	public SCMPSrvChangeSubscriptionCall(IRequester requester, SCMPMessage receivedMessage) {
 		super(requester, receivedMessage);
@@ -69,9 +67,8 @@ public class SCMPSrvChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

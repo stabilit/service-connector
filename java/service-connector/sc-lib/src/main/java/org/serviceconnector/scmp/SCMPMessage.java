@@ -22,20 +22,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 
 /**
  * Service Connector Message Protocol. Data container for one message.
- * 
+ *
  * @author JTraber
  */
 public class SCMPMessage implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4620549763039638861L;
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCMPMessage.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPMessage.class);
 	/** The SCMP_VERSION of current message. */
 	private final SCMPVersion SCMP_VERSION;;
 	/** The actual SC_VERSION. */
@@ -55,9 +56,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Instantiates a new SCMP.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version of current message
+	 *
+	 * @param scmpVersion the SCMP version of current message
 	 */
 	public SCMPMessage(SCMPVersion scmpVersion) {
 		this.header = new HashMap<String, String>();
@@ -67,12 +67,10 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * Instantiates a new SCMP. Copy constructor. Make a copy of given object.
-	 * Pay attention the body of type object is not properly copied here. Copying an instance of type object is not possible.
-	 * SCMPVersion and SCVersion are not copied as well knowing that runtime changes are forbidden anyway.
-	 * 
-	 * @param toCopyObject
-	 *            the object to be copied
+	 * Instantiates a new SCMP. Copy constructor. Make a copy of given object. Pay attention the body of type object is not properly copied here. Copying an instance of type object
+	 * is not possible. SCMPVersion and SCVersion are not copied as well knowing that runtime changes are forbidden anyway.
+	 *
+	 * @param toCopyObject the object to be copied
 	 */
 	public SCMPMessage(SCMPMessage toCopyObject) {
 		this(toCopyObject.getSCMPVersion(), toCopyObject.getHeader());
@@ -85,11 +83,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Instantiates a new SCMP message with given message key.
-	 * 
-	 * @param scmpVersion
-	 *            the SCMP version of current message
-	 * @param baseHeader
-	 *            the base header
+	 *
+	 * @param scmpVersion the SCMP version of current message
+	 * @param baseHeader the base header
 	 */
 	public SCMPMessage(SCMPVersion scmpVersion, Map<String, String> baseHeader) {
 		this(scmpVersion);
@@ -98,7 +94,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the SCMP version.
-	 * 
+	 *
 	 * @return the SCMP version
 	 */
 	public SCMPVersion getSCMPVersion() {
@@ -107,9 +103,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the message type.
-	 * 
-	 * @param messageType
-	 *            the new message type
+	 *
+	 * @param messageType the new message type
 	 */
 	public void setMessageType(SCMPMsgType messageType) {
 		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageType.getValue());
@@ -117,9 +112,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the message type.
-	 * 
-	 * @param messageTypeValue
-	 *            the new message type
+	 *
+	 * @param messageTypeValue the new message type
 	 */
 	public void setMessageType(String messageTypeValue) {
 		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageTypeValue);
@@ -127,7 +121,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the message type.
-	 * 
+	 *
 	 * @return the message type
 	 */
 	public String getMessageType() {
@@ -136,7 +130,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the message sequence number.
-	 * 
+	 *
 	 * @return the message sequence number
 	 */
 	public String getMessageSequenceNr() {
@@ -145,7 +139,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the cache id.
-	 * 
+	 *
 	 * @return the cache id
 	 */
 	public String getCacheId() {
@@ -154,9 +148,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the cache id.
-	 * 
-	 * @param cacheId
-	 *            the new cache id
+	 *
+	 * @param cacheId the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		if (cacheId == null) {
@@ -167,7 +160,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if is cached.
-	 * 
+	 *
 	 * @return true, if is cached
 	 */
 	public boolean isCached() {
@@ -186,7 +179,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the message is a fault.
-	 * 
+	 *
 	 * @return true, if is fault
 	 */
 	public boolean isFault() {
@@ -196,7 +189,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the message is a part.
-	 * 
+	 *
 	 * @return true, if is part
 	 */
 	public boolean isPart() {
@@ -206,7 +199,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the message is a poll request in large message sequence.
-	 * 
+	 *
 	 * @return true, if is poll
 	 */
 	public boolean isPollRequest() {
@@ -216,7 +209,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if is keep alive.
-	 * 
+	 *
 	 * @return true, if is keep alive
 	 */
 	public boolean isKeepAlive() {
@@ -225,7 +218,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Is true if there is an offset to use when accessing body data.
-	 * 
+	 *
 	 * @return true, if there is body offset
 	 */
 	public boolean isBodyOffset() {
@@ -235,7 +228,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the body offset.
-	 * 
+	 *
 	 * @return the body offset
 	 */
 	public int getBodyOffset() {
@@ -245,7 +238,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the message is a composite.
-	 * 
+	 *
 	 * @return true, if is composite
 	 */
 	public boolean isComposite() {
@@ -255,7 +248,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the body is of type byte array.
-	 * 
+	 *
 	 * @return true, if body is of type byte array
 	 */
 	public boolean isByteArray() {
@@ -267,7 +260,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if the body is of type string.
-	 * 
+	 *
 	 * @return true, if body is of type string
 	 */
 	public boolean isString() {
@@ -279,7 +272,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if this is a large message.
-	 * 
+	 *
 	 * @return true, if is a large message
 	 */
 	public boolean isLargeMessage() {
@@ -293,7 +286,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if is compressed.
-	 * 
+	 *
 	 * @return true, if is compressed
 	 */
 	public boolean isCompressed() {
@@ -305,9 +298,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Removes the attribute with the specified name from the header.
-	 * 
-	 * @param name
-	 *            the name
+	 *
+	 * @param name the name
 	 */
 	public void removeHeader(String name) {
 		this.header.remove(name);
@@ -315,9 +307,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Removes the attribute with the specified type from the header.
-	 * 
-	 * @param headerType
-	 *            the header type
+	 *
+	 * @param headerType the header type
 	 */
 	public void removeHeader(SCMPHeaderAttributeKey headerType) {
 		this.header.remove(headerType.getValue());
@@ -325,11 +316,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header attribute by name and value.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
-	 * @param attributeValue
-	 *            the value of the attribute
+	 *
+	 * @param attributeName the name of the attribute
+	 * @param attributeValue the value of the attribute
 	 */
 	public void setHeader(String attributeName, String attributeValue) {
 		this.header.put(attributeName, attributeValue);
@@ -337,11 +326,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header attribute by type and value.
-	 * 
-	 * @param headerType
-	 *            the header type
-	 * @param attributeValue
-	 *            the value
+	 *
+	 * @param headerType the header type
+	 * @param attributeValue the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, String attributeValue) {
 		this.header.put(headerType.getValue(), attributeValue);
@@ -349,11 +336,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header check null value. If value is null header is not set!
-	 * 
-	 * @param headerType
-	 *            the header type
-	 * @param attributeValue
-	 *            the attribute value
+	 *
+	 * @param headerType the header type
+	 * @param attributeValue the attribute value
 	 */
 	public void setHeaderCheckNull(SCMPHeaderAttributeKey headerType, String attributeValue) {
 		if (attributeValue == null) {
@@ -365,11 +350,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header attribute by type and value.
-	 * 
-	 * @param headerType
-	 *            the header attribute
-	 * @param attributeValue
-	 *            the value
+	 *
+	 * @param headerType the header attribute
+	 * @param attributeValue the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, boolean attributeValue) {
 		if (attributeValue) {
@@ -381,11 +364,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header by type and value.
-	 * 
-	 * @param headerType
-	 *            the header attribute
-	 * @param attributeValue
-	 *            the value
+	 *
+	 * @param headerType the header attribute
+	 * @param attributeValue the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, int attributeValue) {
 		this.header.put(headerType.getValue(), String.valueOf(attributeValue));
@@ -393,11 +374,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header by type and value.
-	 * 
-	 * @param headerType
-	 *            the header attribute
-	 * @param attributeValue
-	 *            the value
+	 *
+	 * @param headerType the header attribute
+	 * @param attributeValue the value
 	 */
 	public void setHeader(SCMPHeaderAttributeKey headerType, long attributeValue) {
 		this.header.put(headerType.getValue(), String.valueOf(attributeValue));
@@ -405,9 +384,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Copies the header from another message.
-	 * 
-	 * @param sourceMessage
-	 *            the message with header header to be copied
+	 *
+	 * @param sourceMessage the message with header header to be copied
 	 */
 	public void setHeader(SCMPMessage sourceMessage) {
 		this.setHeader(sourceMessage.getHeader());
@@ -415,11 +393,9 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Copies a header attribute from another message.
-	 * 
-	 * @param sourceMessage
-	 *            the source message from which header header should be copied
-	 * @param headerType
-	 *            the key to be copied. If the key does not exist in the source message, attribute is not set.
+	 *
+	 * @param sourceMessage the source message from which header header should be copied
+	 * @param headerType the key to be copied. If the key does not exist in the source message, attribute is not set.
 	 */
 	public void setHeader(SCMPMessage sourceMessage, SCMPHeaderAttributeKey headerType) {
 		String value = sourceMessage.getHeader(headerType);
@@ -431,9 +407,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Returns the value of the header attribute.
-	 * 
-	 * @param attributeName
-	 *            the name of the attribute
+	 *
+	 * @param attributeName the name of the attribute
 	 * @return the attribute value
 	 */
 	public String getHeader(String attributeName) {
@@ -442,9 +417,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Returns the value of the header attribute.
-	 * 
-	 * @param headerType
-	 *            the header type
+	 *
+	 * @param headerType the header type
 	 * @return the attribute value
 	 */
 	public String getHeader(SCMPHeaderAttributeKey headerType) {
@@ -452,11 +426,10 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and if you unbox
-	 * return value automatically into boolean than a NullPointerException will be thrown.
-	 * 
-	 * @param headerType
-	 *            the header attribute
+	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and if you unbox return value automatically into boolean than a
+	 * NullPointerException will be thrown.
+	 *
+	 * @param headerType the header attribute
 	 * @return the boolean attribute value
 	 */
 	public Boolean getHeaderBoolean(SCMPHeaderAttributeKey headerType) {
@@ -473,9 +446,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the header flag. Gets a header flag if header contains header key. Value totally irrelevant in this case.
-	 * 
-	 * @param headerKey
-	 *            the header key
+	 *
+	 * @param headerKey the header key
 	 * @return the header flag
 	 */
 	public boolean getHeaderFlag(SCMPHeaderAttributeKey headerKey) {
@@ -487,9 +459,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Returns the integer value of the header attribute.
-	 * 
-	 * @param headerType
-	 *            the header attribute
+	 *
+	 * @param headerType the header attribute
 	 * @return the integer attribute value
 	 */
 	public Integer getHeaderInt(SCMPHeaderAttributeKey headerType) {
@@ -509,7 +480,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the session id.
-	 * 
+	 *
 	 * @return the session id
 	 */
 	public String getSessionId() {
@@ -518,7 +489,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -527,9 +498,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
+	 *
+	 * @param serviceName the new service name
 	 */
 	public void setServiceName(String serviceName) {
 		this.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
@@ -537,9 +507,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the session id.
-	 * 
-	 * @param sessionId
-	 *            the new session id
+	 *
+	 * @param sessionId the new session id
 	 */
 	public void setSessionId(String sessionId) {
 		if (sessionId == null) {
@@ -550,7 +519,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the whole header.
-	 * 
+	 *
 	 * @return the whole header
 	 */
 	public Map<String, String> getHeader() {
@@ -559,9 +528,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the whole header.
-	 * 
-	 * @param header
-	 *            the whole header
+	 *
+	 * @param header the whole header
 	 */
 	public void setHeader(Map<String, String> header) {
 		this.header = header;
@@ -569,9 +537,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the header flag. Sets a headerKey with value null.
-	 * 
-	 * @param headerKey
-	 *            the new header flag
+	 *
+	 * @param headerKey the new header flag
 	 */
 	public void setHeaderFlag(SCMPHeaderAttributeKey headerKey) {
 		this.header.put(headerKey.getValue(), null);
@@ -579,35 +546,31 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the body.
-	 * 
-	 * @param body
-	 *            the new body
+	 *
+	 * @param body the new body
 	 */
 	public void setBody(Object body) {
 		this.body = body;
 		// set body type (bty) in header fields if body is of type TEXT
 		SCMPBodyType bodyType = this.getBodyType();
 		switch (bodyType) {
-		case BINARY:
-		case INPUT_STREAM:
-		case UNDEFINED:
-			return;
-		case TEXT:
-			this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
-		default:
-			return;
+			case BINARY:
+			case INPUT_STREAM:
+			case UNDEFINED:
+				return;
+			case TEXT:
+				this.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
+			default:
+				return;
 		}
 	}
 
 	/**
 	 * Sets the body.
-	 * 
-	 * @param buffer
-	 *            the buffer
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the length
+	 *
+	 * @param buffer the buffer
+	 * @param offset the offset
+	 * @param length the length
 	 */
 	public void setBody(byte[] buffer, int offset, int length) {
 		if (buffer == null) {
@@ -623,7 +586,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the body type.
-	 * 
+	 *
 	 * @return the body type
 	 */
 	public SCMPBodyType getBodyType() {
@@ -644,7 +607,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the body.
-	 * 
+	 *
 	 * @return the body
 	 */
 	public Object getBody() {
@@ -653,7 +616,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Gets the body length.
-	 * 
+	 *
 	 * @return the body length
 	 */
 	public int getBodyLength() {
@@ -669,8 +632,8 @@ public class SCMPMessage implements Serializable {
 		}
 		if (this.body instanceof InputStream) {
 			/*
-			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE
-			 * 2^31-1 (2048 MB). Never rely on bodyLength for body type INPUT_STREAM.
+			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE 2^31-1 (2048 MB). Never rely on bodyLength for
+			 * body type INPUT_STREAM.
 			 */
 			return Integer.MAX_VALUE;
 		}
@@ -678,9 +641,8 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a request returns
-	 * true.
-	 * 
+	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a request returns true.
+	 *
 	 * @return true, if is final request part
 	 */
 	public boolean isReqCompleteAfterMarshallingPart() {
@@ -689,9 +651,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the checks if is request complete after marshalling part.
-	 * 
-	 * @param isReqCompleteAfterMarshallingPart
-	 *            the new checks if is request complete after marshalling part
+	 *
+	 * @param isReqCompleteAfterMarshallingPart the new checks if is request complete after marshalling part
 	 */
 	public void setIsReqCompleteAfterMarshallingPart(boolean isReqCompleteAfterMarshallingPart) {
 		this.isReqCompleteAfterMarshallingPart = isReqCompleteAfterMarshallingPart;
@@ -699,7 +660,7 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Checks if this message is a reply.
-	 * 
+	 *
 	 * @return true, if is reply
 	 */
 	public boolean isReply() {
@@ -708,9 +669,8 @@ public class SCMPMessage implements Serializable {
 
 	/**
 	 * Sets the the reply flag in the message.
-	 * 
-	 * @param isReply
-	 *            the reply flag value
+	 *
+	 * @param isReply the reply flag value
 	 */
 	public void setIsReply(boolean isReply) {
 		this.isReply = isReply;
@@ -724,9 +684,7 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * @param partSize
-	 *            the size in which message will be broken when it is large
-	 *            check done in SCMessage
+	 * @param partSize the size in which message will be broken when it is large check done in SCMessage
 	 */
 	public void setPartSize(int partSize) {
 		this.partSize = partSize;
@@ -740,8 +698,7 @@ public class SCMPMessage implements Serializable {
 	}
 
 	/**
-	 * @param httpUrlFileQualifier
-	 *            the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server.
+	 * @param httpUrlFileQualifier the HTTP URL file qualifier which is added to the URL when communicating to a HTTP server.
 	 */
 	public void setHttpUrlFileQualifier(String httpUrlFileQualifier) {
 		this.httpUrlFileQualifier = httpUrlFileQualifier;

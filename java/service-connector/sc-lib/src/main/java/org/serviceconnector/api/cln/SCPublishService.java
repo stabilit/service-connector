@@ -35,11 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
- * functions. Creating a publish service instance for API users should be done by calling SCClient newPublishService().<br />
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication functions. Creating a publish service instance for
+ * API users should be done by calling SCClient newPublishService().<br />
  * <br />
  * State Diagram<br />
- * 
+ *
  * <pre>
  *        ||                                                        |-----receive publication-------|
  *        \/                                                        |                               |
@@ -50,10 +50,10 @@ import org.slf4j.LoggerFactory;
  *        ||
  *        \/
  * </pre>
- * 
- * After subscribing the service an unsubscribe must follow in every case at the end of communication. Unsubscribe may be called
- * multiple times. Nothing happens if the subscription turns inactive in meantime.
- * 
+ *
+ * After subscribing the service an unsubscribe must follow in every case at the end of communication. Unsubscribe may be called multiple times. Nothing happens if the subscription
+ * turns inactive in meantime.
+ *
  * @author JTraber
  */
 public class SCPublishService extends SCService {
@@ -62,26 +62,21 @@ public class SCPublishService extends SCService {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SCPublishService.class);
 	/**
-	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
-	 * set. Default = 0.
+	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag set. Default = 0.
 	 */
 	protected int noDataIntervalSeconds;
 	/**
-	 * The receive publication timeout in seconds. Time to wait for the reply of SC in case of a receive publication until the
-	 * subscription is marked as dead.
+	 * The receive publication timeout in seconds. Time to wait for the reply of SC in case of a receive publication until the subscription is marked as dead.
 	 */
 	protected int receivePublicationTimeoutSeconds;
 
 	/**
-	 * Instantiates a new SC publish service. Should only be used by service connector internal classes. Instantiating
-	 * SCPublishService should be done by the SCClient method newPublishService().
-	 * 
-	 * @param scClient
-	 *            the SC client
-	 * @param serviceName
-	 *            the service name
-	 * @param requester
-	 *            the requester
+	 * Instantiates a new SC publish service. Should only be used by service connector internal classes. Instantiating SCPublishService should be done by the SCClient method
+	 * newPublishService().
+	 *
+	 * @param scClient the SC client
+	 * @param serviceName the service name
+	 * @param requester the requester
 	 */
 	SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
@@ -93,48 +88,38 @@ public class SCPublishService extends SCService {
 	/**
 	 * Subscribe to SC with default operation timeout. <br />
 	 * Once a subscribe is called a unsubscribe need to be done at the end of a communication.
-	 * 
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
-	 * @param scMessageCallback
-	 *            the SC message callback
+	 *
+	 * @param scSubscribeMessage the SC subscribe message
+	 * @param scMessageCallback the SC message callback
 	 * @return the SC subscribe message
-	 * @throws SCMPValidatorException
-	 *             subscribe message is null<br />
-	 *             callback is null<br />
-	 *             mask is invalid<br />
-	 * @throws SCServiceException
-	 *             instance already subscribed before<br />
-	 *             subscribe to host failed<br />
-	 *             error message received from SC <br />
+	 * @throws SCMPValidatorException subscribe message is null<br />
+	 *         callback is null<br />
+	 *         mask is invalid<br />
+	 * @throws SCServiceException instance already subscribed before<br />
+	 *         subscribe to host failed<br />
+	 *         error message received from SC <br />
 	 */
-	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback)
-			throws SCServiceException, SCMPValidatorException {
+	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback) throws SCServiceException, SCMPValidatorException {
 		return this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, scMessageCallback);
 	}
 
 	/**
 	 * Subscribe to SC. <br />
 	 * Once a subscribe is called a unsubscribe need to be done at the end of a communication.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
-	 * @param scMessageCallback
-	 *            the SC message callback
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param scSubscribeMessage the SC subscribe message
+	 * @param scMessageCallback the SC message callback
 	 * @return the SC subscribe message
-	 * @throws SCMPValidatorException
-	 *             subscribe message is null<br />
-	 *             callback is null<br />
-	 *             mask is invalid<br />
-	 * @throws SCServiceException
-	 *             instance already subscribed before<br />
-	 *             subscribe to host failed<br />
-	 *             error message received from SC <br />
+	 * @throws SCMPValidatorException subscribe message is null<br />
+	 *         callback is null<br />
+	 *         mask is invalid<br />
+	 * @throws SCServiceException instance already subscribed before<br />
+	 *         subscribe to host failed<br />
+	 *         error message received from SC <br />
 	 */
-	public synchronized SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
-			SCMessageCallback scMessageCallback) throws SCServiceException, SCMPValidatorException {
+	public synchronized SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback)
+			throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive) {
 			throw new SCServiceException(this.serviceName + " already subscribed.");
@@ -191,38 +176,30 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Change subscription on SC with default operation timeout.
-	 * 
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
+	 *
+	 * @param scSubscribeMessage the SC subscribe message
 	 * @return the SC subscribe message
-	 * @throws SCMPValidatorException
-	 *             subscribe message is null<br />
-	 *             mask not valid<br />
-	 * @throws SCServiceException
-	 *             instance not subscribed<br />
-	 *             change subscription to host failed<br />
-	 *             error message received from SC <br />
+	 * @throws SCMPValidatorException subscribe message is null<br />
+	 *         mask not valid<br />
+	 * @throws SCServiceException instance not subscribed<br />
+	 *         change subscription to host failed<br />
+	 *         error message received from SC <br />
 	 */
-	public synchronized SCSubscribeMessage changeSubscription(SCSubscribeMessage scSubscribeMessage) throws SCServiceException,
-			SCMPValidatorException {
+	public synchronized SCSubscribeMessage changeSubscription(SCSubscribeMessage scSubscribeMessage) throws SCServiceException, SCMPValidatorException {
 		return this.changeSubscription(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
 	}
 
 	/**
 	 * Change subscription on SC.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param scSubscribeMessage
-	 *            the SC subscribe message
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param scSubscribeMessage the SC subscribe message
 	 * @return the SC subscribe message
-	 * @throws SCMPValidatorException
-	 *             subscribe message is null<br />
-	 *             mask not valid<br />
-	 * @throws SCServiceException
-	 *             instance not subscribed<br />
-	 *             change subscription to host failed<br />
-	 *             error message received from SC <br />
+	 * @throws SCMPValidatorException subscribe message is null<br />
+	 *         mask not valid<br />
+	 * @throws SCServiceException instance not subscribed<br />
+	 *         change subscription to host failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized SCSubscribeMessage changeSubscription(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws SCServiceException, SCMPValidatorException {
@@ -237,8 +214,7 @@ public class SCPublishService extends SCService {
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, this.serviceName,
-				this.sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		changeSubscriptionCall.setRequestBody(scSubscribeMessage.getData());
@@ -273,9 +249,8 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility).
-	 * The registered message callback from the client gets informed in case of an error. Operation timeout for receive publication
-	 * is (receivePublicationTimeoutSeconds+noDataIntervalSeconds).
+	 * Sends a receive publication (CRP) to the SC. Is only used internally (method visibility). The registered message callback from the client gets informed in case of an error.
+	 * Operation timeout for receive publication is (receivePublicationTimeoutSeconds+noDataIntervalSeconds).
 	 */
 	void receivePublication() {
 		// 1. checking preconditions and initialize
@@ -285,76 +260,61 @@ public class SCPublishService extends SCService {
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCPublishServiceCallback callback = new SCPublishServiceCallback(this, this.messageCallback);
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
-				this.sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName, this.sessionId);
 		try {
 			PerformanceLogger.begin(this.sessionId);
-			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
-					* (this.receivePublicationTimeoutSeconds + this.noDataIntervalSeconds));
+			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR * (this.receivePublicationTimeoutSeconds + this.noDataIntervalSeconds));
 		} catch (Exception e) {
 			PerformanceLogger.end(this.sessionId);
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("Receive publication failed.");
 			ex.setSCErrorCode(SCMPError.BROKEN_SUBSCRIPTION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("Receive publication for service=" + this.serviceName
-					+ " failed."));
+			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("Receive publication for service=" + this.serviceName + " failed."));
 			this.messageCallback.receive(ex);
 			return;
 		}
 	}
 
 	/**
-	 * Unsubscribe from SC with default operation timeout.
-	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
-	 * 
-	 * @throws SCServiceException
-	 *             unsubscribe from SC failed<br />
-	 *             error message received from SC <br />
+	 * Unsubscribe from SC with default operation timeout. Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
+	 *
+	 * @throws SCServiceException unsubscribe from SC failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void unsubscribe() throws SCServiceException {
 		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
 	}
 
 	/**
-	 * Unsubscribe from SC.
-	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
-	 * 
-	 * @param scMessage
-	 *            the SC message
-	 * @throws SCServiceException
-	 *             unsubscribe from SC failed<br />
-	 *             error message received from SC <br />
+	 * Unsubscribe from SC. Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
+	 *
+	 * @param scMessage the SC message
+	 * @throws SCServiceException unsubscribe from SC failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void unsubscribe(SCMessage scMessage) throws SCServiceException {
 		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
 	}
 
 	/**
-	 * Unsubscribe from SC.
-	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @throws SCServiceException
-	 *             unsubscribe from SC failed<br />
-	 *             error message received from SC <br />
+	 * Unsubscribe from SC. Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @throws SCServiceException unsubscribe from SC failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void unsubscribe(int operationTimeoutSeconds) throws SCServiceException {
 		this.unsubscribe(operationTimeoutSeconds, null);
 	}
 
 	/**
-	 * Unsubscribe from SC.
-	 * Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param scMessage
-	 *            the SC message
-	 * @throws SCServiceException
-	 *             unsubscribe from SC failed<br />
-	 *             error message received from SC <br />
+	 * Unsubscribe from SC. Unsubscribe may be called multiple times. Nothing happens if the subscription turns inactive in meantime.
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param scMessage the SC message
+	 * @throws SCServiceException unsubscribe from SC failed<br />
+	 *         error message received from SC <br />
 	 */
 	public synchronized void unsubscribe(int operationTimeoutSeconds, SCMessage scMessage) throws SCServiceException {
 		// 1. checking preconditions and initialize
@@ -392,7 +352,7 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Checks if is subscribed.
-	 * 
+	 *
 	 * @return true, if is subscribed
 	 */
 	public boolean isSubscribed() {
@@ -400,32 +360,25 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * Sets the receive publication timeout in seconds. Time in seconds a receive publication request waits to be confirmed. If no
-	 * confirmation is received
-	 * subscription is marked as dead.
-	 * 
-	 * @param receivePublicationTimeoutSeconds
-	 *            time to wait for completion of a receive publication request
-	 *            Example: 10
-	 * @throws SCMPValidatorException
-	 *             receivePublicationTimeoutSeconds > 1 and < 3600<br />
-	 * @throws SCServiceException
-	 *             called method after subscribe
+	 * Sets the receive publication timeout in seconds. Time in seconds a receive publication request waits to be confirmed. If no confirmation is received subscription is marked
+	 * as dead.
+	 *
+	 * @param receivePublicationTimeoutSeconds time to wait for completion of a receive publication request Example: 10
+	 * @throws SCMPValidatorException receivePublicationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCServiceException called method after subscribe
 	 */
-	public void setReceivePublicationTimeoutSeconds(int receivePublicationTimeoutSeconds) throws SCMPValidatorException,
-			SCServiceException {
+	public void setReceivePublicationTimeoutSeconds(int receivePublicationTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
 		if (this.sessionActive) {
 			throw new SCServiceException("Can not set receivePublicationTimeoutSeconds, subscription is already subscribed.");
 		}
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, receivePublicationTimeoutSeconds, Constants.MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE,
-				SCMPError.HV_WRONG_RECEIVE_PUBLICAION_TIMEOUT);
+		ValidatorUtility.validateInt(1, receivePublicationTimeoutSeconds, Constants.MAX_RECEIVE_PUBLICAION_TIMEOUT_VALUE, SCMPError.HV_WRONG_RECEIVE_PUBLICAION_TIMEOUT);
 		this.receivePublicationTimeoutSeconds = receivePublicationTimeoutSeconds;
 	}
 
 	/**
 	 * Gets the receive publication timeout in seconds. Time in seconds a receive publication request waits to be confirmed.
-	 * 
+	 *
 	 * @return the receive publication timeout in seconds
 	 */
 	public int getReceivePublicationTimeoutSeconds() {

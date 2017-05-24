@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln.casc1;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -29,6 +27,8 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
+import junit.framework.Assert;
+
 @SuppressWarnings("unused")
 public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClientTest {
 
@@ -36,6 +36,7 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -73,8 +74,7 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 
 	/**
 	 * Description: Create session to file service<br>
-	 * Expectation: throws SCServiceException (unfortunately this passes because file services uses sessions) file service accepts
-	 * create session (sessionService)<br>
+	 * Expectation: throws SCServiceException (unfortunately this passes because file services uses sessions) file service accepts create session (sessionService)<br>
 	 * TODO JOT/TRN how do we distinguish between session for file services??
 	 */
 	@Test(expected = SCMPValidatorException.class)

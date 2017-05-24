@@ -18,7 +18,8 @@ package org.serviceconnector.call;
 
 import java.net.InetAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -26,24 +27,21 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPClnChangeSubscriptionCall. Call changes a subscription for a client.
- * 
+ *
  * @author JTraber
  */
 public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPClnChangeSubscriptionCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPClnChangeSubscriptionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnChangeSubscriptionCall.
-	 * 
-	 * @param req
-	 *            the req
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param req the req
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPClnChangeSubscriptionCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
@@ -65,9 +63,8 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the session info.
-	 * 
-	 * @param sessionInfo
-	 *            the new session info
+	 *
+	 * @param sessionInfo the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
@@ -75,9 +72,8 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            the new mask
+	 *
+	 * @param mask the new mask
 	 */
 	public void setMask(String mask) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
@@ -85,9 +81,8 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {

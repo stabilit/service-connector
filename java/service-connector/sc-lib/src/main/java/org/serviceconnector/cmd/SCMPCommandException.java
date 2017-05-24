@@ -21,7 +21,7 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class SCMPCommandException. Occurs when processing a command fails.
- * 
+ *
  * @author JTraber
  */
 public class SCMPCommandException extends HasFaultResponseException {
@@ -31,11 +31,9 @@ public class SCMPCommandException extends HasFaultResponseException {
 
 	/**
 	 * Instantiates a new SCMP command exception.
-	 * 
-	 * @param error
-	 *            the error
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param error the error
+	 * @param additionalInfo the additional info
 	 */
 	public SCMPCommandException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);

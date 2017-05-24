@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to registered services and their callback.
- * 
+ *
  * @author JTraber
  */
 public class SrvServiceRegistry extends Registry<String, SrvService> {
@@ -32,11 +32,9 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/**
 	 * Adds the server service.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param srvService
-	 *            the server service
+	 *
+	 * @param key the key
+	 * @param srvService the server service
 	 */
 	public void addSrvService(String key, SrvService srvService) {
 		super.put(key, srvService);
@@ -44,9 +42,8 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/**
 	 * Gets the server service.
-	 * 
-	 * @param key
-	 *            the server service name
+	 *
+	 * @param key the server service name
 	 * @return the server service
 	 */
 	public SrvService getSrvService(String key) {
@@ -55,9 +52,8 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/**
 	 * Removes the server service.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the srv service
 	 */
 	public SrvService removeSrvService(String key) {

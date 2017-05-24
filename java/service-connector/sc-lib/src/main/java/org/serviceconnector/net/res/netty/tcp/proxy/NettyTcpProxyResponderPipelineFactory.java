@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.tcp.proxy;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -39,17 +40,14 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpProxyResponderPipelineFactory.class);
 
 	/**
 	 * Instantiates a new netty tcp proxy responder pipeline factory.
-	 * 
-	 * @param cf
-	 *            the cf
-	 * @param remoteHost
-	 *            the remote host
-	 * @param remotePort
-	 *            the remote port
+	 *
+	 * @param cf the cf
+	 * @param remoteHost the remote host
+	 * @param remotePort the remote port
 	 */
 	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
@@ -59,11 +57,11 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 
 	/**
 	 * Gets the pipeline.
-	 * 
+	 *
 	 * @return the pipeline
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
+	 * @throws Exception the exception {@inheritDoc}
 	 */
+	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler

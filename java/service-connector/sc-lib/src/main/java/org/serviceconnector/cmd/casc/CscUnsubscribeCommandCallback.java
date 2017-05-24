@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -40,7 +41,7 @@ import org.serviceconnector.service.Subscription;
 public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -52,18 +53,13 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Instantiates a new csc unsubscribe command callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
-	 * @param cascSubscription
-	 *            the casc subscription
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
+	 * @param cascSubscription the casc subscription
 	 */
-	public CscUnsubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
-			Subscription cascSubscription) {
+	public CscUnsubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback, Subscription cascSubscription) {
 		this.responderCallback = responderCallback;
 		this.request = request;
 		this.response = response;
@@ -72,9 +68,8 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Receive.
-	 * 
-	 * @param reply
-	 *            the reply {@inheritDoc}
+	 *
+	 * @param reply the reply {@inheritDoc}
 	 */
 	@Override
 	public void receive(SCMPMessage reply) {
@@ -99,9 +94,8 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
 	/**
 	 * Receive.
-	 * 
-	 * @param ex
-	 *            the ex {@inheritDoc}
+	 *
+	 * @param ex the ex {@inheritDoc}
 	 */
 	@Override
 	public void receive(Exception ex) {
@@ -119,11 +113,9 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC csc unsubscribe sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc unsubscribe sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION,
-					"broken connection on SC csc unsubscribe sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc unsubscribe sid=" + sid);
 		} else if (ex instanceof InvalidMaskLengthException) {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.HV_WRONG_MASK, ex.getMessage() + " sid=" + sid);
 		} else {

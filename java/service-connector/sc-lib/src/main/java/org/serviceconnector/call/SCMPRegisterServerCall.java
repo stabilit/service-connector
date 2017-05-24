@@ -16,29 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SCMPRegisterServerCall. Registers a server to a service.
- * 
+ *
  * @author JTraber
  */
 public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPRegisterServerCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPRegisterServerCall.class);
 
 	/**
 	 * Instantiates a new SCMPRegisterServerCall.
-	 * 
-	 * @param req
-	 *            the requesters to use when invoking call
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param req the requesters to use when invoking call
+	 * @param serviceName the service name
 	 */
 	public SCMPRegisterServerCall(IRequester req, String serviceName) {
 		super(req, serviceName);
@@ -46,9 +45,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the version.
-	 * 
-	 * @param version
-	 *            the new version
+	 *
+	 * @param version the new version
 	 */
 	public void setVersion(String version) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
@@ -56,9 +54,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the local date time.
-	 * 
-	 * @param localDateTime
-	 *            the new local date time
+	 *
+	 * @param localDateTime the new local date time
 	 */
 	public void setLocalDateTime(String localDateTime) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
@@ -66,9 +63,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the max sessions.
-	 * 
-	 * @param maxSessions
-	 *            the new max sessions
+	 *
+	 * @param maxSessions the new max sessions
 	 */
 	public void setMaxSessions(int maxSessions) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_SESSIONS, maxSessions);
@@ -76,9 +72,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the max connections.
-	 * 
-	 * @param maxConnections
-	 *            the new max connections
+	 *
+	 * @param maxConnections the new max connections
 	 */
 	public void setMaxConnections(int maxConnections) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS, maxConnections);
@@ -86,9 +81,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the keep alive interval.
-	 * 
-	 * @param keepAliveIntervalSeconds
-	 *            the new keep alive interval
+	 *
+	 * @param keepAliveIntervalSeconds the new keep alive interval
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL, keepAliveIntervalSeconds);
@@ -96,9 +90,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the check registration interval seconds.
-	 * 
-	 * @param checkRegistrationIntervalSeconds
-	 *            the new check registration interval seconds
+	 *
+	 * @param checkRegistrationIntervalSeconds the new check registration interval seconds
 	 */
 	public void setCheckRegistrationIntervalSeconds(int checkRegistrationIntervalSeconds) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CHECK_REGISTRATION_INTERVAL, checkRegistrationIntervalSeconds);
@@ -106,9 +99,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the port number.
-	 * 
-	 * @param portNumber
-	 *            the new port number
+	 *
+	 * @param portNumber the new port number
 	 */
 	public void setPortNumber(int portNumber) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.PORT_NR, portNumber);
@@ -116,9 +108,8 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the immediate connect.
-	 * 
-	 * @param immediateConnect
-	 *            the new immediate connect
+	 *
+	 * @param immediateConnect the new immediate connect
 	 */
 	public void setImmediateConnect(boolean immediateConnect) {
 		if (immediateConnect) {

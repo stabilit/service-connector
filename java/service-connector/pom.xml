@@ -41,9 +41,8 @@
 
 		<junit.version>4.8.1</junit.version>
 		<netty.version>3.2.5.Final</netty.version>		
-		<log4j.version>1.2.15</log4j.version>
+		<logback.version>1.2.1</logback.version>
 		<commons-configuration.version>1.6</commons-configuration.version>
-		<slf4j.version>1.7.2</slf4j.version>
 		<ehcache.version>2.4.1</ehcache.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 	</properties>
@@ -211,7 +210,10 @@
 	</build>
 
 	<dependencies>
-
+		<dependency>
+  			<groupId>ch.qos.logback</groupId>
+  			<artifactId>logback-classic</artifactId>
+		</dependency>
 		
 
 	</dependencies>
@@ -239,29 +241,6 @@
 				<version>${netty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>jmxri</artifactId>
-						<groupId>com.sun.jmx</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>jms</artifactId>
-						<groupId>javax.jms</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>jmxtools</artifactId>
-						<groupId>com.sun.jdmk</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>mail</artifactId>
-						<groupId>javax.mail</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
 				<groupId>commons-configuration</groupId>
 				<artifactId>commons-configuration</artifactId>
 				<version>${commons-configuration.version}</version>
@@ -277,11 +256,6 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache-core</artifactId>
 				<version>${ehcache.version}</version>
@@ -290,6 +264,11 @@
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
+			</dependency>
+			<dependency>
+	  			<groupId>ch.qos.logback</groupId>
+	  			<artifactId>logback-classic</artifactId>
+	  			<version>${logback.version}</version>
 			</dependency>
 			
 		

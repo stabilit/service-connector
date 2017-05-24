@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,14 +34,13 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger
-			.getLogger(APINewServiceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APINewServiceTest.class);
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP,
-				ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC0_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
@@ -72,8 +72,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new session service with service name =
-	 * "The quick brown fox jumps over a lazy dog."<br>
+	 * Description: create new session service with service name = "The quick brown fox jumps over a lazy dog."<br>
 	 * Expectation: throws SCMPValidatorException (too long)
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -87,49 +86,27 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t106_newSessionService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
-	 * Description: create new session service with service name = "session-1"
-	 * twice<br>
+	 * Description: create new session service with service name = "session-1" twice<br>
 	 * Expectation: successful creation
 	 */
 	@Test
 	public void t107_newSessionServiceCalledTwice() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
-	 * Description: create new session service with service name = "session-1"
-	 * and "publish-1"<br>
+	 * Description: create new session service with service name = "session-1" and "publish-1"<br>
 	 * Expectation: successful creation
 	 */
 	@Test
 	public void t108_newSessionService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newSessionService(TestConstants.pubServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.pubServiceName1) instanceof SCSessionService);
 	}
 
 	/**
@@ -141,8 +118,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 		int serviceCount = 1000;
 		SCSessionService[] services = new SCSessionService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
-			services[i] = client
-					.newSessionService(TestConstants.sesServiceName1);
+			services[i] = client.newSessionService(TestConstants.sesServiceName1);
 			Assert.assertEquals(true, services[i] instanceof SCSessionService);
 		}
 	}
@@ -177,8 +153,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new publish service with service name =
-	 * "The quick brown fox jumps over a lazy dog."<br>
+	 * Description: create new publish service with service name = "The quick brown fox jumps over a lazy dog."<br>
 	 * Expectation: throws SCMPValidatorException. (too long)
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -192,49 +167,27 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t206_newPublisService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
-	 * Description: create new publish service with service name = "publish-1"
-	 * twice<br>
+	 * Description: create new publish service with service name = "publish-1" twice<br>
 	 * Expectation: successful creation
 	 */
 	@Test
 	public void t207_newPublisServiceCalledTwice() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
-	 * Description: create new publish service with service name = "session-1"
-	 * and "publish-1"<br>
+	 * Description: create new publish service with service name = "session-1" and "publish-1"<br>
 	 * Expectation: successful creation
 	 */
 	@Test
 	public void t208_newPublisService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
@@ -246,8 +199,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 		int serviceCount = 1000;
 		SCPublishService[] services = new SCPublishService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
-			services[i] = client
-					.newPublishService(TestConstants.pubServiceName1);
+			services[i] = client.newPublishService(TestConstants.pubServiceName1);
 			Assert.assertEquals(true, services[i] instanceof SCPublishService);
 		}
 	}
@@ -282,8 +234,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new file service with service name =
-	 * "The quick brown fox jumps over a lazy dog."<br>
+	 * Description: create new file service with service name = "The quick brown fox jumps over a lazy dog."<br>
 	 * Expectation: throws SCMPValidatorException (too long)
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -297,11 +248,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t306_newFileService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
@@ -310,35 +257,18 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t307_newFileServiceCalledTwice() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
-	 * Description: create new file service with service name = "session-1" and
-	 * "publish-1"<br>
+	 * Description: create new file service with service name = "session-1" and "publish-1"<br>
 	 * Expectation: successful creation
 	 */
 	@Test
 	public void t308_newFileService() throws Exception {
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
-		Assert
-				.assertEquals(
-						"create",
-						true,
-						client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
 	}
 
 	/**

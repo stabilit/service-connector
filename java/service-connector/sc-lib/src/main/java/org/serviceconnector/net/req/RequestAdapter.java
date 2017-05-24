@@ -18,20 +18,21 @@ package org.serviceconnector.net.req;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.
- * 
+ *
  * @author JTraber
  */
 public abstract class RequestAdapter implements IRequest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(RequestAdapter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RequestAdapter.class);
 
 	/** The scmp message. */
 	private SCMPMessage message;
@@ -42,11 +43,9 @@ public abstract class RequestAdapter implements IRequest {
 
 	/**
 	 * Instantiates a new request adapter.
-	 * 
-	 * @param localAddress
-	 *            the local address
-	 * @param remoteAddress
-	 *            the remote address
+	 *
+	 * @param localAddress the local address
+	 * @param remoteAddress the remote address
 	 */
 	public RequestAdapter(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		this.localSocketAddress = localAddress;

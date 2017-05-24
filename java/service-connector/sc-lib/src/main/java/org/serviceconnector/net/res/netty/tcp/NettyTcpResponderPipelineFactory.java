@@ -26,7 +26,7 @@ import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
 
 /**
  * A factory for creating NettyTcpResponderPipelineFactory objects.
- * 
+ *
  * @author JTraber
  */
 public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {

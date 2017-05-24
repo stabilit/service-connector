@@ -21,81 +21,73 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Interface IConnection abstracts any connection to a responder.
- * 
+ *
  * @author JTraber
  */
 public interface IConnection {
 
 	/**
 	 * Gets the context.
-	 * 
+	 *
 	 * @return the context
 	 */
 	public abstract ConnectionContext getContext();
 
 	/**
 	 * Sets the context.
-	 * 
-	 * @param connectionContext
-	 *            the new context
+	 *
+	 * @param connectionContext the new context
 	 */
 	public abstract void setContext(ConnectionContext connectionContext);
 
 	/**
 	 * Sets the host.
-	 * 
-	 * @param host
-	 *            the host
+	 *
+	 * @param host the host
 	 */
 	public void setHost(String host);
 
 	/**
 	 * Gets the host.
-	 * 
+	 *
 	 * @return the host
 	 */
 	public String getHost();
 
 	/**
 	 * Sets the port.
-	 * 
-	 * @param port
-	 *            the port
+	 *
+	 * @param port the port
 	 */
 	public void setPort(int port);
 
 	/**
 	 * Gets the port.
-	 * 
+	 *
 	 * @return the port
 	 */
 	public int getPort();
 
 	/**
 	 * Connect.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public abstract void connect() throws Exception;
 
 	/**
 	 * Send and receive asynchronous operation.
-	 * 
-	 * @param scmp
-	 *            the scmp
-	 * @param callback
-	 *            the callback
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param scmp the scmp
+	 * @param callback the callback
+	 * @throws Exception the exception
 	 */
 	public abstract void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception;
 
 	/**
 	 * Disconnect.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public abstract void disconnect() throws Exception;
 
@@ -106,16 +98,15 @@ public interface IConnection {
 
 	/**
 	 * Checks if is connected.
-	 * 
+	 *
 	 * @return true, if is connected
 	 */
 	public abstract boolean isConnected();
 
 	/**
 	 * Sets the idle timeout.
-	 * 
-	 * @param idleTimeoutSeconds
-	 *            the new idle timeout
+	 *
+	 * @param idleTimeoutSeconds the new idle timeout
 	 */
 	public abstract void setIdleTimeoutSeconds(int idleTimeoutSeconds);
 
@@ -131,16 +122,15 @@ public interface IConnection {
 
 	/**
 	 * Gets the nr of idles in sequence.
-	 * 
+	 *
 	 * @return the nr of idles in sequence
 	 */
 	public abstract int getNrOfIdlesInSequence();
 
 	/**
 	 * Sets the quiet disconnect. Disconnect is not logged or does not reply any answer to higher layer.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public abstract void setQuietDisconnect() throws Exception;
 }

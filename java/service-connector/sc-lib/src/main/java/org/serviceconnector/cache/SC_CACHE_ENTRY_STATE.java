@@ -17,8 +17,8 @@
 package org.serviceconnector.cache;
 
 /**
- * The Enum SC_CACHE_ENTRY_STATE. Identifies the state of the entry in cache. Loading means the entry is not completed yet, somebody
- * is loading the rest of the message. Loaded marks a complete entry which is ready to deliver from cache.
+ * The Enum SC_CACHE_ENTRY_STATE. Identifies the state of the entry in cache. Loading means the entry is not completed yet, somebody is loading the rest of the message. Loaded
+ * marks a complete entry which is ready to deliver from cache.
  */
 public enum SC_CACHE_ENTRY_STATE {
 

@@ -18,7 +18,8 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -37,7 +38,7 @@ import org.serviceconnector.service.Subscription;
 public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscAbortSubscriptionCommandCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscAbortSubscriptionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -49,16 +50,12 @@ public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallbac
 
 	/**
 	 * Instantiates a new csc abort subscription command callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param response
-	 *            the response
-	 * @param responderCallback
-	 *            the responder callback
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
 	 */
-	public CscAbortSubscriptionCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback,
-			Subscription cascSubscription) {
+	public CscAbortSubscriptionCommandCallback(IRequest request, IResponse response, IResponderCallback responderCallback, Subscription cascSubscription) {
 		this.responderCallback = responderCallback;
 		this.request = request;
 		this.response = response;
@@ -87,11 +84,9 @@ public class CscAbortSubscriptionCommandCallback implements ISubscriptionCallbac
 		SCMPVersion scmpVersion = reqMessage.getSCMPVersion();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling - SCMP Version request
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC csc abort subscription sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc abort subscription sid=" + sid);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION,
-					"broken connection on SC csc abort subscription sid=" + sid);
+			fault = new SCMPMessageFault(scmpVersion, SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc abort subscription sid=" + sid);
 		} else {
 			fault = new SCMPMessageFault(scmpVersion, SCMPError.SC_ERROR, "executing csc abort subscription failed sid=" + sid);
 		}

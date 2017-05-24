@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.web.IWebRequest;
 
-
 /**
  * The Interface IXMLLoader.
  */
@@ -32,62 +31,50 @@ public interface IXMLLoader {
 
 	/**
 	 * Checks if this loader returns raw text instead of xml.
-	 * 
+	 *
 	 * @return true, if is raw
 	 */
 	public abstract boolean isText();
 
 	/**
 	 * Load.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param os
-	 *            the os
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param request the request
+	 * @param os the os
+	 * @throws Exception the exception
 	 */
 	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	public abstract void loadBody(Writer writer, IWebRequest request) throws Exception;
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @param request
-	 *            the request
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
 
 	/**
 	 * Adds the meta.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param value
-	 *            the value
+	 *
+	 * @param name the name
+	 * @param value the value
 	 */
 	public abstract void addMeta(String name, String value);
 
 	/**
 	 * Adds the meta.
-	 * 
-	 * @param map
-	 *            the map
+	 *
+	 * @param map the map
 	 */
 	public abstract void addMeta(Map<String, String> map);
 

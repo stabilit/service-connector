@@ -21,8 +21,6 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
@@ -36,14 +34,17 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 
+import junit.framework.Assert;
+
 public class MultipleNICTest extends IntegrationSuperTest {
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		AppContext.init();
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SCNoInterfacesProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.logbackSC0, TestConstants.SCNoInterfacesProperties);
 	}
 
 	/**
@@ -59,8 +60,8 @@ public class MultipleNICTest extends IntegrationSuperTest {
 			Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 			for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 				try {
-					IRequester req = new Requester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-							TestConstants.PORT_SC0_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 1));
+					IRequester req = new Requester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC0_HTTP,
+							ConnectionType.NETTY_HTTP.getValue(), 0, 0, 1));
 					SCMPAttachCall attachCall = new SCMPAttachCall(req);
 					attachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));

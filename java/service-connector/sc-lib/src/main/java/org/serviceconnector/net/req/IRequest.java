@@ -28,47 +28,44 @@ public interface IRequest {
 
 	/**
 	 * Gets the message type.
-	 * 
+	 *
 	 * @return the key message type in request.
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	public SCMPMsgType getKey() throws Exception;
 
 	/**
 	 * Gets the message.
-	 * 
+	 *
 	 * @return the message
 	 */
 	public SCMPMessage getMessage();
 
 	/**
 	 * Sets the scmp message in the request.
-	 * 
-	 * @param message
-	 *            the new scmp message
+	 *
+	 * @param message the new scmp message
 	 */
 	public void setMessage(SCMPMessage message);
 
 	/**
 	 * Gets the socket address.
-	 * 
+	 *
 	 * @return the socket address
 	 */
 	public InetSocketAddress getLocalSocketAddress();
 
 	/**
 	 * Gets the remote socket address.
-	 * 
+	 *
 	 * @return the remote socket address
 	 */
 	public InetSocketAddress getRemoteSocketAddress();
 
 	/**
 	 * Load content on socket to the request. Decodes network frame into an scmp.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @throws Exception the exception
 	 */
 	public void load() throws Exception;
 }

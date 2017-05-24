@@ -29,11 +29,9 @@ public class CascadedSessionService extends Service {
 
 	/**
 	 * Instantiates a new cascaded session service.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param cascadedSC
-	 *            the cascaded sc
+	 *
+	 * @param name the name
+	 * @param cascadedSC the cascaded sc
 	 */
 	public CascadedSessionService(String name, CascadedSC cascadedSC) {
 		super(name, ServiceType.CASCADED_SESSION_SERVICE);
@@ -42,9 +40,8 @@ public class CascadedSessionService extends Service {
 
 	/**
 	 * Sets the cascaded sc.
-	 * 
-	 * @param cascadedSC
-	 *            the new cascaded sc
+	 *
+	 * @param cascadedSC the new cascaded sc
 	 */
 	public void setCascadedSC(CascadedSC cascadedSC) {
 		this.cascadedSC = cascadedSC;
@@ -52,13 +49,13 @@ public class CascadedSessionService extends Service {
 
 	/**
 	 * Gets the cascaded sc.
-	 * 
+	 *
 	 * @return the cascaded sc
 	 */
 	public CascadedSC getCascadedSC() {
 		return cascadedSC;
 	}
-	
+
 	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("service");

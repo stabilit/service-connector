@@ -17,8 +17,7 @@
 package org.serviceconnector.net.connection;
 
 /**
- * The Class ConnectionPoolBusyException. Connection pool has no available connection to give back. Creating is not
- * possible because allowed limit is reached.
+ * The Class ConnectionPoolBusyException. Connection pool has no available connection to give back. Creating is not possible because allowed limit is reached.
  */
 public class ConnectionPoolBusyException extends Exception {
 
@@ -27,9 +26,8 @@ public class ConnectionPoolBusyException extends Exception {
 
 	/**
 	 * Instantiates a new connection pool busy exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public ConnectionPoolBusyException(String message) {
 		super(message);

@@ -35,21 +35,21 @@ import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test
 public class SCMPClnCreateSessionCasc2Test extends SCMPClnCreateSessionCasc1Test {
 
 	public SCMPClnCreateSessionCasc2Test() {
-		SCMPClnCreateSessionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 3, 2, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
+		this.requester = new SCRequester(
+				new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, TestConstants.PORT_SC2_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 0, 3), 0);
 		AppContext.init();
 	}
 }

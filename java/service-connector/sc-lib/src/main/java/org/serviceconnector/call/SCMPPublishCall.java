@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -25,22 +26,20 @@ import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class SCMPPublishCall. Call publishes a message to clients.
- * 
+ *
  * @author JTraber
  */
 public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPPublishCall.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPPublishCall.class);
 
 	/**
 	 * Instantiates a new SCMPPublishCall.
-	 * 
-	 * @param req
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param req the requester
+	 * @param serviceName the service name
 	 */
 	public SCMPPublishCall(IRequester req, String serviceName) {
 		super(req, serviceName);
@@ -57,9 +56,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the compression.
-	 * 
-	 * @param compressed
-	 *            the compression
+	 *
+	 * @param compressed the compression
 	 */
 	public void setCompressed(boolean compressed) {
 		if (compressed) {
@@ -69,9 +67,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            the new mask
+	 *
+	 * @param mask the new mask
 	 */
 	public void setMask(String mask) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MASK, mask);
@@ -79,9 +76,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the part size.
-	 * 
-	 * @param partSize
-	 *            the size of the message parts
+	 *
+	 * @param partSize the size of the message parts
 	 */
 	public void setPartSize(int partSize) {
 		this.requestMessage.setPartSize(partSize);
@@ -89,9 +85,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the message info.
-	 * 
-	 * @param messageInfo
-	 *            the new message info
+	 *
+	 * @param messageInfo the new message info
 	 */
 	public void setMessageInfo(String messageInfo) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
@@ -99,9 +94,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the cache method.
-	 * 
-	 * @param cacheMethod
-	 *            the new cache method
+	 *
+	 * @param cacheMethod the new cache method
 	 */
 	public void setCacheMethod(String cacheMethod) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.CACHING_METHOD, cacheMethod);
@@ -109,9 +103,8 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Sets the cache id.
-	 * 
-	 * @param cacheId
-	 *            the new cache id
+	 *
+	 * @param cacheId the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		this.requestMessage.setHeaderCheckNull(SCMPHeaderAttributeKey.CACHE_ID, cacheId);

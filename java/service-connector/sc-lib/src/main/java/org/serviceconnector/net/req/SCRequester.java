@@ -20,7 +20,8 @@ import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -41,15 +42,15 @@ import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
 
 /**
- * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines how to
- * connect/disconnect, send/receive has to process. Handling of large request/response is defined on this level.
- * 
+ * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines how to connect/disconnect, send/receive has to process.
+ * Handling of large request/response is defined on this level.
+ *
  * @author JTraber
  */
 public class SCRequester implements IRequester {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SCRequester.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCRequester.class);
 	/** The context. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 	/** The msg sequence nr. */
@@ -59,15 +60,13 @@ public class SCRequester implements IRequester {
 
 	/**
 	 * Instantiates a new requester.
-	 * 
-	 * @param remoteNodeConfiguration
-	 *            the remote node configuration
+	 *
+	 * @param remoteNodeConfiguration the remote node configuration
 	 */
 	public SCRequester(RemoteNodeConfiguration remoteNodeConfiguration, int keepAliveTimeoutMillis) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
-		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
-				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds(),
-				keepAliveTimeoutMillis);
+		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
+				remoteNodeConfiguration.getKeepAliveIntervalSeconds(), keepAliveTimeoutMillis);
 		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
@@ -86,13 +85,11 @@ public class SCRequester implements IRequester {
 			if (message.isLargeMessage()) {
 				// SCMPLargeRequest handles splitting, works like an iterator
 				SCMPCompositeSender largeResponse = new SCMPCompositeSender(message);
-				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse,
-						msgSequenceNr);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse, msgSequenceNr);
 				// setting up operation timeout after successful send
 				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-						timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
+				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(timeoutWrapper, timeoutMillis, TimeUnit.MILLISECONDS);
 				reqCallback.setOperationTimeout(timeout);
 				reqCallback.setTimeoutMillis(timeoutMillis);
 				// extract first part message & send
@@ -108,8 +105,7 @@ public class SCRequester implements IRequester {
 				// setting up operation timeout after successful send
 				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-						timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
+				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(timeoutWrapper, timeoutMillis, TimeUnit.MILLISECONDS);
 				reqCallback.setOperationTimeout(timeout);
 				reqCallback.setTimeoutMillis(timeoutMillis);
 				// handling msgSequenceNr
@@ -138,8 +134,8 @@ public class SCRequester implements IRequester {
 	}
 
 	/**
-	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
-	 * received. Handles freeing up earlier requested connections. Provides functionality to deal with large messages.
+	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is received. Handles freeing up earlier requested
+	 * connections. Provides functionality to deal with large messages.
 	 */
 	private class SCRequesterSCMPCallback implements ISCMPMessageCallback, ITimeout {
 
@@ -162,37 +158,27 @@ public class SCRequester implements IRequester {
 
 		/**
 		 * Instantiates a new sC requester scmp callback.
-		 * 
-		 * @param reqMsg
-		 *            the req msg
-		 * @param scmpCallback
-		 *            the scmp callback
-		 * @param conCtx
-		 *            the con ctx
-		 * @param msgSequenceNr
-		 *            the msg sequence nr
+		 *
+		 * @param reqMsg the req msg
+		 * @param scmpCallback the scmp callback
+		 * @param conCtx the con ctx
+		 * @param msgSequenceNr the msg sequence nr
 		 */
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
-				SCMPMessageSequenceNr msgSequenceNr) {
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx, SCMPMessageSequenceNr msgSequenceNr) {
 			this(reqMsg, scmpCallback, conCtx, null, msgSequenceNr);
 		}
 
 		/**
 		 * Instantiates a new sC requester scmp callback.
-		 * 
-		 * @param reqMsg
-		 *            the req msg
-		 * @param scmpCallback
-		 *            the scmp callback
-		 * @param conCtx
-		 *            the con ctx
-		 * @param largeRequest
-		 *            the large request
-		 * @param msgSequenceNr
-		 *            the msg sequence nr
+		 *
+		 * @param reqMsg the req msg
+		 * @param scmpCallback the scmp callback
+		 * @param conCtx the con ctx
+		 * @param largeRequest the large request
+		 * @param msgSequenceNr the msg sequence nr
 		 */
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
-				SCMPCompositeSender largeRequest, SCMPMessageSequenceNr msgSequenceNr) {
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx, SCMPCompositeSender largeRequest,
+				SCMPMessageSequenceNr msgSequenceNr) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
@@ -295,11 +281,9 @@ public class SCRequester implements IRequester {
 
 		/**
 		 * Handling large response.
-		 * 
-		 * @param scmpReply
-		 *            the scmp reply
-		 * @throws Exception
-		 *             the exception
+		 *
+		 * @param scmpReply the scmp reply
+		 * @throws Exception the exception
 		 */
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {
 			// response is a part - response is large, continue polling
@@ -326,12 +310,10 @@ public class SCRequester implements IRequester {
 
 		/**
 		 * Handling large request.
-		 * 
-		 * @param scmpReply
-		 *            the scmp reply
+		 *
+		 * @param scmpReply the scmp reply
 		 * @return true, if successful
-		 * @throws Exception
-		 *             the exception
+		 * @throws Exception the exception
 		 */
 		private boolean handlingLargeRequest(SCMPMessage scmpReply) throws Exception {
 			SCMPMessage part = null;
@@ -339,8 +321,7 @@ public class SCRequester implements IRequester {
 			part = largeRequest.getCurrentPart();
 			if (part.isReqCompleteAfterMarshallingPart()) {
 				/*
-				 * request has been sent completely. The response can be small or large, this doesn't matter, we continue reading any
-				 * large response later
+				 * request has been sent completely. The response can be small or large, this doesn't matter, we continue reading any large response later
 				 */
 				return true;
 			}
@@ -390,11 +371,9 @@ public class SCRequester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
-		 * state.
-		 * 
-		 * @param quietDisconnect
-		 *            the quiet disconnect
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious state.
+		 *
+		 * @param quietDisconnect the quiet disconnect
 		 */
 		private void disconnectConnection(boolean quietDisconnect) {
 			try {
@@ -406,9 +385,8 @@ public class SCRequester implements IRequester {
 
 		/**
 		 * Sets the operation timeout.
-		 * 
-		 * @param operationTimeout
-		 *            the new operation timeout
+		 *
+		 * @param operationTimeout the new operation timeout
 		 */
 		public void setOperationTimeout(ScheduledFuture<TimeoutWrapper> operationTimeout) {
 			this.operationTimeout = operationTimeout;
@@ -422,9 +400,8 @@ public class SCRequester implements IRequester {
 
 		/**
 		 * Sets the timeout milliseconds.
-		 * 
-		 * @param timeoutMillis
-		 *            the new timeout milliseconds
+		 *
+		 * @param timeoutMillis the new timeout milliseconds
 		 */
 		public void setTimeoutMillis(int timeoutMillis) {
 			this.timeoutMillis = timeoutMillis;
@@ -438,8 +415,7 @@ public class SCRequester implements IRequester {
 			LOGGER.warn("oti timeout expiration in sc client API oti=" + this.timeoutMillis);
 			this.disconnectConnection(true);
 			try {
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.REQUEST_TIMEOUT,
-						"Operation timeout expired on client");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPVersion.CURRENT, SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
 				fault.setMessageType(requestMsg.getMessageType());
 				this.scmpCallback.receive(fault);
 			} catch (Exception e) {
@@ -450,7 +426,7 @@ public class SCRequester implements IRequester {
 
 	/**
 	 * Gets the sCMP msg sequence nr.
-	 * 
+	 *
 	 * @return the sCMP msg sequence nr
 	 */
 	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {

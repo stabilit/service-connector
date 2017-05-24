@@ -22,7 +22,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.IServer;
@@ -33,16 +34,15 @@ import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the
- * session timeout and initiating clean up in case of a broken session. Session timer gets initialized by adding the session.
- * Resetting the timer needs to be done outside the registry by calling reset method.
- * 
+ * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the session timeout and initiating clean up in case
+ * of a broken session. Session timer gets initialized by adding the session. Resetting the timer needs to be done outside the registry by calling reset method.
+ *
  * @author JTraber
  */
 public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SessionRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
@@ -56,11 +56,9 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Adds the session.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param session
-	 *            the session
+	 *
+	 * @param key the key
+	 * @param session the session
 	 */
 	public void addSession(String key, Session session) {
 		SessionLogger.logCreateSession(session.getId(), session.getSessionTimeoutMillis());
@@ -70,9 +68,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	public void removeSession(Session session) {
 		if (session == null) {
@@ -90,9 +87,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Removes the session.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeSession(String key) {
 		this.removeSession(this.getSession(key));
@@ -100,9 +96,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Gets the session.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the session
 	 */
 	public Session getSession(String key) {
@@ -111,7 +106,7 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Gets all sessions.
-	 * 
+	 *
 	 * @return the sessions
 	 */
 	public Session[] getSessions() {
@@ -133,9 +128,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Schedule session timeout.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	@SuppressWarnings("unchecked")
 	private void scheduleSessionTimeout(Session session, double newTimeoutMillis) {
@@ -148,8 +142,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session, session.getSessionTimeoutMillis()));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
-				sessionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter, (long) newTimeoutMillis,
+				TimeUnit.MILLISECONDS);
 		if (SessionLogger.isTraceEnabled()) {
 			SessionLogger.logScheduleTimeout(session.getId(), newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
 		}
@@ -159,9 +153,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Cancel session timeout.
-	 * 
-	 * @param session
-	 *            the session
+	 *
+	 * @param session the session
 	 */
 	private void cancelSessionTimeout(Session session) {
 		if (session == null) {
@@ -177,12 +170,10 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			LOGGER.error("cancel of session timeout failed sid=" + session.getId() + " delay="
-					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
+			LOGGER.error("cancel of session timeout failed sid=" + session.getId() + " delay=" + sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
 			if (remove == false) {
-				LOGGER.error("remove of session timeout failed sid=" + session.getId() + " delay="
-						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
+				LOGGER.error("remove of session timeout failed sid=" + session.getId() + " delay=" + sessionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			}
 		}
 		this.sessionScheduler.purge();
@@ -192,11 +183,9 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Reset session timeout.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param newTimeoutMillis
-	 *            the new timeout in milliseconds
+	 *
+	 * @param session the session
+	 * @param newTimeoutMillis the new timeout in milliseconds
 	 */
 	public void resetSessionTimeout(Session session, double newTimeoutMillis) {
 		synchronized (session) {
@@ -221,9 +210,8 @@ public class SessionRegistry extends Registry<String, Session> {
 
 		/**
 		 * Instantiates a new session timer run.
-		 * 
-		 * @param session
-		 *            the session
+		 *
+		 * @param session the session
 		 */
 		public SessionTimeout(Session session, double timeoutMillis) {
 			this.session = session;
@@ -256,11 +244,9 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Dump the sessions into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("sessions");

@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCServer;
@@ -30,7 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 
 public class DemoSessionServer extends Thread {
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(DemoSessionServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoSessionServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -122,7 +123,7 @@ public class DemoSessionServer extends Thread {
 			System.out.println("DemoSessionServer.SrvCallback.execute() " + data);
 			return request;
 		}
-		
+
 		@Override
 		public void exceptionCaught(SCServiceException ex) {
 			LOGGER.error("exception caught");

@@ -18,7 +18,7 @@ package org.serviceconnector.api;
 
 /**
  * The Class SCServiceException. Used to notify errors on SC service level.
- * 
+ *
  * @author JTraber
  */
 public class SCServiceException extends Exception {
@@ -37,11 +37,9 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Instantiates a new SC service exception.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param exception
-	 *            the cause
+	 *
+	 * @param message the message
+	 * @param exception the cause
 	 */
 	public SCServiceException(String message, Exception exception) {
 		super(message, exception);
@@ -49,9 +47,8 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Instantiates a new SC service exception.
-	 * 
-	 * @param message
-	 *            the message
+	 *
+	 * @param message the message
 	 */
 	public SCServiceException(String message) {
 		super(message);
@@ -59,7 +56,7 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Gets the application error code.
-	 * 
+	 *
 	 * @return the application error code
 	 */
 	public int getAppErrorCode() {
@@ -68,9 +65,8 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Sets the application error code.
-	 * 
-	 * @param appErrorCode
-	 *            the new application error code
+	 *
+	 * @param appErrorCode the new application error code
 	 */
 	public void setAppErrorCode(Integer appErrorCode) {
 		if (appErrorCode == null) {
@@ -82,7 +78,7 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Gets the application error text.
-	 * 
+	 *
 	 * @return the application error text
 	 */
 	public String getAppErrorText() {
@@ -91,9 +87,8 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Sets the application error text.
-	 * 
-	 * @param appErrorText
-	 *            the new application error text
+	 *
+	 * @param appErrorText the new application error text
 	 */
 	public void setAppErrorText(String appErrorText) {
 		this.appErrorText = appErrorText;
@@ -101,9 +96,8 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Sets the SC error code.
-	 * 
-	 * @param scErrorCode
-	 *            the new SC error code
+	 *
+	 * @param scErrorCode the new SC error code
 	 */
 	public void setSCErrorCode(Integer scErrorCode) {
 		if (scErrorCode == null) {
@@ -115,9 +109,8 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Sets the sC error text.
-	 * 
-	 * @param scErrorText
-	 *            the new sC error text
+	 *
+	 * @param scErrorText the new sC error text
 	 */
 	public void setSCErrorText(String scErrorText) {
 		this.scErrorText = scErrorText;
@@ -125,7 +118,7 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Gets the SC error code.
-	 * 
+	 *
 	 * @return the SC error code
 	 */
 	public int getSCErrorCode() {
@@ -134,7 +127,7 @@ public class SCServiceException extends Exception {
 
 	/**
 	 * Gets the SC error text.
-	 * 
+	 *
 	 * @return the SC error text
 	 */
 	public String getSCErrorText() {
@@ -143,7 +136,6 @@ public class SCServiceException extends Exception {
 
 	@Override
 	public String toString() {
-		return "SCServiceException [appErrorCode=" + appErrorCode + ", appErrorText=" + appErrorText + ", scErrorText="
-				+ scErrorText + ", scErrorCode=" + scErrorCode + "]";
+		return "SCServiceException [appErrorCode=" + appErrorCode + ", appErrorText=" + appErrorText + ", scErrorText=" + scErrorText + ", scErrorCode=" + scErrorCode + "]";
 	}
 }

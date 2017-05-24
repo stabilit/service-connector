@@ -45,7 +45,7 @@ public class ServersXMLLoader extends AbstractXMLLoader {
 				sim[i] = servers[0];
 			}
 			servers = sim;
- 		}
+		}
 		Paging paging = this.writePagingAttributes(writer, request, servers.length, ""); // no prefix
 		// String showSessionsParameter = request.getParameter("showsessions");
 		int startIndex = paging.getStartIndex();

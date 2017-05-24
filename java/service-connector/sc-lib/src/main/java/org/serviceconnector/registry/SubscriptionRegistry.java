@@ -24,7 +24,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.Subscription;
@@ -35,13 +36,13 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class SubscriptionRegistry. Registry stores entries for properly created subscriptions.
- * 
+ *
  * @author JTraber
  */
 public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SubscriptionRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private ScheduledThreadPoolExecutor subscriptionScheduler;
@@ -55,24 +56,20 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Adds the subscription.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param key the key
+	 * @param subscription the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis(),
-				subscription.getNoDataIntervalMillis());
+		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis(), subscription.getNoDataIntervalMillis());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription, subscription.getSubscriptionTimeoutMillis());
 	}
 
 	/**
 	 * Removes the subscription.
-	 * 
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param subscription the subscription
 	 */
 	public void removeSubscription(Subscription subscription) {
 		if (subscription == null) {
@@ -88,9 +85,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Removes the subscription.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeSubscription(String key) {
 		Subscription subscription = this.getSubscription(key);
@@ -99,9 +95,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Gets the subscription.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the subscription
 	 */
 	public Subscription getSubscription(String key) {
@@ -111,7 +106,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Gets all subscriptions.
-	 * 
+	 *
 	 * @return the subscriptions
 	 */
 	public Subscription[] getSubscriptions() {
@@ -133,9 +128,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Gets all subscriptions for given service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
+	 *
+	 * @param serviceName the service name
 	 * @return the subscriptions
 	 */
 	public Subscription[] getSubscriptions(String serviceName) {
@@ -163,9 +157,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Schedule subscription timeout.
-	 * 
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param subscription the subscription
 	 */
 	@SuppressWarnings("unchecked")
 	private void scheduleSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
@@ -178,8 +171,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		// sets up subscription timeout
 		TimeoutWrapper subscriptionTimeouter = new TimeoutWrapper(new SubscriptionTimeout(subscription));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
-				subscriptionTimeouter, (long) newTimeoutMillis, TimeUnit.MILLISECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(subscriptionTimeouter, (long) newTimeoutMillis,
+				TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
 		if (SubscriptionLogger.isTraceEnabled()) {
 			SubscriptionLogger.logScheduleTimeout(subscription.getId(), newTimeoutMillis, timeout.getDelay(TimeUnit.MILLISECONDS));
@@ -188,9 +181,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Cancel session timeout.
-	 * 
-	 * @param subscription
-	 *            the session
+	 *
+	 * @param subscription the session
 	 */
 	private void cancelSubscriptionTimeout(Subscription subscription) {
 		if (subscription == null) {
@@ -206,12 +198,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		}
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			LOGGER.error("cancel of subscription timeout failed sid=" + subscription.getId() + " delay="
-					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
+			LOGGER.error("cancel of subscription timeout failed sid=" + subscription.getId() + " delay=" + subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + "ms");
 			boolean remove = this.subscriptionScheduler.remove(subscription.getTimeouterTask());
 			if (remove == false) {
-				LOGGER.error("remove of subscription timeout failed sid=" + subscription.getId() + " delay="
-						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
+				LOGGER.error("remove of subscription timeout failed sid=" + subscription.getId() + " delay=" + subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS) + " ms");
 			}
 		}
 
@@ -223,9 +213,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Cancel subscription timeout.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		synchronized (subscription) {
@@ -240,8 +229,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	}
 
 	/**
-	 * The Class SubscriptionTimeout. Gets control when a subscription times out. Responsible for cleaning up when subscription gets
-	 * broken.
+	 * The Class SubscriptionTimeout. Gets control when a subscription times out. Responsible for cleaning up when subscription gets broken.
 	 */
 	private class SubscriptionTimeout implements ITimeout {
 
@@ -252,9 +240,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 		/**
 		 * Instantiates a new subscription timer run.
-		 * 
-		 * @param subscription
-		 *            the session
+		 *
+		 * @param subscription the session
 		 */
 		public SubscriptionTimeout(Subscription subscription) {
 			this.subscription = subscription;
@@ -286,11 +273,9 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/**
 	 * Dump the su8bscriptions into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("subscriptions");

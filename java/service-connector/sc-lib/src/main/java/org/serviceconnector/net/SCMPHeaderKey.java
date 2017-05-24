@@ -16,11 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Enum SCMPHeadlineKey. Defines possible headline key in SCMP.
- * 
+ *
  * @author JTraber
  */
 public enum SCMPHeaderKey {
@@ -46,13 +47,12 @@ public enum SCMPHeaderKey {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPHeaderKey.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPHeaderKey.class);
 
 	/**
 	 * Gets the msg header key by string.
-	 * 
-	 * @param headerKey
-	 *            the header key
+	 *
+	 * @param headerKey the header key
 	 * @return the msg header key
 	 */
 	public static SCMPHeaderKey getMsgHeaderKey(String headerKey) {
@@ -61,9 +61,8 @@ public enum SCMPHeaderKey {
 
 	/**
 	 * Gets the key by headline (byte buffer).
-	 * 
-	 * @param b
-	 *            the b
+	 *
+	 * @param b the b
 	 * @return the key by headline
 	 */
 	public static SCMPHeaderKey getKeyByHeadline(byte[] b) {
@@ -114,9 +113,8 @@ public enum SCMPHeaderKey {
 
 	/**
 	 * Gets the key by headline (string).
-	 * 
-	 * @param string
-	 *            the string
+	 *
+	 * @param string the string
 	 * @return the key by headline
 	 */
 	public static SCMPHeaderKey getKeyByHeadline(String string) {

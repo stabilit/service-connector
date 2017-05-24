@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.SubscribeCommandCallback;
 import org.serviceconnector.registry.PublishMessageQueue;
@@ -26,23 +27,21 @@ import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
- * functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication functions.
  */
 public class PublishService extends StatefulService implements IPublishService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(PublishService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PublishService.class);
 
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 
 	/**
 	 * Instantiates a new publish service.
-	 * 
-	 * @param name
-	 *            the name
+	 *
+	 * @param name the name
 	 */
 	public PublishService(String name) {
 		super(name, ServiceType.PUBLISH_SERVICE);
@@ -51,34 +50,29 @@ public class PublishService extends StatefulService implements IPublishService {
 
 	/**
 	 * Gets the subscription queue.
-	 * 
+	 *
 	 * @return the subscription queue
 	 */
+	@Override
 	public PublishMessageQueue<SCMPMessage> getMessageQueue() {
 		return this.publishMessageQueue;
 	}
 
 	/**
 	 * Allocate server and subscribe.
-	 * 
-	 * @param msgToForward
-	 *            the msg to forward
-	 * @param callback
-	 *            the callback
-	 * @param subscription
-	 *            the subscription
-	 * @param timeoutMillis
-	 *            the timeout millis
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param msgToForward the msg to forward
+	 * @param callback the callback
+	 * @param subscription the subscription
+	 * @param timeoutMillis the timeout millis
+	 * @throws Exception the exception
 	 */
-	public synchronized void allocateServerAndSubscribe(SCMPMessage msgToForward, SubscribeCommandCallback callback,
-			Subscription subscription, int timeoutMillis) throws Exception {
+	public synchronized void allocateServerAndSubscribe(SCMPMessage msgToForward, SubscribeCommandCallback callback, Subscription subscription, int timeoutMillis)
+			throws Exception {
 		int numberOfServer = this.listOfServers.size();
 		if (numberOfServer == 0) {
 			// no server registered for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service="
-					+ msgToForward.getServiceName());
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service=" + msgToForward.getServiceName());
 			scmpCommandException.setMessageType(msgToForward.getMessageType());
 			throw scmpCommandException;
 		}
@@ -102,12 +96,11 @@ public class PublishService extends StatefulService implements IPublishService {
 			}
 		}
 		// no free server available
-		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service="
-				+ msgToForward.getServiceName());
+		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service=" + msgToForward.getServiceName());
 		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
 		throw noFreeSessionExc;
 	}
-	
+
 	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("service");

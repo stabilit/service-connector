@@ -36,25 +36,12 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCConsole {
 
 	/**
-	 * @param args
-	 *            usage : java -jar sc-console.jar -h <host> -p <port>
-	 *            <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>");
-	 *            java -jar sc-console.jar -h localhost -p 7000 enable?serviceName=abc
-	 *            java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc
-	 *            java -jar sc-console.jar -h localhost -p 7000 state?serviceName=abc
-	 *            java -jar sc-console.jar -h localhost -p 7000 sessions?serviceName=abc
-	 *            java -jar sc-console.jar -h localhost -p 7000 clearCache
-	 *            java -jar sc-console.jar -h localhost -p 7000 dump
-	 *            java -jar sc-console.jar -h localhost -p 7000 kill
-	 *            java -jar sc-console.jar -h localhost -p 7000 scVersion
-	 *            java -jar sc-console.jar -h localhost -p 7000 serviceConfiguration?serviceName=abc
-	 *            java -jar sc-console.jar -config sc.properties kill
-	 *            system exit status<br />
-	 *            0 = success
-	 *            1 = error parsing arguments
-	 *            3 = invalid command
-	 *            4 = service not found
-	 *            5 = unexpected error
+	 * @param args usage : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>"); java -jar
+	 *        sc-console.jar -h localhost -p 7000 enable?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc java -jar sc-console.jar -h localhost
+	 *        -p 7000 state?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 sessions?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 clearCache java
+	 *        -jar sc-console.jar -h localhost -p 7000 dump java -jar sc-console.jar -h localhost -p 7000 kill java -jar sc-console.jar -h localhost -p 7000 scVersion java -jar
+	 *        sc-console.jar -h localhost -p 7000 serviceConfiguration?serviceName=abc java -jar sc-console.jar -config sc.properties kill system exit status<br />
+	 *        0 = success 1 = error parsing arguments 3 = invalid command 4 = service not found 5 = unexpected error
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -82,12 +69,12 @@ public class SCConsole {
 			}
 			int status = SCConsole.run(configFileName, bodyString);
 			System.exit(status);
-		} 
-		
-		if(args.length < 5) {
+		}
+
+		if (args.length < 5) {
 			// configFileName is null and number of arguments lower than 3
 			showError("Config file name argument is missing");
-			System.exit(1);			
+			System.exit(1);
 		}
 
 		// get command from args[4]
@@ -118,16 +105,12 @@ public class SCConsole {
 
 	/**
 	 * Run SCConsole command.
-	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param bodyString
-	 *            the body string
+	 *
+	 * @param host the host
+	 * @param port the port
+	 * @param bodyString the body string
 	 * @return the int - return status
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private static int run(String host, int port, String bodyString) throws Exception {
 
@@ -247,12 +230,10 @@ public class SCConsole {
 
 	/**
 	 * Run.
-	 * 
-	 * @param configFileName
-	 *            the config file name
+	 *
+	 * @param configFileName the config file name
 	 * @return the int - return status
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception the exception
 	 */
 	private static int run(String configFileName, String bodyString) throws Exception {
 		int status = 5;
@@ -268,11 +249,11 @@ public class SCConsole {
 			ConnectionType connectionType = ConnectionType.getType(connectionTypeString);
 
 			switch (connectionType) {
-			case DEFAULT_SERVER_CONNECTION_TYPE:
-			case NETTY_TCP:
-				return run(listenerConfiguration.getNetworkInterfaces().get(0), listenerConfiguration.getPort(), bodyString);
-			default:
-				continue;
+				case DEFAULT_SERVER_CONNECTION_TYPE:
+				case NETTY_TCP:
+					return run(listenerConfiguration.getNetworkInterfaces().get(0), listenerConfiguration.getPort(), bodyString);
+				default:
+					continue;
 			}
 		}
 		if (status == 5) {
@@ -283,14 +264,12 @@ public class SCConsole {
 
 	/**
 	 * Show error.
-	 * 
-	 * @param msg
-	 *            the msg
+	 *
+	 * @param msg the msg
 	 */
 	private static void showError(String msg) {
 		System.err.println("\nerror: " + msg);
-		System.out
-				.println("\nusage  : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>");
+		System.out.println("\nusage  : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>");
 		System.out.println("\nsamples: java -jar sc-console.jar -h localhost -p 7000 enable?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 state?serviceName=abc");

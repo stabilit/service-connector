@@ -41,6 +41,7 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 		APISessionSubscriptionTest.setUpServiceConnectorAndServer();
 	}
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -52,15 +53,13 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 
-		ServerDefinition sessSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 10, 5, TestConstants.sesServiceName1);
-		ServerDefinition pubSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.pubServiceName1);
+		ServerDefinition sessSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.logbackSrv, TestConstants.sesServerName1,
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC0_TCP, 10, 5, TestConstants.sesServiceName1);
+		ServerDefinition pubSrvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.logbackSrv, TestConstants.pubServerName1,
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC0_TCP, 100, 10, TestConstants.pubServiceName1);
 		srvToSC0Defs.add(pubSrvToSC0Def);
 		srvToSC0Defs.add(sessSrvToSC0Def);
-		APISessionSubscriptionTest.srvDefs = srvToSC0Defs;
+		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
 	/**

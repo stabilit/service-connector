@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -32,7 +33,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscSubscribeActiveCascClientCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CscSubscribeActiveCascClientCallback.class);
 
 	/** The request. */
 	protected IRequest request;
@@ -44,13 +45,10 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 
 	/**
 	 * Instantiates a new csc subscribe active casc client callback.
-	 * 
-	 * @param cascClient
-	 *            the casc client
-	 * @param request
-	 *            the request
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param cascClient the casc client
+	 * @param request the request
+	 * @param callback the callback
 	 */
 	public CscSubscribeActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
 		this.request = request;
@@ -72,11 +70,10 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 				this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
 				if (cscScSubscription.isCascaded() == true) {
 					// update csc subscription id list for cascaded subscription
-					cscScSubscription.addCscSubscriptionId(this.request.getMessage().getSessionId(), new SubscriptionMask(request
-							.getMessage().getHeader(SCMPHeaderAttributeKey.MASK)));
+					cscScSubscription.addCscSubscriptionId(this.request.getMessage().getSessionId(),
+							new SubscriptionMask(request.getMessage().getHeader(SCMPHeaderAttributeKey.MASK)));
 				}
-				this.cascClient.setSubscriptionMask(new SubscriptionMask(this.request.getMessage().getHeader(
-						SCMPHeaderAttributeKey.CASCADED_MASK)));
+				this.cascClient.setSubscriptionMask(new SubscriptionMask(this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK)));
 				// release permit
 				this.cascClient.getCascClientSemaphore().release();
 				return;
@@ -92,8 +89,7 @@ public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallbac
 		try {
 			this.commandCallback.receive(reply);
 		} catch (Exception e) {
-			LOGGER.warn("receive rejected or fault reply failed, sid=" + this.request.getMessage().getSessionId() + " "
-					+ e.toString());
+			LOGGER.warn("receive rejected or fault reply failed, sid=" + this.request.getMessage().getSessionId() + " " + e.toString());
 		}
 	}
 

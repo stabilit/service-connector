@@ -18,7 +18,8 @@ package org.serviceconnector.net.req.netty;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -44,7 +45,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(NettyConnectionAdpater.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NettyConnectionAdpater.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 
@@ -73,18 +74,16 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	/** The timer to observe timeouts, static because should be shared. */
 	protected static Timer timer;
 	/**
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket. A worker thread performs
+	 * non-blocking read and write on a channel.
 	 */
 	protected static NioClientSocketChannelFactory channelFactory;
 
 	/**
 	 * Instantiates a new NETTY connection adapter.
-	 * 
-	 * @param channelFactory
-	 *            the channel factory
-	 * @param timer
-	 *            the timer
+	 *
+	 * @param channelFactory the channel factory
+	 * @param timer the timer
 	 */
 	public NettyConnectionAdpater(NioClientSocketChannelFactory channelFactory, Timer timer) {
 		this.port = 0;
@@ -134,12 +133,10 @@ public abstract class NettyConnectionAdpater implements IConnection {
 			this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis());
 		} catch (CommunicationException ex) {
 			LOGGER.error("disconnect", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect from IP="
-					+ this.remotSocketAddress.toString());
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect from IP=" + this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logDisconnectByLocalHost(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
-					this.remotSocketAddress.getPort());
+			ConnectionLogger.logDisconnectByLocalHost(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort());
 		}
 	}
 

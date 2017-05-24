@@ -20,7 +20,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -29,19 +30,17 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
 
 /**
- * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback.
- * This class is designed to be extended by various callback's. It provides synchronous flag to to save state if somebody is waiting
- * for a message. Synchronous flag might be useful in subclasses. It only gets access to the newest message - it only queues one
- * item. Queuing an arrived message happens only if someone is expecting (synchronous = true) a reply. This restriction prevents
- * race
- * conditions - late messages are ignored.
- * 
+ * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback. This class is designed to be extended by various
+ * callback's. It provides synchronous flag to to save state if somebody is waiting for a message. Synchronous flag might be useful in subclasses. It only gets access to the newest
+ * message - it only queues one item. Queuing an arrived message happens only if someone is expecting (synchronous = true) a reply. This restriction prevents race conditions - late
+ * messages are ignored.
+ *
  * @author JTraber
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SynchronousCallback.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SynchronousCallback.class);
 
 	/** Queue to store the answer. */
 	protected final BlockingQueue<SCMPMessage> answer;
@@ -115,8 +114,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 				// time runs out before message got received
 				reply = new SCMPMessageFault(SCMPVersion.LOWEST, SCMPError.REQUEST_WAIT_ABORT, "");
 				reply.setMessageType(SCMPMsgType.UNDEFINED);
-				LOGGER.error("Operation did not complete in time, timeout=" + timeoutMillis + "ms aborting callback="
-						+ this.getClass().getName());
+				LOGGER.error("Operation did not complete in time, timeout=" + timeoutMillis + "ms aborting callback=" + this.getClass().getName());
 			}
 		}
 		return reply;

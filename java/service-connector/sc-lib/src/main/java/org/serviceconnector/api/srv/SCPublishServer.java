@@ -39,13 +39,10 @@ public class SCPublishServer extends SCSessionServer {
 
 	/**
 	 * Instantiates a new SC publish server.
-	 * 
-	 * @param scServer
-	 *            the SC server
-	 * @param serviceName
-	 *            the service name
-	 * @param requester
-	 *            the requester
+	 *
+	 * @param scServer the SC server
+	 * @param serviceName the service name
+	 * @param requester the requester
 	 */
 	public SCPublishServer(SCServer scServer, String serviceName, SCRequester requester) {
 		super(scServer, serviceName, requester);
@@ -53,47 +50,35 @@ public class SCPublishServer extends SCSessionServer {
 
 	/**
 	 * Register server on SC with default operation timeout.
-	 * 
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws SCServiceException
-	 *             listener not started yet<br />
-	 *             server already registered for service<br />
-	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             callback is not set<br />
+	 *
+	 * @param maxSessions the max sessions to serve
+	 * @param maxConnections the max connections pool uses to connect to SC
+	 * @param scCallback the SC callback
+	 * @throws SCServiceException listener not started yet<br />
+	 *         server already registered for service<br />
+	 *         register server on SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException callback is not set<br />
 	 */
-	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
-			throws SCServiceException, SCMPValidatorException {
+	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
 	/**
 	 * Register server on SC.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws SCServiceException
-	 *             listener not started yet<br />
-	 *             server already registered for service<br />
-	 *             register server on SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             callback is not set<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param maxSessions the max sessions to serve
+	 * @param maxConnections the max connections pool uses to connect to SC
+	 * @param scCallback the SC callback
+	 * @throws SCServiceException listener not started yet<br />
+	 *         server already registered for service<br />
+	 *         register server on SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException callback is not set<br />
 	 */
-	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
-			SCPublishServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
+	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
+			throws SCServiceException, SCMPValidatorException {
 		if (scCallback == null) {
 			throw new SCMPValidatorException("Callback is missing.");
 		}
@@ -107,15 +92,12 @@ public class SCPublishServer extends SCSessionServer {
 
 	/**
 	 * Publish message to SC with default operation timeout.
-	 * 
-	 * @param publishMessage
-	 *            the publish message
-	 * @throws SCServiceException
-	 *             server not registered yet<br />
-	 *             publish to SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             publish message is not set<br />
+	 *
+	 * @param publishMessage the publish message
+	 * @throws SCServiceException server not registered yet<br />
+	 *         publish to SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException publish message is not set<br />
 	 */
 	public void publish(SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
@@ -123,20 +105,15 @@ public class SCPublishServer extends SCSessionServer {
 
 	/**
 	 * Publish message to SC.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation
-	 * @param publishMessage
-	 *            the publish message
-	 * @throws SCServiceException
-	 *             server not registered yet<br />
-	 *             publish to SC failed<br />
-	 *             error message received from SC <br />
-	 * @throws SCMPValidatorException
-	 *             publish message is not set<br />
+	 *
+	 * @param operationTimeoutSeconds the allowed time in seconds to complete the operation
+	 * @param publishMessage the publish message
+	 * @throws SCServiceException server not registered yet<br />
+	 *         publish to SC failed<br />
+	 *         error message received from SC <br />
+	 * @throws SCMPValidatorException publish message is not set<br />
 	 */
-	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException,
-			SCMPValidatorException {
+	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		if (this.registered == false) {
 			throw new SCServiceException("Server is not registered for a service.");
 		}

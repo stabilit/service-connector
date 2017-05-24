@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class SrvService. Represent of a service on backend server.
- * 
+ *
  * @author JTraber
  */
 public abstract class SrvService {
@@ -58,7 +58,7 @@ public abstract class SrvService {
 
 	/**
 	 * Gets the requester.
-	 * 
+	 *
 	 * @return the requester
 	 */
 	public IRequester getRequester() {
@@ -67,7 +67,7 @@ public abstract class SrvService {
 
 	/**
 	 * Gets the service name.
-	 * 
+	 *
 	 * @return the service name
 	 */
 	public String getServiceName() {
@@ -76,7 +76,7 @@ public abstract class SrvService {
 
 	/**
 	 * Gets the max sessions.
-	 * 
+	 *
 	 * @return the max sessions
 	 */
 	public int getMaxSessions() {
@@ -85,7 +85,7 @@ public abstract class SrvService {
 
 	/**
 	 * Gets the max connections.
-	 * 
+	 *
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {

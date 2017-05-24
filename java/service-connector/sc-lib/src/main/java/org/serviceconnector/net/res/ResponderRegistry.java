@@ -19,7 +19,8 @@ package org.serviceconnector.net.res;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.registry.Registry;
@@ -27,13 +28,13 @@ import org.serviceconnector.util.XMLDumpWriter;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
- * 
+ *
  * @author JTraber
  */
 public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(ResponderRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResponderRegistry.class);
 
 	/** The thread local. Space to store any data for a single thread. */
 	private ThreadLocal<Object> threadLocal;
@@ -46,11 +47,9 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 	}
 
 	/**
-	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same thread.
-	 * Other threads cannot access earlier set object.
-	 * 
-	 * @param obj
-	 *            the new thread local
+	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same thread. Other threads cannot access earlier set object.
+	 *
+	 * @param obj the new thread local
 	 */
 	public void setThreadLocal(Object obj) {
 		this.threadLocal.set(obj);
@@ -58,11 +57,9 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Adds an entry of a responder.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param responder
-	 *            the responder
+	 *
+	 * @param key the key
+	 * @param responder the responder
 	 */
 	public void addResponder(Object key, IResponder responder) {
 		this.put(key, responder);
@@ -70,9 +67,8 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Removes the responder.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 */
 	public void removeResponder(Object key) {
 		this.remove(key);
@@ -80,9 +76,8 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Gets the responder.
-	 * 
-	 * @param key
-	 *            the key
+	 *
+	 * @param key the key
 	 * @return the responder
 	 */
 	public IResponder getResponder(Object key) {
@@ -91,7 +86,7 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Gets all responders.
-	 * 
+	 *
 	 * @return the responders
 	 */
 	public IResponder[] getResponders() {
@@ -112,11 +107,9 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Dump the responders into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("responders");
@@ -126,10 +119,10 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		}
 		writer.writeEndElement(); // end of responders
 	}
-	
+
 	/**
 	 * Gets the current responder.
-	 * 
+	 *
 	 * @return the current responder
 	 */
 	public IResponder getCurrentResponder() {
@@ -149,10 +142,10 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 	public IResponder getFirstResponderForConnectionType(ConnectionType connectionType) {
 		IResponder[] responderArray = this.getResponders();
 		for (IResponder responder : responderArray) {
- 			ListenerConfiguration listenerConfiguration = responder.getListenerConfig();
-            if (listenerConfiguration.getConnectionType().equals(connectionType.getValue())) {
-            	return responder;
-            }
+			ListenerConfiguration listenerConfiguration = responder.getListenerConfig();
+			if (listenerConfiguration.getConnectionType().equals(connectionType.getValue())) {
+				return responder;
+			}
 		}
 		return null;
 	}

@@ -18,7 +18,8 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CacheLogger.
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
 public final class CacheLogger {
 
 	/** The Constant cacheLogger. */
-	private static final Logger CACHE_LOGGER = Logger.getLogger(Loggers.CACHE.getValue());
+	private static final Logger CACHE_LOGGER = LoggerFactory.getLogger(Loggers.CACHE.getValue());
 	/** The start loading string. */
 	private static String startLoadingStr = "start loading message cid=%s sid=%s timeout=%sms";
 	/** The start caching appendix string. */
@@ -68,7 +69,7 @@ public final class CacheLogger {
 
 	/**
 	 * Checks if is enabled.
-	 * 
+	 *
 	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
@@ -77,15 +78,11 @@ public final class CacheLogger {
 
 	/**
 	 * Try to get message from cache.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param sessionId
-	 *            the session id
-	 * @param requestedPart
-	 *            the requested part
-	 * @param appendixNr
-	 *            the appendix number
+	 *
+	 * @param cacheId the cache identifier
+	 * @param sessionId the session id
+	 * @param requestedPart the requested part
+	 * @param appendixNr the appendix number
 	 */
 	public static void tryGetMessageFromCache(String cacheId, String sessionId, String requestedPart, String appendixNr) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -98,11 +95,9 @@ public final class CacheLogger {
 
 	/**
 	 * Got message from cache.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param cacheId the cache identifier
+	 * @param sessionId the session id
 	 */
 	public static void gotMessageFromCache(String cacheId, String sessionId, int length) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -115,13 +110,10 @@ public final class CacheLogger {
 
 	/**
 	 * Start loading cache message.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param sessionId
-	 *            the session id
-	 * @param timeout
-	 *            the loading timeout in milliseconds
+	 *
+	 * @param cacheId the cache identifier
+	 * @param sessionId the session id
+	 * @param timeout the loading timeout in milliseconds
 	 */
 	public static void startLoadingCacheMessage(String cacheId, String sessionId, int timeout) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -134,13 +126,10 @@ public final class CacheLogger {
 
 	/**
 	 * Start caching appendix.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param cacheGuardian
-	 *            the cache guardian
-	 * @param timeout
-	 *            the timeout
+	 *
+	 * @param cacheId the cache id
+	 * @param cacheGuardian the cache guardian
+	 * @param timeout the timeout
 	 */
 	public static void startCachingAppendix(String cacheId, String cacheGuardian, int timeout) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -153,11 +142,9 @@ public final class CacheLogger {
 
 	/**
 	 * Cache appendix.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param cacheGuardian
-	 *            the cache guardian name
+	 *
+	 * @param cacheId the cache id
+	 * @param cacheGuardian the cache guardian name
 	 */
 	public static void cacheAppendix(String cacheId, String cacheGuardian) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -170,15 +157,11 @@ public final class CacheLogger {
 
 	/**
 	 * Finish loading cache message.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param sessionId
-	 *            the session id
-	 * @param numberOfParts
-	 *            the number of parts
-	 * @param numberOfAppendix
-	 *            the number of appendix
+	 *
+	 * @param cacheId the cache identifier
+	 * @param sessionId the session id
+	 * @param numberOfParts the number of parts
+	 * @param numberOfAppendix the number of appendix
 	 */
 	public static void finishLoadingCacheMessage(String cacheId, String sessionId, int numberOfParts, int numberOfAppendix) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -191,13 +174,10 @@ public final class CacheLogger {
 
 	/**
 	 * Finish caching appendix.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param cacheGuardian
-	 *            the cache guardian name
-	 * @param numberOfParts
-	 *            the number of parts
+	 *
+	 * @param cacheId the cache identifier
+	 * @param cacheGuardian the cache guardian name
+	 * @param numberOfParts the number of parts
 	 */
 	public static void finishCachingAppendix(String cacheId, String cacheGuardian, int numberOfParts) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -210,11 +190,9 @@ public final class CacheLogger {
 
 	/**
 	 * Abort loading message.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param cacheId the cache identifier
+	 * @param sessionId the session id
 	 */
 	public static void abortLoadingMessage(String cacheId, String sessionId) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -227,14 +205,11 @@ public final class CacheLogger {
 
 	/**
 	 * Put message to cache.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param loadingSessionId
-	 *            the loading session id
+	 *
+	 * @param cacheId the cache identifier
+	 * @param loadingSessionId the loading session id
 	 */
-	public static void putMessageToCache(String cacheId, int nrOfParts, String loadingSessionId, int length, String loadingState,
-			String cmt) {
+	public static void putMessageToCache(String cacheId, int nrOfParts, String loadingSessionId, int length, String loadingState, String cmt) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(putMessageStr, cacheId, nrOfParts, loadingSessionId, length, loadingState, cmt);
@@ -245,17 +220,12 @@ public final class CacheLogger {
 
 	/**
 	 * Put appendix part to cache.
-	 * 
-	 * @param cacheId
-	 *            the cache identifier
-	 * @param cacheGuardian
-	 *            the cache guardian
-	 * @param nrOfAppendix
-	 *            the number of appendix
-	 * @param appendixNr
-	 *            the appendix number
-	 * @param partNr
-	 *            the part number
+	 *
+	 * @param cacheId the cache identifier
+	 * @param cacheGuardian the cache guardian
+	 * @param nrOfAppendix the number of appendix
+	 * @param appendixNr the appendix number
+	 * @param partNr the part number
 	 */
 	public static void putManagedDataToCache(String cacheId, String cacheGuardian, int appendixNr, int partNr) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -268,11 +238,9 @@ public final class CacheLogger {
 
 	/**
 	 * Start loading replacement.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param cacheGuardian
-	 *            the cache guardian
+	 *
+	 * @param cacheId the cache id
+	 * @param cacheGuardian the cache guardian
 	 */
 	public static void startLoadingReplacement(String cacheId, String cacheGuardian) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -285,13 +253,10 @@ public final class CacheLogger {
 
 	/**
 	 * Stop loading replacement.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param cacheGuardian
-	 *            the cache guardian
-	 * @param nrOfParts
-	 *            the nr of parts
+	 *
+	 * @param cacheId the cache id
+	 * @param cacheGuardian the cache guardian
+	 * @param nrOfParts the nr of parts
 	 */
 	public static void stopLoadingReplacement(String cacheId, String cacheGuardian, int nrOfParts) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -304,11 +269,9 @@ public final class CacheLogger {
 
 	/**
 	 * Replace existing data.
-	 * 
-	 * @param cacheId
-	 *            the cache id
-	 * @param cacheGuardian
-	 *            the cache guardian
+	 *
+	 * @param cacheId the cache id
+	 * @param cacheGuardian the cache guardian
 	 */
 	public static void replaceExistingData(String cacheId, String cacheGuardian) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -321,9 +284,8 @@ public final class CacheLogger {
 
 	/**
 	 * Removes the message from cache.
-	 * 
-	 * @param cid
-	 *            the cache identifier
+	 *
+	 * @param cid the cache identifier
 	 */
 	public static void removeMessageFromCache(String cid, String reason) {
 		if (CACHE_LOGGER.isTraceEnabled()) {
@@ -336,9 +298,8 @@ public final class CacheLogger {
 
 	/**
 	 * Message expired.
-	 * 
-	 * @param cid
-	 *            the cache identifier
+	 *
+	 * @param cid the cache identifier
 	 */
 	public static void messageExpired(String cid) {
 		if (CACHE_LOGGER.isTraceEnabled()) {

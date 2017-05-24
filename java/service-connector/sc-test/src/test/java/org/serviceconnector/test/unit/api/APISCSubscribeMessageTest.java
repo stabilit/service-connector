@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,16 +31,18 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(APISCSubscribeMessageTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(APISCSubscribeMessageTest.class);
 
 	private SCSubscribeMessage message;
 
+	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		message = new SCSubscribeMessage();
 	}
 
+	@Override
 	@After
 	public void afterOneTest() {
 		message = null;
@@ -53,8 +56,7 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 	@Test
 	public void t01_constructor() {
 		Assert.assertEquals("mask is not null", null, message.getMask());
-		Assert.assertEquals("noDataInterval is default", Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS, message
-				.getNoDataIntervalSeconds());
+		Assert.assertEquals("noDataInterval is default", Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS, message.getNoDataIntervalSeconds());
 	}
 
 	/**

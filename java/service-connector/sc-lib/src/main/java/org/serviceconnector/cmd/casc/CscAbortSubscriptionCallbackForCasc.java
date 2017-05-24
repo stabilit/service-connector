@@ -33,11 +33,9 @@ public class CscAbortSubscriptionCallbackForCasc implements ISubscriptionCallbac
 
 	/**
 	 * Instantiates a new csc abort subscription callback.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param subscription
-	 *            the subscription
+	 *
+	 * @param request the request
+	 * @param subscription the subscription
 	 */
 	public CscAbortSubscriptionCallbackForCasc(IRequest request, Subscription subscription) {
 		this.subscription = subscription;

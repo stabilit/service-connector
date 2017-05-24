@@ -34,9 +34,8 @@ public final class WildcardFileFilter implements FileFilter {
 
 	/**
 	 * Instantiates a new wildcard file filter.
-	 * 
-	 * @param path
-	 *            the path
+	 *
+	 * @param path the path
 	 */
 	public WildcardFileFilter(String path) {
 		final String slashPrefix = "(?<=^|/)";
@@ -47,8 +46,8 @@ public final class WildcardFileFilter implements FileFilter {
 		if (!path.contains(Constants.SLASH)) {
 			path = "**/" + path;
 		}
-		Pattern wildcardTokens = Pattern.compile("(" + slashPrefix + Pattern.quote("**") + slashPostfix + ")|" + "("
-				+ notStarPrefix + Pattern.quote("*") + notStarPostfix + ")|" + "(" + Pattern.quote("?") + ")");
+		Pattern wildcardTokens = Pattern.compile(
+				"(" + slashPrefix + Pattern.quote("**") + slashPostfix + ")|" + "(" + notStarPrefix + Pattern.quote("*") + notStarPostfix + ")|" + "(" + Pattern.quote("?") + ")");
 		Matcher matcher = wildcardTokens.matcher(path);
 		StringBuilder escaped = new StringBuilder();
 		int endOfLastMatch = 0;
@@ -72,7 +71,9 @@ public final class WildcardFileFilter implements FileFilter {
 		this.pattern = Pattern.compile(escaped.toString());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
 	@Override

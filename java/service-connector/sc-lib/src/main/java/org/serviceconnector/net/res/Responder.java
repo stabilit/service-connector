@@ -20,22 +20,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.util.XMLDumpWriter;
 
 /**
- * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation of a
- * responder connection.
- * 
+ * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation of a responder connection.
+ *
  * @author JTraber
  */
 public class Responder implements IResponder {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(Responder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Responder.class);
 
 	/** The listener configuration. */
 	private ListenerConfiguration listenerConfig;
@@ -44,9 +44,8 @@ public class Responder implements IResponder {
 
 	/**
 	 * Instantiates a new responder.
-	 * 
-	 * @param listenerConfig
-	 *            the listener config
+	 *
+	 * @param listenerConfig the listener config
 	 */
 	public Responder(ListenerConfiguration listenerConfig) {
 		this.listenerConfig = listenerConfig;
@@ -122,21 +121,21 @@ public class Responder implements IResponder {
 
 	/**
 	 * Gets the endpoint.
-	 * 
+	 *
 	 * @return the endpoint
 	 */
+	@Override
 	public List<IEndpoint> getEndpoints() {
 		return Collections.unmodifiableList(endpoints);
 	}
 
 	/**
 	 * Dump the responder into the xml writer.
-	 * 
-	 * @param writer
-	 *            the writer
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param writer the writer
+	 * @throws Exception the exception
 	 */
+	@Override
 	public void dump(XMLDumpWriter writer) throws Exception {
 		writer.writeStartElement("responder");
 		this.getListenerConfig().dump(writer);
