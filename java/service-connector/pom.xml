@@ -5,7 +5,7 @@
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-parent</artifactId>
 
-	<version>3.0.0.RELEASE</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SC Parent POM</name>
 
@@ -15,8 +15,8 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/tags/sc-parent-3.0.0.RELEASE</connection>
-		<developerConnection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/tags/sc-parent-3.0.0.RELEASE</developerConnection>
+		<connection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</connection>
+		<developerConnection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</developerConnection>
 	</scm>
 
 	<modules>
