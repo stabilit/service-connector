@@ -27,7 +27,7 @@
 		<kit.dest.path>kit</kit.dest.path>
 
 		<!-- Artifact Versions -->
-		<sc.version>3.0.0-SNAPSHOT</sc.version>
+		<sc.version>3.0.0.RELEASE</sc.version>
 		
 
 	</properties>
