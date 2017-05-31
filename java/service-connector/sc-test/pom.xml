@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>sc-test</artifactId>
 	<packaging>jar</packaging>
 
-	<name>sc-test</name>
+	<name>SC Test</name>
 	<description>Test project for SC</description>
 	<url>http://maven.apache.org</url>
-	
+
 	<parent>
 		<groupId>org.serviceconnector</groupId>
 		<artifactId>sc-parent</artifactId>
@@ -43,8 +44,8 @@
 						<id>create-test-client-server</id>
 						<phase>generate-test-resources</phase>
 						<goals>
-			              <goal>jar</goal>
-			            </goals>
+							<goal>jar</goal>
+						</goals>
 						<configuration>
 							<finalName>test-client-server</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
@@ -66,40 +67,40 @@
 						<id>copy-sc</id>
 						<phase>generate-test-resources</phase>
 						<goals>
-			              <goal>copy</goal>
-			            </goals>
-			            <configuration>
-			              <artifactItems>
-			                <artifactItem>
-			                  <groupId>org.serviceconnector</groupId>
-			                  <artifactId>sc</artifactId>
-			                  <version>${project.version}</version>
-			                  <type>jar</type>
-			                  <overWrite>true</overWrite>
-			                  <outputDirectory>${project.build.directory}</outputDirectory>
-			                  <destFileName>sc.jar</destFileName>
-			                </artifactItem>
-			              </artifactItems>
-			            </configuration>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.serviceconnector</groupId>
+									<artifactId>sc</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>sc.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 					<execution>
-			            <id>copy-dependencies</id>
-			            <phase>generate-test-resources</phase>
-			            <goals>
-			              <goal>copy-dependencies</goal>
-			            </goals>
-			            <configuration>
-			              <outputDirectory>${project.build.directory}</outputDirectory>
-			              <overWriteReleases>false</overWriteReleases>
-			              <overWriteSnapshots>false</overWriteSnapshots>
-			              <overWriteIfNewer>true</overWriteIfNewer>
-<!-- 			              <excludeArtifactIds></excludeArtifactIds> -->
-			            </configuration>
-			         </execution>
+						<id>copy-dependencies</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
@@ -117,5 +118,5 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	
+
 </project>
