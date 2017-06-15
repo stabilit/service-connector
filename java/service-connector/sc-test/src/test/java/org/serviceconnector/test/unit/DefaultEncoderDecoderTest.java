@@ -85,7 +85,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t01_DecodeREQTest() {
-		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty="
+				+ msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
 		byte[] buffer = requestString.getBytes();
@@ -109,7 +110,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	public void t02_DecodeRESTest() {
 		headKey = SCMPHeaderKey.RES;
 
-		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty="
+				+ msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -134,7 +136,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	public void t03_DecodeEXCTest() {
 		headKey = SCMPHeaderKey.EXC;
 
-		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty="
+				+ msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -160,7 +163,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t04_DecodeUNDEFTest() {
-		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n\n" + body + "\n";
+		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr
+				+ "\n" + "mty=" + msgType.getValue() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -180,7 +184,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t05_DecodeBodyTypesTest() {
-		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty="
+				+ msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -197,7 +202,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 		verifySCMP(message);
 
 		bodyType = SCMPBodyType.TEXT;
-		header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
+		header = "bty=" + bodyType.getValue() + "\n" + "mid=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
+				+ "\n";
 
 		requestString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -222,7 +228,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	public void t10_EncodeREQTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "mty=" + msgType.getValue() + "\n" + "bty=" + bodyType.getValue() + "\n" + "msn="
+				+ msgSequenceNr + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -244,7 +251,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		this.headKey = SCMPHeaderKey.RES;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "mty=" + msgType.getValue() + "\n" + "bty=" + bodyType.getValue() + "\n" + "msn="
+				+ msgSequenceNr + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -271,7 +279,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		this.headKey = SCMPHeaderKey.EXC;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "mty=" + msgType.getValue() + "\n" + "bty=" + bodyType.getValue() + "\n" + "msn="
+				+ msgSequenceNr + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -296,7 +305,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	public void t13_EncodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
+		String header = "mty=" + msgType.getValue() + "\n" + "bty=" + bodyType.getValue() + "\n" + "msn="
+				+ msgSequenceNr + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -312,7 +322,8 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 		bodyType = SCMPBodyType.TEXT;
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 
-		header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
+		header = "mty=" + msgType.getValue() + "\n" + "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr
+				+ "\n";
 
 		expectedString = TestUtil.getSCMPString(headKey, header, body);
 
@@ -328,11 +339,13 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	/**
 	 * Verify scmp string body.
 	 *
-	 * @param scmp the scmp
+	 * @param scmp
+	 *            the scmp
 	 */
 	private void verifySCMPStringBody(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		// Assert.assertEquals(msgID,
+		// scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getBodyLength() + "");
 		Assert.assertEquals(msgType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, scmp.getBody());
@@ -341,11 +354,13 @@ public class DefaultEncoderDecoderTest extends SuperUnitTest {
 	/**
 	 * Verify scmp.
 	 *
-	 * @param scmp the scmp
+	 * @param scmp
+	 *            the scmp
 	 */
 	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertEquals(bodyType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
-		// Assert.assertEquals(msgID, scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		// Assert.assertEquals(msgID,
+		// scmp.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 		Assert.assertEquals(bodyLength, scmp.getBodyLength() + "");
 		Assert.assertEquals(msgType.getValue(), scmp.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(body, new String((byte[]) scmp.getBody()));

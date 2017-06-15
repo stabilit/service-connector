@@ -73,6 +73,6 @@ public class SCMPLargeResponseTest {
 
 		Assert.assertEquals(bodyLength, largeResponse.getBodyLength());
 		Assert.assertEquals(body.toString(), largeResponse.getBody() + "");
-		Assert.assertEquals(request.toString(), largeResponse.getPollMessage().toString());
+		Assert.assertEquals(request.getHeader(), largeResponse.getPollMessage().getHeader());
 	}
 }
