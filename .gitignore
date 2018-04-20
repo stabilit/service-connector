@@ -1,0 +1,133 @@
+
+# /java/
+/java/.metadata
+/java/RemoteSystemsTempFiles
+/java/Servers
+
+# /java/cfp-file-test/
+/java/cfp-file-test/target kit
+
+# /java/cfp-file-test/kit/
+/java/cfp-file-test/kit/files *
+/java/cfp-file-test/kit/*
+/java/cfp-file-test/kit/*
+/java/cfp-file-test/kit/*
+/java/cfp-file-test/kit/*
+/java/cfp-file-test/kit/*
+/java/cfp-file-test/kit/*
+
+# /java/cfp-file-test/kit/files/
+/java/cfp-file-test/kit/files/*
+
+# /java/cfp-file-test/misc/files/
+/java/cfp-file-test/misc/files/*.*
+
+# /java/kitBuild/
+/java/kitBuild/bin
+
+# /java/kitBuild/kit/
+/java/kitBuild/kit/*.zip
+
+# /java/kitBuild/logs/
+/java/kitBuild/logs/*
+
+# /java/service-connector/demo-client/
+/java/service-connector/demo-client/logs
+/java/service-connector/demo-client/target
+
+# /java/service-connector/demo-client/.settings/
+/java/service-connector/demo-client/.settings/org.eclipse.jdt.core.prefs
+
+# /java/service-connector/demo-client/logs/
+/java/service-connector/demo-client/logs/*
+
+# /java/service-connector/demo-server/
+/java/service-connector/demo-server/target
+
+# /java/service-connector/demo-server/.settings/
+/java/service-connector/demo-server/.settings/org.eclipse.jdt.core.prefs
+
+# /java/service-connector/demo-server/logs/
+/java/service-connector/demo-server/logs/*
+
+# /java/service-connector/demo-server/src/main/resources/
+/java/service-connector/demo-server/src/main/resources/*.bak
+
+# /java/service-connector/demo-web-server/
+/java/service-connector/demo-web-server/target
+
+# /java/service-connector/sc/
+/java/service-connector/sc/target
+
+# /java/service-connector/sc/cache/
+/java/service-connector/sc/cache/*
+
+# /java/service-connector/sc/logs/
+/java/service-connector/sc/logs/*
+
+# /java/service-connector/sc/src/main/resources/
+/java/service-connector/sc/src/main/resources/*.bak
+
+# /java/service-connector/sc-console/
+/java/service-connector/sc-console/.settings
+/java/service-connector/sc-console/log
+/java/service-connector/sc-console/target
+
+# /java/service-connector/sc-console/logs/
+/java/service-connector/sc-console/logs/*
+
+# /java/service-connector/sc-lib/
+/java/service-connector/sc-lib/target
+
+# /java/service-connector/sc-lib/.settings/
+/java/service-connector/sc-lib/.settings/org.eclipse.jdt.core.prefs
+
+# /java/service-connector/sc-test/
+/java/service-connector/sc-test/docs
+/java/service-connector/sc-test/target
+/java/service-connector/sc-test/logs
+
+# /java/service-connector/sc-test/cache/
+/java/service-connector/sc-test/cache/*
+
+# /java/service-connector/sc-test/src/main/resources/
+/java/service-connector/sc-test/src/main/resources/*.bak
+
+# /java/service-connector/sc-test/up-download/
+/java/service-connector/sc-test/up-download/*
+
+# /java/service-connector/sc-web/
+/java/service-connector/sc-web/target
+
+# /java/service-connector/sc-web/.settings/
+/java/service-connector/sc-web/.settings/target
+
+# /java/service-connector/sc-web/src/
+/java/service-connector/sc-web/src/target
+
+# /java/service-connector/sc-web/src/main/
+/java/service-connector/sc-web/src/main/target
+
+# /java/service-connector/sc-web/src/main/java/
+/java/service-connector/sc-web/src/main/java/target
+
+# /java/service-connector/sc-web/src/main/java/org/
+/java/service-connector/sc-web/src/main/java/org/target
+
+# /java/service-connector/sc-web/src/main/java/org/serviceconnector/
+/java/service-connector/sc-web/src/main/java/org/serviceconnector/target
+
+# /java/service-connector/sc-web/src/main/java/org/serviceconnector/web/
+/java/service-connector/sc-web/src/main/java/org/serviceconnector/web/target
+
+# /java/service-connector/sc-web/src/main/resources/
+/java/service-connector/sc-web/src/main/resources/target
+
+# /java/service-connector/sc-web/src/test/
+/java/service-connector/sc-web/src/test/target
+
+# /java/service-connector/sc-web/src/test/java/
+/java/service-connector/sc-web/src/test/java/target
+
+# /java/service-connector/sc-web/src/test/resources/
+/java/service-connector/sc-web/src/test/resources/target
