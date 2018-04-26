@@ -131,3 +131,5 @@
 
 # /java/service-connector/sc-web/src/test/resources/
 /java/service-connector/sc-web/src/test/resources/target
+/java/kitBuild/target
+/java/cfp-file-test/target
