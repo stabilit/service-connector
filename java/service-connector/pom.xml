@@ -15,8 +15,8 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</connection>
-		<developerConnection>scm:svn:svn://10.0.0.27/projects/SC/SVN-repository/trunk/java/service-connector/</developerConnection>
+		<connection>scm:git:https://github.com/stabilit/service-connector.git</connection>
+		<developerConnection>scm:git:https://github.com/stabilit/service-connector.git</developerConnection>
 	</scm>
 
 	<modules>
