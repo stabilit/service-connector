@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.serviceconnector</groupId>
 		<artifactId>sc-parent</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.2.RELEASE</version>
 	</parent>
 
 	<properties>
