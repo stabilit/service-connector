@@ -17,7 +17,6 @@
 	<scm>
 		<connection>scm:git:https://github.com/stabilit/service-connector.git</connection>
 		<developerConnection>scm:git:https://github.com/stabilit/service-connector.git</developerConnection>
-	  <tag>v3.0.2.TEST</tag>
   </scm>
 
 	<modules>
