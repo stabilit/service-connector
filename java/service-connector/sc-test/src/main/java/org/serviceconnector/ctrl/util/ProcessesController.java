@@ -23,10 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.EnvironmentConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.SystemConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestPublishServiceMessageCallback;
@@ -65,7 +69,7 @@ public class ProcessesController {
 	private String getPidPath(String propertyFile) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
-		compositeConfig.addConfiguration(new PropertiesConfiguration(propertyFile));
+		compositeConfig.addConfiguration(buildPropertiesConfigurationWithFile(propertyFile));
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		// Read & parse properties file.
 		String pidPath = compositeConfig.getString(Constants.ROOT_PID_PATH);
@@ -77,6 +81,12 @@ public class ProcessesController {
 			throw new Exception("wrong property for key=" + Constants.ROOT_PID_PATH);
 		}
 		return configFile.getAbsolutePath();
+	}
+	
+	private PropertiesConfiguration buildPropertiesConfigurationWithFile(String configFile) throws ConfigurationException {
+		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+				.configure(new Parameters().properties().setFileName(configFile).setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
+		return builder.getConfiguration();
 	}
 
 	private String getPortFromConfFile(String scPropertiesFullName) throws Exception {

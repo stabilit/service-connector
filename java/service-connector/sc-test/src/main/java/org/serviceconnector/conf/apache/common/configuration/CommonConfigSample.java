@@ -16,9 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf.apache.common.configuration;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import java.util.List;
+
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.serviceconnector.log.Loggers;
@@ -32,7 +37,7 @@ public class CommonConfigSample {
 		String commonPropertiesFile = "org/serviceconnector/conf/apache/common/configuration/sc.common.properties";
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {
-			PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(commonPropertiesFile);
+			PropertiesConfiguration propertiesConfiguration = buildPropertiesConfigurationWithFile(commonPropertiesFile);
 			config.addConfiguration(propertiesConfiguration);
 			int a = config.getInt("a");
 			int b = config.getInt("b");
@@ -47,5 +52,11 @@ public class CommonConfigSample {
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static PropertiesConfiguration buildPropertiesConfigurationWithFile(String configFile) throws ConfigurationException {
+		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+				.configure(new Parameters().properties().setFileName(configFile).setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
+		return builder.getConfiguration();
 	}
 }

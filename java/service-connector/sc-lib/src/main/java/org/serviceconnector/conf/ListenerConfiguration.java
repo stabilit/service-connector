@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
@@ -87,7 +87,7 @@ public class ListenerConfiguration {
 	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration) throws SCMPValidatorException {
 
 		// get interfaces for listener
-		networkInterfaces = compositeConfig.getList(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
+		networkInterfaces = compositeConfig.getList(String.class, this.name + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
 		if (networkInterfaces == null) {
 			// interfaces not set in configuration file - get all NIC's
 			networkInterfaces = new ArrayList<String>();

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
@@ -53,7 +53,7 @@ public class RemoteNodeListConfiguration {
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> requesterList = compositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
+		List<String> requesterList = compositeConfig.getList(String.class, Constants.PROPERTY_REMOTE_NODES);
 		if (requesterList == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_REMOTE_NODES + " is missing");
 		}

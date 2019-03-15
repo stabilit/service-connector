@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
@@ -46,7 +46,7 @@ public class ServiceListConfiguration {
 	 */
 	public void load(CompositeConfiguration config) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
+		List<String> serviceNames = config.getList(String.class, Constants.PROPERTY_SERVICE_NAMES);
 		if (serviceNames == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_SERVICE_NAMES + " is missing");
 		}

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
@@ -55,7 +55,7 @@ public class ListenerListConfiguration {
 	 */
 	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> listeners = compositeConfig.getList(Constants.PROPERTY_LISTENERS, null);
+		List<String> listeners = compositeConfig.getList(String.class, Constants.PROPERTY_LISTENERS, null);
 		if (listeners == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_LISTENERS + " is missing");
 		}

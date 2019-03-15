@@ -36,11 +36,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.EnvironmentConfiguration;
+import org.apache.commons.configuration2.SystemConfiguration;
 import org.serviceconnector.net.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;

@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;

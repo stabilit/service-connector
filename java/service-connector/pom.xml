@@ -44,7 +44,8 @@
 		<netty.version>3.2.5.Final</netty.version>
 		<logback.version>1.2.1</logback.version>
 		<slf4j-api.version>1.7.22</slf4j-api.version>
-		<commons-configuration.version>1.6</commons-configuration.version>
+		<commons-configuration.version>2.4</commons-configuration.version>
+		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<ehcache.version>2.4.1</ehcache.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
 	</properties>
@@ -249,19 +250,14 @@
 				<version>${netty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-configuration</groupId>
-				<artifactId>commons-configuration</artifactId>
+				<groupId>org.apache.commons</groupId>
+    			<artifactId>commons-configuration2</artifactId>
 				<version>${commons-configuration.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>commons-beanutils-core</artifactId>
-						<groupId>commons-beanutils</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>commons-digester</artifactId>
-						<groupId>commons-digester</groupId>
-					</exclusion>
-				</exclusions>
+			</dependency>
+			<dependency>
+			    <groupId>commons-beanutils</groupId>
+			    <artifactId>commons-beanutils</artifactId>
+			    <version>${commons-beanutils.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>

@@ -29,9 +29,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.EnvironmentConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.jboss.netty.handler.execution.OrderedMemoryAwareThreadPoolExecutor;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
@@ -322,7 +326,7 @@ public final class AppContext {
 		try {
 			// add environment variables to configuration
 			AppContext.apacheCompositeConfig.addConfiguration(new EnvironmentConfiguration());
-			AppContext.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(configFile));
+			AppContext.apacheCompositeConfig.addConfiguration(buildPropertiesConfigurationWithFile(configFile));
 		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
 		}
@@ -558,5 +562,11 @@ public final class AppContext {
 			writer.writeAttribute("orderedscworker_activeCount", threadPoolEx.getActiveCount());
 		}
 		writer.writeEndElement(); // end of ordered-sc-worker-threadpool
+	}
+	
+	private static PropertiesConfiguration buildPropertiesConfigurationWithFile(String configFile) throws ConfigurationException {
+		FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+				.configure(new Parameters().properties().setFileName(configFile).setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
+		return builder.getConfiguration();
 	}
 }
