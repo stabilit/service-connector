@@ -25,10 +25,6 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import javax.activity.InvalidActivityException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCscAbortSubscriptionCall;
 import org.serviceconnector.call.SCMPCscChangeSubscriptionCall;
@@ -68,6 +64,8 @@ import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CascadedSC.
@@ -247,7 +245,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 		cascClient.resetSemaphorePermitDenialCounter();
 		if (cascClient.isDestroyed() == true) {
 			// cascaded client got destroyed in the meantime, stop operation
-			callback.receive(new InvalidActivityException("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName()));
+			callback.receive(new IllegalStateException("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName()));
 			// release permit
 			cascClientSemaphore.release();
 			LOGGER.warn("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName());
