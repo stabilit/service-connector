@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.serviceconnector</groupId>
@@ -17,8 +19,8 @@
 	<scm>
 		<connection>scm:git:https://github.com/stabilit/service-connector.git</connection>
 		<developerConnection>scm:git:https://github.com/stabilit/service-connector.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<modules>
 		<module>sc</module>
@@ -44,7 +46,7 @@
 		<netty.version>3.2.5.Final</netty.version>
 		<logback.version>1.2.1</logback.version>
 		<slf4j-api.version>1.7.22</slf4j-api.version>
-		<commons-configuration.version>2.4</commons-configuration.version>
+		<commons-configuration.version>2.7</commons-configuration.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<ehcache.version>2.4.1</ehcache.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
@@ -251,13 +253,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
-    			<artifactId>commons-configuration2</artifactId>
+				<artifactId>commons-configuration2</artifactId>
 				<version>${commons-configuration.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>commons-beanutils</groupId>
-			    <artifactId>commons-beanutils</artifactId>
-			    <version>${commons-beanutils.version}</version>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
