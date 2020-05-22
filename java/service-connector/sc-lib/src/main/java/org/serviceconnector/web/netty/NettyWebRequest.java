@@ -73,8 +73,8 @@ public class NettyWebRequest extends AbstractWebRequest {
 			ChannelBuffer content = request.getContent();
 			if (content.readable()) {
 				String charsetName = Constants.SC_CHARACTER_SET;
-				if (request.containsHeader(HttpHeaders.Names.ACCEPT_CHARSET)) {
-					String contentType = request.getHeader(HttpHeaders.Names.ACCEPT_CHARSET);
+				if (request.headers().contains(HttpHeaders.Names.ACCEPT_CHARSET)) {
+					String contentType = request.headers().get(HttpHeaders.Names.ACCEPT_CHARSET);
 					charsetName = contentType.indexOf("charset=") > -1 ? contentType.substring(contentType.indexOf("charset=") + 8) : charsetName;
 				}
 				Charset charset = null;
@@ -107,7 +107,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		if (this.request == null) {
 			return null;
 		}
-		return this.request.getHeader(key);
+		return this.request.headers().get(key);
 	}
 
 	/** {@inheritDoc} */

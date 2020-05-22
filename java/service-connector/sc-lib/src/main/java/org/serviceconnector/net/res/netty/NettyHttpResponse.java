@@ -55,11 +55,11 @@ public class NettyHttpResponse extends ResponseAdapter {
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		ChannelBuffer buffer = getBuffer();
 		httpResponse.setContent(buffer);
-		httpResponse.addHeader("Access-Control-Allow-Origin", "*");
-		httpResponse.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		httpResponse.addHeader(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		httpResponse.addHeader(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
-		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+		httpResponse.headers().add("Access-Control-Allow-Origin", "*");
+		httpResponse.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		httpResponse.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
+		httpResponse.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
+		httpResponse.headers().set(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		channel.write(httpResponse);
 		if (ConnectionLogger.isEnabledFull()) {

@@ -85,7 +85,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		webCommand.run(webRequest, webResponse);
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
 		httpResponse.setContent(buffer);
-		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+		httpResponse.headers().set(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);
 	}
