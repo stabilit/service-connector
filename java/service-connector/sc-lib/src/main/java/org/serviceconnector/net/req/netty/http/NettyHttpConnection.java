@@ -110,14 +110,14 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		// Http header fields
-		request.addHeader(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
-		request.addHeader(HttpHeaders.Names.HOST, host);
-		request.addHeader(HttpHeaders.Names.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
-		request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
-		request.addHeader(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		request.addHeader(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
+		request.headers().add(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
+		request.headers().add(HttpHeaders.Names.HOST, host);
+		request.headers().add(HttpHeaders.Names.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
+		request.headers().add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+		request.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		request.headers().add(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
+		request.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
+		request.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
 
 		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);

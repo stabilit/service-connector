@@ -50,7 +50,7 @@ public class NettyWebResponse implements IWebResponse {
 	/** {@inheritDoc} */
 	@Override
 	public void addHeader(String name, String value) {
-		this.response.addHeader(name, value);
+		this.response.headers().add(name, value);
 	}
 
 	/** {@inheritDoc} */
@@ -74,14 +74,14 @@ public class NettyWebResponse implements IWebResponse {
 	/** {@inheritDoc} */
 	@Override
 	public void setContentType(String contentType) {
-		this.response.addHeader("Content-Type", contentType);
+		this.response.headers().add("Content-Type", contentType);
 	}
 
 	@Override
 	public void redirect(String path) {
 		LOGGER.debug("redirect location = " + path);
 		response.setStatus(HttpResponseStatus.FOUND);
-		response.addHeader("Location", path);
+		response.headers().add("Location", path);
 	}
 
 	@Override
