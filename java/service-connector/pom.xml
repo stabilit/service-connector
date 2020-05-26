@@ -5,7 +5,7 @@
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-parent</artifactId>
 
-	<version>4.0.0-SNAPSHOT</version>
+	<version>3.1.0.RELEASE</version>
 	<packaging>pom</packaging>
 	<name>SC Parent POM</name>
 
@@ -17,7 +17,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/stabilit/service-connector.git</connection>
 		<developerConnection>scm:git:https://github.com/stabilit/service-connector.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v3.1.0.RELEASE</tag>
 	</scm>
 
 	<modules>
