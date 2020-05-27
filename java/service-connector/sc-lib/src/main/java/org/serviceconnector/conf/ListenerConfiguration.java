@@ -82,8 +82,6 @@ public class ListenerConfiguration {
 	 * @param remoteNodeListConfiguration the remote node list configuration
 	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
-
-	@SuppressWarnings("unchecked")
 	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration) throws SCMPValidatorException {
 
 		// get interfaces for listener

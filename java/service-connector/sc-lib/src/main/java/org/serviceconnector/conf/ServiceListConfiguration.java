@@ -45,7 +45,6 @@ public class ServiceListConfiguration {
 	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration config) throws SCMPValidatorException {
-		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(String.class, Constants.PROPERTY_SERVICE_NAMES);
 		if (serviceNames == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_SERVICE_NAMES + " is missing");

@@ -16,17 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf.apache.common.configuration;
 
-import java.util.List;
-
 import org.apache.commons.configuration2.CompositeConfiguration;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.serviceconnector.log.Loggers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.log.Loggers;
 
 public class CommonConfigSample {
 
