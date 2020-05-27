@@ -131,7 +131,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					return;
 				}
 				if (body instanceof InputStream) {
-					InputStream inStream = (InputStream) body;
+					@SuppressWarnings("resource")
+					InputStream inStream = (InputStream) body; // don't close that stream at the end, it won't process large messages. It must stay open.
 					int msgPartSize = scmpMsg.getPartSize();
 					byte[] buffer = new byte[msgPartSize];
 					// try reading as much as we can until stream is closed or part size reached
