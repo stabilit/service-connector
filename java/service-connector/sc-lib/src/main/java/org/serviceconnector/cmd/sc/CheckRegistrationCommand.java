@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -33,6 +31,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CheckRegistrationCommand. Validates the server registration. Used by the server to check that SC is alive and the registration is valid.

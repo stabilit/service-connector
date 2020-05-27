@@ -23,9 +23,9 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.serviceconnector.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.Constants;
 
 /**
  * The Class DumpUtility. This class provides several dump utility functions.

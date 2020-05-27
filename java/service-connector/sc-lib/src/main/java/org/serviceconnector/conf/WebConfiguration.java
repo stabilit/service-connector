@@ -17,12 +17,12 @@
 package org.serviceconnector.conf;
 
 import org.apache.commons.configuration2.CompositeConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class WebConfiguration.

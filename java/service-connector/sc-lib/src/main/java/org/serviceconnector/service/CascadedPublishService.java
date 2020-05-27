@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CascadedPublishService.

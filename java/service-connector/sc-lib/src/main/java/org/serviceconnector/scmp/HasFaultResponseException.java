@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the response. Used to save data about occurred errors and writing the

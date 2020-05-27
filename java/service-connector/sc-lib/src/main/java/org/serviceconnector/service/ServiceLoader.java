@@ -18,8 +18,6 @@ package org.serviceconnector.service;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -31,6 +29,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JTraber

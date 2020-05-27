@@ -18,8 +18,6 @@ package org.serviceconnector.net.res.netty;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -29,6 +27,8 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss Netty.

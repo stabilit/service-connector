@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides actual SCMP version and method to check compatibility. The SCMP version schema follows this philosophy <br />

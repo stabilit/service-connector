@@ -21,11 +21,11 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client and a server. Session activity is observed by a

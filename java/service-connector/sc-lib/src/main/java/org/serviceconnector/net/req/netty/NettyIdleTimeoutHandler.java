@@ -18,13 +18,13 @@ package org.serviceconnector.net.req.netty;
 
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JTraber

@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req.netty;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
@@ -27,6 +25,8 @@ import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.connection.IIdleConnectionCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JTraber

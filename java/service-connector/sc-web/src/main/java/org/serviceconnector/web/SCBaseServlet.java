@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
@@ -65,6 +63,8 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCBaseServlet. Base servlet for service implementations. SCBaseServlet is implemented by SCBaseSessionServlet and SCBasePublishServlet. User of servlet API must extend

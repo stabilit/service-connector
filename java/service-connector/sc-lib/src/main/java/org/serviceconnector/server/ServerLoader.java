@@ -19,14 +19,14 @@ package org.serviceconnector.server;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.conf.RemoteNodeListConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JTraber

@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication functions.

@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.ehcache.SCCacheFactory;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -41,6 +39,8 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCCache. The cache is responsible for handling caching actions in the Service Connector. The AppContext gives access to the SC cache instance. It controls the life

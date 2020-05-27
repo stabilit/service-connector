@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -40,6 +38,8 @@ import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.URLUtility;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class FileServer.

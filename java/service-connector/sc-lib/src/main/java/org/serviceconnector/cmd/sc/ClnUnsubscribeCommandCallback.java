@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -33,6 +31,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ClnUnsubscribeCommandCallback.

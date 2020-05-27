@@ -19,12 +19,12 @@ package org.serviceconnector.test.unit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.

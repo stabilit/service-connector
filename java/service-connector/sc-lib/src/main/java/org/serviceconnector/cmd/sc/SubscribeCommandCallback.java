@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.IRequest;
@@ -40,6 +38,8 @@ import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.ReceivePublicationTimeout;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ClnSubscribeCommandCallback.

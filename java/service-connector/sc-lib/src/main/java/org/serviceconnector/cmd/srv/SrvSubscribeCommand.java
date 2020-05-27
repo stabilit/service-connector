@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -33,6 +31,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SrvSubscribeCommand.

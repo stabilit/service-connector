@@ -22,11 +22,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.net.ConnectionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class DemoFileClient.

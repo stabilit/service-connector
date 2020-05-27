@@ -16,12 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.srv;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoLargeSessionServer extends DemoSessionServer {
 	/** The Constant LOGGER. */

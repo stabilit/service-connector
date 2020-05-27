@@ -20,14 +20,14 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and holds a connection pool to communicate to a

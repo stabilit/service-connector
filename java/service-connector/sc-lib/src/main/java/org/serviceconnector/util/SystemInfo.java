@@ -26,9 +26,9 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import org.serviceconnector.scmp.SCMPVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * SystemInfo holds and detects current system information.

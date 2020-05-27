@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +27,8 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APINewServiceTest extends APIIntegrationSuperClientTest {
 

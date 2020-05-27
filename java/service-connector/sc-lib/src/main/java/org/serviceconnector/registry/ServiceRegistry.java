@@ -19,10 +19,10 @@ package org.serviceconnector.registry;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ServiceRegistry. Registry stores entries for properly configured services.

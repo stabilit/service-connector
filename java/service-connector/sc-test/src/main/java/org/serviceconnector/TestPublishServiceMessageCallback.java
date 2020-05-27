@@ -16,11 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestPublishServiceMessageCallback extends SCMessageCallback {
 

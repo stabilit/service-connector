@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.web.xml.AjaxContentXMLLoader;
 import org.serviceconnector.web.xml.AjaxMaintenanceXMLLoader;
 import org.serviceconnector.web.xml.AjaxResourceXMLLoader;
@@ -35,6 +33,8 @@ import org.serviceconnector.web.xml.ServicesXMLLoader;
 import org.serviceconnector.web.xml.SessionsXMLLoader;
 import org.serviceconnector.web.xml.SubscriptionsXMLLoader;
 import org.serviceconnector.web.xml.TimerXMLLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A factory for creating XMLLoader objects.

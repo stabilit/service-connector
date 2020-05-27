@@ -24,8 +24,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.Subscription;
@@ -33,6 +31,8 @@ import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SubscriptionRegistry. Registry stores entries for properly created subscriptions.

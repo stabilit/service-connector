@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
+import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
 @SuppressWarnings("unused")
 public class TestSessionClientJan extends Thread {

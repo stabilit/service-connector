@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,6 +25,8 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.unit.SuperUnitTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APISCServerTest extends SuperUnitTest {
 

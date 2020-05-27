@@ -20,14 +20,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback. This class is designed to be extended by various

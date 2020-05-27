@@ -18,14 +18,14 @@ package org.serviceconnector.net.res;
 
 import java.io.ByteArrayOutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ResponseAdapter. Provides basic functionality for responses.

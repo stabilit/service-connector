@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCMPPublishCall. Call publishes a message to clients.

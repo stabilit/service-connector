@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -29,6 +27,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual attach) to SC.

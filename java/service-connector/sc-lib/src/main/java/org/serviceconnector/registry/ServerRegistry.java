@@ -22,12 +22,12 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ServerRegistry. Stores an entry for every registered server in system. Server registry is also responsible for observation of server timeout and to clean up in case of

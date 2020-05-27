@@ -20,8 +20,6 @@ import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -40,6 +38,8 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines how to connect/disconnect, send/receive has to process.

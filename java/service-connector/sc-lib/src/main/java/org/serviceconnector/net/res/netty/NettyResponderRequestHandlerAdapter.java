@@ -19,8 +19,6 @@ package org.serviceconnector.net.res.netty;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -32,6 +30,8 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyResponderRequestHandlerAdapter.

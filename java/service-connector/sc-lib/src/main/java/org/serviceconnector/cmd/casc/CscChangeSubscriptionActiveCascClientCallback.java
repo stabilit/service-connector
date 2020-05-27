@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -26,6 +24,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CscChangeSubscriptionActiveCascClientCallback.

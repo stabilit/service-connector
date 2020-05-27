@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
@@ -30,6 +28,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ClnExecuteCommandCascCallback.

@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -34,6 +32,8 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to clients.

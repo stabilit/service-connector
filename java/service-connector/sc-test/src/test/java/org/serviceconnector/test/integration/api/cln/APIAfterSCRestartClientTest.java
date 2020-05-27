@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 

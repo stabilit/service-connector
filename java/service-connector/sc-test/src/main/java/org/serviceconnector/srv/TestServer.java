@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.srv;
 
+import org.serviceconnector.TestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.TestConstants;
 
 public class TestServer {
 

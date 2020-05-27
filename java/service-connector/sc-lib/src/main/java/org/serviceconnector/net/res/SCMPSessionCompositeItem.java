@@ -18,12 +18,12 @@ package org.serviceconnector.net.res;
 
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.util.TimeoutWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCMPSessionCompositeItem. Item represents a value in SCMPSessionCompositeRegistry. Gives access to composite receiver/sender and in the context used SCMPMessageId.

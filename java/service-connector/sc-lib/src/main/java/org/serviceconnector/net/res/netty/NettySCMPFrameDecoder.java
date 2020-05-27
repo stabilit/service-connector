@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -25,6 +23,8 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.SCMPFrameDecoder;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettySCMPFrameDecoder. Decodes a SCMP frame.

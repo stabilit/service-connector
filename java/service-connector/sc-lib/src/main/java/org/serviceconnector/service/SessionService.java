@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.CreateSessionCommandCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SessionService. SessionService is a remote interface to a session service and provides communication functions.

@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JTraber

@@ -20,9 +20,9 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.serviceconnector.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.Constants;
 
 /**
  * The Class PerformanceLogger.
