@@ -30,8 +30,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
@@ -42,6 +40,8 @@ import org.serviceconnector.web.WebSession;
 import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.xml.IXMLLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.config.InvalidConfigurationException;
 

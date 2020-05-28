@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
@@ -33,6 +31,8 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SrvCommandAdapter. Command adapter for every kind of command on server.

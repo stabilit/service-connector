@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.api.SCMessage;
@@ -29,6 +27,8 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.test.integration.IntegrationSuperTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 

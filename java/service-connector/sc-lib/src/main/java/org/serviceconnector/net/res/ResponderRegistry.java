@@ -19,12 +19,12 @@ package org.serviceconnector.net.res;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.

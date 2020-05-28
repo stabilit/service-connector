@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -28,6 +26,8 @@ import org.jboss.netty.handler.execution.ExecutionHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A factory for creating NettyWebResponderPipeline objects.

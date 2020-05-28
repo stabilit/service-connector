@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvAbortSubscriptionCall;
@@ -54,6 +52,8 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class StatefulServer.

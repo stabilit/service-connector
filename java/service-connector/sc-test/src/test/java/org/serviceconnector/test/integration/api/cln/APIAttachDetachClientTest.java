@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration.api.cln;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.Constants;
@@ -27,6 +25,8 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 

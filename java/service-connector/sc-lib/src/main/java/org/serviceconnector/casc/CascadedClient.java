@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.casc.CscReceivePublicationCallback;
 import org.serviceconnector.ctx.AppContext;
@@ -31,6 +29,8 @@ import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.SubscriptionMask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CascadedClient.

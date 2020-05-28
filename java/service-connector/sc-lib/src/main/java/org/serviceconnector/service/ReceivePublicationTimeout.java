@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
@@ -30,6 +28,8 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.util.ITimeout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ReceivePublicationTimeout. ReceivePublicationTimeout defines action to get in place when receive publication times out or a new publish message arrives.

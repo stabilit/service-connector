@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.serviceconnector.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SuperUnitTest {
 

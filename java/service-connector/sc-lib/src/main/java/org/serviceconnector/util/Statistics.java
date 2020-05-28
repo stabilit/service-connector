@@ -19,9 +19,9 @@ package org.serviceconnector.util;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import org.serviceconnector.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.Constants;
 
 /**
  * The Class Statistics.

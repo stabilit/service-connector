@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector commands.

@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.registry.jmx.IRegistryMXBean;
 import org.serviceconnector.registry.jmx.RegistryEntryWrapperJMX;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class Registry. Provides functionality for general registries.

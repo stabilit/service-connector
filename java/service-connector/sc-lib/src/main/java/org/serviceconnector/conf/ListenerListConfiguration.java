@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.CompositeConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ResponderConfiguration. It may hold more than one configuration for a responder, is represented by <code>ResponderConfig</code>.

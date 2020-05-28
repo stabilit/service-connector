@@ -19,8 +19,6 @@ package org.serviceconnector.srv;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -29,6 +27,8 @@ import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.net.ConnectionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoPublishServer extends Thread {
 

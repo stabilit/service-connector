@@ -20,8 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -43,6 +41,8 @@ import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyHttpClientConnection. Concrete connection implementation with JBoss Netty for Http.

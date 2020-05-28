@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.test.unit.SuperUnitTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import junit.framework.Assert;
 

@@ -28,8 +28,6 @@ import java.util.Set;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
@@ -41,6 +39,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.scmp.SCMPVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class MessageEncoderDecoderAdapter.

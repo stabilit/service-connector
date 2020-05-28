@@ -19,14 +19,14 @@ package org.serviceconnector.net.res.netty;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.RequestAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame. Based on JBoss Netty.

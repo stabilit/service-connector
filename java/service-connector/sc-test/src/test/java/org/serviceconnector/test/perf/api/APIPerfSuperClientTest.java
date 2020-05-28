@@ -18,8 +18,6 @@ package org.serviceconnector.test.perf.api;
 
 import java.util.concurrent.TimeoutException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.TestConstants;
@@ -32,6 +30,8 @@ import org.serviceconnector.api.cln.SCService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APIPerfSuperClientTest extends APIPerfSuperTest {
 

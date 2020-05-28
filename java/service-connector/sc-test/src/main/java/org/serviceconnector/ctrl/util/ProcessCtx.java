@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.ctrl.util;
 
+import org.serviceconnector.net.ConnectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.net.ConnectionType;
 
 public class ProcessCtx {
 

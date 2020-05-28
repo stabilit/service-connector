@@ -19,13 +19,13 @@ package org.serviceconnector.cache.ehcache;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.ISCCacheModule;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;

@@ -37,8 +37,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.cln.SCClient;
@@ -69,6 +67,8 @@ import org.serviceconnector.web.WebSession;
 import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.WebCommandException;
 import org.serviceconnector.web.ctx.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class AbstractXMLLoader.

@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -39,6 +37,8 @@ import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CscExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the server. Execute command runs asynchronously and

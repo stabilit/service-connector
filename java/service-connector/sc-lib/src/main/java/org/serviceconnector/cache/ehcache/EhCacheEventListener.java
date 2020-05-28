@@ -19,12 +19,12 @@ package org.serviceconnector.cache.ehcache;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.cache.SCCacheMetaEntry;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.util.Statistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;

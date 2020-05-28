@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req.netty.tcp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -28,6 +26,8 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
 import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A factory for creating NettyTcpRequesterPipelineFactory objects.
@@ -49,7 +49,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	 * Instantiates a new NettyTcpRequesterPipelineFactory.
 	 *
 	 * @param context the context
-	 * @param timer the timer
+	 * @param timer   the timer
 	 */
 	public NettyTcpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
 		this.timer = timer;

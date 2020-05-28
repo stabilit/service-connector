@@ -18,11 +18,11 @@ package org.serviceconnector.web.example;
 
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.web.SCBaseSessionServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoSCSessionServlet extends SCBaseSessionServlet {
 

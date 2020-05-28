@@ -20,9 +20,9 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are

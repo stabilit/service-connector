@@ -18,8 +18,6 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 
 import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
@@ -27,6 +25,8 @@ import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.IResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.config.InvalidConfigurationException;
 

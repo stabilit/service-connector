@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
@@ -45,6 +43,8 @@ import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CommandAdapter. Adapter for every kind of command. Provides basic functions that is used by executions of commands.

@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -36,6 +34,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to enable/disable services.

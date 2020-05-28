@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.CommandCascCallback;
@@ -34,6 +32,8 @@ import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.

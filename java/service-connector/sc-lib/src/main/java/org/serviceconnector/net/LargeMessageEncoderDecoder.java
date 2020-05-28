@@ -22,14 +22,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of object into/from stream.
@@ -131,7 +131,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					return;
 				}
 				if (body instanceof InputStream) {
-					InputStream inStream = (InputStream) body;
+					@SuppressWarnings("resource")
+					InputStream inStream = (InputStream) body; // don't close that stream at the end, it won't process large messages. It must stay open.
 					int msgPartSize = scmpMsg.getPartSize();
 					byte[] buffer = new byte[msgPartSize];
 					// try reading as much as we can until stream is closed or part size reached

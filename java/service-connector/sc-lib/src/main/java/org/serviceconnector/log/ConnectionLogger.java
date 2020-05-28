@@ -18,9 +18,9 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
+import org.serviceconnector.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.Constants;
 
 /**
  * The Class ConnectionLogger.

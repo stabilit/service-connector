@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -33,6 +31,8 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cache.SC_CACHING_METHOD;
 import org.serviceconnector.net.ConnectionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoCCServer extends Thread {
 	/** The Constant LOGGER. */

@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.cache.ISCCacheModule;
@@ -50,6 +48,8 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
 import org.serviceconnector.web.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for testing/maintaining reasons. Returns dumps of internal stuff

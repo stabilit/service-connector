@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -43,6 +41,8 @@ import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register backend server in SC. Backend server will be registered in server

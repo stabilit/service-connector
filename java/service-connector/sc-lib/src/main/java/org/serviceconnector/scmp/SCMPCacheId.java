@@ -16,9 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import org.serviceconnector.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.serviceconnector.Constants;
 
 /**
  * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is unique for every message. Format: CacheId / SequenceNr.

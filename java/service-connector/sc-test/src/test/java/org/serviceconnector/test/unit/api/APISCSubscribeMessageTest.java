@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,6 +24,8 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.test.unit.SuperUnitTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class APISCSubscribeMessageTest extends SuperUnitTest {
 

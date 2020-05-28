@@ -20,8 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -34,6 +32,8 @@ import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.

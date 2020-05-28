@@ -19,10 +19,10 @@ package org.serviceconnector.web;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.web.ctx.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebSession {
 	/** The Constant LOGGER. */

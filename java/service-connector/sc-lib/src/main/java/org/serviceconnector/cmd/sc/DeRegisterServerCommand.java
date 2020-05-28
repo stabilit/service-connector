@@ -18,8 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -35,6 +33,8 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to deregisters server from SC service. Server will be removed from server

@@ -18,12 +18,12 @@ package org.serviceconnector.cln;
 
 import java.util.concurrent.TimeoutException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.

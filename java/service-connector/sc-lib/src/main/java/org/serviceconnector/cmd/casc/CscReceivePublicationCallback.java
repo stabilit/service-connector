@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.ctx.AppContext;
@@ -28,6 +26,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.ServiceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CscReceivePublicationCallback.

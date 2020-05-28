@@ -18,12 +18,12 @@ package org.serviceconnector.net.res.netty;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss Netty.

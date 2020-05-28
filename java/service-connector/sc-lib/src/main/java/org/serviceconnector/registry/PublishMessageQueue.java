@@ -23,8 +23,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -35,6 +33,8 @@ import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform subscriptions about new arrived messages, to observe there

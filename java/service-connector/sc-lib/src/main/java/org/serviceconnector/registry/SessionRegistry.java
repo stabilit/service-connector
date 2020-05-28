@@ -22,8 +22,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.IServer;
@@ -32,6 +30,8 @@ import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the session timeout and initiating clean up in case

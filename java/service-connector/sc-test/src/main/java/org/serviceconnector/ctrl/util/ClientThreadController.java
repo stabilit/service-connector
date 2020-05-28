@@ -18,8 +18,6 @@ package org.serviceconnector.ctrl.util;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
@@ -27,6 +25,8 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cln.PerformanceSessionClient;
 import org.serviceconnector.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientThreadController {
 
