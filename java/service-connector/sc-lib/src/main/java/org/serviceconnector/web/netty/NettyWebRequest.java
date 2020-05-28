@@ -22,14 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.serviceconnector.Constants;
 import org.serviceconnector.web.AbstractWebRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.QueryStringDecoder;
 
 /**
  * The Class NettyWebRequest.
@@ -40,7 +41,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebRequest.class);
 
 	/** The request. */
-	private HttpRequest request;
+	private FullHttpRequest request;
 
 	/** The parameters. */
 	private Map<String, List<String>> parameters;
@@ -55,7 +56,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 	 * @param localAddress the local address
 	 * @param remoteAddress the remote address
 	 */
-	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+	public NettyWebRequest(FullHttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
 		this.request = httpRequest;
 		this.url = null;
@@ -65,13 +66,13 @@ public class NettyWebRequest extends AbstractWebRequest {
 			// http get
 			this.parameters = new HashMap<String, List<String>>();
 			QueryStringDecoder qsd = new QueryStringDecoder(this.getURL());
-			Map<String, List<String>> qsdParameters = qsd.getParameters();
+			Map<String, List<String>> qsdParameters = qsd.parameters();
 			if (qsdParameters != null) {
 				this.parameters.putAll(qsdParameters);
 			}
 			// http post
-			ChannelBuffer content = request.getContent();
-			if (content.readable()) {
+			ByteBuf content = request.content();
+			if (content.isReadable()) {
 				String charsetName = Constants.SC_CHARACTER_SET;
 				if (request.headers().contains(HttpHeaders.Names.ACCEPT_CHARSET)) {
 					String contentType = request.headers().get(HttpHeaders.Names.ACCEPT_CHARSET);
@@ -86,7 +87,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 				}
 				String param = content.toString(charset);
 				QueryStringDecoder queryStringDecoder = new QueryStringDecoder("/?" + param);
-				Map<String, List<String>> postParams = queryStringDecoder.getParameters();
+				Map<String, List<String>> postParams = queryStringDecoder.parameters();
 				this.parameters.putAll(postParams);
 			}
 		}

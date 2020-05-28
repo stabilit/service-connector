@@ -19,12 +19,6 @@ package org.serviceconnector.net.res.netty;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
@@ -32,11 +26,17 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * The Class NettyResponderRequestHandlerAdapter.
  */
-public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelUpstreamHandler {
+public abstract class NettyResponderRequestHandlerAdapter extends ChannelInboundHandlerAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyResponderRequestHandlerAdapter.class);
@@ -55,9 +55,9 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	}
 
 	@Override
-	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-		super.channelDisconnected(ctx, e);
-		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
+		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		if (AppContext.isScEnvironment()) {
 			// if in sc environment - clean up server
 			this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());

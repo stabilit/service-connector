@@ -16,18 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.tcp.proxy;
 
-import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.IResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import io.netty.channel.nio.NioEventLoopGroup;
 import net.sf.ehcache.config.InvalidConfigurationException;
 
 /**
@@ -42,10 +39,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 	/** The port. */
 	private int remotePort;
 
-	/** The client channel factory. */
-	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
-			AppContext.getBasicConfiguration().getMaxIOThreads());
-
 	/**
 	 * Instantiates a new NettyTcpProxyEndpoint.
 	 */
@@ -53,7 +46,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 		super();
 		this.remoteHost = null;
 		this.remotePort = 0;
-		this.endpointChannelFactory = null;
 	}
 
 	/** {@inheritDoc} */
@@ -61,7 +53,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 	public void create() {
 		super.create();
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(clientChannelFactory, remoteHost, remotePort));
+		this.bootstrap.childHandler(new NettyTcpProxyResponderPipelineFactory(remoteHost, remotePort));
 	}
 
 	/** {@inheritDoc} */
@@ -77,10 +69,8 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 		this.remotePort = remoteNodeConfig.getPort();
 		try {
 			// limit threads to maxIOThreads
-			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
-					AppContext.getBasicConfiguration().getMaxIOThreads());
-			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
-					AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.bossGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.workerGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
 		} catch (Exception e) {
 			LOGGER.error("setResponder", e);
 		}

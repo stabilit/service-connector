@@ -20,12 +20,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -34,6 +28,15 @@ import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.XMLDumpWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
@@ -58,12 +61,12 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	/** The bootstrap. */
 	protected ServerBootstrap bootstrap;
 	/** The channel. */
-	protected Channel channel;
+	protected ChannelFuture channel;
 	/** The responder. */
 	protected IResponder resp;
 
-	/** The channel factory. */
-	protected NioServerSocketChannelFactory endpointChannelFactory = null;
+	protected EventLoopGroup bossGroup;
+	protected EventLoopGroup workerGroup;
 
 	/**
 	 * Instantiates a new EndpointAdapter.
@@ -76,16 +79,21 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		this.channel = null;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
 		this.serverThread = new Thread(this, this.getClass().getSimpleName());
+		this.bossGroup = new NioEventLoopGroup();
+		this.workerGroup = new NioEventLoopGroup();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() {
-		this.bootstrap = new ServerBootstrap(this.endpointChannelFactory);
-		this.bootstrap.setOption("child.tcpNoDelay", true);
+		this.bootstrap = new ServerBootstrap();
+
+		this.bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+				.childOption(ChannelOption.TCP_NODELAY, true);
+
 		if (baseConf.getTcpKeepAliveListener() != null) {
 			// TCP keep alive for incoming connections is configured - set it!
-			this.bootstrap.setOption("child.keepAlive", baseConf.getTcpKeepAliveListener());
+			this.bootstrap.childOption(ChannelOption.SO_KEEPALIVE, baseConf.getTcpKeepAliveListener());
 		}
 	}
 
@@ -104,6 +112,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	@Override
 	public void startListenSync() throws Exception {
 		try {
+			// Start the server.
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
@@ -129,13 +138,16 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		try {
 			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port=" + this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"cannot start listener on port=" + this.port);
 		}
 		if (bool == null) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out on port=" + this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"startup listener timed out on port=" + this.port);
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port=" + this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"cannot start listener on port=" + this.port);
 		}
 	}
 
@@ -144,7 +156,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	public void stopListening() {
 		try {
 			if (this.channel != null) {
-				ChannelFuture future = this.channel.close();
+				ChannelFuture future = this.channel.channel().close();
 				NettyOperationListener operationListener = new NettyOperationListener();
 				future.addListener(operationListener);
 				try {
@@ -166,8 +178,16 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	@Override
 	public void destroy() {
 		this.stopListening();
-		this.bootstrap.releaseExternalResources();
-		this.endpointChannelFactory.releaseExternalResources();
+		this.bossGroup.shutdownGracefully();
+		this.workerGroup.shutdownGracefully();
+
+		// Wait until all threads are terminated.
+		try {
+			this.bossGroup.terminationFuture().sync();
+			this.workerGroup.terminationFuture().sync();
+		} catch (InterruptedException e) {
+			LOGGER.error("Endpoint destroy error", e); // stopListening must continue
+		}
 	}
 
 	/** {@inheritDoc} */

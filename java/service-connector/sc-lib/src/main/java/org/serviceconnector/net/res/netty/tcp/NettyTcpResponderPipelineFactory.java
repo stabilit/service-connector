@@ -16,33 +16,28 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.tcp;
 
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.execution.ExecutionHandler;
-import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * A factory for creating NettyTcpResponderPipelineFactory objects.
  *
  * @author JTraber
  */
-public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpResponderPipelineFactory extends ChannelInitializer<SocketChannel> {
 
 	/** {@inheritDoc} */
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
+	protected void initChannel(SocketChannel ch) throws Exception {
 		// logging handler
-		pipeline.addFirst("logger", new LoggingHandler());
+		ch.pipeline().addLast("logger", new LoggingHandler());
 		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new NettySCMPFrameDecoder());
-		// executer to run NettyTcpResponderRequestHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
+		ch.pipeline().addLast("framer", new NettySCMPFrameDecoder());
 		// responsible for handling request
-		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
-		return pipeline;
+		ch.pipeline().addLast(AppContext.getSCWorkerThreadPool(), "handler", new NettyTcpResponderRequestHandler());
 	}
 }

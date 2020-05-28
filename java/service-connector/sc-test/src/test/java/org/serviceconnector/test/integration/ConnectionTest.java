@@ -51,11 +51,11 @@ import org.serviceconnector.util.DateTimeUtility;
 public class ConnectionTest extends IntegrationSuperTest {
 
 	/**
-	 * Description: connect, send message and disconnect - 50'000 times the same connection<br>
+	 * Description: connect, send message and disconnect - 50 times the same connection<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_ConnectSendAndDisconnect50000() throws Exception {
+	public void t01_ConnectSendAndDisconnect50() throws Exception {
 		ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 		IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
 		connection.setHost(TestConstants.HOST);
@@ -71,13 +71,13 @@ public class ConnectionTest extends IntegrationSuperTest {
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 
-		for (int i = 0; i < 50000; i++) {
+		for (int i = 0; i < 50; i++) {
 			connection.connect();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
 			connection.disconnect();
-			if ((i + 1) % 1000 == 0) {
+			if ((i + 1) % 10 == 0) {
 				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}

@@ -210,42 +210,42 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	}
 
 	/**
-	 * Description: Get connection send a message and free connection - 10000 times<br>
+	 * Description: Get connection send a message and free connection - 10 times<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t50_GetConnectionSendAttachFreeConnection10000Times() throws Exception {
+	public void t50_GetConnectionSendAttachFreeConnection10Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 		SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 10; i++) {
 			IConnection connection = connectionPool.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);
 			connectionPool.freeConnection(connection);
-			if ((i + 1) % 5000 == 0) {
+			if ((i + 1) % 5 == 0) {
 				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}
 	}
 
 	/**
-	 * Description: Create new ConnectionPool get connection, send a message, free connection, destroy pool - 10000 times<br>
+	 * Description: Create new ConnectionPool get connection, send a message, free connection, destroy pool - 10 times<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection10000Times() throws Exception {
+	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection10Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 		SCMPMessage message = new SCMPMessage(SCMPVersion.CURRENT);
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 10; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAliveSeconds, this.keepAliveOTIMillis);
 			IConnection connection = cp.getConnection();
 			TestCallback cbk = new TestCallback();
@@ -253,7 +253,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 			cbk.getMessageSync(1000);
 			cp.freeConnection(connection);
 			cp.destroy();
-			if ((i + 1) % 5000 == 0) {
+			if ((i + 1) % 5 == 0) {
 				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}

@@ -19,11 +19,12 @@ package org.serviceconnector.web.netty;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
+import org.serviceconnector.web.IWebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.serviceconnector.web.IWebResponse;
+
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 
 /**
  * The Class NettyWebResponse.
@@ -33,7 +34,7 @@ public class NettyWebResponse implements IWebResponse {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebResponse.class);
 	/** The response. */
-	private HttpResponse response;
+	private FullHttpResponse response;
 	/** The os. */
 	private ByteArrayOutputStream os;
 
@@ -42,7 +43,7 @@ public class NettyWebResponse implements IWebResponse {
 	 *
 	 * @param httpResponse the response
 	 */
-	public NettyWebResponse(HttpResponse httpResponse) {
+	public NettyWebResponse(FullHttpResponse httpResponse) {
 		this.response = httpResponse;
 		this.os = null;
 	}

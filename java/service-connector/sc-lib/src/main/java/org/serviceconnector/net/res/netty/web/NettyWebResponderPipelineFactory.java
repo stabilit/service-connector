@@ -16,44 +16,39 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
-import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
-import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
-import org.jboss.netty.handler.execution.ExecutionHandler;
-import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * A factory for creating NettyWebResponderPipeline objects.
  */
-public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory {
+public class NettyWebResponderPipelineFactory extends ChannelInitializer<SocketChannel> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebResponderPipelineFactory.class);
-
+	
 	/** {@inheritDoc} */
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
+	protected void initChannel(SocketChannel ch) throws Exception {
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
+		ch.pipeline().addLast("logger", new LoggingHandler());		
 		// responsible for decoding requests - Netty
-		pipeline.addLast("decoder", new HttpRequestDecoder());
+		ch.pipeline().addLast("decoder", new HttpRequestDecoder());
 		// responsible for encoding responses - Netty
-		pipeline.addLast("encoder", new HttpResponseEncoder());
+		ch.pipeline().addLast("encoder", new HttpResponseEncoder());
 		// responsible for aggregate chunks - Netty
-		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
-		// executer to run NettyWebResponderRequestHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
-		// responsible for handle requests - Stabilit
-		pipeline.addLast("handler", new NettyWebResponderRequestHandler());
-		return pipeline;
+		ch.pipeline().addLast("aggregator", new HttpObjectAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
+		// responsible for handling request
+		ch.pipeline().addLast(AppContext.getSCWorkerThreadPool(), "handler", new NettyWebResponderRequestHandler());
 	}
 }

@@ -17,11 +17,7 @@
 package org.serviceconnector.net.connection;
 
 import java.security.InvalidParameterException;
-import java.util.concurrent.Executors;
 
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.util.HashedWheelTimer;
-import org.jboss.netty.util.Timer;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
@@ -29,8 +25,14 @@ import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timer;
+
 /**
- * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types are shown as constants below.
+ * A factory for creating connection objects. Provides access to concrete client
+ * instances. Possible connection types are shown as constants below.
  */
 public class ConnectionFactory {
 
@@ -39,11 +41,16 @@ public class ConnectionFactory {
 
 	/**
 	 * NETTY stuff<br />
-	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket. A worker thread performs non-blocking read and
-	 * write on a channel.
+	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss
+	 * thread accepts incoming connections on a socket. A worker thread performs
+	 * non-blocking read and write on a channel.
 	 */
-	private static NioClientSocketChannelFactory channelFactory;
-	/** The Constant timer, responsible component to observe timeouts in a connection. */
+	private static EventLoopGroup bossGroup;
+	private static EventLoopGroup workerGroup;
+	/**
+	 * The Constant timer, responsible component to observe timeouts in a
+	 * connection.
+	 */
 	private static Timer timer;
 
 	static {
@@ -58,9 +65,9 @@ public class ConnectionFactory {
 	 */
 	public IConnection createConnection(String key) {
 		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {
-			return new NettyHttpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
+			return new NettyHttpConnection(ConnectionFactory.workerGroup, ConnectionFactory.timer);
 		} else if (ConnectionType.NETTY_TCP.getValue().equalsIgnoreCase(key)) {
-			return new NettyTcpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
+			return new NettyTcpConnection(ConnectionFactory.workerGroup, ConnectionFactory.timer);
 		} else {
 			LOGGER.error("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
@@ -69,18 +76,25 @@ public class ConnectionFactory {
 
 	/**
 	 * Shutdown connection factory.<br />
-	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down. Be very careful if you use this method - every connection
-	 * in relation to this channelFactory must be closed otherwise you end up in indefinitely loop. In most cases closing the connections is good enough NETTY will release other
-	 * resources. http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
+	 * This method shuts down every resource needed by connections. Should only be
+	 * used if whole application shuts down. Be very careful if you use this method
+	 * - every connection in relation to this channelFactory must be closed
+	 * otherwise you end up in indefinitely loop. In most cases closing the
+	 * connections is good enough NETTY will release other resources.
+	 * http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	 */
 	public static void shutdownConnectionFactory() {
 		if (ConnectionFactory.timer != null) {
 			ConnectionFactory.timer.stop();
 			ConnectionFactory.timer = null;
 		}
-		if (ConnectionFactory.channelFactory != null) {
-			ConnectionFactory.channelFactory.releaseExternalResources();
-			ConnectionFactory.channelFactory = null;
+		if (ConnectionFactory.bossGroup != null) {
+			ConnectionFactory.bossGroup.shutdownGracefully();
+			ConnectionFactory.bossGroup = null;
+		}
+		if (ConnectionFactory.workerGroup != null) {
+			ConnectionFactory.workerGroup.shutdownGracefully();
+			ConnectionFactory.workerGroup = null;
 		}
 	}
 
@@ -88,9 +102,11 @@ public class ConnectionFactory {
 	 * Initialize the connection factory.
 	 */
 	public static void init() {
-		if (ConnectionFactory.channelFactory == null) {
-			ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
-					AppContext.getBasicConfiguration().getMaxIOThreads());
+		if (ConnectionFactory.bossGroup == null) {
+			ConnectionFactory.bossGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+		}
+		if (ConnectionFactory.workerGroup == null) {
+			ConnectionFactory.workerGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
 		}
 		if (ConnectionFactory.timer == null) {
 			ConnectionFactory.timer = new HashedWheelTimer();
