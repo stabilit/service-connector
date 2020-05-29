@@ -562,14 +562,14 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	private void addLogFiles(Logger logger, List<File> logFileList, Set<String> distinctLoggerSet, Date current, Date today) {
 		Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
 		while (appenders.hasNext()) {
-			Appender appender = appenders.next();
+			Appender<ILoggingEvent> appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;
 			}
 			distinctLoggerSet.add(appenderName);
 			if (appender instanceof FileAppender) {
-				FileAppender fileAppender = (FileAppender) appender;
+				FileAppender<ILoggingEvent> fileAppender = (FileAppender<ILoggingEvent>) appender;
 				String sFile = fileAppender.getFile();
 				if (current.before(today)) {
 					sFile += "." + WebUtil.getXMLDateAsString(current);

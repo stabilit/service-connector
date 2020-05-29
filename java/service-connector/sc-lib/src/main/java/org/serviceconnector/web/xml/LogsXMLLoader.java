@@ -136,7 +136,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeCharacters(level.toString());
 		writer.writeEndElement();
 		while (appenders.hasNext()) {
-			Appender appender = appenders.next();
+			Appender<ILoggingEvent> appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;
@@ -146,7 +146,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 			writer.writeAttribute("name", appender.getName());
 			if (appender instanceof FileAppender) {
 				writer.writeAttribute("type", "file");
-				FileAppender fileAppender = (FileAppender) appender;
+				FileAppender<ILoggingEvent> fileAppender = (FileAppender<ILoggingEvent>) appender;
 				String sFile = fileAppender.getFile();
 				if (current.before(today)) {
 					sFile += "." + WebUtil.getXMLDateAsString(current);
@@ -196,14 +196,14 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 	protected void addLogFiles(ch.qos.logback.classic.Logger logger, List<String> logFileList) {
 		Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
 		while (appenders.hasNext()) {
-			Appender appender = appenders.next();
+			Appender<?> appender = appenders.next();
 			String appenderName = appender.getName();
 			if (distinctLoggerSet.contains(appenderName)) {
 				continue;
 			}
 			distinctLoggerSet.add(appenderName);
 			if (appender instanceof FileAppender) {
-				FileAppender fileAppender = (FileAppender) appender;
+				FileAppender<?> fileAppender = (FileAppender<?>) appender;
 				String sFile = fileAppender.getFile();
 				File file = new File(sFile);
 				if (file.exists() && file.isFile()) {
