@@ -47,9 +47,10 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * The Class NettyWebResponderRequestHandler.
@@ -62,36 +63,40 @@ public class NettyWebResponderRequestHandler extends ChannelInboundHandlerAdapte
 	/** {@inheritDoc} */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		// needs to set a key in thread local to identify thread later and get access to
-		// the responder
-		Channel channel = ctx.channel();
-		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-		InetSocketAddress localAddress = (InetSocketAddress) channel.localAddress();
-		InetSocketAddress remoteAddress = (InetSocketAddress) channel.remoteAddress();
-		int port = ((InetSocketAddress) channel.localAddress()).getPort();
-		responderRegistry.setThreadLocal(port);
+		try {
+			// needs to set a key in thread local to identify thread later and get access to
+			// the responder
+			Channel channel = ctx.channel();
+			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+			InetSocketAddress localAddress = (InetSocketAddress) channel.localAddress();
+			InetSocketAddress remoteAddress = (InetSocketAddress) channel.remoteAddress();
+			int port = ((InetSocketAddress) channel.localAddress()).getPort();
+			responderRegistry.setThreadLocal(port);
 
-		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
-		ListenerConfiguration respConfig = responder.getListenerConfig();
-		String contextUserid = respConfig.getUsername();
-		String contextPassword = respConfig.getPassword();
-		WebContext.setSCWebCredentials(new WebCredentials(contextUserid, contextPassword));
+			IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
+			ListenerConfiguration respConfig = responder.getListenerConfig();
+			String contextUserid = respConfig.getUsername();
+			String contextPassword = respConfig.getPassword();
+			WebContext.setSCWebCredentials(new WebCredentials(contextUserid, contextPassword));
 
-		FullHttpRequest httpRequest = (FullHttpRequest) msg;
-		FullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		IWebRequest webRequest = new NettyWebRequest(httpRequest, localAddress, remoteAddress);
-		IWebResponse webResponse = new NettyWebResponse(httpResponse);
-		WebCommand webCommand = WebContext.getWebCommand();
-		webCommand.run(webRequest, webResponse);
-		ByteBuf buffer = Unpooled.copiedBuffer(webResponse.getBytes());
+			FullHttpRequest httpRequest = (FullHttpRequest) msg;
+			FullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+			IWebRequest webRequest = new NettyWebRequest(httpRequest, localAddress, remoteAddress);
+			IWebResponse webResponse = new NettyWebResponse(httpResponse);
+			WebCommand webCommand = WebContext.getWebCommand();
+			webCommand.run(webRequest, webResponse);
+			ByteBuf buffer = Unpooled.copiedBuffer(webResponse.getBytes());
 
-		FullHttpResponse finalHttpResponse = new DefaultFullHttpResponse(httpResponse.getProtocolVersion(),
-				httpResponse.getStatus(), buffer);
-		finalHttpResponse.headers().set(httpResponse.headers());
-		finalHttpResponse.trailingHeaders().set(httpResponse.trailingHeaders());
-		finalHttpResponse.headers().set(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		// Write the response.
-		channel.write(finalHttpResponse);
+			FullHttpResponse finalHttpResponse = new DefaultFullHttpResponse(httpResponse.protocolVersion(),
+					httpResponse.status(), buffer);
+			finalHttpResponse.headers().set(httpResponse.headers());
+			finalHttpResponse.trailingHeaders().set(httpResponse.trailingHeaders());
+			finalHttpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
+			// Write the response.
+			channel.writeAndFlush(finalHttpResponse);
+		} finally {
+			ReferenceCountUtil.release(msg);
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -103,7 +108,7 @@ public class NettyWebResponderRequestHandler extends ChannelInboundHandlerAdapte
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
+			LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);

@@ -124,7 +124,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 				LOGGER.info("Endpoint started host=" + host + ":" + port);
 				wait();
 			} catch (InterruptedException e) {
-				LOGGER.warn("Interrupt exception in Listener, host:port=" + host + ":" + port + " " + e.toString());
+				LOGGER.warn("Endpoint stop (InterruptException) host:port=" + host + ":" + port);
 			}
 			LOGGER.info("Endpoint stopped host=" + host + ":" + port);
 		}

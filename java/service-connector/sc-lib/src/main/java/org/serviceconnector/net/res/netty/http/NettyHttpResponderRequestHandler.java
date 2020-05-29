@@ -34,10 +34,13 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.util.ReferenceCountUtil;
 
 /**
- * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the Netty framework by catching events (message received,
- * exception caught). Functionality to handle large messages is also inside.
+ * The Class NettyHttpResponderRequestHandler. This class is responsible for
+ * handling Http requests. Is called from the Netty framework by catching events
+ * (message received, exception caught). Functionality to handle large messages
+ * is also inside.
  *
  * @author JTraber
  */
@@ -45,18 +48,21 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpResponderRequestHandler.class);
-	
+
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		Channel channel = ctx.channel();
-		NettyHttpResponse response = new NettyHttpResponse(channel);
-		FullHttpRequest httpRequest = (FullHttpRequest) msg;
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
-		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
-		// process request in super class
-		super.messageReceived(request, response, channel);
-		super.channelRead(ctx, msg);
+		try {
+			Channel channel = ctx.channel();
+			NettyHttpResponse response = new NettyHttpResponse(channel);
+			FullHttpRequest httpRequest = (FullHttpRequest) msg;
+			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+			IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
+			// process request in super class
+			super.messageReceived(request, response, channel);
+		} finally {
+			ReferenceCountUtil.release(msg);
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -68,7 +74,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
+			LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);

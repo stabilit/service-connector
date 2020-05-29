@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * The Class NettyTcpRequesterResponseHandler.
@@ -68,35 +69,40 @@ public class NettyTcpRequesterResponseHandler extends ChannelInboundHandlerAdapt
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if (this.pendingRequest) {
-			this.pendingRequest = false;
-			SCMPMessage ret = null;
-			try {
-				byte[] buffer = (byte[]) msg;
-				Statistics.getInstance().incrementTotalMessages(buffer.length);
-				if (ConnectionLogger.isEnabledFull()) {
-					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(), remoteAddress.getPort(), buffer, 0, buffer.length);
-				}
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-				ret = (SCMPMessage) encoderDecoder.decode(bais);
-				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
-			} catch (Throwable th) {
-				LOGGER.error("receive message", th);
-				if ((th instanceof Exception) == false) {
-					try {
-						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
-						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
-					} catch (Throwable th1) {
-						LOGGER.error("receive exception", th1);
+		try {
+			if (this.pendingRequest) {
+				this.pendingRequest = false;
+				SCMPMessage ret = null;
+				try {
+					byte[] buffer = (byte[]) msg;
+					Statistics.getInstance().incrementTotalMessages(buffer.length);
+					if (ConnectionLogger.isEnabledFull()) {
+						InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+						ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
+								remoteAddress.getPort(), buffer, 0, buffer.length);
+					}
+					ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+					IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+					ret = (SCMPMessage) encoderDecoder.decode(bais);
+					NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
+				} catch (Throwable th) {
+					LOGGER.error("receive message", th);
+					if ((th instanceof Exception) == false) {
+						try {
+							SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
+							NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
+						} catch (Throwable th1) {
+							LOGGER.error("receive exception", th1);
+						}
 					}
 				}
+				return;
 			}
-			return;
+			// unsolicited input, message not expected - race condition
+			LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
+		} finally {
+			ReferenceCountUtil.release(msg);
 		}
-		// unsolicited input, message not expected - race condition
-		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
 	@Override
@@ -105,10 +111,10 @@ public class NettyTcpRequesterResponseHandler extends ChannelInboundHandlerAdapt
 			this.pendingRequest = false;
 			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
 			if (ConnectionLogger.isEnabled()) {
-				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
+				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName());
 			}
-			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
+			DisconnectException ex = new DisconnectException(
+					"Connection disconnect, reply is outstanding. Operation stopped.");
 			try {
 				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
 			} catch (Throwable throwable) {
@@ -117,8 +123,7 @@ public class NettyTcpRequesterResponseHandler extends ChannelInboundHandlerAdapt
 			return;
 		}
 		if (ConnectionLogger.isEnabled()) {
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
+			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName());
 		}
 	}
 
@@ -142,14 +147,15 @@ public class NettyTcpRequesterResponseHandler extends ChannelInboundHandlerAdapt
 			}
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.warn("regular disconnect", th); // regular disconnect causes this expected exception
+			LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 		} else {
 			LOGGER.error("Response error", th);
 		}
 	}
 
 	/**
-	 * Connection disconnect. Method gets called when connection got disconnected for some reason. This avoids receiving messages in disconnect procedure.
+	 * Connection disconnect. Method gets called when connection got disconnected
+	 * for some reason. This avoids receiving messages in disconnect procedure.
 	 */
 	public void connectionDisconnect() {
 		this.pendingRequest = false;

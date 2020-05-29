@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
 /**
@@ -74,8 +74,8 @@ public class NettyWebRequest extends AbstractWebRequest {
 			ByteBuf content = request.content();
 			if (content.isReadable()) {
 				String charsetName = Constants.SC_CHARACTER_SET;
-				if (request.headers().contains(HttpHeaders.Names.ACCEPT_CHARSET)) {
-					String contentType = request.headers().get(HttpHeaders.Names.ACCEPT_CHARSET);
+				if (request.headers().contains(HttpHeaderNames.ACCEPT_CHARSET)) {
+					String contentType = request.headers().get(HttpHeaderNames.ACCEPT_CHARSET);
 					charsetName = contentType.indexOf("charset=") > -1 ? contentType.substring(contentType.indexOf("charset=") + 8) : charsetName;
 				}
 				Charset charset = null;
@@ -99,7 +99,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		if (this.url != null) {
 			return this.url;
 		}
-		return this.request.getUri();
+		return this.request.uri();
 	}
 
 	/** {@inheritDoc} */

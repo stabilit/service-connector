@@ -43,7 +43,7 @@
 
 
 		<junit.version>4.8.1</junit.version>
-		<netty.version>4.0.56.Final</netty.version>
+		<netty.version>4.1.50.Final</netty.version>
 		<logback.version>1.2.1</logback.version>
 		<slf4j-api.version>1.7.22</slf4j-api.version>
 		<commons-configuration.version>2.7</commons-configuration.version>

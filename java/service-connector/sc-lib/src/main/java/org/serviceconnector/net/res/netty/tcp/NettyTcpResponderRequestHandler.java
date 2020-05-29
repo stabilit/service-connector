@@ -33,10 +33,13 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.ReferenceCountUtil;
 
 /**
- * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty framework by catching events (message received,
- * exception caught). Functionality to handle large messages is also inside.
+ * The Class NettyTcpResponderRequestHandler. This class is responsible for
+ * handling Tcp requests. Is called from the Netty framework by catching events
+ * (message received, exception caught). Functionality to handle large messages
+ * is also inside.
  *
  * @author JTraber
  */
@@ -45,20 +48,23 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpResponderRequestHandler.class);
 
-	/** {@inheritDoc} */	
+	/** {@inheritDoc} */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		Channel channel = ctx.channel();
-		NettyTcpResponse response = new NettyTcpResponse(channel);		
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
-		byte[] buffer = (byte[]) msg;
-		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
-		// process request in super class
-		super.messageReceived(request, response, channel);
-		super.channelRead(ctx, msg);
+		try {
+			Channel channel = ctx.channel();
+			NettyTcpResponse response = new NettyTcpResponse(channel);
+			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+			byte[] buffer = (byte[]) msg;
+			IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
+			// process request in super class
+			super.messageReceived(request, response, channel);
+		} finally {
+			ReferenceCountUtil.release(msg);
+		}
 	}
-	
+
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable th) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(ctx.channel());
@@ -67,7 +73,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
+			LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);

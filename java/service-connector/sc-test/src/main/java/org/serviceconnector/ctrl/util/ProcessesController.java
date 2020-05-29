@@ -165,7 +165,7 @@ public class ProcessesController {
 		/*
 		 * start SC process Arguments: [0] -Dlogback.configurationFile=file [1] logback.xml [2] -jar [3] SC runnable [4] -sc.configuration
 		 */
-		String command = "java -Xmx1024M -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + scRunableFullName + " " + Constants.CLI_CONFIG_ARG + " "
+		String command = "java -Xmx2024M -Dio.netty.leakDetection.level=paranoid -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + scRunableFullName + " " + Constants.CLI_CONFIG_ARG + " "
 				+ scPropertiesFullName;
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
@@ -311,7 +311,7 @@ public class ProcessesController {
 			// empty timezoneParam
 			timezoneParam = "";
 		}
-		String command = "java -Xmx1024M -Dlogback.configurationFile=file:" + logbackFileFullName + timezoneParam + " -jar " + srvRunablFullName + " " + serverType + " "
+		String command = "java -Xmx2024M -Dio.netty.leakDetection.level=paranoid -Dlogback.configurationFile=file:" + logbackFileFullName + timezoneParam + " -jar " + srvRunablFullName + " " + serverType + " "
 				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
@@ -433,7 +433,7 @@ public class ProcessesController {
 		 * [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or "netty.http") [9] maxConnections [10] keepAliveIntervalSeconds [11] serviceName [12] echoIntervalSeconds [13]
 		 * echoTimeoutSeconds [14] noDataIntervalSeconds [15] methodsToInvoke (split * by | "initAttach|detach")
 		 */
-		String command = "java -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + clnRunablFullName + " " + clientType + " " + clientName + " " + scHost + " "
+		String command = "java -Dio.netty.leakDetection.level=paranoid -Dlogback.configurationFile=file:" + logbackFileFullName + " -jar " + clnRunablFullName + " " + clientType + " " + clientName + " " + scHost + " "
 				+ scPort + " " + connectionType.getValue() + " " + maxConnections + " " + keepAliveIntervalSeconds + " " + serviceName + " " + echoIntervalSeconds + " "
 				+ echoTimeoutSeconds + " " + noDataIntervalSeconds + " " + methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);

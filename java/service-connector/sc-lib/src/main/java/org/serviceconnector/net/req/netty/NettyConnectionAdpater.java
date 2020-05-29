@@ -118,7 +118,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	@Override
 	public void disconnect() throws Exception {
 		if (this.isConnected() == false) {
-			// not disconnected anymore - do not continue!
+			// not connected anymore - do not continue!
 			return;
 		}
 		ChannelFuture future = this.channel.disconnect();

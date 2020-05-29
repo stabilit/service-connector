@@ -105,11 +105,11 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 
 		ByteBuf chBuffer = Unpooled.buffer(baos.size());
 		chBuffer.writeBytes(baos.toByteArray());
-		channel.write(chBuffer);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(),
 					chBuffer.array(), 0, chBuffer.array().length);
 		}
+		channel.writeAndFlush(chBuffer);
 	}
 
 	@Override

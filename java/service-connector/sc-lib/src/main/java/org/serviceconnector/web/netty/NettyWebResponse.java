@@ -87,6 +87,6 @@ public class NettyWebResponse implements IWebResponse {
 
 	@Override
 	public boolean isRedirect() {
-		return response.getStatus() == HttpResponseStatus.FOUND;
+		return response.status() == HttpResponseStatus.FOUND;
 	}
 }

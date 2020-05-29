@@ -144,7 +144,7 @@ public final class AppContext {
 	// initialize configurations in every case
 	static {
 		// configures NETTY logging to use Slf4j framework
-		InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
+		InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
 		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.scCacheConfiguration = new SCCacheConfiguration();
 		AppContext.responderConfiguration = new ListenerListConfiguration();

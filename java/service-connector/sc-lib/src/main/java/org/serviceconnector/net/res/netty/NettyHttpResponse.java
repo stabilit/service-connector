@@ -27,7 +27,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
@@ -56,15 +57,15 @@ public class NettyHttpResponse extends ResponseAdapter {
 		ByteBuf buffer = getBuffer();
 		FullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
 		httpResponse.headers().add("Access-Control-Allow-Origin", "*");
-		httpResponse.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		httpResponse.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		httpResponse.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
-		httpResponse.headers().set(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		// Write the response.
-		channel.write(httpResponse);
+		httpResponse.headers().add(HttpHeaderNames.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		httpResponse.headers().add(HttpHeaderNames.CACHE_CONTROL, HttpHeaderValues.NO_CACHE);
+		httpResponse.headers().add(HttpHeaderNames.PRAGMA, HttpHeaderValues.NO_CACHE);
+		httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.remoteAddress()).getHostName(),
 					((InetSocketAddress) this.channel.remoteAddress()).getPort(), buffer.array(), 0, buffer.array().length);
 		}
+		// Write the response.
+		channel.writeAndFlush(httpResponse);
 	}
 }

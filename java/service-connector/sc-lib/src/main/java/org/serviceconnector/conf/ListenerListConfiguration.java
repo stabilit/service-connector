@@ -54,7 +54,6 @@ public class ListenerListConfiguration {
 	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration) throws SCMPValidatorException {
-		@SuppressWarnings("unchecked")
 		List<String> listeners = compositeConfig.getList(String.class, Constants.PROPERTY_LISTENERS, null);
 		if (listeners == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.PROPERTY_LISTENERS + " is missing");

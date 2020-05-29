@@ -127,7 +127,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 	 */	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		outboundChannel.write(msg);
+		outboundChannel.writeAndFlush(msg);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			LOGGER.info("regular disconnect", th); // regular disconnect causes this expected exception
+			LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 			return;
 		} else {
 			LOGGER.error("Responder error", th);
@@ -171,7 +171,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 		/** {@inheritDoc} */
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-			inboundChannel.write(msg);
+			inboundChannel.writeAndFlush(msg);
 		}
 		
 		@Override
@@ -187,7 +187,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 				return;
 			}
 			if (th instanceof java.io.IOException) {
-				// regular disconnect, nothing special - just ignore.
+				LOGGER.debug("regular disconnect"); // regular disconnect causes this expected exception
 				return;
 			} else {
 				LOGGER.error("Responder error", th);
@@ -202,7 +202,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 		 */
 		static void closeOnFlush(Channel ch) {
 			if (ch.isActive()) {
-				ch.write(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+				ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 			}
 		}
 	}

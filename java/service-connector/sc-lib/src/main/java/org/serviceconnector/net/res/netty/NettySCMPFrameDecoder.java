@@ -48,20 +48,26 @@ public class NettySCMPFrameDecoder extends ByteToMessageDecoder {
 	public NettySCMPFrameDecoder() {
 		this.scmpFrameSize = 0;
 	}
-	
+
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		if (this.scmpFrameSize != 0) {
 			// headline and frame size has already been decoded
-			out.add(this.aggregateFrame(in));
+			byte[] ret = this.aggregateFrame(in);
+			if (ret != null) {
+				out.add(ret);
+			}
 		} else {
 			// try reading headline & extracting frame size
 			this.decodeFrameSizeFromHeadline(in);
 			if (scmpFrameSize != 0) {
 				// headline decoded try aggregate whole frame
-				out.add(this.aggregateFrame(in));
+				byte[] ret = this.aggregateFrame(in);
+				if (ret != null) {
+					out.add(ret);
+				}
 			}
-		}	
+		}
 	}
 
 	/**
@@ -95,9 +101,12 @@ public class NettySCMPFrameDecoder extends ByteToMessageDecoder {
 		if (buffer.readableBytes() < scmpFrameSize) {
 			return null;
 		}
-		ByteBuf channelBuffer = buffer.readBytes(scmpFrameSize);
+
+		byte[] frame = new byte[scmpFrameSize];
+		buffer.readBytes(frame);
+
 		// reset the frame size
 		this.scmpFrameSize = 0;
-		return channelBuffer.array();
+		return frame;
 	}
 }

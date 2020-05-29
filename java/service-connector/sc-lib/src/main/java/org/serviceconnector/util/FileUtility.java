@@ -101,8 +101,8 @@ public final class FileUtility {
 		if (file.exists()) {
 			// Get a file channel for the file
 			FileChannel channel = null;
-			try {
-				channel = new RandomAccessFile(file, "rw").getChannel();
+			try (RandomAccessFile randomFile = new RandomAccessFile(file, "rw")) {
+				channel = randomFile.getChannel();
 
 				// Use the file channel to create a lock on the file.
 				// This method blocks until it can retrieve the lock.
@@ -295,7 +295,8 @@ public final class FileUtility {
 				fw.flush();
 				fw.close();
 			}
-			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel();
+			@SuppressWarnings("resource")
+			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel(); //don't close that resource here, the lock needs to stay.
 			LOGGER.info("Create PID-file=" + fileNameFull + " PID=" + pid);
 			FileLock lock = channel.lock();
 			return new FileCtx(lock, channel, pidFile);
@@ -332,12 +333,12 @@ public final class FileUtility {
 	public static String getLogPath() throws SCMPValidatorException {
 
 		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-		FileAppender fileAppender = null;
+		FileAppender<ILoggingEvent> fileAppender = null;
 		Iterator<Appender<ILoggingEvent>> iteratorForAppenders = rootLogger.iteratorForAppenders();
 		while (iteratorForAppenders.hasNext()) {
 			Appender<ILoggingEvent> appender = iteratorForAppenders.next();
 			if (appender instanceof FileAppender) {
-				fileAppender = (FileAppender) appender;
+				fileAppender = (FileAppender<ILoggingEvent>) appender;
 				break;
 			}
 		}

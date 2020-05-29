@@ -41,7 +41,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
@@ -93,16 +94,18 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = future.channel(); 
+			this.channel = future.channel();
 			this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).channel();
 			// complete localSocketAdress
 			this.remotSocketAddress = (InetSocketAddress) this.channel.remoteAddress();
 		} catch (CommunicationException ex) {
 			LOGGER.error("connect", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP=" + this.remotSocketAddress.toString());
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"connect to IP=" + this.remotSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {
-			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort());
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort());
 		}
 	}
 
@@ -117,26 +120,27 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 
 		byte[] buffer = baos.toByteArray();
 		ByteBuf channelBuffer = Unpooled.copiedBuffer(buffer);
-		HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath(), channelBuffer);
+		HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath(),
+				channelBuffer);
 		// Http header fields
-		request.headers().add(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
-		request.headers().add(HttpHeaders.Names.HOST, host);
-		request.headers().add(HttpHeaders.Names.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
-		request.headers().add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-		request.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		request.headers().add(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
-		request.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		request.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
+		request.headers().add(HttpHeaderNames.USER_AGENT, System.getProperty("java.runtime.version"));
+		request.headers().add(HttpHeaderNames.HOST, host);
+		request.headers().add(HttpHeaderNames.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
+		request.headers().add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+		request.headers().add(HttpHeaderNames.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		request.headers().add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.length));
+		request.headers().add(HttpHeaderNames.CACHE_CONTROL, HttpHeaderValues.NO_CACHE);
+		request.headers().add(HttpHeaderNames.PRAGMA, HttpHeaderValues.NO_CACHE);
 
 		NettyHttpRequesterResponseHandler handler = channel.pipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);
-
-		channel.write(request);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(),
-					buffer, 0, buffer.length);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(),
+					this.remotSocketAddress.getPort(), buffer, 0, buffer.length);
 		}
+		channel.writeAndFlush(request);
 		return;
+
 	}
 
 	@Override
