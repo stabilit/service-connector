@@ -35,7 +35,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * The Class NettyHttpROequesterResponseHandler.
@@ -71,42 +70,38 @@ public class NettyHttpRequesterResponseHandler extends ChannelInboundHandlerAdap
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		try {
-			if (this.pendingRequest) {
-				this.pendingRequest = false;
-				try {
-					FullHttpResponse httpResponse = (FullHttpResponse) msg;
-					ByteBuf content = httpResponse.content();
-					byte[] buffer = new byte[content.readableBytes()];
-					content.readBytes(buffer);
-					Statistics.getInstance().incrementTotalMessages(buffer.length);
-					if (ConnectionLogger.isEnabledFull()) {
-						InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-						ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
-								remoteAddress.getPort(), buffer, 0, buffer.length);
-					}
-					ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-					IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-					SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
-					NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ret);
-				} catch (Throwable th) {
-					LOGGER.error("receive message", th);
-					if ((th instanceof Exception) == true) {
-						try {
-							SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
-							NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
-						} catch (Throwable th1) {
-							LOGGER.error("receive exception", th1);
-						}
+		if (this.pendingRequest) {
+			this.pendingRequest = false;
+			try {
+				FullHttpResponse httpResponse = (FullHttpResponse) msg;
+				ByteBuf content = httpResponse.content();
+				byte[] buffer = new byte[content.readableBytes()];
+				content.readBytes(buffer);
+				Statistics.getInstance().incrementTotalMessages(buffer.length);
+				if (ConnectionLogger.isEnabledFull()) {
+					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(),
+							remoteAddress.getPort(), buffer, 0, buffer.length);
+				}
+				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+				SCMPMessage ret = (SCMPMessage) encoderDecoder.decode(bais);
+				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ret);
+			} catch (Throwable th) {
+				LOGGER.error("receive message", th);
+				if ((th instanceof Exception) == true) {
+					try {
+						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
+						NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
+					} catch (Throwable th1) {
+						LOGGER.error("receive exception", th1);
 					}
 				}
-				return;
 			}
-			// unsolicited input, message not expected - race condition
-			LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
-		} finally {
-			ReferenceCountUtil.release(msg);
+			return;
 		}
+		// unsolicited input, message not expected - race condition
+		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
 	@Override

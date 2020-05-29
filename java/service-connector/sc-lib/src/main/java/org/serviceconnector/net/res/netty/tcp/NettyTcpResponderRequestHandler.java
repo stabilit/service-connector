@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for
@@ -51,18 +50,14 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 	/** {@inheritDoc} */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		try {
-			Channel channel = ctx.channel();
-			NettyTcpResponse response = new NettyTcpResponse(channel);
-			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
-			byte[] buffer = (byte[]) msg;
-			IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
-			// process request in super class
-			super.messageReceived(request, response, channel);
-		} finally {
-			ReferenceCountUtil.release(msg);
-		}
+		Channel channel = ctx.channel();
+		NettyTcpResponse response = new NettyTcpResponse(channel);
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+		byte[] buffer = (byte[]) msg;
+		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
+		// process request in super class
+		super.messageReceived(request, response, channel);
 	}
 
 	@Override

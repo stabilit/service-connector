@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for
@@ -51,18 +50,14 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		try {
-			Channel channel = ctx.channel();
-			NettyHttpResponse response = new NettyHttpResponse(channel);
-			FullHttpRequest httpRequest = (FullHttpRequest) msg;
-			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
-			IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
-			// process request in super class
-			super.messageReceived(request, response, channel);
-		} finally {
-			ReferenceCountUtil.release(msg);
-		}
+		Channel channel = ctx.channel();
+		NettyHttpResponse response = new NettyHttpResponse(channel);
+		FullHttpRequest httpRequest = (FullHttpRequest) msg;
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
+		// process request in super class
+		super.messageReceived(request, response, channel);
 	}
 
 	/** {@inheritDoc} */
