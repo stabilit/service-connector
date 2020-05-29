@@ -192,7 +192,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");
 		// dont't check message.log might be an EXC because of broken CRP
-		TestUtil.checkLogFile(TestConstants.logbackSC1, "sc.log");
+		TestUtil.checkLogFile(TestConstants.logbackSC0, "sc.log");
 
 		ProcessCtx sc0 = SystemSuperTest.scCtxs.remove("sc0");
 		SystemSuperTest.ctrl.stopSC(sc0);
