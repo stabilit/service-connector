@@ -92,8 +92,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		try {
-			sc.setKeepAliveIntervalSeconds(0);
-			sc.setKeepAliveIntervalSeconds(10);
+			sc.setKeepAliveIntervalSeconds(0);  // turn off KA, connection might be busy otherwise for CRG
 			sc.setCheckRegistrationIntervalSeconds(40);
 			sc.setImmediateConnect(true);
 			sc.startListener();

@@ -324,17 +324,17 @@ public class APISCServerTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Start and stop Listener 100 times. <br>
+	 * Description: Start and stop Listener 10 times. <br>
 	 * Expectation: Listener is stopped
 	 */
 	@Test
 	public void t81_Listener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC0_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertNotNull("server exists", server);
-		int nr = 100;
+		int nr = 10;
 		int sleep = 0;
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 10) == 0) {
+			if (((i + 1) % 2) == 0) {
 				testLogger.info("Start/stop listener nr. " + (i + 1) + "...");
 			}
 			server.startListener();
@@ -345,7 +345,5 @@ public class APISCServerTest extends SuperUnitTest {
 			server.stopListener();
 			Assert.assertEquals("Listener is not running", false, server.isListening());
 		}
-
 	}
-
 }
