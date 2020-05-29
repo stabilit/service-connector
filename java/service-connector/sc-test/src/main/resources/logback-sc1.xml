@@ -49,6 +49,16 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
       <maxHistory>1</maxHistory>
     </rollingPolicy>
   </appender>
+  <appender name="NettyLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${logPath}${fs}netty.log</File>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSSZ} [%t] %-5p \(%c:%L\) - %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logPath}${fs}netty.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <maxHistory>1</maxHistory>
+    </rollingPolicy>
+  </appender>
   <appender name="performanceLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <File>${logPath}${fs}performance.log</File>
     <encoder>
@@ -79,7 +89,7 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
       <maxHistory>1</maxHistory>
     </rollingPolicy>
   </appender>
-  <logger name="CacheLogger" additivity="false" level="TRACE">
+  <logger name="CacheLogger" additivity="false" level="OFF">
     <appender-ref ref="cacheLog"/>
   </logger>
    <!-- subscriptions:
@@ -87,14 +97,14 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
    DEBUG level for subscribe, change subscription, unsubscribe, abortion and timeout
    TRACE level for all subscription events
    --> 
-  <logger name="SubscriptionLogger" additivity="false" level="TRACE">
+  <logger name="SubscriptionLogger" additivity="false" level="OFF">
     <appender-ref ref="subscriptionLog"/>
   </logger>
   <!-- messages:
    DEBUG important message attributes
    TRACE all message attributes
    --> 
-  <logger name="MessageLogger" additivity="false" level="TRACE">
+  <logger name="MessageLogger" additivity="false" level="OFF">
     <appender-ref ref="messageLog"/>
   </logger>
   <!-- sessions:
@@ -102,7 +112,7 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
    DEBUG level for session creation, deletion, abortion and timeout
    TRACE level for all session events
    -->
-  <logger name="SessionLogger" additivity="false" level="TRACE">
+  <logger name="SessionLogger" additivity="false" level="OFF">
     <appender-ref ref="sessionLog"/>
   </logger>
   <!-- performance:
@@ -115,12 +125,13 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
    DEBUG level for connection creation and deletion
    TRACE level for read buffer, write buffer, send keepalive
    --> 
-  <logger name="ConnectionLogger" additivity="false" level="TRACE">
+  <logger name="ConnectionLogger" additivity="false" level="OFF">
     <appender-ref ref="connectionLog"/>
   </logger>
-  <logger name="org.jboss" additivity="false" level="OFF">
+  <logger name="io.netty" additivity="false" level="WARN">
+    <appender-ref ref="NettyLog"/>
   </logger>
-  <root level="DEBUG">
+  <root level="WARN">
     <appender-ref ref="generalLog"/>
   </root>
 </configuration>
