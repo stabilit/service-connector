@@ -38,6 +38,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
+		TestUtil.deleteLogDir(TestConstants.logbackCln);
 		super.beforeOneTest();
 		TestUtil.deleteLogDir(TestConstants.logbackCln);
 	}
@@ -78,11 +79,12 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		int numberOfClients = 2;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
-		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.logbackCln, "client" + i, TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP,
-					10, 0, TestConstants.pubServerName1, 50, "f_subscribeReceive10000Unsubscribe");
-			clientCtxs[i] = clientCtx;
-		}
+		clientCtxs[0] = ctrl.startPublishClient(TestConstants.logbackCln, "client1", TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP,
+				10, 0, TestConstants.pubServerName1, 50, "f_subscribeReceive10000Unsubscribe");
+		
+		clientCtxs[1] = ctrl.startPublishClient(TestConstants.logbackCln, "client2", TestConstants.HOST, TestConstants.PORT_SC1_TCP, ConnectionType.NETTY_TCP,
+				10, 0, TestConstants.pubServerName2, 50, "f_subscribeReceive10000Unsubscribe");
+		
 		SystemSuperTest.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.logbackCln, "sc.log");

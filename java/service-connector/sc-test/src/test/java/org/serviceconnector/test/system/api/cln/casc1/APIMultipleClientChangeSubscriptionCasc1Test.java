@@ -52,6 +52,7 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
+		TestUtil.deleteLogDir(TestConstants.logbackCln);
 		super.beforeOneTest();
 		TestUtil.deleteLogDir(TestConstants.logbackCln);
 	}

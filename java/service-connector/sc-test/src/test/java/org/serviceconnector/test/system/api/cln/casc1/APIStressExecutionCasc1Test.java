@@ -33,6 +33,7 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 	@Override
 	@Before
 	public void beforeOneTest() throws Exception {
+		TestUtil.deleteLogDir(TestConstants.logbackCln);
 		super.beforeOneTest();
 		TestUtil.deleteLogDir(TestConstants.logbackCln);
 	}
