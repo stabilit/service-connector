@@ -40,7 +40,28 @@ public abstract class NettyResponderRequestHandlerAdapter extends ChannelInbound
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyResponderRequestHandlerAdapter.class);
+	
+	/** The local Socket Address of the channel. */
+	protected InetSocketAddress localSocketAddress;
+	/** The remote Socket Address of the channel. */
+	protected InetSocketAddress remoteSocketAddress;
+	protected String remoteHostName;
+	protected int remoteHostPort;
 
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		Channel channel = ctx.channel();
+		this.localSocketAddress = (InetSocketAddress) channel.localAddress();
+		this.remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+		
+		if(this.remoteSocketAddress != null) {
+			// can be null in case the disconnect is faster than the pipeline processing
+			this.remoteHostName = this.remoteSocketAddress.getHostName();
+			this.remoteHostPort = this.remoteSocketAddress.getPort();
+		}		
+		super.channelActive(ctx);
+	}
+	
 	/**
 	 * Message received.
 	 *
@@ -56,12 +77,11 @@ public abstract class NettyResponderRequestHandlerAdapter extends ChannelInbound
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		super.channelInactive(ctx);
-		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		if (AppContext.isScEnvironment()) {
 			// if in sc environment - clean up server
-			this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
+			this.cleanUpDeadServer(this.remoteHostName, this.remoteHostPort);
 		}
+		super.channelInactive(ctx);
 	}
 
 	/**

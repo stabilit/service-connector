@@ -63,10 +63,10 @@ public class NettyHttpRequesterPipelineFactory extends ChannelInitializer<Socket
 		ch.pipeline().addLast("idleTimeout", new NettyIdleHandler(this.context, 0, 0, this.context.getIdleTimeoutSeconds()));
 		// responsible for decoding responses - Netty
 		ch.pipeline().addLast("decoder", new HttpResponseDecoder());
-		// responsible for encoding requests - Netty
-		ch.pipeline().addLast("encoder", new HttpRequestEncoder());
 		// responsible for aggregate chunks - Netty
 		ch.pipeline().addLast("aggregator", new HttpObjectAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
+		// responsible for encoding requests - Netty
+		ch.pipeline().addLast("encoder", new HttpRequestEncoder());
 		// responsible for handle responses - Stabilit
 		ch.pipeline().addLast(AppContext.getSCWorkerThreadPool(), "requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 	}

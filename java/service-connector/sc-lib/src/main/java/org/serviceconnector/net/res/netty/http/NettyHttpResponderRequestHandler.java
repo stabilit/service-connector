@@ -51,11 +51,17 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		Channel channel = ctx.channel();
+		
+		if(this.remoteSocketAddress == null) {
+			this.localSocketAddress = (InetSocketAddress) channel.localAddress();
+			this.remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();			
+			this.remoteHostName = this.remoteSocketAddress.getHostName();
+			this.remoteHostPort = this.remoteSocketAddress.getPort();
+		}		
+		
 		NettyHttpResponse response = new NettyHttpResponse(channel);
 		FullHttpRequest httpRequest = (FullHttpRequest) msg;
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
-		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
+		IRequest request = new NettyHttpRequest(httpRequest, this.localSocketAddress, this.remoteSocketAddress);
 		// process request in super class
 		super.messageReceived(request, response, channel);
 	}

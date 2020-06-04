@@ -38,6 +38,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
@@ -145,9 +146,16 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 
 	@Override
 	public void setQuietDisconnect() throws Exception {
-		// this avoids receiving messages (outstanding replies) in disconnecting
-		// procedure
-		NettyHttpRequesterResponseHandler handler = channel.pipeline().get(NettyHttpRequesterResponseHandler.class);
-		handler.connectionDisconnect();
+		// this avoids receiving messages (outstanding replies) in disconnecting procedure
+		ChannelPipeline pipeline = channel.pipeline();
+
+		// following null checks are necessary. In case the connection is already destroyed everything is nulled under the hood
+		if (pipeline != null) {
+			NettyHttpRequesterResponseHandler handler = channel.pipeline().get(NettyHttpRequesterResponseHandler.class);
+
+			if (handler != null) {
+				handler.connectionDisconnect();
+			}
+		}
 	}
 }

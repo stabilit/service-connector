@@ -46,16 +46,22 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpResponderRequestHandler.class);
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		Channel channel = ctx.channel();
-		NettyTcpResponse response = new NettyTcpResponse(channel);
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+		
+		if(this.remoteSocketAddress == null) {
+			this.localSocketAddress = (InetSocketAddress) channel.localAddress();
+			this.remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();			
+			this.remoteHostName = this.remoteSocketAddress.getHostName();
+			this.remoteHostPort = this.remoteSocketAddress.getPort();
+		}
+		
+		NettyTcpResponse response = new NettyTcpResponse(channel);		
 		byte[] buffer = (byte[]) msg;
-		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
+		IRequest request = new NettyTcpRequest(buffer, this.localSocketAddress, this.remoteSocketAddress);
 		// process request in super class
 		super.messageReceived(request, response, channel);
 	}
