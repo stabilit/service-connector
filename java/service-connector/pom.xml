@@ -53,18 +53,18 @@
 	<distributionManagement>
 		<repository>
 			<id>opensource.releases</id>
-			<url>http://10.0.0.28:8081/nexus/content/repositories/opensource.releases</url>
+			<url>http://v-essenza:25081/nexus/content/repositories/opensource.releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>opensource.snapshots</id>
-			<url>http://10.0.0.28:8081/nexus/content/repositories/opensource.snapshots</url>
+			<url>http://v-essenza:25081/nexus/content/repositories/opensource.snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
 		<repository>
 			<id>repository.stabilit.ch</id>
-			<url>http://10.0.0.28:8081/nexus/content/groups/ntp.repos/</url>
+			<url>http://v-essenza:25081/nexus/content/groups/ntp.repos/</url>
 		</repository>
 	</repositories>
 
