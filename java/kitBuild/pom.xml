@@ -35,7 +35,7 @@
 	<repositories>
 		<repository>
 			<id>repository.stabilit.ch</id>
-			<url>http://10.0.0.28:8081/nexus/content/groups/ntp.repos/</url>
+			<url>http://v-essenza:25081/nexus/content/groups/ntp.repos/</url>
 		</repository>
 	</repositories>
 
