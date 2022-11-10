@@ -31,6 +31,9 @@
 # /java/kitBuild/logs/
 /java/kitBuild/logs/*
 
+# /java/kitBuild/src/main/resources/collected/*
+/java/kitBuild/src/main/resources/collected/*
+
 # /java/service-connector/demo-client/
 /java/service-connector/demo-client/logs
 /java/service-connector/demo-client/target
