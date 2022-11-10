@@ -4,7 +4,7 @@
 
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc.dist</artifactId>
-	<version>3.6.0-SNAPSHOT</version>
+	<version>3.6.0.RELEASE</version>
 	<name>SC Delivery</name>
 
 	<properties>
@@ -27,7 +27,7 @@
 		<kit.dest.path>kit</kit.dest.path>
 
 		<!-- Artifact Versions -->
-		<sc.version>3.5.0.RELEASE</sc.version>
+		<sc.version>3.6.0.RELEASE</sc.version>
 		
 
 	</properties>
