@@ -5,7 +5,7 @@
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-parent</artifactId>
 
-	<version>3.6.0.RELEASE</version>
+	<version>3.6.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SC Parent POM</name>
 
