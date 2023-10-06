@@ -93,7 +93,7 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 			@Override
 			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
-				String version = "3.0-000";
+				String version = "4.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
@@ -143,7 +143,7 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
-				String version = "2.0-000";
+				String version = "3.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
