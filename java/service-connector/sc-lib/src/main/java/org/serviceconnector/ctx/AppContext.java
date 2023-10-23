@@ -22,11 +22,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration2.CompositeConfiguration;
@@ -36,9 +33,6 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.jboss.netty.handler.execution.OrderedMemoryAwareThreadPoolExecutor;
-import org.jboss.netty.logging.InternalLoggerFactory;
-import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.SCCache;
@@ -64,6 +58,12 @@ import org.serviceconnector.util.NamedPriorityThreadFactory;
 import org.serviceconnector.util.XMLDumpWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
 
 /**
  * The Class AppContext. The AppContext is singleton and holds all factories and registries. Its the top context in a service connector, server or even in clients. Its a superset
@@ -135,16 +135,16 @@ public final class AppContext {
 	/**
 	 * The executor to submit runnable objects. Provides threads for handling NETTY events and processing AJAX requests from web UI.
 	 */
-	private static ExecutorService scWorkerThreadPool;
+	private static EventExecutorGroup scWorkerThreadPool;
 	/**
 	 * The executor to submit runnable objects for Proxy handler of Netty. Ordered pool needed because of pipe logic.
 	 */
-	private static ExecutorService orderedSCWorkerThreadPool;
+	private static EventExecutorGroup orderedSCWorkerThreadPool;
 
 	// initialize configurations in every case
 	static {
 		// configures NETTY logging to use Slf4j framework
-		InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
+		InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
 		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.scCacheConfiguration = new SCCacheConfiguration();
 		AppContext.responderConfiguration = new ListenerListConfiguration();
@@ -173,12 +173,11 @@ public final class AppContext {
 				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI", Thread.MAX_PRIORITY));
 			}
 			if (AppContext.scWorkerThreadPool == null) {
-				AppContext.scWorkerThreadPool = Executors.newCachedThreadPool(new NamedPriorityThreadFactory("SC_WORKER"));
+				AppContext.scWorkerThreadPool = new NioEventLoopGroup(basicConfiguration.getMaxIOThreads(), new NamedPriorityThreadFactory("SC_WORKER"));
 			}
 
 			if (AppContext.orderedSCWorkerThreadPool == null) {
-				AppContext.orderedSCWorkerThreadPool = new OrderedMemoryAwareThreadPoolExecutor(Constants.DEFAULT_MAX_ORDERED_IO_THREADS, 0, 0, 10, TimeUnit.SECONDS,
-						new NamedPriorityThreadFactory("ORDERED_SC_WORKER"));
+				AppContext.orderedSCWorkerThreadPool = new DefaultEventExecutorGroup(Constants.DEFAULT_MAX_ORDERED_IO_THREADS, new NamedPriorityThreadFactory("ORDERED_SC_WORKER"));
 			}
 		}
 	}
@@ -416,7 +415,7 @@ public final class AppContext {
 	 *
 	 * @return the SC worker thread pool
 	 */
-	public static ExecutorService getSCWorkerThreadPool() {
+	public static EventExecutorGroup getSCWorkerThreadPool() {
 		return AppContext.scWorkerThreadPool;
 	}
 
@@ -425,7 +424,7 @@ public final class AppContext {
 	 *
 	 * @return the ordered SC worker thread pool
 	 */
-	public static ExecutorService getOrderedSCWorkerThreadPool() {
+	public static EventExecutorGroup getOrderedSCWorkerThreadPool() {
 		return AppContext.orderedSCWorkerThreadPool;
 	}
 
@@ -452,11 +451,11 @@ public final class AppContext {
 					AppContext.eci_cri_Scheduler = null;
 				}
 				if (AppContext.scWorkerThreadPool != null) {
-					AppContext.scWorkerThreadPool.shutdownNow();
+					AppContext.scWorkerThreadPool.shutdownGracefully();
 					AppContext.scWorkerThreadPool = null;
 				}
 				if (AppContext.orderedSCWorkerThreadPool != null) {
-					AppContext.orderedSCWorkerThreadPool.shutdownNow();
+					AppContext.orderedSCWorkerThreadPool.shutdownGracefully();
 					AppContext.orderedSCWorkerThreadPool = null;
 				}
 			} else {

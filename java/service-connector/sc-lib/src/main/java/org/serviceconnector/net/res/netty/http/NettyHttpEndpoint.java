@@ -18,7 +18,6 @@ package org.serviceconnector.net.res.netty.http;
 
 import java.util.concurrent.Executors;
 
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.EndpointAdapter;
 
@@ -29,20 +28,13 @@ import org.serviceconnector.net.res.EndpointAdapter;
  */
 public class NettyHttpEndpoint extends EndpointAdapter {
 
-	/**
-	 * Instantiates a NettyHttpEndpoint.
-	 */
-	public NettyHttpEndpoint() {
-		super();
-		this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool(),
-				AppContext.getBasicConfiguration().getMaxIOThreads());
-	}
+	
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		super.create();
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyHttpResponderPipelineFactory());
+		this.bootstrap.childHandler(new NettyHttpResponderPipelineFactory());
 	}
 }

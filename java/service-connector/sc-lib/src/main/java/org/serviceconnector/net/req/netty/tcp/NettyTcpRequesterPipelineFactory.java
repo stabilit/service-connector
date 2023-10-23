@@ -18,12 +18,10 @@ package org.serviceconnector.net.req.netty.tcp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.execution.ExecutionHandler;
-import org.jboss.netty.handler.logging.LoggingHandler;
-import org.jboss.netty.util.Timer;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
@@ -34,14 +32,12 @@ import org.serviceconnector.net.res.netty.NettySCMPFrameDecoder;
  *
  * @author JTraber
  */
-public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpRequesterPipelineFactory extends ChannelInitializer<SocketChannel> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpRequesterPipelineFactory.class);
 
-	/** The timer to observe timeouts. */
-	private Timer timer;
 	/** The context. */
 	private ConnectionContext context;
 
@@ -49,27 +45,21 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 	 * Instantiates a new NettyTcpRequesterPipelineFactory.
 	 *
 	 * @param context the context
-	 * @param timer the timer
 	 */
-	public NettyTcpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
-		this.timer = timer;
+	public NettyTcpRequesterPipelineFactory(ConnectionContext context) {
 		this.context = context;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
+	protected void initChannel(SocketChannel ch) throws Exception {
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		ch.pipeline().addLast("LOGGER", new LoggingHandler());
 		// responsible for observing idle timeout - Netty
-		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context.getIdleTimeoutSeconds()));
+		ch.pipeline().addLast("idleTimeout", new NettyIdleHandler(this.context, 0, 0, this.context.getIdleTimeoutSeconds()));
 		// responsible for reading until SCMP frame is complete
-		pipeline.addLast("framer", new NettySCMPFrameDecoder());
-		// executer to run NettyTcpRequesterResponseHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
+		ch.pipeline().addLast("framer", new NettySCMPFrameDecoder());
 		// responsible for handle response - Stabilit
-		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
-		return pipeline;
+		ch.pipeline().addLast(AppContext.getSCWorkerThreadPool(), "requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 	}
 }

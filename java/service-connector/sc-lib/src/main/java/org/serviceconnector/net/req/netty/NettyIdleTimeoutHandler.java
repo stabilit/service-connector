@@ -20,11 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateHandler;
-import org.jboss.netty.util.Timer;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * @author JTraber
@@ -44,15 +42,15 @@ public class NettyIdleTimeoutHandler extends IdleStateHandler {
 	 * @param allIdleTime the all idle time
 	 * @param unit the unit
 	 */
-	public NettyIdleTimeoutHandler(Timer timer, long readerIdleTime, long writerIdleTime, long allIdleTime, TimeUnit unit) {
-		super(timer, readerIdleTime, writerIdleTime, allIdleTime, unit);
+	public NettyIdleTimeoutHandler(long readerIdleTime, long writerIdleTime, long allIdleTime, TimeUnit unit) {
+		super(readerIdleTime, writerIdleTime, allIdleTime, unit);
 	}
 
 	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis) throws Exception {
-		super.channelIdle(ctx, state, lastActivityTimeMillis);
+	protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
+		super.channelIdle(ctx, evt);
 
-		switch (state) {
+		switch (evt.state()) {
 			case WRITER_IDLE:
 				// ignore writer idle
 				return;
@@ -60,7 +58,7 @@ public class NettyIdleTimeoutHandler extends IdleStateHandler {
 				// ignore reader idle
 				return;
 			case ALL_IDLE:
-				Channels.fireExceptionCaught(ctx, new IdleTimeoutException("idle timeout. operation - could not be completed."));
+				ctx.fireExceptionCaught(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 				break;
 			default:
 				break;

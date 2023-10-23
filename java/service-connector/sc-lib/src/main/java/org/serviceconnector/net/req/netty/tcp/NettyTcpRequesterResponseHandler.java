@@ -19,11 +19,9 @@ package org.serviceconnector.net.req.netty.tcp;
 import java.io.ByteArrayInputStream;
 import java.net.InetSocketAddress;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
@@ -41,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author JTraber
  */
-public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
+public class NettyTcpRequesterResponseHandler extends ChannelInboundHandlerAdapter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyTcpRequesterResponseHandler.class);
@@ -69,15 +67,15 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {		
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			SCMPMessage ret = null;
 			try {
-				byte[] buffer = (byte[]) e.getMessage();
+				byte[] buffer = (byte[]) msg;
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
-					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), remoteAddress.getHostName(), remoteAddress.getPort(), buffer, 0, buffer.length);
 				}
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
@@ -102,12 +100,12 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	}
 
 	@Override
-	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
 			LOGGER.warn("connection disconnect in pending request state, stop operation."); // regular disconnect
 			if (ConnectionLogger.isEnabled()) {
-				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+				InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 				ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
 			}
 			DisconnectException ex = new DisconnectException("Connection disconnect, reply is outstanding. Operation stopped.");
@@ -119,14 +117,13 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			return;
 		}
 		if (ConnectionLogger.isEnabled()) {
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+			InetSocketAddress remoteSocketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 			ConnectionLogger.logDisconnectByRemoteHost(this.getClass().getSimpleName(), remoteSocketAddress.getHostName(), remoteSocketAddress.getPort());
 		}
 	}
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Throwable th = e.getCause();
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable th) throws Exception {
 		if (th instanceof Exception) {
 			Exception ex = (Exception) th;
 			if (this.pendingRequest) {

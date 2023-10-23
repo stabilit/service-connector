@@ -18,10 +18,15 @@ package org.serviceconnector.net.res.netty;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.frame.FrameDecoder;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.ReferenceCountUtil;
+
+import java.util.List;
+
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.SCMPFrameDecoder;
 import org.serviceconnector.scmp.SCMPError;
@@ -31,7 +36,7 @@ import org.serviceconnector.scmp.SCMPError;
  *
  * @author JTraber
  */
-public class NettySCMPFrameDecoder extends FrameDecoder {
+public class NettySCMPFrameDecoder extends ByteToMessageDecoder {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettySCMPFrameDecoder.class);
@@ -48,19 +53,24 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 	}
 
 	@Override
-	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		if (this.scmpFrameSize != 0) {
 			// headline and frame size has already been decoded
-			return this.aggregateFrame(buffer);
+			byte[] ret = this.aggregateFrame(in);
+			if (ret != null) {
+				out.add(ret);
+			}
 		} else {
 			// try reading headline & extracting frame size
-			this.decodeFrameSizeFromHeadline(buffer);
+			this.decodeFrameSizeFromHeadline(in);
 			if (scmpFrameSize != 0) {
 				// headline decoded try aggregate whole frame
-				return this.aggregateFrame(buffer);
+				byte[] ret = this.aggregateFrame(in);
+				if (ret != null) {
+					out.add(ret);
+				}
 			}
 		}
-		return null;
 	}
 
 	/**
@@ -69,7 +79,8 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 	 * @param buffer the buffer
 	 * @throws SCMPFrameDecoderException the sCMP frame decoder exception
 	 */
-	private void decodeFrameSizeFromHeadline(ChannelBuffer buffer) throws SCMPFrameDecoderException {
+	private void decodeFrameSizeFromHeadline(ByteBuf buffer) throws SCMPFrameDecoderException {
+		buffer.touch();
 		if (buffer.readableBytes() < Constants.SCMP_HEADLINE_SIZE) {
 			// not enough bytes in buffer to decode the SCMP headline
 			return;
@@ -90,13 +101,21 @@ public class NettySCMPFrameDecoder extends FrameDecoder {
 	 * @param buffer the buffer
 	 * @return the byte[]
 	 */
-	private byte[] aggregateFrame(ChannelBuffer buffer) {
+	private byte[] aggregateFrame(ByteBuf buffer) {
 		if (buffer.readableBytes() < scmpFrameSize) {
 			return null;
 		}
-		ChannelBuffer channelBuffer = buffer.readBytes(scmpFrameSize);
-		// reset the frame size
-		this.scmpFrameSize = 0;
-		return channelBuffer.array();
+		ByteBuf channelBuffer = null;
+		try {
+			channelBuffer = buffer.readBytes(scmpFrameSize);
+			// reset the frame size
+			this.scmpFrameSize = 0;
+			return ByteBufUtil.getBytes(channelBuffer);			
+		} finally {
+			if(channelBuffer != null) {
+				ReferenceCountUtil.release(channelBuffer);
+				channelBuffer.touch();
+			}
+		}
 	}
 }

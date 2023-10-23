@@ -19,10 +19,9 @@ package org.serviceconnector.net.res.netty.tcp;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.netty.NettyResponderRequestHandlerAdapter;
 import org.serviceconnector.net.res.netty.NettyTcpRequest;
@@ -48,22 +47,21 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 
 	/** {@inheritDoc} */
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		NettyTcpResponse response = new NettyTcpResponse(event.getChannel());
-		Channel channel = ctx.getChannel();
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-		byte[] buffer = (byte[]) event.getMessage();
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		NettyTcpResponse response = new NettyTcpResponse(ctx.channel());
+		Channel channel = ctx.channel();
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
+		byte[] buffer = (byte[]) msg;
 		IRequest request = new NettyTcpRequest(buffer, localSocketAddress, remoteSocketAddress);
 		// process request in super class
-		super.messageReceived(request, response, channel);
+		super.channelRead(request, response, channel);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Throwable th = e.getCause();
-		NettyTcpResponse response = new NettyTcpResponse(e.getChannel());
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable th) throws Exception {
+		NettyTcpResponse response = new NettyTcpResponse(ctx.channel());
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;

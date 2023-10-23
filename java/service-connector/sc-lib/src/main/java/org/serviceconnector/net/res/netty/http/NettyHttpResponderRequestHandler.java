@@ -19,11 +19,9 @@ package org.serviceconnector.net.res.netty.http;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.handler.codec.http.HttpRequest;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpRequest;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.netty.NettyHttpRequest;
 import org.serviceconnector.net.res.netty.NettyHttpResponse;
@@ -49,22 +47,21 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 
 	/** {@inheritDoc} */
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
-		NettyHttpResponse response = new NettyHttpResponse(event.getChannel());
-		HttpRequest httpRequest = (HttpRequest) event.getMessage();
-		Channel channel = ctx.getChannel();
-		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
-		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		Channel channel = ctx.channel();
+		NettyHttpResponse response = new NettyHttpResponse(channel);
+		FullHttpRequest httpRequest = (FullHttpRequest) msg;
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.localAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.remoteAddress();
 		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
 		// process request in super class
-		super.messageReceived(request, response, channel);
+		super.channelRead(request, response, channel);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		Throwable th = e.getCause();
-		NettyHttpResponse response = new NettyHttpResponse(e.getChannel());
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable th) throws Exception {
+		NettyHttpResponse response = new NettyHttpResponse(ctx.channel());
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
@@ -76,7 +73,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 			LOGGER.error("Responder error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
-			((HasFaultResponseException) e).setFaultResponse(response);
+			((HasFaultResponseException) th).setFaultResponse(response);
 			response.write();
 			return;
 		}

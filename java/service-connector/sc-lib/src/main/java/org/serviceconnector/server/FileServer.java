@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.log.SessionLogger;
@@ -115,7 +115,7 @@ public class FileServer extends Server {
 			// last package arrived
 			out.close();
 			httpCon = session.getHttpURLConnection();
-			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
+			if (httpCon.getResponseCode() != HttpResponseStatus.OK.code()) {
 				// error handling - SCMP Version request
 				SCMPMessageFault fault = new SCMPMessageFault(message.getSCMPVersion(), SCMPError.FILE_UPLOAD_FAILED, httpCon.getResponseMessage());
 				LOGGER.warn("Upload file failed =" + httpCon.getResponseMessage());

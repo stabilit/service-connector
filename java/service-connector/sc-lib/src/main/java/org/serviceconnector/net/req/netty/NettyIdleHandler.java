@@ -18,10 +18,9 @@ package org.serviceconnector.net.req.netty;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateHandler;
-import org.jboss.netty.util.Timer;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -44,20 +43,19 @@ public class NettyIdleHandler extends IdleStateHandler {
 	 * Instantiates a new netty idle handler.
 	 *
 	 * @param connectionContext the connection context
-	 * @param timer the timer
 	 * @param readerIdleTimeSeconds the reader idle time seconds
 	 * @param writerIdleTimeSeconds the writer idle time seconds
 	 * @param allIdleTimeSeconds the all idle time seconds
 	 */
-	public NettyIdleHandler(ConnectionContext connectionContext, Timer timer, int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
-		super(timer, readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
+	public NettyIdleHandler(ConnectionContext connectionContext, int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
+		super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
 		this.connectionContext = connectionContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis) throws Exception {
-		super.channelIdle(ctx, state, lastActivityTimeMillis);
+	protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
+		super.channelIdle(ctx, evt);
 		IConnection connection = this.connectionContext.getConnection();
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logKeepAlive(this.getClass().getSimpleName(), connection.getHost(), 0, this.connectionContext.getConnection().getNrOfIdlesInSequence());

@@ -18,15 +18,14 @@ package org.serviceconnector.net.req.netty.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
-import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
-import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
-import org.jboss.netty.handler.execution.ExecutionHandler;
-import org.jboss.netty.handler.logging.LoggingHandler;
-import org.jboss.netty.util.Timer;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestEncoder;
+import io.netty.handler.codec.http.HttpResponseDecoder;
+import io.netty.handler.logging.LoggingHandler;
+
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -37,14 +36,13 @@ import org.serviceconnector.net.req.netty.NettyIdleHandler;
  *
  * @author JTraber
  */
-public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory {
+public class NettyHttpRequesterPipelineFactory extends ChannelInitializer<SocketChannel> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpRequesterPipelineFactory.class);
 
-	/** The timer to observe timeouts. */
-	private Timer timer;
+
 	/** The context. */
 	private ConnectionContext context;
 
@@ -52,31 +50,27 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
 	 *
 	 * @param context the context
-	 * @param timer the timer
 	 */
-	public NettyHttpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
-		this.timer = timer;
+	public NettyHttpRequesterPipelineFactory(ConnectionContext context) {
 		this.context = context;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
+	protected void initChannel(SocketChannel ch) throws Exception {
 		// logging handler
-		pipeline.addLast("LOGGER", new LoggingHandler());
+		ch.pipeline().addLast("LOGGER", new LoggingHandler());
 		// responsible for observing idle timeout - Netty
-		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context.getIdleTimeoutSeconds()));
+		ch.pipeline().addLast("idleTimeout", new NettyIdleHandler(this.context, 0, 0, this.context.getIdleTimeoutSeconds()));
 		// responsible for decoding responses - Netty
-		pipeline.addLast("decoder", new HttpResponseDecoder());
-		// responsible for encoding requests - Netty
-		pipeline.addLast("encoder", new HttpRequestEncoder());
+		ch.pipeline().addLast("decoder", new HttpResponseDecoder());
 		// responsible for aggregate chunks - Netty
-		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
-		// executer to run NettyHttpRequesterResponseHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getSCWorkerThreadPool()));
+		ch.pipeline().addLast("aggregator", new HttpObjectAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
+		// responsible for encoding requests - Netty
+		ch.pipeline().addLast("encoder", new HttpRequestEncoder());
 		// responsible for handle responses - Stabilit
-		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
-		return pipeline;
+		ch.pipeline().addLast(AppContext.getSCWorkerThreadPool(), "requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 	}
+
+	
 }

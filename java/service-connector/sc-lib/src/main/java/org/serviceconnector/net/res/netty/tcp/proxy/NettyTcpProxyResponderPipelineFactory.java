@@ -18,21 +18,17 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
-import org.jboss.netty.handler.execution.ExecutionHandler;
-import org.jboss.netty.handler.logging.LoggingHandler;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating NettyTcpProxyResponderPipeline objects.
  */
-public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFactory {
+public class NettyTcpProxyResponderPipelineFactory extends ChannelInitializer<SocketChannel> {
 
-	/** The cf. */
-	private final ClientSocketChannelFactory cf;
 	/** The remote host. */
 	private final String remoteHost;
 	/** The remote port. */
@@ -45,12 +41,10 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	/**
 	 * Instantiates a new netty tcp proxy responder pipeline factory.
 	 *
-	 * @param cf the cf
 	 * @param remoteHost the remote host
 	 * @param remotePort the remote port
 	 */
-	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
-		this.cf = cf;
+	public NettyTcpProxyResponderPipelineFactory(String remoteHost, int remotePort) {
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 	}
@@ -58,18 +52,13 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	/**
 	 * Gets the pipeline.
 	 *
-	 * @return the pipeline
 	 * @throws Exception the exception {@inheritDoc}
 	 */
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = Channels.pipeline();
+	protected void initChannel(SocketChannel ch) throws Exception {
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
-		// executer to run NettyTcpProxyResponderRequestHandler in own thread
-		pipeline.addLast("executor", new ExecutionHandler(AppContext.getOrderedSCWorkerThreadPool()));
+		ch.pipeline().addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
-		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
-		return pipeline;
+		ch.pipeline().addLast(AppContext.getOrderedSCWorkerThreadPool(), "handler", new NettyTcpProxyResponderRequestHandler(remoteHost, remotePort));
 	}
 }

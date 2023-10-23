@@ -20,8 +20,10 @@ import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.Channel;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.channel.Channel;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
@@ -46,12 +48,13 @@ public class NettyTcpResponse extends ResponseAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void write() throws Exception {
-		ChannelBuffer buffer = this.getBuffer();
+		ByteBuf buffer = this.getBuffer();
 		// Write the response.
-		channel.write(buffer);
+		channel.writeAndFlush(buffer);
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getHostName(),
-					((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+			byte[] bytes = ByteBufUtil.getBytes(buffer);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.remoteAddress()).getHostName(),
+					((InetSocketAddress) this.channel.remoteAddress()).getPort(), bytes, 0, bytes.length);
 		}
 	}
 }

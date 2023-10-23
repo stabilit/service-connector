@@ -20,9 +20,10 @@ import java.io.ByteArrayOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.Channel;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -65,12 +66,12 @@ public abstract class ResponseAdapter implements IResponse {
 	 * @return the buffer
 	 * @throws Exception the exception
 	 */
-	public ChannelBuffer getBuffer() throws Exception {
+	public ByteBuf getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(this.scmp);
 		encoderDecoder.encode(baos, scmp);
 		byte[] buf = baos.toByteArray();
-		return ChannelBuffers.copiedBuffer(buf);
+		return Unpooled.copiedBuffer(buf);
 	}
 
 	/** {@inheritDoc} */
