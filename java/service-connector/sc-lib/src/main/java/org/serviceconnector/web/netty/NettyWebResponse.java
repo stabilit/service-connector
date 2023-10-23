@@ -21,8 +21,10 @@ import java.io.OutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
 
 /**
@@ -33,7 +35,7 @@ public class NettyWebResponse implements IWebResponse {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyWebResponse.class);
 	/** The response. */
-	private HttpResponse response;
+	private FullHttpResponse response;
 	/** The os. */
 	private ByteArrayOutputStream os;
 
@@ -42,7 +44,7 @@ public class NettyWebResponse implements IWebResponse {
 	 *
 	 * @param httpResponse the response
 	 */
-	public NettyWebResponse(HttpResponse httpResponse) {
+	public NettyWebResponse(FullHttpResponse httpResponse) {
 		this.response = httpResponse;
 		this.os = null;
 	}
@@ -86,6 +88,6 @@ public class NettyWebResponse implements IWebResponse {
 
 	@Override
 	public boolean isRedirect() {
-		return response.getStatus() == HttpResponseStatus.FOUND;
+		return response.status() == HttpResponseStatus.FOUND;
 	}
 }
