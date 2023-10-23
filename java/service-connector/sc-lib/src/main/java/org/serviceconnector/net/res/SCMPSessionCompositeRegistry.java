@@ -38,7 +38,6 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SCMPSessionCompositeRegistry.class);
-	/** The timer. Timer instance is responsible to observe large message timeouts. */
 	private ScheduledThreadPoolExecutor largeMessageScheduler;
 
 	public SCMPSessionCompositeRegistry() {
