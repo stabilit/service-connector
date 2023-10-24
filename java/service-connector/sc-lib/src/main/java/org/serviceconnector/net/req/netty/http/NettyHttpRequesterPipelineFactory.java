@@ -58,10 +58,10 @@ public class NettyHttpRequesterPipelineFactory extends ChannelInitializer<Socket
 	/** {@inheritDoc} */
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
-		// logging handler
-		ch.pipeline().addLast("LOGGER", new LoggingHandler());
 		// responsible for observing idle timeout - Netty
 		ch.pipeline().addLast("idleTimeout", new NettyIdleHandler(this.context, 0, 0, this.context.getIdleTimeoutSeconds()));
+		// logging handler
+		ch.pipeline().addLast("LOGGER", new LoggingHandler());		
 		// responsible for decoding responses - Netty
 		ch.pipeline().addLast("decoder", new HttpResponseDecoder());
 		// responsible for aggregate chunks - Netty
