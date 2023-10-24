@@ -22,6 +22,9 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.netty.util.ResourceLeakDetector;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,6 +66,8 @@ public class SystemSuperTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		ResourceLeakDetector.setLevel(io.netty.util.ResourceLeakDetector.Level.PARANOID);
+		System.setProperty("io.netty.leakDetection.targetRecords", String.valueOf(20));
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 		scCtxs = ctrl.startSCEnvironment(scDefs);
@@ -82,6 +87,7 @@ public class SystemSuperTest {
 		}
 		scCtxs = null;
 		testLogger.info("Number of threads=" + Thread.activeCount() + " created=" + (Thread.activeCount() - threadCount));
+		Thread.sleep(500L);
 	}
 
 	@AfterClass
