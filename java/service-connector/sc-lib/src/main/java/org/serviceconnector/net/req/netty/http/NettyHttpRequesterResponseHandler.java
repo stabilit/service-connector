@@ -77,8 +77,7 @@ public class NettyHttpRequesterResponseHandler extends ChannelInboundHandlerAdap
 			ByteBuf content = httpResponse.content();
 			try {				
 				byte[] buffer = new byte[content.readableBytes()];
-				ByteBuf byteBuf = content.readBytes(buffer);
-				ReferenceCountUtil.release(byteBuf);
+				content.readBytes(buffer);
 				Statistics.getInstance().incrementTotalMessages(buffer.length);
 				if (ConnectionLogger.isEnabledFull()) {
 					InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
@@ -99,7 +98,7 @@ public class NettyHttpRequesterResponseHandler extends ChannelInboundHandlerAdap
 					}
 				}
 			} finally {
-				//ReferenceCountUtil.release(content);				
+				ReferenceCountUtil.release(content);				
 			}
 			return;
 		}
