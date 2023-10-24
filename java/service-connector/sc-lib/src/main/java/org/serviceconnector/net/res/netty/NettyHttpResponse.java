@@ -61,13 +61,13 @@ public class NettyHttpResponse extends ResponseAdapter {
 		httpResponse.headers().add(HttpHeaderNames.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		httpResponse.headers().add(HttpHeaderNames.CACHE_CONTROL, HttpHeaderValues.NO_CACHE);
 		httpResponse.headers().add(HttpHeaderNames.PRAGMA, HttpHeaderValues.NO_CACHE);
-		httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		// Write the response.
-		channel.writeAndFlush(httpResponse);
+		httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));		
 		if (ConnectionLogger.isEnabledFull()) {
 			byte[] bytes = ByteBufUtil.getBytes(buffer);
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.remoteAddress()).getHostName(),
 					((InetSocketAddress) this.channel.remoteAddress()).getPort(), bytes, 0, bytes.length);
 		}
+		// Write the response.
+		channel.writeAndFlush(httpResponse);
 	}
 }

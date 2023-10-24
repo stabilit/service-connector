@@ -49,12 +49,12 @@ public class NettyTcpResponse extends ResponseAdapter {
 	@Override
 	public void write() throws Exception {
 		ByteBuf buffer = this.getBuffer();
-		// Write the response.
-		channel.writeAndFlush(buffer);
 		if (ConnectionLogger.isEnabledFull()) {
 			byte[] bytes = ByteBufUtil.getBytes(buffer);
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.remoteAddress()).getHostName(),
 					((InetSocketAddress) this.channel.remoteAddress()).getPort(), bytes, 0, bytes.length);
 		}
+		// Write the response.
+		channel.writeAndFlush(buffer);
 	}
 }

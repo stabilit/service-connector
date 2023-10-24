@@ -97,12 +97,12 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 		int size = baos.size();
 		ByteBuf chBuffer = Unpooled.buffer(size);
 		chBuffer.writeBytes(baos.toByteArray());
-		channel.writeAndFlush(chBuffer);
 		if (ConnectionLogger.isEnabledFull()) {
 			byte[] bytes = ByteBufUtil.getBytes(chBuffer);
-				ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(),
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(),
 							bytes, 0, bytes.length);
-		}		
+		}
+		channel.writeAndFlush(chBuffer);
 	}
 
 	@Override
