@@ -173,7 +173,7 @@ public final class AppContext {
 				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI", Thread.MAX_PRIORITY));
 			}
 			if (AppContext.scWorkerThreadPool == null) {
-				AppContext.scWorkerThreadPool = new NioEventLoopGroup(basicConfiguration.getMaxIOThreads(), new NamedPriorityThreadFactory("SC_WORKER"));
+				AppContext.scWorkerThreadPool = new NioEventLoopGroup(new NamedPriorityThreadFactory("SC_WORKER"));
 			}
 
 			if (AppContext.orderedSCWorkerThreadPool == null) {
