@@ -230,6 +230,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 			if ((i + 1) % 5000 == 0) {
 				testLogger.info("connection nr " + (i + 1) + "...");
 			}
+			Thread.sleep(20l);
 		}
 	}
 
@@ -256,6 +257,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 			if ((i + 1) % 5000 == 0) {
 				testLogger.info("connection nr " + (i + 1) + "...");
 			}
+			Thread.sleep(20l);
 		}
 	}
 }
