@@ -61,6 +61,6 @@ public class NettyIdleHandler extends IdleStateHandler {
 			ConnectionLogger.logKeepAlive(this.getClass().getSimpleName(), connection.getHost(), 0, this.connectionContext.getConnection().getNrOfIdlesInSequence());
 		}
 		IIdleConnectionCallback callback = this.connectionContext.getIdleCallback();
-		AppContext.getSCWorkerThreadPool().execute((callback));
+		AppContext.getOrderedSCWorkerThreadPool().execute((callback));
 	}
 }
