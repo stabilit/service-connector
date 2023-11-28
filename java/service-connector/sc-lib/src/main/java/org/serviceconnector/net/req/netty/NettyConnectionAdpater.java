@@ -20,12 +20,11 @@ import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.util.Timer;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -66,26 +65,21 @@ public abstract class NettyConnectionAdpater implements IConnection {
 	/** The channel. */
 	protected Channel channel;
 	/** The bootstrap. */
-	protected ClientBootstrap bootstrap;
-	/** The channel pipeline factory. */
-	protected ChannelPipelineFactory pipelineFactory;
+	protected Bootstrap bootstrap;
 	/** The idle timeout. */
 	protected int idleTimeout;
-	/** The timer to observe timeouts, static because should be shared. */
-	protected static Timer timer;
 	/**
 	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket. A worker thread performs
 	 * non-blocking read and write on a channel.
 	 */
-	protected static NioClientSocketChannelFactory channelFactory;
+	protected static EventLoopGroup workerGroup;
 
 	/**
 	 * Instantiates a new NETTY connection adapter.
 	 *
-	 * @param channelFactory the channel factory
-	 * @param timer the timer
+	 * @param workerGroup the workerGroup
 	 */
-	public NettyConnectionAdpater(NioClientSocketChannelFactory channelFactory, Timer timer) {
+	public NettyConnectionAdpater(EventLoopGroup workerGroup) {
 		this.port = 0;
 		this.host = null;
 		this.operationListener = null;
@@ -94,10 +88,8 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		this.remotSocketAddress = null;
 		this.channel = null;
 		this.bootstrap = null;
-		this.pipelineFactory = null;
 		this.idleTimeout = 0; // default 0 -> inactive
-		NettyConnectionAdpater.channelFactory = channelFactory;
-		NettyConnectionAdpater.timer = timer;
+		NettyConnectionAdpater.workerGroup = workerGroup;
 	}
 
 	/** {@inheritDoc} */
@@ -158,7 +150,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		if (this.channel == null) {
 			return false;
 		}
-		return this.channel.isConnected();
+		return this.channel.isActive();
 	}
 
 	/** {@inheritDoc} */

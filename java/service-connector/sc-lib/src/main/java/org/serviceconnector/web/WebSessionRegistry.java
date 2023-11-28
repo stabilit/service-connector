@@ -35,7 +35,6 @@ public final class WebSessionRegistry extends Registry<String, WebSession> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebSessionRegistry.class);
 
-	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
 
 	/**

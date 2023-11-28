@@ -22,17 +22,23 @@ import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.jboss.netty.util.Timer;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.ReferenceCountUtil;
+
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
@@ -61,36 +67,31 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	 * Instantiates a new netty http connection.
 	 *
 	 * @param channelFactory the channel factory
-	 * @param timer the timer
 	 */
-	public NettyHttpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
-		super(channelFactory, timer);
+	public NettyHttpConnection(EventLoopGroup workerGroup) {
+		super(workerGroup);
 		this.url = null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void connect() throws Exception {
-		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
-		this.bootstrap.setOption("tcpNoDelay", true);
+		this.bootstrap = new Bootstrap().channel(NioSocketChannel.class).group(workerGroup).option(ChannelOption.CONNECT_TIMEOUT_MILLIS, baseConf.getConnectionTimeoutMillis()).option(ChannelOption.TCP_NODELAY, true).handler(new NettyHttpRequesterPipelineFactory(this.connectionContext));
 		if (baseConf.getTcpKeepAliveInitiator() != null) {
 			// TCP keep alive is configured - set it!
-			this.bootstrap.setOption("keepAlive", baseConf.getTcpKeepAliveInitiator());
+			this.bootstrap.option(ChannelOption.SO_KEEPALIVE, baseConf.getTcpKeepAliveInitiator());
 		}
-		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyConnectionAdpater.timer);
-		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
 		this.remotSocketAddress = new InetSocketAddress(host, port);
-		ChannelFuture future = bootstrap.connect(this.remotSocketAddress);
+		ChannelFuture future = bootstrap.connect(this.remotSocketAddress).sync();
 		this.operationListener = new NettyOperationListener();
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).channel();
 			// complete localSocketAdress
-			this.remotSocketAddress = (InetSocketAddress) this.channel.getRemoteAddress();
-		} catch (CommunicationException ex) {
+			this.remotSocketAddress = (InetSocketAddress) this.channel.remoteAddress();
+		} catch (Exception ex) {
 			LOGGER.error("connect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP=" + this.remotSocketAddress.toString());
 		}
@@ -107,24 +108,23 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
 		url = new URL(Constants.HTTP, host, port, scmp.getHttpUrlFileQualifier());
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
+		ByteBuf channelBuffer = Unpooled.copiedBuffer(buffer);
+		HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath(), channelBuffer);
 		// Http header fields
-		request.headers().add(HttpHeaders.Names.USER_AGENT, System.getProperty("java.runtime.version"));
-		request.headers().add(HttpHeaders.Names.HOST, host);
-		request.headers().add(HttpHeaders.Names.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
-		request.headers().add(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-		request.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		request.headers().add(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
-		request.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		request.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
+		request.headers().add(HttpHeaderNames.USER_AGENT, System.getProperty("java.runtime.version"));
+		request.headers().add(HttpHeaderNames.HOST, host);
+		request.headers().add(HttpHeaderNames.ACCEPT, Constants.HTTP_ACCEPT_PARAMS);
+		request.headers().add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+		request.headers().add(HttpHeaderNames.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		request.headers().add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.length));
+		request.headers().add(HttpHeaderNames.CACHE_CONTROL, HttpHeaderValues.NO_CACHE);
+		request.headers().add(HttpHeaderNames.PRAGMA, HttpHeaderValues.NO_CACHE);
 
-		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
+		NettyHttpRequesterResponseHandler handler = channel.pipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);
 
-		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
-		request.setContent(channelBuffer);
-		channel.write(request);
+		channel.writeAndFlush(request);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.remotSocketAddress.getHostName(), this.remotSocketAddress.getPort(), buffer, 0, buffer.length);
 		}
@@ -134,7 +134,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	@Override
 	public void setQuietDisconnect() throws Exception {
 		// this avoids receiving messages (outstanding replies) in disconnecting procedure
-		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
+		NettyHttpRequesterResponseHandler handler = channel.pipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.connectionDisconnect();
 	}
 }

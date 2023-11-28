@@ -21,8 +21,11 @@ import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.handler.codec.http.HttpRequest;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.util.ReferenceCountUtil;
+
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
@@ -40,7 +43,7 @@ public class NettyHttpRequest extends RequestAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(NettyHttpRequest.class);
 
 	/** The request. */
-	private HttpRequest request;
+	private FullHttpRequest request;
 
 	/**
 	 * Instantiates a new netty http request.
@@ -49,7 +52,7 @@ public class NettyHttpRequest extends RequestAdapter {
 	 * @param localAddress the socket address
 	 * @param remoteAddress the remote address
 	 */
-	public NettyHttpRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+	public NettyHttpRequest(FullHttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		super(localAddress, remoteAddress);
 		this.request = httpRequest;
 	}
@@ -57,17 +60,22 @@ public class NettyHttpRequest extends RequestAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void load() throws Exception {
-		ChannelBuffer channelBuffer = request.getContent();
-		byte[] buffer = new byte[channelBuffer.readableBytes()];
-		channelBuffer.readBytes(buffer);
-		Statistics.getInstance().incrementTotalMessages(buffer.length);
-		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getRemoteSocketAddress().getHostName(), this.getRemoteSocketAddress().getPort(), buffer, 0,
-					buffer.length);
+		ByteBuf byteBuf = request.content();
+		try {			
+			byte[] buffer = new byte[byteBuf.readableBytes()];
+			byteBuf.readBytes(buffer);
+			Statistics.getInstance().incrementTotalMessages(buffer.length);
+			if (ConnectionLogger.isEnabledFull()) {
+				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getRemoteSocketAddress().getHostName(), this.getRemoteSocketAddress().getPort(), buffer, 0,
+						buffer.length);
+			}
+			IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+			SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
+			this.setMessage(message);
+		} finally {
+			ReferenceCountUtil.release(byteBuf);
 		}
-		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
-		this.setMessage(message);
+					
 	}
 }

@@ -44,7 +44,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionRegistry.class);
 
-	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private ScheduledThreadPoolExecutor subscriptionScheduler;
 
 	/**

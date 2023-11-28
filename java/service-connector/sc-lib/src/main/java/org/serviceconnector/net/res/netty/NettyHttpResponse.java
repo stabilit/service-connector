@@ -20,13 +20,16 @@ import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
@@ -52,19 +55,19 @@ public class NettyHttpResponse extends ResponseAdapter {
 	@Override
 	public void write() throws Exception {
 		// Build the response object.
-		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		ChannelBuffer buffer = getBuffer();
-		httpResponse.setContent(buffer);
+		ByteBuf buffer = getBuffer();
+		FullHttpResponse httpResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
 		httpResponse.headers().add("Access-Control-Allow-Origin", "*");
-		httpResponse.headers().add(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
-		httpResponse.headers().add(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
-		httpResponse.headers().add(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
-		httpResponse.headers().set(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
-		// Write the response.
-		channel.write(httpResponse);
+		httpResponse.headers().add(HttpHeaderNames.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		httpResponse.headers().add(HttpHeaderNames.CACHE_CONTROL, HttpHeaderValues.NO_CACHE);
+		httpResponse.headers().add(HttpHeaderNames.PRAGMA, HttpHeaderValues.NO_CACHE);
+		httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));		
 		if (ConnectionLogger.isEnabledFull()) {
-			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.getRemoteAddress()).getHostName(),
-					((InetSocketAddress) this.channel.getRemoteAddress()).getPort(), buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
+			byte[] bytes = ByteBufUtil.getBytes(buffer);
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.channel.remoteAddress()).getHostName(),
+					((InetSocketAddress) this.channel.remoteAddress()).getPort(), bytes, 0, bytes.length);
 		}
+		// Write the response.
+		channel.writeAndFlush(httpResponse);
 	}
 }

@@ -44,7 +44,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRegistry.class);
 
-	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
 
 	/**

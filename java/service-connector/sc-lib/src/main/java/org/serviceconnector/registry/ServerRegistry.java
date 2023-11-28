@@ -40,7 +40,6 @@ public class ServerRegistry extends Registry<String, Server> {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerRegistry.class);
 
-	/** The timer. Timer instance is responsible to observe server timeouts. */
 	private ScheduledThreadPoolExecutor serverScheduler;
 
 	/**
