@@ -128,7 +128,8 @@ USED FOR FINAL SC NODE IN SIMPLE NON-CASCADED CONFIGURATION
   <logger name="ConnectionLogger" additivity="false" level="TRACE">
     <appender-ref ref="connectionLog"/>
   </logger>
-  <logger name="org.jboss" additivity="false" level="DBEUG">
+  <!-- new package name since version 4 is io.netty -->
+  <logger name="io.netty" additivity="false" level="DBEUG">
     <appender-ref ref="NettyLog"/>
   </logger>
   <root level="INFO">
