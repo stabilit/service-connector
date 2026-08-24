@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.EnvironmentConfiguration;
@@ -473,6 +474,13 @@ public class ProcessesController {
 		testLogger.error("Client " + clnProcess.getProcessName() + "stopped.");
 	}
 
+	/**
+	 * Backstop for a client that never terminates. Clients enforce their own, tighter limits (see
+	 * TestPublishClient.waitForMessages), so this only exists to stop one wedged client hanging the
+	 * entire suite. Deliberately generous - it should never fire in a healthy run.
+	 */
+	private static final long CLIENT_TERMINATION_TIMEOUT_SECONDS = 600;
+
 	public void waitForClientTermination(ProcessCtx[] clientCtxs) {
 		for (ProcessCtx processCtx : clientCtxs) {
 			this.waitForClientTermination(processCtx);
@@ -481,11 +489,21 @@ public class ProcessesController {
 
 	public void waitForClientTermination(ProcessCtx clientCtx) {
 		try {
-			clientCtx.getProcess().waitFor();
+			if (clientCtx.getProcess().waitFor(CLIENT_TERMINATION_TIMEOUT_SECONDS, TimeUnit.SECONDS) == false) {
+				clientCtx.getProcess().destroyForcibly();
+				clientCtx.getProcess().waitFor();
+				FileUtility.deleteFile(clientCtx.getPidFileName());
+				// fail loudly - testLogger does not feed the log file checkLogFile inspects, so a
+				// silent return here would let a wedged client pass as a successful test
+				throw new IllegalStateException("Client " + clientCtx.getProcessName() + " did not terminate within "
+						+ CLIENT_TERMINATION_TIMEOUT_SECONDS + " seconds, destroyed it.");
+			}
 			FileUtility.deleteFile(clientCtx.getPidFileName());
 			testLogger.error("Client " + clientCtx.getProcessName() + " stopped.");
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			testLogger.error("Waiting for Client " + clientCtx.getProcessName() + "termination failed.");
 		}
 	}
+	
 }

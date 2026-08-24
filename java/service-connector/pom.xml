@@ -5,7 +5,7 @@
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-parent</artifactId>
 
-	<version>5.0.0.RELEASE</version>
+	<version>5.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SC Parent POM</name>
 
@@ -38,6 +38,11 @@
 		<skipTests>false</skipTests>
 		<maven.test.skip>${skipTests}</maven.test.skip>
 		<include>**/*Test.java</include>
+		<!-- Overridable on the command line to skip parts of the suite, e.g.
+		     mvn test -pl sc-test -Dexclude="**/casc1/**,**/casc2/**"
+		     which drops the 28 cascaded classes and roughly halves the runtime.
+		     The default deliberately matches nothing. -->
+		<exclude>**/nothing-to-exclude/**</exclude>
 
 
 		<junit.version>4.8.1</junit.version>
@@ -176,6 +181,9 @@
 						<includes>
 							<include>${include}</include>
 						</includes>
+						<excludes>
+							<exclude>${exclude}</exclude>
+						</excludes>
 						<useSystemClassloader>true</useSystemClassloader>
 						<runOrder>alphabetical</runOrder>
 					</configuration>

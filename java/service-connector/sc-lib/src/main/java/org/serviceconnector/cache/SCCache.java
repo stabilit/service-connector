@@ -825,11 +825,13 @@ public class SCCache {
 		// dump cache
 		writer.writeStartElement("cache");
 		writer.writeAttribute("enabled", this.isCacheEnabled());
-		writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
-		writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
-		writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());
-		writer.writeAttribute("inMemorySize", this.getInMemorySize());
-		writer.writeAttribute("offHeapSize", this.getOffHeapSize());
+		if(this.isCacheEnabled()) {
+			writer.writeAttribute("diskPath", this.getCacheConfiguration().getDiskPath());
+			writer.writeAttribute("maxElementsInMemory", this.getCacheConfiguration().getMaxElementsInMemory());
+			writer.writeAttribute("maxElementsOnDisk", this.getCacheConfiguration().getMaxElementsOnDisk());		
+			writer.writeAttribute("inMemorySize", this.getInMemorySize());
+			writer.writeAttribute("offHeapSize", this.getOffHeapSize());
+		}
 		writer.writeEndElement(); // end of cache
 	}
 }

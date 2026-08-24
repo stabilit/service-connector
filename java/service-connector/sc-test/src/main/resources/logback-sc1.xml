@@ -118,7 +118,8 @@ USED FOR 1-ST LEVEL CASCADED SC NODE IN CASCADED CONFIGURATION
   <logger name="ConnectionLogger" additivity="false" level="TRACE">
     <appender-ref ref="connectionLog"/>
   </logger>
-  <logger name="org.jboss" additivity="false" level="OFF">
+  <!-- new package name since version 4 is io.netty -->
+  <logger name="io.netty" additivity="false" level="OFF">
   </logger>
   <root level="DEBUG">
     <appender-ref ref="generalLog"/>
