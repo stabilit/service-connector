@@ -88,8 +88,8 @@ public class TestPublishClient extends TestAbstractClient {
 	}
 
 	public void p_unsubscribeAfter10000() throws Exception {
-		// 10000 message or 1500 seconds
-		this.waitForMessages(10000, 1500000);
+		// 10000 message or 300 seconds
+		this.waitForMessages(10000, 300000);
 		service.unsubscribe();
 	}
 
