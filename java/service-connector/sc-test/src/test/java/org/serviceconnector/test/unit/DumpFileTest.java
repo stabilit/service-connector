@@ -26,6 +26,8 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.server.ServerLoader;
+import org.serviceconnector.service.ServiceLoader;
 
 import junit.framework.Assert;
 
@@ -47,8 +49,21 @@ public class DumpFileTest {
 	 */
 	@Test
 	public void t01_dumpFile() throws Exception {
+		AppContext.setSCEnvironment(true);
 		AppContext.initConfiguration(TestConstants.SC0Properties);
 		AppContext.getBasicConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getSCCacheConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig(), AppContext.getRequesterConfiguration());
+		AppContext.getServiceConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.initAfterConfigurationLoad();
+		// load servers
+		ServerLoader.load(AppContext.getRequesterConfiguration());
+		// load services
+		ServiceLoader.load(AppContext.getServiceConfiguration());
+		// load cache configuration in cache after service are loaded
+		AppContext.getSCCache().load(AppContext.getSCCacheConfiguration());
+		
 		String dumpPathString = AppContext.getBasicConfiguration().getDumpPath();
 		// delete directory
 		File dumpPath = new File(dumpPathString);
