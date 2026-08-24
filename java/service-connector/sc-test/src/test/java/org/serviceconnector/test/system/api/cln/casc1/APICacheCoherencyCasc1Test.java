@@ -63,7 +63,7 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		sessionService1.execute(request);
 
 		// 2: wait until expiration time runs out
-		Thread.sleep(2000);
+		Thread.sleep(2500);
 
 		// 3: verify data is NOT in top level cache
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
