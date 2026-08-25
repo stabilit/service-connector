@@ -28,7 +28,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 
@@ -64,7 +65,7 @@ public class NettyTcpProxyResponderRequestHandler extends ChannelInboundHandlerA
 	public NettyTcpProxyResponderRequestHandler(String remoteHost, int remotePort) {
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
-		this.workerGroup =  new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+		this.workerGroup =  new MultiThreadIoEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads(), NioIoHandler.newFactory());
 	}
 
 	/** {@inheritDoc} */

@@ -20,7 +20,8 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -73,8 +74,8 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter {
 		this.remotePort = remoteNodeConfig.getPort();
 		try {
 			// limit threads to maxIOThreads
-			this.bossGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
-			this.workerGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+			this.bossGroup = new MultiThreadIoEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads(), NioIoHandler.newFactory());
+			this.workerGroup = new MultiThreadIoEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads(), NioIoHandler.newFactory());
 		} catch (Exception e) {
 			LOGGER.error("setResponder", e);
 		}
