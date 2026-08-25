@@ -116,6 +116,12 @@
 			<artifactId>sc-console</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<!-- ResourceLeakDetector is used directly by IntegrationSuperTest and SystemSuperTest -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-common</artifactId>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 </project>
