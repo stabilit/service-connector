@@ -59,7 +59,8 @@ import org.serviceconnector.util.XMLDumpWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.internal.logging.InternalLoggerFactory;
@@ -173,7 +174,7 @@ public final class AppContext {
 				AppContext.eci_cri_Scheduler = new ScheduledThreadPoolExecutor(1, new NamedPriorityThreadFactory("ECI_CRI", Thread.MAX_PRIORITY));
 			}
 			if (AppContext.scWorkerThreadPool == null) {
-				AppContext.scWorkerThreadPool = new NioEventLoopGroup(new NamedPriorityThreadFactory("SC_WORKER"));
+				AppContext.scWorkerThreadPool = new MultiThreadIoEventLoopGroup(new NamedPriorityThreadFactory("SC_WORKER"), NioIoHandler.newFactory());
 			}
 
 			if (AppContext.orderedSCWorkerThreadPool == null) {

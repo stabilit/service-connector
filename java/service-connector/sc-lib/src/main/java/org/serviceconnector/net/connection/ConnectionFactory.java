@@ -18,7 +18,8 @@ package org.serviceconnector.net.connection;
 
 import java.security.InvalidParameterException;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
@@ -85,10 +86,10 @@ public class ConnectionFactory {
 	 */
 	public static void init() {
 		if (ConnectionFactory.bossGroup == null) {
-			ConnectionFactory.bossGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+			ConnectionFactory.bossGroup = new MultiThreadIoEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads(), NioIoHandler.newFactory());
 		}
 		if (ConnectionFactory.workerGroup == null) {
-			ConnectionFactory.workerGroup = new NioEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads());
+			ConnectionFactory.workerGroup = new MultiThreadIoEventLoopGroup(AppContext.getBasicConfiguration().getMaxIOThreads(), NioIoHandler.newFactory());
 		}
 	}
 }
