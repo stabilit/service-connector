@@ -128,8 +128,21 @@ USED FOR FINAL SC NODE IN SIMPLE NON-CASCADED CONFIGURATION
   <logger name="ConnectionLogger" additivity="false" level="TRACE">
     <appender-ref ref="connectionLog"/>
   </logger>
-  <!-- new package name since version 4 is io.netty -->
-  <logger name="io.netty" additivity="false" level="DBEUG">
+  <!-- netty (package name since version 4 is io.netty):
+   ERROR level keeps buffer leak reports visible, see the ResourceLeakDetector logger below
+   DEBUG level additionally lets LoggingHandler hex-dump every message - that produces several GB
+   of netty.log per test run, so switch it on only for targeted debugging
+   -->
+  <logger name="io.netty" additivity="false" level="ERROR">
+    <appender-ref ref="NettyLog"/>
+  </logger>
+  <!-- resource leaks:
+   ERROR level for the leak reports themselves - ResourceLeakDetector only tracks buffers while
+   its logger is enabled at ERROR (needReport() asks logger.isErrorEnabled()), so never set this
+   logger to OFF or WARN, that silently disables leak detection altogether
+   DEBUG level additionally logs the effective -Dio.netty.leakDetection.level once at startup
+   -->
+  <logger name="io.netty.util.ResourceLeakDetector" additivity="false" level="DEBUG">
     <appender-ref ref="NettyLog"/>
   </logger>
   <root level="DEBUG">
