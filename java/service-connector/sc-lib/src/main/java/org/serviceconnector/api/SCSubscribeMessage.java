@@ -74,7 +74,7 @@ public class SCSubscribeMessage extends SCMessage {
 	/**
 	 * Sets the mask.
 	 *
-	 * @param mask Any printable character, length > 0 and < 256 Byte<br />
+	 * @param mask Any printable character, length > 0 and &lt; 256 Byte<br />
 	 *        Client may not subscribe with mask containing "%" character.<br />
 	 *        Example: "000012100012832102FADF-----------X-----------"
 	 */
@@ -94,7 +94,7 @@ public class SCSubscribeMessage extends SCMessage {
 	/**
 	 * Sets the actual mask.
 	 *
-	 * @param actualMask Validation: Any printable character, length < 256Byte.<br />
+	 * @param actualMask Validation: Any printable character, length &lt; 256Byte.<br />
 	 *        Example: "000012100012832102FADF-----------X-----------"
 	 */
 	public void setActualMask(String actualMask) {
@@ -114,7 +114,7 @@ public class SCSubscribeMessage extends SCMessage {
 	/**
 	 * Sets the no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag set.
 	 *
-	 * @param noDataIntervalSeconds Validation: Number > 0 and < 3600<br />
+	 * @param noDataIntervalSeconds Validation: Number > 0 and &lt; 3600<br />
 	 *        Example: 60
 	 */
 	public void setNoDataIntervalSeconds(Integer noDataIntervalSeconds) {

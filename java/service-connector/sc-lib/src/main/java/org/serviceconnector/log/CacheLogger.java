@@ -223,7 +223,6 @@ public final class CacheLogger {
 	 *
 	 * @param cacheId the cache identifier
 	 * @param cacheGuardian the cache guardian
-	 * @param nrOfAppendix the number of appendix
 	 * @param appendixNr the appendix number
 	 * @param partNr the part number
 	 */

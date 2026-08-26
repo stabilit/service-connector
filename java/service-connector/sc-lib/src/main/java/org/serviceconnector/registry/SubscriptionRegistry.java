@@ -213,7 +213,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	/**
 	 * Cancel subscription timeout.
 	 *
-	 * @param key the key
+	 * @param subscription the subscription
+	 * @param newTimeoutMillis the new timeout in milliseconds
 	 */
 	public void resetSubscriptionTimeout(Subscription subscription, double newTimeoutMillis) {
 		synchronized (subscription) {

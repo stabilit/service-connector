@@ -66,7 +66,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	/**
 	 * Instantiates a new netty http connection.
 	 *
-	 * @param channelFactory the channel factory
+	 * @param workerGroup the worker group
 	 */
 	public NettyHttpConnection(EventLoopGroup workerGroup) {
 		super(workerGroup);

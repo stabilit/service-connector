@@ -244,7 +244,7 @@ public class ProcessesController {
 	 * @param logbackXml (file name)
 	 * @param serverName
 	 * @param listenerPort
-	 * @param SCport
+	 * @param scPort
 	 * @param maxSessions
 	 * @param maxConnections
 	 * @param serviceNames (comma delimited list)
@@ -264,7 +264,7 @@ public class ProcessesController {
 	 * @param logbackSrvXml (file name)
 	 * @param serverName
 	 * @param listenerPort
-	 * @param SCport
+	 * @param scPort
 	 * @param maxSessions
 	 * @param maxConnections
 	 * @param connectionType

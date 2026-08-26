@@ -36,7 +36,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCConsole {
 
 	/**
-	 * @param args usage : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>"); java -jar
+	 * @param args usage : {@code java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>}"); java -jar
 	 *        sc-console.jar -h localhost -p 7000 enable?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc java -jar sc-console.jar -h localhost
 	 *        -p 7000 state?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 sessions?serviceName=abc java -jar sc-console.jar -h localhost -p 7000 clearCache java
 	 *        -jar sc-console.jar -h localhost -p 7000 dump java -jar sc-console.jar -h localhost -p 7000 kill java -jar sc-console.jar -h localhost -p 7000 scVersion java -jar

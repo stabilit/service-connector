@@ -80,7 +80,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * <br />
  * Required parameters in web.xml, example for service "session-1":<br />
  *
- * <pre>
+ * <pre>{@code
  *	<context-param>
  *		<param-name>scPort</param-name>
  *		<param-value>7000</param-value>
@@ -130,7 +130,7 @@ import org.serviceconnector.util.ValidatorUtility;
  *		<servlet-name>DemoSCSessionServlet</servlet-name>
  *		<url-pattern>/DemoSCSessionServlet</url-pattern>
  *	</servlet-mapping>
- * </pre>
+ * }</pre>
  */
 public abstract class SCBaseServlet extends HttpServlet {
 

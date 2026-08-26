@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * <br />
  * State Diagram<br />
  *
- * <pre>
+ * <pre>{@code
  *        ||                                                        |-----receive publication-------|
  *        \/                                                        |                               |
  *    |---------|              |----------|                   |---------------|                     |
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *    |---------|              |----------|                   |---------------|<--------------------|
  *        ||
  *        \/
- * </pre>
+ * }</pre>
  *
  * After subscribing the service an unsubscribe must follow in every case at the end of communication. Unsubscribe may be called multiple times. Nothing happens if the subscription
  * turns inactive in meantime.
@@ -364,7 +364,7 @@ public class SCPublishService extends SCService {
 	 * as dead.
 	 *
 	 * @param receivePublicationTimeoutSeconds time to wait for completion of a receive publication request Example: 10
-	 * @throws SCMPValidatorException receivePublicationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCMPValidatorException receivePublicationTimeoutSeconds > 1 and &lt; 3600<br />
 	 * @throws SCServiceException called method after subscribe
 	 */
 	public void setReceivePublicationTimeoutSeconds(int receivePublicationTimeoutSeconds) throws SCMPValidatorException, SCServiceException {

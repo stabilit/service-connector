@@ -68,7 +68,7 @@ public class PublishMessageQueue<E> {
 	}
 
 	/**
-	 * Iterator<LinkedNode<E>>.
+	 * {@code Iterator<LinkedNode<E>>}.
 	 *
 	 * @return the iterator
 	 */

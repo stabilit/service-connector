@@ -62,7 +62,6 @@ public final class WebContext {
 	/**
 	 * Gets the web command.
 	 *
-	 * @param webRequest the web request
 	 * @return the web command
 	 */
 	public static WebCommand getWebCommand() {
