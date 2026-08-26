@@ -20,6 +20,10 @@
 	</properties>
 
 	<build>
+		<!-- TestConstants.serverRunable/clientRunable launch this jar by name. jar 3.x no
+		     longer lets an execution override finalName, so it is set for the whole module;
+		     the installed artifact is still sc-test-<version>.jar. -->
+		<finalName>test-client-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -35,22 +39,28 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>org.serviceconnector.TestMainClass</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 				<executions>
 					<execution>
+						<!-- The system tests spawn this jar as an OS process during the test
+						     phase, i.e. before package, so it has to be built early. attach=false
+						     keeps it from taking the place of the module artifact - without it
+						     jar 3.x aborts the later default-jar with "You have to use a
+						     classifier to attach supplemental artifacts". -->
 						<id>create-test-client-server</id>
 						<phase>generate-test-resources</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
 						<configuration>
-							<finalName>test-client-server</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-							<archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
-									<mainClass>org.serviceconnector.TestMainClass</mainClass>
-								</manifest>
-							</archive>
+							<attach>false</attach>
 						</configuration>
 					</execution>
 				</executions>
