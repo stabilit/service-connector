@@ -155,10 +155,12 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.12.0</version>
 					<configuration>
-						<!-- doclint would fail the build: the sources still have ~40 missing @param
-						     and "no comment" errors in sc-lib alone. The remaining warnings about
-						     malformed HTML are reported regardless of this setting. -->
-						<doclint>none</doclint>
+						<!-- Check html, syntax, reference and accessibility, but not "missing":
+						     documenting every member would mean writing ~400 comments, most of them
+						     on trivial getters and test constants. The other groups are clean and
+						     stay that way - a swallowed <pre> block or an @param naming a parameter
+						     that does not exist now fails the build. sc-test overrides this. -->
+						<doclint>all,-missing</doclint>
 						<!-- Do not probe the other reactor modules for a package-list. JDK 9+ javadoc
 						     writes element-list instead, and the probe only produced noise. -->
 						<detectOfflineLinks>false</detectOfflineLinks>

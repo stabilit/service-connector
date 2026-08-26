@@ -351,7 +351,7 @@ public class SCServer {
 	 * @throws SCMPValidatorException scPort Number > 1 and &lt; 65535<br />
 	 *         listenerPort Number > 1 and &lt; 65535<br />
 	 *         SC port and listener port are the same<br />
-	 *         bind to interface failed<be>
+	 *         bind to interface failed<br />
 	 */
 	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
 		if (this.listening == true) {

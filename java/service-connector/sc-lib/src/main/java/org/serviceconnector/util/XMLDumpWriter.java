@@ -139,7 +139,7 @@ public class XMLDumpWriter {
 	 *
 	 * @param name the name
 	 * @param value the double value
-	 * @throws Exception the exception
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeElement(String name, double value) throws XMLStreamException {
 		writer.writeStartElement(name);
@@ -215,7 +215,7 @@ public class XMLDumpWriter {
 	 *
 	 * @param attributeName the name of the attribute
 	 * @param value the attribute value
-	 * @throws Exception the exception
+	 * @throws XMLStreamException the xML stream exception
 	 */
 	public void writeAttribute(String attributeName, double value) throws XMLStreamException {
 		writer.writeAttribute(attributeName, String.valueOf(value));

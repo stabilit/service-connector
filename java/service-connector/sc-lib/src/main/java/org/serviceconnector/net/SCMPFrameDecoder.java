@@ -37,7 +37,7 @@ public class SCMPFrameDecoder {
 	 *
 	 * @param buffer the buffer to parse
 	 * @return the frame size
-	 * @throws Exception the exception
+	 * @throws FrameDecoderException the frame decoder exception
 	 */
 	public static int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 		try {
