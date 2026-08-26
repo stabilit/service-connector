@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * <br />
  * State Diagram<br />
  *
- * <pre>
+ * <pre>{@code
  *        ||
  *        \/
  *    |---------|              |----------|
@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  *    |---------|              |----------|
  *        ||
  *        \/
- * </pre>
+ * }</pre>
  *
  * Never forget at the end of a communication to detach the client of the SC. Even in case of an error the detach must be done! Like closing a file or a stream. The detach
  * operation does detach client from SC and releases local resources (connections, timers, threads) if not used by another client.
@@ -556,7 +556,6 @@ public class SCClient {
 	/**
 	 * Gets the configuration of a service with default operation timeout. Use only specific service names - passing regex patterns for service name is not allowed.
 	 *
-	 * @param operationTimeout the allowed time in seconds to complete the operation
 	 * @param serviceName the service name
 	 * @return the service configuration
 	 * @throws SCServiceException client not attached<br />
@@ -773,7 +772,7 @@ public class SCClient {
 	 * Sets the keep alive timeout in seconds. Time in seconds a keep alive request waits to be confirmed. If no confirmation is received single connection gets closed.
 	 *
 	 * @param keepAliveTimeoutSeconds time to wait for completion of a keep alive request Example: 10
-	 * @throws SCMPValidatorException keepAliveTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCMPValidatorException keepAliveTimeoutSeconds > 1 and &lt; 3600<br />
 	 * @throws SCServiceException called method after attach
 	 */
 	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException, SCServiceException {

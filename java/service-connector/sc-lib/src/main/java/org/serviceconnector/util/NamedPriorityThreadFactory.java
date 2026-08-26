@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A {@link ThreadFactory} that sets names and priority to the threads created by this factory. Threads created by this factory will take names in the form of the string
- * <code>namePrefix + " thread-" + threadNum</code> where <tt>threadNum</tt> is the count of threads created by this type of factory.
+ * <code>namePrefix + " thread-" + threadNum</code> where {@code threadNum} is the count of threads created by this type of factory.
  */
 public class NamedPriorityThreadFactory implements ThreadFactory {
 

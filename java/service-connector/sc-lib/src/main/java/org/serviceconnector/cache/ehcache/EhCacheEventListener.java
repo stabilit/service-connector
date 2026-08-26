@@ -33,10 +33,8 @@ import net.sf.ehcache.event.CacheEventListener;
 
 /**
  * The listener interface for receiving ehCacheEvent events. The class that is interested in processing a ehCacheEvent event implements this interface, and the object created with
- * that class is registered with a component using the component's <code>addEhCacheEventListener<code> method. When the ehCacheEvent event occurs, that object's appropriate method
+ * that class is registered with a component using the component's <code>addEhCacheEventListener</code> method. When the ehCacheEvent event occurs, that object's appropriate method
  * is invoked.
- *
- * @see EhCacheEventEvent
  */
 public class EhCacheEventListener implements CacheEventListener {
 

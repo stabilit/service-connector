@@ -42,7 +42,7 @@ public class NettyTcpRequest extends RequestAdapter {
 	/**
 	 * Instantiates a new netty tcp request.
 	 *
-	 * @param event the event from Netty framework
+	 * @param buffer the message buffer received from the Netty framework
 	 * @param localAddress the local address
 	 * @param remoteAddress the remote address
 	 */

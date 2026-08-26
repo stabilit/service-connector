@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * <br />
  * State Diagram<br />
  *
- * <pre>
+ * <pre>{@code
  *        ||                                                            |-------execute-------|
  *        \/                                                            |                     |
  *    |---------|              |----------|                      |--------------|             |
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  *    |---------|              |----------|                      |--------------|<------------|
  *        ||
  *        \/
- * </pre>
+ * }</pre>
  *
  * After creating a session a delete session must be done in every case at the end of communication. A delete session may be called multiple times. Nothing happens if the session
  * turns inactive in meantime.
@@ -527,7 +527,7 @@ public class SCSessionService extends SCService {
 	 * Sets the echo timeout in seconds. Time in seconds the an echo request waits to be confirmed. If no confirmation is received session is marked as dead.
 	 *
 	 * @param echoTimeoutSeconds time to wait for completion of an echo request Example: 10
-	 * @throws SCMPValidatorException echoTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCMPValidatorException echoTimeoutSeconds > 1 and &lt; 3600<br />
 	 */
 	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) throws SCMPValidatorException {
 		// validate in this case its a local needed information
@@ -547,7 +547,7 @@ public class SCSessionService extends SCService {
 	/**
 	 * Sets the echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message is sent only when no message is pending.
 	 *
-	 * @param echoIntervalSeconds Validation: echoIntervalSeconds > 1 and < 3600<br />
+	 * @param echoIntervalSeconds Validation: echoIntervalSeconds > 1 and &lt; 3600<br />
 	 *        Example: 360
 	 */
 	public void setEchoIntervalSeconds(int echoIntervalSeconds) {

@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class URLString supports the following format: key1=value1&key2=value2&... All keys and values url encoded (see {@link java.net.URLEncoder}) using default encoding The parse
+ * The Class URLString supports the following format: {@code key1=value1&key2=value2&...} All keys and values url encoded (see {@link java.net.URLEncoder}) using default encoding The parse
  * Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using default encoding This class is not synchronized.
  */
 public class URLString {
@@ -170,7 +170,7 @@ public class URLString {
 	}
 
 	/**
-	 * return url encoded string callKey=parameter1&parameter2&parameter3&...
+	 * return url encoded string {@code callKey=parameter1&parameter2&parameter3&...}
 	 *
 	 * @return the string
 	 */

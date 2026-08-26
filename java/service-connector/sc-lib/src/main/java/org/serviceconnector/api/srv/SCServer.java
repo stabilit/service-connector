@@ -222,7 +222,7 @@ public class SCServer {
 	 * Sets the keep alive timeout in seconds. Time in seconds a keep alive request waits to be confirmed. If no confirmation is received single connection gets closed.
 	 *
 	 * @param keepAliveTimeoutSeconds time to wait for completion of a keep alive request Example: 10
-	 * @throws SCMPValidatorException keepAliveTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCMPValidatorException keepAliveTimeoutSeconds > 1 and &lt; 3600<br />
 	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setKeepAliveTimeoutSeconds(int keepAliveTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
@@ -296,7 +296,7 @@ public class SCServer {
 	 * service is dead.
 	 *
 	 * @param checkRegistrationTimeoutSeconds time to wait for completion of a check registration request Example: 10
-	 * @throws SCMPValidatorException checkRegistrationTimeoutSeconds > 1 and < 3600<br />
+	 * @throws SCMPValidatorException checkRegistrationTimeoutSeconds > 1 and &lt; 3600<br />
 	 * @throws SCServiceException listener is already started<br />
 	 */
 	public void setCheckRegistrationTimeoutSeconds(int checkRegistrationTimeoutSeconds) throws SCMPValidatorException, SCServiceException {
@@ -348,10 +348,10 @@ public class SCServer {
 	 *         SC host not set<br />
 	 *         ConnectionType not set<br />
 	 *         starting listener fails<br />
-	 * @throws SCMPValidatorException scPort Number > 1 and < 65535<br />
-	 *         listenerPort Number > 1 and < 65535<br />
+	 * @throws SCMPValidatorException scPort Number > 1 and &lt; 65535<br />
+	 *         listenerPort Number > 1 and &lt; 65535<br />
 	 *         SC port and listener port are the same<br />
-	 *         bind to interface failed<be>
+	 *         bind to interface failed<br />
 	 */
 	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
 		if (this.listening == true) {

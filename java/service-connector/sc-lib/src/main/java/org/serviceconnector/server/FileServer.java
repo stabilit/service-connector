@@ -192,7 +192,7 @@ public class FileServer extends Server {
 	 *
 	 * @param path the path
 	 * @param listScriptName the list script name
-	 * @param serviceName the service name
+	 * @param reqMessage the request message
 	 * @param timeoutSeconds the timeout seconds
 	 * @return the SCMP message
 	 * @throws Exception the exception

@@ -69,7 +69,7 @@ public class SCFileService extends SCService {
 	/**
 	 * Sets the echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message is sent only when no message is pending.
 	 *
-	 * @param echoIntervalSeconds Validation: echoIntervalSeconds > 1 and < 3600<br />
+	 * @param echoIntervalSeconds Validation: echoIntervalSeconds > 1 and &lt; 3600<br />
 	 *        Example: 360
 	 */
 	public void setEchoIntervalSeconds(int echoIntervalSeconds) {

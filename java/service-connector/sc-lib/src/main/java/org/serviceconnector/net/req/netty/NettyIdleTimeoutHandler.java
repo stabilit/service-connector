@@ -36,11 +36,10 @@ public class NettyIdleTimeoutHandler extends IdleStateHandler {
 	/**
 	 * Instantiates a new NETTY idle timeout handler.
 	 *
-	 * @param timer the timer
 	 * @param readerIdleTime the reader idle time
 	 * @param writerIdleTime the writer idle time
 	 * @param allIdleTime the all idle time
-	 * @param unit the unit
+	 * @param unit the time unit of the idle times
 	 */
 	public NettyIdleTimeoutHandler(long readerIdleTime, long writerIdleTime, long allIdleTime, TimeUnit unit) {
 		super(readerIdleTime, writerIdleTime, allIdleTime, unit);
