@@ -22,7 +22,9 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -47,6 +49,7 @@ import junit.framework.Assert;
 /**
  * @author JTraber
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;

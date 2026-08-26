@@ -21,7 +21,9 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -44,6 +46,7 @@ import junit.framework.Assert;
 /**
  * The Class ClnCreateSessionTestCase.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;

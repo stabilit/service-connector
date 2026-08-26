@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
@@ -28,6 +30,7 @@ import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTest {
 
 	public APIMultipleClientChangeSubscriptionCasc1Test() {

@@ -19,13 +19,16 @@ package org.serviceconnector.test.perf.api.cln;
 import java.util.Arrays;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
 @SuppressWarnings("unused")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APISessionBenchmark extends APIPerfSuperClientTest {
 
 	/**

@@ -22,7 +22,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -36,6 +38,7 @@ import org.serviceconnector.net.req.Requester;
 
 import junit.framework.Assert;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultipleNICTest extends IntegrationSuperTest {
 
 	@Override

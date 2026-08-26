@@ -17,7 +17,9 @@
 package org.serviceconnector.test.perf.api.srv;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
@@ -25,6 +27,7 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.perf.api.APIPerfSuperServerTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIPublishBenchmark extends APIPerfSuperServerTest {
 
 	/**

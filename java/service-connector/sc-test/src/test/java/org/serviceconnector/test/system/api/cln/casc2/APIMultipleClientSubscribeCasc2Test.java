@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.api.cln.casc2;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
@@ -24,6 +26,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIMultipleClientSubscribeCasc2Test extends APIMultipleClientSubscribeCasc1Test {
 
 	public APIMultipleClientSubscribeCasc2Test() {

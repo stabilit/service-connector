@@ -22,7 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
@@ -35,6 +37,7 @@ import org.serviceconnector.scmp.SCMPVersion;
 /**
  * The Class LargeMessageEncoderDecoderTest.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 
 	/** The coder factory. */

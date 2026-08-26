@@ -17,7 +17,9 @@
 package org.serviceconnector.test.system.scmp;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -35,6 +37,7 @@ import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc
 
 import junit.framework.Assert;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc1Test {
 
 	public SCMPClnChangeSubscriptionTest() {

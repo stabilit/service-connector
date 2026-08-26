@@ -18,7 +18,9 @@ package org.serviceconnector.test.integration.scmp;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -37,6 +39,7 @@ import org.serviceconnector.test.integration.IntegrationSuperTest;
 
 import junit.framework.Assert;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPManageTest extends IntegrationSuperTest {
 
 	private SCRequester requester;

@@ -21,7 +21,9 @@ import java.security.Permission;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -33,6 +35,7 @@ import org.serviceconnector.test.integration.IntegrationSuperTest;
 /**
  * The Class SCConsoleTest.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**

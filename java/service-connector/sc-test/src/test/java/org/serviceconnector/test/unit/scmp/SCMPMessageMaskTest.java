@@ -17,7 +17,9 @@
 package org.serviceconnector.test.unit.scmp;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -25,6 +27,7 @@ import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.SubscriptionMask;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPMessageMaskTest {
 
 	/**

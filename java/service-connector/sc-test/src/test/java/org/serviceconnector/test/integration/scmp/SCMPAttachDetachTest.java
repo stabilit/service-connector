@@ -20,8 +20,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.After;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.TestCallback;
@@ -42,6 +44,7 @@ import org.serviceconnector.util.ValidatorUtility;
 import junit.framework.Assert;
 
 @RunWith(Parameterized.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPAttachDetachTest extends IntegrationSuperTest {
 
 	private int port;

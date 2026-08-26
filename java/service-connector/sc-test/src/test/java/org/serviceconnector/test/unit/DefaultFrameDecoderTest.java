@@ -17,7 +17,9 @@
 package org.serviceconnector.test.unit;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.net.FrameDecoderException;
 import org.serviceconnector.net.SCMPFrameDecoder;
 
@@ -26,6 +28,7 @@ import org.serviceconnector.net.SCMPFrameDecoder;
  *
  * @author JTraber
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DefaultFrameDecoderTest extends SuperUnitTest {
 
 	/**

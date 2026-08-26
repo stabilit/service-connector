@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -33,6 +35,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.DateTimeUtility;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SendTest extends IntegrationSuperTest {
 
 	/**

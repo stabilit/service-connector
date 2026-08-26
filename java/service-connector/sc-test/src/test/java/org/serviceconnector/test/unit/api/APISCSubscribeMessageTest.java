@@ -21,12 +21,15 @@ import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APISCSubscribeMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */

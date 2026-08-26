@@ -17,7 +17,9 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -30,6 +32,7 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 @SuppressWarnings("unused")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {

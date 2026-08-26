@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.scmp;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -32,6 +34,7 @@ import junit.framework.Assert;
  *
  * @author JTraber
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPLargeResponseTest {
 
 	/**

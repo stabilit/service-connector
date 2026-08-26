@@ -17,12 +17,15 @@
 package org.serviceconnector.test.perf.api.cln;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIAttachBenchmark extends APIPerfSuperClientTest {
 
 	/**

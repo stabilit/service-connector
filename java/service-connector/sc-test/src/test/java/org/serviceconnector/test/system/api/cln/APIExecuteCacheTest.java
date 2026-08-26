@@ -17,12 +17,15 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIExecuteCacheTest extends APIExecuteCacheCasc1Test {
 
 	public APIExecuteCacheTest() {
