@@ -25,13 +25,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
-					<!-- switch on dependency-driven aggregation -->
-					<includeDependencySources>true</includeDependencySources>
-
-					<dependencySourceIncludes>
-						<dependency-source>org.serviceconnector.*</dependency-source>
-					</dependencySourceIncludes>
-
+					<!-- the test client classes are not part of the documented API -->
 					<excludePackageNames>org.serviceconnector.cln</excludePackageNames>
 				</configuration>
 			</plugin>
