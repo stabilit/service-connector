@@ -100,8 +100,8 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3", "700/0/0=0&700/1/0=0&700/2/0=0&700/3/0=0&", TestConstants.cacheGuardian1);
 
-		// 5: wait until expiration time runs out
-		Thread.sleep(3000);
+		// 5: wait until expiration time runs out - initial data is cached for 4 seconds
+		Thread.sleep(5000);
 
 		// 6: verify data is NOT in top level cache
 		inspectResponse = mgmtClient.inspectCache("700");
