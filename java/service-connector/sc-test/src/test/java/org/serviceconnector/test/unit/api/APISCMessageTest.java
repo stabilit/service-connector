@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
@@ -33,6 +35,7 @@ import junit.framework.Assert;
 /**
  * @author FJurnecka
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APISCMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */

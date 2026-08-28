@@ -21,13 +21,16 @@ import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APINewServerTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */

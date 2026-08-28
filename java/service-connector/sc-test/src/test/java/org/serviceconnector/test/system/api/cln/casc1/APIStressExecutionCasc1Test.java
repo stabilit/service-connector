@@ -17,13 +17,16 @@
 package org.serviceconnector.test.system.api.cln.casc1;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
 	public APIStressExecutionCasc1Test() {

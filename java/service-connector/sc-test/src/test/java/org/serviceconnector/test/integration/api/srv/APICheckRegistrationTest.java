@@ -19,7 +19,9 @@ package org.serviceconnector.test.integration.api.srv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
@@ -27,6 +29,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */

@@ -24,7 +24,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.cln.SCFileService;
@@ -32,6 +34,7 @@ import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.FileUtility;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 
 	public APIFileServiceCasc1() {

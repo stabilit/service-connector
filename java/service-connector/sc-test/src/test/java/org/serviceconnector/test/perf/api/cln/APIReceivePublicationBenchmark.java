@@ -17,12 +17,15 @@
 package org.serviceconnector.test.perf.api.cln;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
 @SuppressWarnings("unused")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 
 	long start = 0;

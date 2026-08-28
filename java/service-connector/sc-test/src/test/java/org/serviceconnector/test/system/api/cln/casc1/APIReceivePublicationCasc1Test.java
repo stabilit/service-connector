@@ -20,13 +20,16 @@ import java.util.concurrent.TimeoutException;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientTest {
 
 	public APIReceivePublicationCasc1Test() {

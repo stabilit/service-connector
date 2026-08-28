@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.cmd.SCMPValidatorException;
 
@@ -25,6 +27,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
  *
  * @author JTrnka
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public final class SCVersionTest extends SuperUnitTest {
 
 	/**

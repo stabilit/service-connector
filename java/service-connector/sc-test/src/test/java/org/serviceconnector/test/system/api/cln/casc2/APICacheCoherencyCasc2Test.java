@@ -18,7 +18,9 @@ package org.serviceconnector.test.system.api.cln.casc2;
 
 import java.util.Map;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -29,6 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.APISystemSuperCCTest;
 import org.serviceconnector.test.system.api.cln.casc1.APICacheCoherencyCasc1Test;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APICacheCoherencyCasc2Test extends APICacheCoherencyCasc1Test {
 
 	public APICacheCoherencyCasc2Test() {

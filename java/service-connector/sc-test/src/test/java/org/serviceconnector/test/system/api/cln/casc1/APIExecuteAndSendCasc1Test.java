@@ -18,7 +18,9 @@ package org.serviceconnector.test.system.api.cln.casc1;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -30,6 +32,7 @@ import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APIExecuteAndSendCasc1Test() {

@@ -17,7 +17,9 @@
 package org.serviceconnector.test.unit;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPVersion;
 import org.serviceconnector.util.LinkedNode;
@@ -28,6 +30,7 @@ import junit.framework.Assert;
 /**
  * @author JTraber
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LinkedQueueTest extends SuperUnitTest {
 
 	private LinkedQueue<SCMPMessage> queue;

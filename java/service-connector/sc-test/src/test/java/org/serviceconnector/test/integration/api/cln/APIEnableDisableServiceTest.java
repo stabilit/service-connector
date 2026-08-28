@@ -17,7 +17,9 @@
 package org.serviceconnector.test.integration.api.cln;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
@@ -25,6 +27,7 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 
 	private SCMgmtClient client;

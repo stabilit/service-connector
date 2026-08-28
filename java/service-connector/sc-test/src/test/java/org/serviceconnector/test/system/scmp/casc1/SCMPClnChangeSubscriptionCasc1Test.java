@@ -21,7 +21,9 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -40,6 +42,7 @@ import org.serviceconnector.test.system.SystemSuperTest;
 
 import junit.framework.Assert;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;

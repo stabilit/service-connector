@@ -21,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -30,6 +32,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */

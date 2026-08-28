@@ -21,7 +21,9 @@ import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
@@ -31,6 +33,7 @@ import org.serviceconnector.util.ValidatorUtility;
  *
  * @author JTraber
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ValidatorUtilityTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */

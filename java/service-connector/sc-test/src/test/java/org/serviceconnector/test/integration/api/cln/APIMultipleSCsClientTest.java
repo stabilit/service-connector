@@ -21,13 +21,16 @@ import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */

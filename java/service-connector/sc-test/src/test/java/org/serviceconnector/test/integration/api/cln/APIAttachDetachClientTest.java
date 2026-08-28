@@ -19,7 +19,9 @@ package org.serviceconnector.test.integration.api.cln;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCServiceException;
@@ -28,6 +30,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */

@@ -23,8 +23,10 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.Constants;
@@ -60,6 +62,7 @@ import junit.framework.Assert;
  * @author JTraber
  */
 @RunWith(Parameterized.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ConnectionPoolTest extends IntegrationSuperTest {
 
 	private int port;

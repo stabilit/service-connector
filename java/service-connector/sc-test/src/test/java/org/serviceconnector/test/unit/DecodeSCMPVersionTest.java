@@ -20,13 +20,16 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.scmp.SCMPVersion;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 	/** The coder factory. */

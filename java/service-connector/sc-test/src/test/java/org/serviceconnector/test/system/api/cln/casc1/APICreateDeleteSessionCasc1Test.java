@@ -17,7 +17,9 @@
 package org.serviceconnector.test.system.api.cln.casc1;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
@@ -30,6 +32,7 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import junit.framework.Assert;
 
 @SuppressWarnings("unused")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APICreateDeleteSessionCasc1Test() {
