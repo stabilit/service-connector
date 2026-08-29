@@ -100,8 +100,8 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		Map<String, String> inspectResponse = mgmtClient.inspectCache("700");
 		this.checkCacheInspectString(inspectResponse, "success", SC_CACHE_ENTRY_STATE.LOADED, "700", "3", "700/0/0=0&700/1/0=0&700/2/0=0&700/3/0=0&", TestConstants.cacheGuardian1);
 
-		// 5: wait until expiration time runs out
-		Thread.sleep(3000);
+		// 5: wait until expiration time runs out - initial data is cached for 4 seconds
+		Thread.sleep(5000);
 
 		// 6: verify data is NOT in top level cache
 		inspectResponse = mgmtClient.inspectCache("700");
@@ -923,7 +923,19 @@ public class APICacheCoherencyCasc1Test extends APISystemSuperCCTest {
 		guardianClient.startCacheGuardian(TestConstants.cacheGuardian1, subMsg, cacheGuardianCbk);
 
 		// 4: try reading data from cache - cache loading exception (appendix loading)
-		Thread.sleep(2000); // assure publish appendix started
+		// Wait until the appendix load has actually started instead of sleeping a fixed time. The 50MB
+		// appendix is transferred in well under a second on current hardware, so a fixed wait reads either
+		// before the load starts or after it has finished - in both cases the message is LOADED and the
+		// read legitimately succeeds. Polling every 50ms still leaves most of the loading window to do
+		// the read in, without flooding the management interface with inspect requests.
+		String cacheState = null;
+		long waitUntil = System.currentTimeMillis() + 10000;
+		while (SC_CACHE_ENTRY_STATE.LOADING_APPENDIX.name().equals(cacheState) == false && System.currentTimeMillis() < waitUntil) {
+			Thread.sleep(50);
+			inspectResponse = mgmtClient.inspectCache("700");
+			cacheState = inspectResponse.get("cacheMessageState");
+		}
+		Assert.assertEquals("appendix loading did not start", SC_CACHE_ENTRY_STATE.LOADING_APPENDIX.name(), cacheState);
 		try {
 			sessionService1.execute(request);
 			Assert.fail("Cache loading exception expected.");

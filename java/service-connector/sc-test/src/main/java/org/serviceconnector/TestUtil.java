@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
@@ -170,7 +171,12 @@ public class TestUtil {
 		String logDirPath = userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
 
 		File dirToDelete = new File(logDirPath);
-		TestUtil.deleteDir(dirToDelete);
+		boolean deleted = TestUtil.deleteDir(dirToDelete);
+		if(!deleted) {
+			// some of the file could not be deleted
+			// try to truncate the files instead
+			TestUtil.truncateFilesInDir(dirToDelete);
+		}
 	}
 
 	public static boolean deleteDir(File dir) {
@@ -226,6 +232,31 @@ public class TestUtil {
 			configuration.addProperty(key, value);
 		}
 		return configuration;
+	}
+	
+	/**
+	 * Truncates every file below dir, used when the directory cannot be deleted. Best effort per file:
+	 * one stubborn file must not stop the rest from being cleared.
+	 *
+	 * @param dir the directory to clear
+	 */
+	private static void truncateFilesInDir(File dir) {
+		File[] entries = dir.listFiles();
+		if (entries == null) {
+			return;
+		}
+		for (File entry : entries) {
+			if (entry.isDirectory()) {
+				TestUtil.truncateFilesInDir(entry);
+				continue;
+			}
+			try (RandomAccessFile raf = new RandomAccessFile(entry, "rw")) {
+				raf.setLength(0);
+			} catch (Exception e) {
+				// nothing sensible to do here - the file stays as it is and checkLogFile may still trip
+				// over its old content, which is the behaviour we had before this fallback existed
+			}
+		}
 	}
 
 }
