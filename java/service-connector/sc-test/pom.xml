@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.serviceconnector</groupId>
 		<artifactId>sc-parent</artifactId>
-		<version>5.2.0.RELEASE</version>
+		<version>5.2.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
